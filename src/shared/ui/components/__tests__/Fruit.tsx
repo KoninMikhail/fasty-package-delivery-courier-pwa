@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import fruits from 'mocks/data/fruits.json'
+import fruits from 'shared/tests/mocks/data/fruits.json'
 import type ReactRouterDOM from 'react-router-dom'
 import Fruit from '../Fruit'
 

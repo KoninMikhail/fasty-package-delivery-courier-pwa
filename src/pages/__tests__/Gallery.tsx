@@ -3,7 +3,7 @@ import GalleryPage from 'pages/Gallery'
 import renderWithProviders, {
 	MOBILE_RESOLUTION_HEIGHT,
 	MOBILE_RESOLUTION_WIDTH
-} from 'testUtils'
+} from 'shared/tests/utils/testUtils'
 
 describe('<Gallery />', () => {
 	it('renders', async () => {

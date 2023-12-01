@@ -13,6 +13,7 @@
 		"plugin:import/recommended",
 		"plugin:import/typescript",
 		"plugin:react/all",
+		"@feature-sliced",
 		"plugin:jsx-a11y/recommended",
 		"airbnb",
 		"airbnb-typescript",
@@ -84,10 +85,10 @@
 			{
 				"devDependencies": [
 					"cypress.config.ts",
-					"vite.config.ts",
-					"src/setupTests.ts",
+					"vite.config.mts",
+					"src/shared/tests/setupTests.ts",
 					"src/testUtils.tsx",
-					"src/mocks/**",
+					"src/shared/tests/mocks/**",
 					"**/__tests__/*.{ts,tsx}"
 				]
 			}
@@ -160,6 +161,14 @@
 	"settings": {
 		"react": {
 			"version": "detect"
+		},
+		"import/resolver": {
+			"typescript": {
+				"alwaysTryTypes": true
+			},
+			"node": {
+				"extensions": [".js", ".jsx", ".ts", ".tsx"]
+			}
 		}
 	},
 	"overrides": [
@@ -170,7 +179,7 @@
 			}
 		},
 		{
-			"files": ["vite.config.ts", "cypress.config.ts"],
+			"files": ["vite.config.mts", "cypress.config.ts"],
 			"parserOptions": {
 				"project": ["./tsconfig.node.json"]
 			}

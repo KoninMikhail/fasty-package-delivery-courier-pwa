@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react'
-import { useMediaQuery } from 'utils'
+import { useMediaQuery } from 'shared/lib/utils'
 
 const BELOW_MIN_WIDTH = 599
 const MIN_WITDH = 600

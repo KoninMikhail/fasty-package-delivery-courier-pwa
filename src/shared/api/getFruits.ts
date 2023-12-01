@@ -1,4 +1,4 @@
-import type { IFruit } from 'types'
+import type { IFruit } from 'shared/types/types'
 
 export default async function getFruits(): Promise<IFruit[]> {
 	const response = await fetch(

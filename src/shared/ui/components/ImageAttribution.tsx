@@ -1,5 +1,5 @@
 import type { MouseEvent, ReactElement } from 'react'
-import type { IFruit } from 'types'
+import type { IFruit } from 'shared/types/types'
 
 interface Properties {
 	author: IFruit['image']['author']

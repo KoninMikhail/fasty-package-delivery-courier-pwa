@@ -2,6 +2,7 @@ import LoadingOrError from 'components/LoadingOrError'
 import type { ReactElement } from 'react'
 import { lazy, Suspense } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import './styles/app.css'
 
 const Gallery = lazy(async () => import('pages/Gallery'))
 const Details = lazy(async () => import('pages/Details'))

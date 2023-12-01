@@ -5,7 +5,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import renderWithProviders, {
 	MOBILE_RESOLUTION_HEIGHT,
 	MOBILE_RESOLUTION_WIDTH
-} from 'testUtils'
+} from 'shared/tests/utils/testUtils'
 import Details from '../Details'
 
 vi.mock('react-router-dom', async () => ({

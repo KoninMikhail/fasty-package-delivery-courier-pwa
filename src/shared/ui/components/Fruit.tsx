@@ -1,7 +1,7 @@
 import type { KeyboardEvent, ReactElement } from 'react'
 import { useNavigate } from 'react-router-dom'
-import type { IFruit } from 'types'
-import { useMediaQuery } from 'utils'
+import type { IFruit } from 'shared/types/types'
+import { useMediaQuery } from 'shared/lib/utils'
 import ImageAttribution from './ImageAttribution'
 
 const PREFERRED_IMAGE_WIDTH = 384
