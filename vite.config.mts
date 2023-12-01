@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => ({
 		include: ['src/**/__tests__/*'],
 		globals: true,
 		environment: 'jsdom',
-		setupFiles: 'src/setupTests.ts',
+		setupFiles: 'src/shared/tests/setupTests.ts',
 		clearMocks: true,
 		coverage: {
 			provider: 'istanbul',
@@ -38,6 +38,8 @@ export default defineConfig(({ mode }) => ({
 							'fonts/*.woff2'
 						],
 						manifest: {
+							name: 'Fasty - Delivery Exchange For Couriers',
+							short_name: 'Fasty',
 							theme_color: '#BD34FE',
 							icons: [
 								{
