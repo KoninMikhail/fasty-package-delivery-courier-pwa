@@ -2,6 +2,9 @@
 	"compilerOptions": {
 		"allowSyntheticDefaultImports": true,
 		"baseUrl": "src",
+		"paths": {
+			"@/*": ["./*"]
+		},
 		"forceConsistentCasingInFileNames": true,
 		"isolatedModules": true,
 		"jsx": "react-jsx",
@@ -15,6 +18,6 @@
 		"target": "ESNext",
 		"types": ["vite/client", "vitest/globals", "vite-plugin-pwa/client"]
 	},
-	"include": ["src"],
+	"include": ["src", "src/**/*.d.ts"],
 	"references": [{ "path": "./tsconfig.node.json" }]
 }

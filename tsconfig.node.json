@@ -10,6 +10,5 @@
 		"strict": true,
 		"target": "ESNext"
 	},
-	"include": [
-      "vite.config.mts", "cypress.config.ts"]
+	"include": ["vite.config.mts", "cypress.config.ts"]
 }

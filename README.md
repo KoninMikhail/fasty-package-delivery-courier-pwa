@@ -1,7 +1,10 @@
 <!-- markdownlint-disable MD032 MD033-->
 <!-- Write your README.md file. Build something amazing! This README.md template can guide you to build your project documentation, but feel free to modify it as you wish 🥰 -->
+
 # **Fasty - Package Delivery Courier PWA**
+
 > Using it for fast creation exchange of deliveries.
+
 <div align="center">
   <!-- Change your logo -->
   <a href="https://github.com/KoninMikhail/fasty-package-delivery-courier-app">
@@ -26,16 +29,18 @@
 
 # **About heading**
 
-* <!-- ... [WHY DID YOU CREATED THIS PROJECT?, MOTIVATION, PURPOSE, DESCRIPTION, OBJECTIVES, etc] -->
+- <!-- ... [WHY DID YOU CREATED THIS PROJECT?, MOTIVATION, PURPOSE, DESCRIPTION, OBJECTIVES, etc] -->
 
 <br />
 
 ## Request features ⚡
->Use [issue](https://github.com/KoninMikhail/fasty-package-delivery-courier-app/issues) and follow the rules :)
+
+> Use [issue](https://github.com/KoninMikhail/fasty-package-delivery-courier-app/issues) and follow the rules :)
 
 ## Report bug 🤬
->The data from repository is provided an 'As is', without any guarantees. All the data provided is used at your own risk.
-**If you want report a bug** - use [issue](https://github.com/KoninMikhail/fasty-package-delivery-courier-app/issues)
+
+> The data from repository is provided an 'As is', without any guarantees. All the data provided is used at your own risk.
+> **If you want report a bug** - use [issue](https://github.com/KoninMikhail/fasty-package-delivery-courier-app/issues)
 
 <br /><br />
 
@@ -44,10 +49,10 @@
 ## TABLE OF CONTENTS
 
 - [General](#what-is-this-template-all-about)
-    - [Request feature](#request-features-)
+  - [Request feature](#request-features-)
 - [Quick start](#quick-start)
-    - [Requirements](#requirements)
-    - [Report a bug](#disclamer--%EF%B8%8F)
+  - [Requirements](#requirements)
+  - [Report a bug](#disclamer--%EF%B8%8F)
 - [Contributing](#contributors)
 - [Buy Me A Coffee](#buy-me-a-coffee)
 - [License and Changelog](#license-and-changelog)
@@ -57,6 +62,7 @@
 <img align="left" src="https://github.com/KoninMikhail/fasty-package-delivery-courier-app/blob/main/.resources/icons/contributors.png" width="50px" />
 
 ## Contributors
+
 I am <3 contributions big or small. If you help my project --> 🍰**link to your profile will be here**🍰.
 
 <a href="https://github.com/KoninMikhail/fasty-package-delivery-courier-app/graphs/contributors">
@@ -68,13 +74,14 @@ I am <3 contributions big or small. If you help my project --> 🍰**link to you
 <img align="left" src="https://github.com/KoninMikhail/fasty-package-delivery-courier-app/blob/main/.resources/icons/coffee.png" width="50px" />
 
 ## Buy Me A Coffee
+
 <a href="https://github.com/KoninMikhail/fasty-package-delivery-courier-app/generate">
   <img alt="KoninMikhail/fasty-package-delivery-courier-app Author brand logo without text" align="right" src="https://raw.githubusercontent.com/KoninMikhail/fasty-package-delivery-courier-app/main/.resources/images/logo.png" width="25%" />
 </a>
 
 Currently I'm seeking for new sponsors to help maintain this project! ❤️
 
-With every donation you make - you're helping with development of this project. *You will be also featured in project's README.md*, so everyone will see your contribution and visit your content⭐.
+With every donation you make - you're helping with development of this project. _You will be also featured in project's README.md_, so everyone will see your contribution and visit your content⭐.
 
 <a href="https://yoomoney.ru/to/410011749810070">
   <img src="https://github.com/KoninMikhail/fasty-package-delivery-courier-app/blob/main/.resources/images/sponsor.svg">
@@ -93,5 +100,5 @@ With every donation you make - you're helping with development of this project. 
 
 ## **License and Changelog**
 
->Copyright (c) 2023, KoninMikhail.
->This project under **[MIT](LICENSE)** license. See the changes in the **[CHANGELOG.md](CHANGELOG.md)** file.
+> Copyright (c) 2023, KoninMikhail.
+> This project under **[MIT](LICENSE)** license. See the changes in the **[CHANGELOG.md](CHANGELOG.md)** file.

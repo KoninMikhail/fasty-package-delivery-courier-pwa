@@ -1,4 +1,6 @@
 /// <reference types="vitest" />
+
+import path from 'path'
 import eslintPlugin from '@nabla/vite-plugin-eslint'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
@@ -19,6 +21,11 @@ export default defineConfig(({ mode }) => ({
 			'100': true,
 			reporter: ['text', 'lcov'],
 			reportsDirectory: 'coverage'
+		}
+	},
+	resolve: {
+		alias: {
+			'@': path.resolve(__dirname, 'src')
 		}
 	},
 	plugins: [

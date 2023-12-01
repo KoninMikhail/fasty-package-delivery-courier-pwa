@@ -87,7 +87,7 @@
 					"cypress.config.ts",
 					"vite.config.mts",
 					"src/shared/tests/setupTests.ts",
-					"src/testUtils.tsx",
+					"src/shared/tests/utils/*",
 					"src/shared/tests/mocks/**",
 					"**/__tests__/*.{ts,tsx}"
 				]
@@ -151,7 +151,7 @@
 			"error",
 			{
 				"cases": {
-					"camelCase": true,
+					"kebabCase": true,
 					"pascalCase": true
 				}
 			}

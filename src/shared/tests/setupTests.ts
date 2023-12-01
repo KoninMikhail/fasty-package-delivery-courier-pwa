@@ -1,13 +1,11 @@
 import '@testing-library/jest-dom'
 import mediaQuery from 'css-mediaquery'
-import server from 'shared/api/msw/server'
+import server from '@/shared/api/msw/server'
 import 'whatwg-fetch'
-
-export const DESKTOP_RESOLUTION_WIDTH = 1280
-export const DESKTOP_RESOLUTION_HEIGHT = 800
-
-export const MOBILE_RESOLUTION_WIDTH = 414
-export const MOBILE_RESOLUTION_HEIGHT = 896
+import {
+	DESKTOP_RESOLUTION_HEIGHT,
+	DESKTOP_RESOLUTION_WIDTH
+} from '@/shared/config'
 
 beforeAll(() => {
 	server.listen({ onUnhandledRequest: 'error' })

@@ -1,7 +1,7 @@
-import getFruits from 'api/getFruits'
-import Fruit from 'components/Fruit'
-import Head from 'components/Head'
-import LoadingOrError from 'components/LoadingOrError'
+import getFruits from '@/shared/api/getFruits'
+import Fruit from '@/shared/ui/components/Fruit'
+import Head from '@/shared/ui/components/Head'
+import LoadingOrError from '@/shared/ui/components/LoadingOrError'
 import type { ReactElement } from 'react'
 import { useQuery } from '@tanstack/react-query'
 

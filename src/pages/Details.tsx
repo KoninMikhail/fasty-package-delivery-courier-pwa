@@ -1,11 +1,11 @@
-import getFruits from 'shared/api/getFruits'
-import Head from 'components/Head'
-import ImageAttribution from 'components/ImageAttribution'
-import LoadingOrError from 'components/LoadingOrError'
+import getFruits from '@/shared/api/getFruits'
+import Head from '@/shared/ui/components/Head'
+import ImageAttribution from '@/shared/ui/components/ImageAttribution'
+import LoadingOrError from '@/shared/ui/components/LoadingOrError'
 import type { ReactElement } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Link, Navigate, useParams } from 'react-router-dom'
-import { useMediaQuery } from 'shared/lib/utils'
+import { useMediaQuery } from '@/shared/lib/utils'
 
 const DESKTOP_IMAGE_WIDTH_PERCENTAGE = 0.4
 const MOBILE_IMAGE_HEIGHT_PERCENTAGE = 0.3
