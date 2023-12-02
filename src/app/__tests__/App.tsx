@@ -1,18 +1,18 @@
-import { screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import App from 'app/App'
-import renderWithProviders from '@/shared/tests/utils/renderWithProviders'
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import App from 'app/App';
+import renderWithProviders from '@/shared/lib/tests/renderWithProviders';
 
 describe('<App />', () => {
-	it('renders', async () => {
-		window.history.pushState({}, 'Home', '/')
-		renderWithProviders(<App />, false)
+    it('renders', async () => {
+        window.history.pushState({}, 'Home', '/');
+        renderWithProviders(<App />, false);
 
-		await expect(screen.findByText('Apple')).resolves.toBeInTheDocument()
-		await userEvent.click(screen.getByText('Apple'))
+        await expect(screen.findByText('Apple')).resolves.toBeInTheDocument();
+        await userEvent.click(screen.getByText('Apple'));
 
-		await expect(
-			screen.findByText('Vitamins per 100 g (3.5 oz)')
-		).resolves.toBeInTheDocument()
-	})
-})
+        await expect(
+            screen.findByText('Vitamins per 100 g (3.5 oz)'),
+        ).resolves.toBeInTheDocument();
+    });
+});

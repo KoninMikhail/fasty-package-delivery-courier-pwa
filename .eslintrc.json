@@ -88,7 +88,7 @@
 					"cypress.config.ts",
 					"vite.config.mts",
 					"tailwind.config.ts",
-					"src/shared/tests/setupTests.ts",
+					"src/shared/config/tests/setupTests.ts",
 					"src/shared/tests/utils/*",
 					"src/shared/tests/mocks/**",
 					"**/__tests__/*.{ts,tsx}"
@@ -154,7 +154,8 @@
 			{
 				"cases": {
 					"kebabCase": true,
-					"pascalCase": true
+					"pascalCase": true,
+					"camelCase": true
 				}
 			}
 		],
@@ -176,7 +177,11 @@
 		"unused-imports/no-unused-vars": [
 			"warn",
 			{ "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
-		]
+		],
+
+		// disabled
+		"react/prop-types": "off",
+		"@typescript-eslint/no-redundant-type-constituents": "off"
 	},
 	"settings": {
 		"react": {

@@ -1,1 +1,1 @@
-export {}
+export { SuspenseLayout } from './layouts';
