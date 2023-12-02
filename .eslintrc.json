@@ -86,6 +86,7 @@
 				"devDependencies": [
 					"cypress.config.ts",
 					"vite.config.mts",
+					"tailwind.config.ts",
 					"src/shared/tests/setupTests.ts",
 					"src/shared/tests/utils/*",
 					"src/shared/tests/mocks/**",
@@ -119,7 +120,7 @@
 		"react/function-component-definition": [
 			"error",
 			{
-				"namedComponents": "function-declaration"
+				"namedComponents": "arrow-function"
 			}
 		],
 		"react/no-unstable-nested-components": "error",
@@ -179,7 +180,7 @@
 			}
 		},
 		{
-			"files": ["vite.config.mts", "cypress.config.ts"],
+			"files": ["vite.config.mts", "cypress.config.ts", "tailwind.config.ts"],
 			"parserOptions": {
 				"project": ["./tsconfig.node.json"]
 			}

@@ -1,8 +1,8 @@
-const defaultConfig = require('tailwindcss/defaultConfig')
-const formsPlugin = require('@tailwindcss/forms')
+import type {Config} from 'tailwindcss'
+import defaultConfig from 'tailwindcss/defaultConfig'
+import formsPlugin from '@tailwindcss/forms'
 
-/** @type {import('tailwindcss/types').Config} */
-const config = {
+export default {
 	content: ['index.html', 'src/**/*.tsx'],
 	theme: {
 		fontFamily: {
@@ -11,5 +11,4 @@ const config = {
 	},
 	experimental: { optimizeUniversalDefaults: true },
 	plugins: [formsPlugin]
-}
-module.exports = config
+} satisfies Config
