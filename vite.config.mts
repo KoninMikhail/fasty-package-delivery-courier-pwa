@@ -12,7 +12,7 @@ import { vitePluginVersionMark } from 'vite-plugin-version-mark';
 export default defineConfig(({ mode }) => ({
     test: {
         css: false,
-        include: ['src/**/__tests__/*'],
+        include: ['src/**/__tests__/*', 'src/**/**/*.{spec,test}.{js,jsx,ts,tsx}'],
         globals: true,
         environment: 'jsdom',
         setupFiles: 'src/shared/config/tests/setupTests.ts',

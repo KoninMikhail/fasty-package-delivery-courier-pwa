@@ -11,5 +11,4 @@ export interface IFruit {
 	metadata: {
 		name: string
 		value: string
-	}[]
 }
