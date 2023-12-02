@@ -6,7 +6,7 @@
 		"es2021": true
 	},
 	"parser": "@typescript-eslint/parser",
-	"plugins": ["react-prefer-function-component"],
+	"plugins": ["react-prefer-function-component", "unused-imports"],
 	"extends": [
 		"eslint:all",
 		"plugin:@typescript-eslint/all",
@@ -21,6 +21,7 @@
 		"plugin:react/jsx-runtime",
 		"plugin:unicorn/all",
 		"plugin:react-prefer-function-component/recommended",
+        "plugin:prettier/recommended",
 		"prettier"
 	],
 	"rules": {
@@ -157,7 +158,25 @@
 				}
 			}
 		],
-		"unicorn/no-nested-ternary": ["error"]
+		"unicorn/no-nested-ternary": ["error"],
+
+		// Code formatting with prettier
+		"prettier/prettier": [
+			"error",
+			{
+				"singleQuote": true,
+				"endOfLine": "auto",
+				"tabWidth": 4
+			}
+		],
+
+		// No unused imports, vars
+		"no-unused-vars": "off", // or "@typescript-eslint/no-unused-vars": "off",
+		"unused-imports/no-unused-imports": "error",
+		"unused-imports/no-unused-vars": [
+			"warn",
+			{ "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
+		]
 	},
 	"settings": {
 		"react": {
@@ -172,6 +191,7 @@
 			}
 		}
 	},
+
 	"overrides": [
 		{
 			"files": ["src/**/*.ts?(x)"],

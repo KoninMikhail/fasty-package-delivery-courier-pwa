@@ -1,3 +1,7 @@
+import { Badge } from '@nextui-org/react';
+
 const Function = () => (
-        <div>sdfsdf</div>
-    )
+    <div>
+        <Badge>sdfsdf</Badge>
+    </div>
+);
