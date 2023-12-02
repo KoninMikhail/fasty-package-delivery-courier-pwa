@@ -10,6 +10,7 @@ export default {
 			sans: ['Inter', ...defaultTheme.fontFamily.sans]
 		}
 	},
+	darkMode: 'class',
 	experimental: { optimizeUniversalDefaults: true },
 	plugins: [formsPlugin, nextui()]
 } satisfies Config
