@@ -1,1 +1,1 @@
-export { SuspenseLayout } from './layouts';
+export * as sharedUiLayouts from './layouts';

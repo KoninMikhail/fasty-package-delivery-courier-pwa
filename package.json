@@ -25,12 +25,15 @@
 	"dependencies": {
 		"@nextui-org/react": "^2.2.9",
 		"@tanstack/react-query": "5.12.1",
+		"compose-function": "^3.0.3",
 		"framer-motion": "^10.16.12",
+		"next-themes": "^0.2.1",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
 		"react-router-dom": "6.20.1"
 	},
 	"devDependencies": {
+		"@types/compose-function": "^0.0.33",
 		"@feature-sliced/eslint-config": "0.1.0-beta.6",
 		"@nabla/vite-plugin-eslint": "2.0.2",
 		"@tailwindcss/forms": "0.5.7",

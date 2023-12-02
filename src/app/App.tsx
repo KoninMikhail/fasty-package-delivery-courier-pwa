@@ -1,26 +1,12 @@
-import LoadingOrError from '@/shared/ui/components/LoadingOrError';
-import { lazy, Suspense } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import './styles/app.css';
-
-const Gallery = lazy(async () => import('pages/Gallery'));
-const Details = lazy(async () => import('pages/Details'));
+import { withProviders } from './providers';
+import { AppRouter } from './routes/router';
+import type React from 'react';
+import './app.css';
 
 /**
  * @name App
  * @constructor
  */
-export const App: FunctionComponent = () => {
-    return (
-        <BrowserRouter>
-            <Suspense fallback={<LoadingOrError />}>
-                <Routes>
-                    <Route path="/" element={<Gallery />} />
-                    <Route path=":fruitName" element={<Details />} />
-                </Routes>
-            </Suspense>
-        </BrowserRouter>
-    );
-};
+const App = (): React.ReactNode => <AppRouter />;
 
-export default App;
+export default withProviders(App);
