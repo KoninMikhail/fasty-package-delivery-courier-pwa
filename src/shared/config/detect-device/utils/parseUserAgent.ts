@@ -1,14 +1,18 @@
 import UAParser from 'ua-parser-js';
 import { UserAgentInfo } from '../types';
 
+/** Parses the user agent string to extract detailed information.
+ * @param {string} userAgentString - The raw user agent string from the browser or client.
+ * @returns {UserAgentInfo} An object containing categorized information about the user agent.
+ */
 export const parseUserAgent = (userAgentString: string): UserAgentInfo => {
-    const parser = new UAParser(userAgentString); // Создаем экземпляр UAParser
-    const browser = parser.getBrowser(); // Получаем информацию о браузере
-    const cpu = parser.getCPU(); // Получаем информацию о CPU
-    const device = parser.getDevice(); // Получаем информацию об устройстве
-    const os = parser.getOS(); // Получаем информацию о ОС
+    const parser = new UAParser(userAgentString); // Create an instance of UAParser
+    const browser = parser.getBrowser(); // Retrieve information about the browser
+    const cpu = parser.getCPU(); // Retrieve information about the CPU
+    const device = parser.getDevice(); // Retrieve information about the device
+    const os = parser.getOS(); // Retrieve information about the OS
 
-    // Возвращаем объект с необходимой информацией
+    // Return an object with the relevant information
     return {
         browser: {
             name: browser.name,
