@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react'
+simport type { ReactElement } from 'react'
 
 interface Properties {
 	error?: Error

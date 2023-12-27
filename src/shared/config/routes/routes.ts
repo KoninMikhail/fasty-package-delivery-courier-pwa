@@ -1,11 +1,12 @@
 import type { ComponentType, PropsWithChildren } from 'react';
 
 export enum RouteName {
-    DELIVERIES_LIST_PAGE = '/',
-    DELIVERY_ITEM_PAGE = `/delivery/:deliveryId`,
-    AUTH_PAGE = '/auth',
+    ROOT_PAGE = '/',
+    DELIVERY_DETAILS_PAGE = `/delivery/:deliveryId`,
+    DELIVERIES_HISTORY_PAGE = '/history',
+    DELIVERIES_MAP_PAGE = '/deliveries/map',
     PROFILE_PAGE = '/profile',
-    MAP_PAGE = '/map',
+    SETTINGS_PAGE = '/settings',
 }
 
 export interface RouteDescription {

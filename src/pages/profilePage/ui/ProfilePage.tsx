@@ -1,35 +1,41 @@
-import { Card, CardBody, CardFooter, CardHeader, Divider, Image, Link } from '@nextui-org/react';
+import { sessionUi } from '@/entities/session';
+import { sharedConfigDetectDevice } from '@/shared/config';
+import { sharedConfigLocale } from '@/shared/config/locale';
+import { sharedConfigConstantsApp } from '@/shared/config/constants';
+import { useTranslation } from 'react-i18next';
+import { useDocumentTitle } from '@/shared/lib';
+import { DesktopProfilePageView, MobileProfilePageView } from './views';
+import { translationNS } from '../config';
+import locale_en from '../locales/en.locale.json';
+import locale_ru from '../locales/ru.locale.json';
 
+const { useDeviceScreen } = sharedConfigDetectDevice;
+const { locale } = sharedConfigLocale;
+const { APP_NAME } = sharedConfigConstantsApp;
+
+/**
+ * Components
+ */
+const { Authorized } = sessionUi;
+
+/**
+ * locale
+ */
+locale.addResourceBundle('en', translationNS, locale_en);
+locale.addResourceBundle('ru', translationNS, locale_ru);
+
+/**
+ * @name ProfilePage
+ * @description Page for deliveries exchange
+ * @constructor
+ */
 export const ProfilePage: FunctionComponent = () => {
-    return (
-        <>
-            <div>
-                <Card className="max-w-[400px]">
-                    <CardHeader className="flex gap-3">
-                        <Image
-                            alt="nextui logo"
-                            height={40}
-                            radius="sm"
-                            src="https://avatars.githubusercontent.com/u/86160567?s=200&v=4"
-                            width={40}
-                        />
-                        <div className="flex flex-col">
-                            <p className="text-md">NextUI</p>
-                            <p className="text-small text-default-500">nextui.org</p>
-                        </div>
-                    </CardHeader>
-                    <Divider />
-                    <CardBody>
-                        <p>Make beautiful websites regardless of your design experience.</p>
-                    </CardBody>
-                    <Divider />
-                    <CardFooter>
-                        <Link isExternal showAnchorIcon href="https://github.com/nextui-org/nextui">
-                            Visit source code on GitHub.
-                        </Link>
-                    </CardFooter>
-                </Card>
-            </div>
-        </>
-    );
+    const { isDesktop } = useDeviceScreen();
+    const { t } = useTranslation(translationNS);
+
+    const pageTitle = `${t('page_title')} | ${APP_NAME}`;
+
+    useDocumentTitle(pageTitle);
+
+    return isDesktop ? <DesktopProfilePageView /> : <MobileProfilePageView />;
 };

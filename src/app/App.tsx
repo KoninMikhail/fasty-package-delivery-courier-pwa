@@ -1,6 +1,6 @@
+import type React from 'react';
 import { withProviders } from './providers';
 import { AppRouter } from './routes/router';
-import type React from 'react';
 import './app.css';
 
 /**

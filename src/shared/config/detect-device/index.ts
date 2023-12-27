@@ -1,2 +1,2 @@
-export * from './provider';
-export * from './connector';
+export { DeviceInfoProvider } from './provider';
+export { useDeviceInfo, useDeviceScreen } from './connector';
