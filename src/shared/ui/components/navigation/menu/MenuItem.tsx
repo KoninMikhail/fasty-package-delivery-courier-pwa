@@ -18,24 +18,22 @@ export const MenuItem: FunctionComponent<MenuItemProperties> = ({
     const resolved = useResolvedPath(to);
     const match = useMatch({ path: resolved.pathname, end: true });
 
-    const verticalClasses = 'flex flex-col items-center justify-center';
-    const horizontalClasses = 'flex items-center';
-
-    const baseClasses = clsx(
-        'px-4 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 focus:outline-none focus:bg-gray-200',
+    // Определение классов для элемента
+    const outputClasslist = clsx(
+        'px-4 py-2 text-xs font-medium',
+        match ? 'text-black' : 'text-gray-400', // Условно добавляем 'text-black' если элемент активен
         {
-            [horizontalClasses]: !vertical,
-            [verticalClasses]: vertical,
+            'flex items-center': !vertical,
+            'flex flex-col items-center justify-center': vertical,
         },
     );
 
-    const activeClasses = 'bg-gray-900 text-white';
+    // Определение классов для иконки
+    const iconClasses = clsx(vertical ? 'mb-2 text-3xl' : 'mr-3');
 
     return (
-        <Link to={to} className={clsx(baseClasses, match && activeClasses)}>
-            {icon ? (
-                <span className={clsx(vertical ? 'mb-1' : 'mr-3')}>{icon}</span>
-            ) : null}
+        <Link to={to} className={outputClasslist}>
+            {icon ? <span className={iconClasses}>{icon}</span> : null}
             {label}
         </Link>
     );
