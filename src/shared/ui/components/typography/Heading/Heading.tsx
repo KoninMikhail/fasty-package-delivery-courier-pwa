@@ -22,7 +22,7 @@ export const Heading: FunctionComponent<HeadingProperties> = ({
     const sizeClasses = {
         small: 'text-sm',
         medium: 'text-lg',
-        large: 'text-2xl',
+        large: 'text-xl',
     };
 
     // переменная для веса шрифта
@@ -41,7 +41,7 @@ export const Heading: FunctionComponent<HeadingProperties> = ({
     );
 
     return (
-        // Применение переменной Tag для создания компонента с нужным тегом
+        // Применение переменной Tag для создания компонента с нужным тегом }
         <Tag className={headingClasses} {...properties}>
             {children}
         </Tag>

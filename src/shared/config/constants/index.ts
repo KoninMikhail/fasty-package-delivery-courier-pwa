@@ -1,2 +1,2 @@
-export * as sharedConfigConstantsApp from './app';
+export * from './app';
 export * from './devices';

@@ -1,5 +1,7 @@
 import { LuPackage } from 'react-icons/lu';
 import { sharedConfigRoutes } from '@/shared/config';
+import { TbTruckDelivery } from 'react-icons/tb';
+import { IoMdSettings } from 'react-icons/io';
 
 const { RouteName } = sharedConfigRoutes;
 
@@ -14,13 +16,13 @@ export const navbarItems = [
     },
     {
         id: 'about',
-        icon: <LuPackage />,
+        icon: <TbTruckDelivery />,
         label: 'nav.deliveries',
         href: PROFILE_PAGE,
     },
     {
         id: 'contacts',
-        icon: <LuPackage />,
+        icon: <IoMdSettings />,
         label: 'nav.settings',
         href: SETTINGS_PAGE,
     },

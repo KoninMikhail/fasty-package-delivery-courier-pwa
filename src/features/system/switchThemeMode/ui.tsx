@@ -21,7 +21,7 @@ export const SwitchThemeMode: FunctionComponent<ISwitchThemeModeProperties> = ({
     const onClickThemeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
         event.stopPropagation();
-        setTheme(event.target.checked ? 'dark' : 'light');
+        setTheme(event.target.checked ? 'light' : 'dark');
     };
 
     useEffect(() => {
@@ -32,11 +32,16 @@ export const SwitchThemeMode: FunctionComponent<ISwitchThemeModeProperties> = ({
 
     return (
         <Switch
-            defaultSelected={theme === 'dark'}
+            defaultSelected={theme === 'light'}
             size={size}
             color={color}
-            startContent={<SunIcon />}
-            endContent={<MoonIcon />}
+            thumbIcon={({ isSelected, className }) =>
+                isSelected ? (
+                    <SunIcon className={className} />
+                ) : (
+                    <MoonIcon className={className} />
+                )
+            }
             onChange={onClickThemeChange}
         />
     );

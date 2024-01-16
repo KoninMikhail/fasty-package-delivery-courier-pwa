@@ -20,18 +20,7 @@ const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
 );
 
 const Header: FunctionComponent = () => (
-    <header className="w-full rounded-b-3xl bg-black p-6">
-        <div className="grid grid-cols-[auto_max-content] text-white">
-            <div>asds</div>
-            <div>icon</div>
-        </div>
-        <div className="grid justify-between text-white">
-            <div>Здравствуйте, Михаил</div>
-            <div>
-                <b className="text-xl">Пришло время доставлять заказы</b>
-            </div>
-        </div>
-    </header>
+    <header className="w-full rounded-b-3xl bg-black p-6" />
 );
 
 export const MobileRootPageView: FunctionComponent = () => {

@@ -6,12 +6,14 @@ import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { widgetAccountDeliveriesMapUi } from '@/widgets/deliveries/account-deliveries-map';
 import { sharedUiLayouts } from '@/shared/ui';
 import { sessionUi } from '@/entities/session';
-import { Heading } from '@/shared/ui/components/typography';
+import { Heading, Text } from '@/shared/ui/components/typography';
 import { widgetAccountDeliveriesStatsUi } from '@/widgets/deliveries/account-deliveries-stats';
+import { widgetAccountDataEditorUi } from '@/widgets/account/account-data-editor';
 import { useMotionValueEvent, useScroll } from 'framer-motion';
 
 const { Authorized, Guest } = sessionUi;
 const { InProgressDeliveriesList } = widgetInProgressDeliveriesUi;
+const { AccountDataEditor } = widgetAccountDataEditorUi;
 const { HistoryDeliveries } = widgetHistoryDeliveriesUi;
 const { AccountDeliveriesMapStats } = widgetAccountDeliveriesStatsUi;
 const { AccountDeliveriesMap } = widgetAccountDeliveriesMapUi;
@@ -36,22 +38,26 @@ const Header: FunctionComponent = () => {
     });
 
     return (
-        <header className="grid w-full gap-8 bg-black p-6 pb-16">
-            <div className="mx-auto grid w-full grid-cols-[auto_max-content] gap-2 text-white lg:w-[750px]">
+        <header className="grid w-full gap-4 bg-black px-4 pb-12 pt-6">
+            <div className="mx-auto grid w-full grid-cols-[auto_max-content] items-center gap-2 text-white lg:w-[750px]">
                 <div>
-                    <p>name</p>
-                    <p>Желаем хорошего дня!</p>
+                    <Text size="large" weight="bold">
+                        Здравствуйте, Михаил
+                    </Text>
+                    <Text size="small">Желаем хорошего дня!</Text>
                 </div>
-                <div>setting</div>
+                <div>
+                    <AccountDataEditor />
+                </div>
             </div>
             <div className="mx-auto flex w-full overflow-x-scroll lg:w-[750px]">
-                <div className="flex-none px-3 py-6">
+                <div className="flex-none px-2 py-4">
                     <AccountDeliveriesMap />
                 </div>
-                <div className="flex-none px-3 py-6">
+                <div className="flex-none px-2 py-4">
                     <HistoryDeliveries />
                 </div>
-                <div className="flex-none px-3 py-6">
+                <div className="flex-none px-2 py-4">
                     <AccountDeliveriesMapStats />
                 </div>
             </div>
@@ -67,12 +73,10 @@ export const MobileProfilePageView: FunctionComponent = () => {
                 <Authorized>
                     <Section>
                         <div>
-                            <Heading size="large" weight="bold">
-                                Ваши доставки
-                            </Heading>
-                            <Heading>
+                            <Heading size="large">Ваши доставки</Heading>
+                            <Text as="span">
                                 Получайте информацию и удобно управляейте
-                            </Heading>
+                            </Text>
                         </div>
                         <InProgressDeliveriesList />
                     </Section>

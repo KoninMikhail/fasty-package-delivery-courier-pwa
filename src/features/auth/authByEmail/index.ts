@@ -1,7 +1,7 @@
 import { Form } from './ui';
 import { factory } from './model';
 
-export const AuthUser = {
+export const AuthByEmail = {
     factory,
     Form,
 };

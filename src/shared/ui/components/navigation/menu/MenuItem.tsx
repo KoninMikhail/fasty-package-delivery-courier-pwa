@@ -20,7 +20,7 @@ export const MenuItem: FunctionComponent<MenuItemProperties> = ({
 
     // Определение классов для элемента
     const outputClasslist = clsx(
-        'px-4 py-2 text-xs font-medium',
+        'px-4 py-1.5 text-xs font-light',
         match ? 'text-black' : 'text-gray-400', // Условно добавляем 'text-black' если элемент активен
         {
             'flex items-center': !vertical,
@@ -29,7 +29,7 @@ export const MenuItem: FunctionComponent<MenuItemProperties> = ({
     );
 
     // Определение классов для иконки
-    const iconClasses = clsx(vertical ? 'mb-2 text-3xl' : 'mr-3');
+    const iconClasses = clsx(vertical ? 'mb-1 text-2xl' : 'mr-3');
 
     return (
         <Link to={to} className={outputClasslist}>

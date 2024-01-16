@@ -3,6 +3,8 @@ import type { PropsWithChildren } from 'react';
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { sharedUiLayouts } from '@/shared/ui';
 import { sessionUi } from '@/entities/session';
+import { SwitchThemeMode } from '@/features/system/switchThemeMode/ui';
+import { SwitchLanguage } from '@/features/system/switchAppLanguage/ui/SwitchLanguage';
 
 const { Authorized, Guest } = sessionUi;
 const { NavbarMobile } = widgetNavbarMobileUi;
@@ -14,31 +16,28 @@ const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
     </main>
 );
 
-const Header: FunctionComponent = () => (
-    <header className="w-full rounded-b-3xl bg-black p-6">
-        <div className="grid grid-cols-[auto_max-content] text-white">
-            <div>asds</div>
-            <div>icon</div>
-        </div>
-        <div className="grid justify-between text-white">
-            <div>Здравствуйте, Михаил</div>
-            <div>
-                <b className="text-xl">Пришло время доставлять заказы</b>
-            </div>
-        </div>
-    </header>
-);
-
 export const MobileSettingsPageView: FunctionComponent = () => {
     return (
         <>
-            <Header />
             <MainContainer>
-                <Authorized>
-                    <Section title="Заказы">profile</Section>
-                    <Section title="Заказы">menu</Section>
-                </Authorized>
-                <Guest>Вам нужно авторизоваться</Guest>
+                <Section title="Заказы">
+                    <div className="flex items-center gap-2">
+                        <div className="flex-grow">Язык</div>
+                        <div>
+                            <SwitchLanguage />
+                        </div>
+                    </div>
+                </Section>
+                <Section title="Заказы">
+                    <div className="flex items-center gap-2">
+                        <div className="flex-grow">Используемая тема</div>
+                        <div>
+                            <SwitchThemeMode />
+                        </div>
+                    </div>
+                </Section>
+                <Section title="Заказы">Правовая информация</Section>
+                <Section title="Заказы">О приложении</Section>
             </MainContainer>
             <NavbarMobile />
         </>

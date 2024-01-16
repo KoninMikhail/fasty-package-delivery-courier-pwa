@@ -22,7 +22,7 @@ locale.addResourceBundle('ru', translationNS, locale_ru);
 const NavbarContainer: FunctionComponent<PropsWithChildren> = ({
     children,
 }) => (
-    <div className="fixed bottom-0 left-0 right-0 z-30 w-full rounded-t-3xl bg-white p-2 shadow-2xl ring-default">
+    <div className="fixed bottom-0 left-0 right-0 z-30 w-full rounded-t-3xl bg-white p-1.5 shadow-2xl ring-default">
         <div className="mx-auto w-full lg:w-[750px]">{children}</div>
     </div>
 );

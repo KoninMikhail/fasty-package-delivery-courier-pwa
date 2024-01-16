@@ -1,25 +1,20 @@
-import { Card, CardBody, CardFooter, Image } from '@nextui-org/react';
+import { Card, CardBody, CardFooter, CardHeader } from '@nextui-org/react';
+import { Text } from '@/shared/ui/components/typography';
 
 export const AccountDeliveriesMapStats: FunctionComponent = () => {
     return (
         <Card
             shadow="sm"
+            className="py-2"
             isPressable
             onPress={() => console.log('item pressed')}
         >
-            <CardBody className="overflow-visible p-0">
-                <Image
-                    shadow="sm"
-                    radius="lg"
-                    width="100%"
-                    alt="DeliveriesHistory"
-                    className="h-[140px] w-full object-cover"
-                    src="https://nextui.org/images/fruit-1.jpeg"
-                />
-            </CardBody>
+            <CardHeader>
+                <Text size="small">Статистика</Text>
+            </CardHeader>
+            <CardBody className="h-12 w-48" />
             <CardFooter className="justify-between text-small">
-                <b>Stats</b>
-                <p className="text-default-500">{2000}</p>
+                <Text size="small">{2000}</Text>
             </CardFooter>
         </Card>
     );

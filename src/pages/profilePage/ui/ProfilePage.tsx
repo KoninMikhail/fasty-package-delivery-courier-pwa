@@ -1,7 +1,10 @@
 import { sessionUi } from '@/entities/session';
-import { sharedConfigDetectDevice } from '@/shared/config';
-import { sharedConfigLocale } from '@/shared/config/locale';
-import { sharedConfigConstantsApp } from '@/shared/config/constants';
+import {
+    sharedConfigDetectDevice,
+    sharedConfigLocale,
+    sharedConfigConstants,
+} from '@/shared/config';
+
 import { useTranslation } from 'react-i18next';
 import { useDocumentTitle } from '@/shared/lib';
 import { DesktopProfilePageView, MobileProfilePageView } from './views';
@@ -11,7 +14,7 @@ import locale_ru from '../locales/ru.locale.json';
 
 const { useDeviceScreen } = sharedConfigDetectDevice;
 const { locale } = sharedConfigLocale;
-const { APP_NAME } = sharedConfigConstantsApp;
+const { APP_NAME } = sharedConfigConstants;
 
 /**
  * Components
