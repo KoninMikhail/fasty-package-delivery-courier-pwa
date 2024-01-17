@@ -45,11 +45,7 @@ export const DeliveryCardRowShort: FunctionComponent<
             </CardBody>
             <Divider />
             <CardFooter>
-                <Link
-                    isExternal
-                    showAnchorIcon
-                    href="https://github.com/nextui-org/nextui"
-                >
+                <Link href="https://github.com/nextui-org/nextui">
                     Visit source code on GitHub.
                 </Link>
             </CardFooter>

@@ -35,9 +35,7 @@ const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
 );
 
 const Header: FunctionComponent = () => (
-    <div className="flex-col px-2 lg:mx-auto lg:w-[1200px]">
-        <NavbarDesktop />
-    </div>
+    <div className="flex-col px-2 lg:mx-auto lg:w-[1200px]" />
 );
 
 export const DesktopRootPageView: FunctionComponent = () => {
