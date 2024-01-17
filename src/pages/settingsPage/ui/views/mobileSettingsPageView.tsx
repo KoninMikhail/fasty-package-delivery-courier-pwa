@@ -5,6 +5,7 @@ import { sharedUiLayouts } from '@/shared/ui';
 import { sessionUi } from '@/entities/session';
 import { SwitchThemeMode } from '@/features/system/switchThemeMode/ui';
 import { SwitchLanguage } from '@/features/system/switchAppLanguage/ui/SwitchLanguage';
+import { Divider } from '@nextui-org/react';
 
 const { Authorized, Guest } = sessionUi;
 const { NavbarMobile } = widgetNavbarMobileUi;
@@ -20,7 +21,7 @@ export const MobileSettingsPageView: FunctionComponent = () => {
     return (
         <>
             <MainContainer>
-                <Section title="Заказы">
+                <Section>
                     <div className="flex items-center gap-2">
                         <div className="flex-grow">Язык</div>
                         <div>
@@ -28,7 +29,18 @@ export const MobileSettingsPageView: FunctionComponent = () => {
                         </div>
                     </div>
                 </Section>
-                <Section title="Заказы">
+                <Divider />
+                соц сети
+                <Divider />
+                <Section>
+                    <div className="flex items-center gap-2">
+                        <div className="flex-grow">Язык</div>
+                        <div>
+                            <SwitchLanguage />
+                        </div>
+                    </div>
+                </Section>
+                <Section>
                     <div className="flex items-center gap-2">
                         <div className="flex-grow">Используемая тема</div>
                         <div>
@@ -36,8 +48,9 @@ export const MobileSettingsPageView: FunctionComponent = () => {
                         </div>
                     </div>
                 </Section>
-                <Section title="Заказы">Правовая информация</Section>
-                <Section title="Заказы">О приложении</Section>
+                <Divider />
+                <Section>Правовая информация</Section>
+                <Section>О приложении</Section>
             </MainContainer>
             <NavbarMobile />
         </>

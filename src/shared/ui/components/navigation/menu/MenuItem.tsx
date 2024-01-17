@@ -21,7 +21,9 @@ export const MenuItem: FunctionComponent<MenuItemProperties> = ({
     // Определение классов для элемента
     const outputClasslist = clsx(
         'px-4 py-1.5 text-xs font-light',
-        match ? 'text-black' : 'text-gray-400', // Условно добавляем 'text-black' если элемент активен
+        match
+            ? 'text-black dark:text-white'
+            : 'text-gray-500 dark:text-gray-800', // Условно добавляем 'text-black' если элемент активен
         {
             'flex items-center': !vertical,
             'flex flex-col items-center justify-center': vertical,
