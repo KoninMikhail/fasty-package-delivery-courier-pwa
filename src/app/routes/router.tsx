@@ -15,7 +15,8 @@ const { NotFoundPage } = notfoundPageUi;
 const { ProfilePage } = profilePageUi;
 const { SettingsPage } = settingsPageUi;
 
-const { ROOT_PAGE, PROFILE_PAGE, SETTINGS_PAGE } = RouteName;
+const { ROOT_PAGE, PROFILE_PAGE, SETTINGS_PAGE, DELIVERIES_HISTORY_PAGE } =
+    RouteName;
 
 const routes: sharedConfigRoutes.RouteDescription[] = [
     {
@@ -25,6 +26,10 @@ const routes: sharedConfigRoutes.RouteDescription[] = [
     {
         path: PROFILE_PAGE,
         component: ProfilePage,
+    },
+    {
+        path: DELIVERIES_HISTORY_PAGE,
+        component: SettingsPage,
     },
     {
         path: SETTINGS_PAGE,
