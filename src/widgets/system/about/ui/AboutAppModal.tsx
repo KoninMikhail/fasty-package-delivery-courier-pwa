@@ -28,10 +28,12 @@ locale.addResourceBundle('ru', translationNS, locale_ru);
 /**
  * Components
  */
-const CloseButton: FunctionComponent<ButtonProps> = (properties) => {
+const CloseButton: FunctionComponent<Pick<ButtonProps, 'onPress'>> = ({
+    onPress,
+}) => {
     const { t } = useTranslation(translationNS);
     return (
-        <Button fullWidth {...properties}>
+        <Button fullWidth onPress={onPress}>
             {t('about.ui.closeButton')}
         </Button>
     );
