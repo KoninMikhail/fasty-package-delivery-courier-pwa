@@ -7,11 +7,15 @@ import {
     DropdownTrigger,
 } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
+import { RiArrowDownSFill } from 'react-icons/ri';
+import { sharedUiComponents } from '@/shared/ui';
 import { translationNS } from '../config';
+
 import locale_en from '../locales/en.locale.json';
 import locale_ru from '../locales/ru.locale.json';
 
 const { locale } = sharedConfigLocale;
+const { Text } = sharedUiComponents;
 
 /**
  * locale
@@ -25,7 +29,7 @@ locale.addResourceBundle('ru', translationNS, locale_ru);
  */
 
 export const SwitchLanguage = (): JSX.Element => {
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation(translationNS);
     const onChangeLanguage = (code: string): void => {
         void i18n.changeLanguage(code);
     };
@@ -33,12 +37,13 @@ export const SwitchLanguage = (): JSX.Element => {
     return (
         <Dropdown>
             <DropdownTrigger>
-                <Button variant="flat" size="sm">
-                    {i18n.language}
+                <Button variant="light" size="md">
+                    {t('language_name')}
+                    <RiArrowDownSFill />
                 </Button>
             </DropdownTrigger>
             <DropdownMenu
-                variant="flat"
+                variant="faded"
                 aria-label="Dropdown menu with shortcut"
             >
                 <DropdownItem
@@ -46,14 +51,14 @@ export const SwitchLanguage = (): JSX.Element => {
                     shortcut="⌘N"
                     onPress={() => onChangeLanguage('en')}
                 >
-                    English
+                    <Text as="span">English</Text>
                 </DropdownItem>
                 <DropdownItem
                     key="copy"
                     shortcut="⌘C"
                     onPress={() => onChangeLanguage('ru')}
                 >
-                    Русский
+                    <Text as="span">Русский</Text>
                 </DropdownItem>
             </DropdownMenu>
         </Dropdown>
