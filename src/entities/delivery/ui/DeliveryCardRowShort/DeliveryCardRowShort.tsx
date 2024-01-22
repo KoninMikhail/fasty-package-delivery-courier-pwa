@@ -16,13 +16,14 @@ interface IDeliveryCardRowShortProperties {
     size?: 'large' | 'medium' | 'small';
     featureSlotTop?: ReactNode | ReactNode[];
     featureSlotBottom?: ReactNode | ReactNode[];
+    onPress?: () => void;
 }
 
 export const DeliveryCardRowShort: FunctionComponent<
     IDeliveryCardRowShortProperties
-> = ({ delivery, size, featureSlotTop, featureSlotBottom }) => {
+> = ({ delivery, size, featureSlotTop, featureSlotBottom, onPress }) => {
     return (
-        <Card className="max-w-[600px] shadow-md ">
+        <Card className="max-w-[600px] shadow-md " onPress={onPress}>
             <CardHeader className="flex gap-3">
                 <Image
                     alt="nextui logo"
