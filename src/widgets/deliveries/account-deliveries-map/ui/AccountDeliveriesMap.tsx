@@ -11,7 +11,9 @@ import {
     ModalHeader,
     useDisclosure,
 } from '@nextui-org/react';
-import { Text } from '@/shared/ui/components/typography';
+import { sharedUiComponents } from '@/shared/ui';
+
+const { Text } = sharedUiComponents;
 
 export const AccountDeliveriesMap: FunctionComponent = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();

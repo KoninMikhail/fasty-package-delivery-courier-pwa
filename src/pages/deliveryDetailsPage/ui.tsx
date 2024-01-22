@@ -3,11 +3,9 @@ import { sessionUi } from '@/entities/session';
 import { NavbarMobile } from '@/widgets/layout/navbar-mobile/ui/ui';
 import { useDocumentTitle } from '@/shared/lib';
 import type { PropsWithChildren } from 'react';
-import { deliveryUi } from '@/entities/delivery';
 import { mapUi } from '@/entities/map';
 
 const { Authorized } = sessionUi;
-const { DeliveryDetailsCard } = deliveryUi;
 const { SingleLocationMap } = mapUi;
 
 const PAGE_HEADING = 'Детали доставки';
@@ -42,9 +40,7 @@ export const DeliveryDetailsPage: FunctionComponent = () => {
             <Hero>
                 <SingleLocationMap />
             </Hero>
-            <Content>
-                <DeliveryDetailsCard />
-            </Content>
+            <Content>sds</Content>
             <div className="fixed bottom-0 left-0 right-0 z-30 w-full rounded-t-3xl bg-white shadow-2xl ring-default">
                 <NavbarMobile />
             </div>
