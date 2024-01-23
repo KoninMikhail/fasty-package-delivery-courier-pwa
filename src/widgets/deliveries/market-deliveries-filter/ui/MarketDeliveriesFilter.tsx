@@ -1,6 +1,9 @@
 import { PropsWithChildren } from 'react';
 import { HorizontalScroll } from '@/shared/ui/layouts';
 import { Chip } from '@nextui-org/react';
+import { sharedUiComponents } from '@/shared/ui';
+
+const { HorizontalDatePicker } = sharedUiComponents;
 
 const Root: FunctionComponent<PropsWithChildren> = ({ children }) => (
     <div className="relative grid grid-cols-1 gap-2">{children}</div>
@@ -11,19 +14,14 @@ const Root: FunctionComponent<PropsWithChildren> = ({ children }) => (
  * @constructor
  */
 export const MarketDeliveriesFilter: FunctionComponent = () => {
+    const onChangeDate = (): void => {
+        alert('work');
+    };
+
     return (
         <Root>
             <HorizontalScroll>
-                <div className="flex gap-4 px-4">
-                    <div>MarketDeliveriesFilter</div>
-                    <div>MarketDeliveriesFilter</div>
-                    <div>MarketDeliveriesFilter</div>
-                    <div>MarketDeliveriesFilter</div>
-                    <div>MarketDeliveriesFilter</div>
-                    <div>MarketDeliveriesFilter</div>
-                    <div>MarketDeliveriesFilter</div>
-                    <div>MarketDeliveriesFilter</div>
-                </div>
+                <HorizontalDatePicker />
             </HorizontalScroll>
             <HorizontalScroll>
                 <div className="flex gap-2 px-4">
