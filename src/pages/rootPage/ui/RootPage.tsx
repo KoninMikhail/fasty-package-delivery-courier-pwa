@@ -40,5 +40,13 @@ export const RootPage: FunctionComponent = () => {
 
     useDocumentTitle(pageTitle);
 
-    return isDesktop ? <DesktopRootPageView /> : <MobileRootPageView />;
+    return isDesktop ? (
+        <Authorized>
+            <DesktopRootPageView />
+        </Authorized>
+    ) : (
+        <Authorized>
+            <MobileRootPageView />
+        </Authorized>
+    );
 };
