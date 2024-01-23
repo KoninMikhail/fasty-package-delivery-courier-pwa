@@ -7,6 +7,8 @@ import { sessionUi } from '@/entities/session';
 import { sharedUiComponents } from '@/shared/ui';
 import { widgetAccountDataEditorUi } from '@/widgets/account/account-data-editor';
 import { Spacer } from '@nextui-org/react';
+import { useTranslation } from 'react-i18next';
+import { translationNS } from '../../config';
 
 const { Heading, Text, NativeScroll } = sharedUiComponents;
 const { Authorized, Guest } = sessionUi;
@@ -56,6 +58,7 @@ const Header: FunctionComponent = () => (
 );
 
 export const MobileRootPageView: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
     return (
         <>
             <Header />
@@ -64,7 +67,7 @@ export const MobileRootPageView: FunctionComponent = () => {
                 <Authorized>
                     <Section padding="none">
                         <Heading size="large" weight="bold" className="pl-4">
-                            Активные доставки
+                            {t('upcoming_deliveries')}
                         </Heading>
                         <NativeScroll direction="horizontal">
                             <div className="px-4">
@@ -75,7 +78,7 @@ export const MobileRootPageView: FunctionComponent = () => {
                     <Spacer y={4} />
                     <Section padding="default">
                         <Heading size="large" weight="bold">
-                            Доступные доставки
+                            {t('market')}
                         </Heading>
                         <DeliveriesMarket />
                     </Section>

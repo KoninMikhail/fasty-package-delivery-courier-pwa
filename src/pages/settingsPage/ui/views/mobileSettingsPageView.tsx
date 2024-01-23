@@ -9,6 +9,8 @@ import { SlSocialVkontakte } from 'react-icons/sl';
 import { IoLogoYoutube } from 'react-icons/io';
 import { widgetLegalUi } from '@/widgets/system/legal';
 import { widgetAboutAppUi } from '@/widgets/system/about';
+import { useTranslation } from 'react-i18next';
+import { translationNS } from '../../config';
 
 const { Section } = sharedUiLayouts;
 const { NavbarMobile } = widgetNavbarMobileUi;
@@ -29,6 +31,7 @@ const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
  * @constructor
  */
 export const MobileSettingsPageView: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
     return (
         <>
             <MainContainer>
@@ -72,7 +75,7 @@ export const MobileSettingsPageView: FunctionComponent = () => {
                 <Spacer />
                 <Section>
                     <div className="flex items-center gap-2">
-                        <div className="flex-grow">Язык</div>
+                        <div className="flex-grow">{t('language.title')}</div>
                         <div>
                             <SwitchLanguage />
                         </div>
@@ -80,7 +83,7 @@ export const MobileSettingsPageView: FunctionComponent = () => {
                 </Section>
                 <Section>
                     <div className="flex items-center gap-2">
-                        <div className="flex-grow">Используемая тема</div>
+                        <div className="flex-grow">{t('theme.title')}</div>
                         <div>
                             <SwitchThemeMode />
                         </div>
