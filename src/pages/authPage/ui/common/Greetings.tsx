@@ -22,9 +22,7 @@ export const Greetings: FunctionComponent<{
 
     return (
         <div className={`relative ${alignClass}`}>
-            <Text size="large" weight="bold">
-                {heading}
-            </Text>
+            <h1>{heading}</h1>
             <Spacer y={1} />
             <Text as="span" size="small">
                 {description}

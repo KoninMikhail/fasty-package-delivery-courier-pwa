@@ -46,6 +46,7 @@
 		"react-router-dom": "6.21.3",
 		"remark-breaks": "^4.0.0",
 		"ua-parser-js": "^1.0.37",
+		"usehooks-ts": "^2.9.5",
 		"vite-plugin-package-version": "^1.1.0",
 		"zod": "^3.22.4"
 	},

@@ -1,7 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
 import { sessionUi } from '@/entities/session';
 import { NavbarMobile } from '@/widgets/layout/navbar-mobile/ui/ui';
-import { useDocumentTitle } from '@/shared/lib';
+import { useDocumentTitle } from 'usehooks-ts';
 import type { PropsWithChildren } from 'react';
 import { mapUi } from '@/entities/map';
 

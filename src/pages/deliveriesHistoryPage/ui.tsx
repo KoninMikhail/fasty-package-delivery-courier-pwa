@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useDocumentTitle } from '@/shared/lib';
+import { useDocumentTitle } from 'usehooks-ts';
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { sessionUi } from '@/entities/session';
 

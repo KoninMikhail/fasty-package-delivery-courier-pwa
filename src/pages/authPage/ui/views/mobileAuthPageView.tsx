@@ -15,7 +15,9 @@ import {
 } from '@nextui-org/react';
 import { sharedUiComponents } from '@/shared/ui';
 import { ImKey } from 'react-icons/im';
+import { AuthByEmail } from '@/features/auth/authByEmail';
 import { Greetings } from '../common';
+import { authUserByEmailModel } from '../../model';
 
 const { Heading, Text } = sharedUiComponents;
 
@@ -104,27 +106,10 @@ const LoginModal: FunctionComponent<Omit<ModalProps, 'children'>> = ({
                             Log in
                         </ModalHeader>
                         <ModalBody>
-                            <Input
-                                label="Email"
-                                placeholder="Enter your email"
-                                variant="flat"
-                            />
-                            <Input
-                                label="Password"
-                                placeholder="Enter your password"
-                                type="password"
-                                variant="flat"
-                            />
+                            <AuthByEmail.Form model={authUserByEmailModel} />
                         </ModalBody>
                         <ModalFooter>
                             <div>
-                                <Button
-                                    color="primary"
-                                    fullWidth
-                                    onPress={onClose}
-                                >
-                                    Авторизоваться
-                                </Button>
                                 <Spacer y={8} />
                                 <Text size="small">
                                     Пролождая авторацию вы соглашаетесь с

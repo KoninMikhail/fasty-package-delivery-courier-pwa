@@ -6,7 +6,7 @@ import {
 } from '@/shared/config';
 
 import { useTranslation } from 'react-i18next';
-import { useDocumentTitle } from '@/shared/lib';
+import { useDocumentTitle } from 'usehooks-ts';
 import { DesktopRootPageView, MobileRootPageView } from './views';
 import { translationNS } from '../config';
 import locale_en from '../locales/en.locale.json';
