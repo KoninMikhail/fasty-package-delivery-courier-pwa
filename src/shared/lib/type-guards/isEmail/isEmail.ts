@@ -2,7 +2,7 @@ import {z} from 'zod';
 
 const email = z.string().email();
 
-type Email = z.infer<typeof email & { kind: Email}>;
+export type Email = z.infer<typeof email & { kind: Email}>;
 
 /**
  * @name isEmail
