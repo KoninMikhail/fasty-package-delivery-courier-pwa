@@ -1,7 +1,6 @@
-import { PropsWithChildren, useState } from 'react';
+import { PropsWithChildren } from 'react';
 import {
     Button,
-    Image,
     Input,
     Modal,
     ModalBody,
@@ -10,115 +9,206 @@ import {
     ModalHeader,
     Spacer,
     useDisclosure,
+    Image,
+    ModalProps,
+    Link,
 } from '@nextui-org/react';
-
-import { widgetInProgressDeliveriesUi } from '@/widgets/deliveries/in-progress-deliveries';
-import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
-import { widgetDeliveriesMarketUi } from '@/widgets/deliveries/deliveres-market';
-import { sessionUi } from '@/entities/session';
 import { sharedUiComponents } from '@/shared/ui';
-import { widgetAccountDataEditorUi } from '@/widgets/account/account-data-editor';
+import { ImKey } from 'react-icons/im';
+import { Greetings } from '../common';
 
-const { Heading, Text, NativeScroll } = sharedUiComponents;
-const { Authorized, Guest } = sessionUi;
-const { InProgressDeliveriesSlider } = widgetInProgressDeliveriesUi;
-const { DeliveriesMarket } = widgetDeliveriesMarketUi;
-const { NavbarMobile } = widgetNavbarMobileUi;
-const { AccountDataEditor } = widgetAccountDataEditorUi;
+const { Heading, Text } = sharedUiComponents;
 
-const Container: FunctionComponent<PropsWithChildren> = ({ children }) => (
-    <div className="flex h-dvh w-full flex-col place-content-end">
-        {children}
+const Layout: FunctionComponent<PropsWithChildren> = ({ children }) => (
+    <div className="h-dvh w-full">
+        <div className="absolute inset-0 h-full w-full bg-[url('/assets/images/auth_bg.jpg')] bg-cover bg-[left_-10rem_top] md:bg-center">
+            <div className="absolute bottom-0 h-1/2 w-full bg-gradient-to-t from-background from-45% to-transparent" />
+            <div className="grid h-full w-full grid-cols-1 grid-rows-[auto_max-content]">
+                {children}
+            </div>
+        </div>
     </div>
 );
+const Section: FunctionComponent<PropsWithChildren> = ({ children }) => (
+    <div className="relative mx-auto w-full max-w-[400px] p-4">{children}</div>
+);
 
-export const MobileAuthPageView: FunctionComponent = () => {
-    const [isFormVisible, setIsFormVisible] = useState(false);
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+/**
+ * Components
+ */
+const LoginToAccountButton: FunctionComponent<{
+    label: string;
+    onPress: () => void;
+}> = ({ label, onPress }) => (
+    <Button color="primary" fullWidth size="lg" radius="full" onPress={onPress}>
+        <ImKey /> {label}
+    </Button>
+);
+const ResetPasswordButton: FunctionComponent<{
+    label: string;
+    onPress: () => void;
+}> = ({ label, onPress }) => (
+    <Button fullWidth size="lg" radius="full" onPress={onPress}>
+        {label}
+    </Button>
+);
 
-    const onLoginClick = () => {
-        onOpen();
-    };
-
+const ResetPasswordModal: FunctionComponent<Omit<ModalProps, 'children'>> = ({
+    isOpen,
+    onOpenChange,
+}) => {
     return (
-        <>
-            <Container>
-                <div className="p-4 text-center ">
-                    <div className="flex items-center">
-                        <Image
-                            alt="NextUI hero Image with delay"
-                            src="/icons/logo.png"
-                            className="h-full w-full object-cover"
-                            radius="none"
-                        />
-                    </div>
-                    <Spacer y={12} />
-                    <div className="relative">
-                        <Heading size="large" weight="bold">
-                            Войдите в профиль
-                        </Heading>
-                        <Spacer y={1} />
-                        <Text as="span" size="small">
-                            Чтобы начать работу <br /> и получать новые доставки
-                        </Text>
-                    </div>
-                    <Spacer y={8} />
-                    <div className="relative">
-                        <Button
-                            color="primary"
-                            fullWidth
-                            size="lg"
-                            radius="full"
-                            onPress={onLoginClick}
-                        >
-                            Войти
-                        </Button>
-                        <Spacer y={4} />
-                        <Button
-                            variant="light"
-                            fullWidth
-                            radius="full"
-                            onPress={onLoginClick}
-                        >
-                            Забыли пароль?
-                        </Button>
-                        <Spacer y={4} />
-                    </div>
-                </div>
-            </Container>
-            <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="auto">
-                <ModalContent>
-                    {(onClose) => (
-                        <>
-                            <ModalHeader className="flex flex-col gap-1">
-                                Log in
-                            </ModalHeader>
-                            <ModalBody>
-                                <Input
-                                    label="Email"
-                                    placeholder="Enter your email"
-                                    variant="bordered"
-                                />
-                                <Input
-                                    label="Password"
-                                    placeholder="Enter your password"
-                                    type="password"
-                                    variant="bordered"
-                                />
-                            </ModalBody>
-                            <ModalFooter>
+        <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="auto">
+            <ModalContent>
+                {(onClose) => (
+                    <>
+                        <ModalHeader className="flex flex-col gap-1">
+                            Сброс пароля
+                        </ModalHeader>
+                        <ModalBody>
+                            <Input
+                                label="Email"
+                                placeholder="Enter your email"
+                                variant="flat"
+                            />
+                        </ModalBody>
+                        <ModalFooter>
+                            <div className="w-full">
                                 <Button
                                     color="primary"
                                     fullWidth
                                     onPress={onClose}
                                 >
-                                    Sign in
+                                    Сброс пароля
                                 </Button>
-                            </ModalFooter>
-                        </>
-                    )}
-                </ModalContent>
-            </Modal>
+                                <Spacer y={8} />
+                            </div>
+                        </ModalFooter>
+                    </>
+                )}
+            </ModalContent>
+        </Modal>
+    );
+};
+
+const LoginModal: FunctionComponent<Omit<ModalProps, 'children'>> = ({
+    isOpen,
+    onOpenChange,
+}) => {
+    return (
+        <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="auto">
+            <ModalContent>
+                {(onClose) => (
+                    <>
+                        <ModalHeader className="flex flex-col gap-1">
+                            Log in
+                        </ModalHeader>
+                        <ModalBody>
+                            <Input
+                                label="Email"
+                                placeholder="Enter your email"
+                                variant="flat"
+                            />
+                            <Input
+                                label="Password"
+                                placeholder="Enter your password"
+                                type="password"
+                                variant="flat"
+                            />
+                        </ModalBody>
+                        <ModalFooter>
+                            <div>
+                                <Button
+                                    color="primary"
+                                    fullWidth
+                                    onPress={onClose}
+                                >
+                                    Авторизоваться
+                                </Button>
+                                <Spacer y={8} />
+                                <Text size="small">
+                                    Пролождая авторацию вы соглашаетесь с
+                                    <Link size="sm">
+                                        политикой конфиденциальности
+                                    </Link>
+                                    ,
+                                    <Link size="sm">
+                                        условиями использования
+                                    </Link>{' '}
+                                    и<Link size="sm">политикой cookie</Link>
+                                </Text>
+                                <Spacer y={2} />
+                            </div>
+                        </ModalFooter>
+                    </>
+                )}
+            </ModalContent>
+        </Modal>
+    );
+};
+
+/**
+ * @name MobileAuthPageView
+ * @constructor
+ */
+export const MobileAuthPageView: FunctionComponent = () => {
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+    const {
+        isOpen: isOpenForgot,
+        onOpen: onOpenForgot,
+        onOpenChange: onOpenChangeForgot,
+    } = useDisclosure();
+
+    const onPressLogin = (): void => {
+        onOpen();
+    };
+
+    const onPressResetPassword = (): void => {
+        onOpenForgot();
+    };
+
+    return (
+        <>
+            <Layout>
+                <Section>
+                    <div className="flex place-content-start items-center gap-2">
+                        <Image
+                            width={60}
+                            alt="NextUI hero Image"
+                            src="https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
+                        />
+                        <div>
+                            <Text weight="bold">Fasty</Text>
+                            <Text as="span" size="small">
+                                Business app for couriers
+                            </Text>
+                        </div>
+                    </div>
+                </Section>
+                <Section>
+                    <Greetings
+                        heading="Добро пожаловать"
+                        description="Войдите в свой профиль для того чтобы начать работу и получать новые доставки"
+                    />
+                    <Spacer y={8} />
+                    <LoginToAccountButton
+                        label="Войти в аккаунт"
+                        onPress={onPressLogin}
+                    />
+                    <Spacer y={2} />
+                    <ResetPasswordButton
+                        label="Восстановить пароль"
+                        onPress={onPressResetPassword}
+                    />
+                    <Spacer y={1} />
+                </Section>
+            </Layout>
+            <LoginModal isOpen={isOpen} onOpenChange={onOpenChange} />
+            <ResetPasswordModal
+                isOpen={isOpenForgot}
+                onOpenChange={onOpenChangeForgot}
+            />
         </>
     );
 };
