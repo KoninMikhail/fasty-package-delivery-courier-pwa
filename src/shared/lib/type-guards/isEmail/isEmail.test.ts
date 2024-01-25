@@ -1,6 +1,6 @@
 // isEmail.test.ts
 import { it, expect, describe } from 'vitest';
-import { isEmail } from './isEmail'; // Change this to the path where your isEmail function is located
+import isEmail from './isEmail'; // Change this to the path where your isEmail function is located
 
 describe('isEmail', () => {
   it('should return true for a valid email', () => {

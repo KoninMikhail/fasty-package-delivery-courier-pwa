@@ -27,7 +27,6 @@ locale.addResourceBundle('ru', translationNS, locale_ru);
  * @name SwitchLanguage
  * @constructor
  */
-
 export const SwitchLanguage = (): JSX.Element => {
     const { t, i18n } = useTranslation(translationNS);
     const onChangeLanguage = (code: string): void => {
