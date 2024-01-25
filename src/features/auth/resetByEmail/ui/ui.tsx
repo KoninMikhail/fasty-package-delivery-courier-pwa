@@ -5,6 +5,8 @@ import { Button, ButtonProps, Input } from '@nextui-org/react';
 import { modelView } from 'effector-factorio';
 import { useTranslation } from 'react-i18next';
 import { sharedConfigLocale } from '@/shared/config';
+import { useEffectOnce } from 'usehooks-ts';
+import { data } from 'autoprefixer';
 import { factory } from '../model';
 
 import { translationNS } from '../config';
@@ -27,6 +29,7 @@ const EmailField: FunctionComponent<
 > = ({ label, placeholder }) => {
     const model = factory.useModel();
     const email = useUnit(model.$login);
+    const pending = useUnit(model.$pending);
 
     /**
      * Handlers
@@ -43,6 +46,7 @@ const EmailField: FunctionComponent<
     return (
         <Input
             isClearable
+            isDisabled={pending}
             label={label}
             placeholder={placeholder}
             variant="flat"
@@ -58,7 +62,7 @@ const SendResetRequestButton: FunctionComponent<
 > = ({ children, ...rest }) => {
     const model = factory.useModel();
     const pending = useUnit(model.$pending);
-    const errors = true;
+    const allowedSend = useUnit(model.$allowedSend);
 
     const onPressButtonHandler = (): void => {
         model.submitPressed();
@@ -66,7 +70,7 @@ const SendResetRequestButton: FunctionComponent<
 
     return (
         <Button
-            isDisabled={errors}
+            isDisabled={!allowedSend}
             color="primary"
             isLoading={pending}
             onPress={onPressButtonHandler}
@@ -79,6 +83,11 @@ const SendResetRequestButton: FunctionComponent<
 
 export const Form = modelView(factory, () => {
     const { t } = useTranslation(translationNS);
+    const model = factory.useModel();
+
+    useEffectOnce(() => {
+        console.log('Triggered only once, on mount', { data });
+    });
 
     return (
         <form className="flex flex-col gap-4">

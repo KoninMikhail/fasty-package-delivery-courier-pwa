@@ -46,6 +46,8 @@ const EmailField: FunctionComponent<
     return (
         <Input
             isClearable
+            isInvalid
+            errorMessage="Please enter a valid email"
             label={label}
             placeholder={placeholder}
             variant="flat"
@@ -82,6 +84,8 @@ const PasswordField: FunctionComponent<
             label={label}
             placeholder={placeholder}
             variant="flat"
+            isInvalid
+            errorMessage="Please enter a valid email"
             value={password}
             endContent={
                 <button

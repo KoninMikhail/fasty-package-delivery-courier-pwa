@@ -25,8 +25,9 @@ import locale_en from '../locales/en.locale.json';
 
 const { locale } = sharedConfigLocale;
 const { APP_NAME } = sharedConfigConstants;
-const { AuthUserModal } = widgetAuthUserModalUi;
+const { AuthUserByEmailModal } = widgetAuthUserModalUi;
 const { ResetPasswordModal } = widgetResetUserPasswordModalUi;
+
 /**
  * locale
  */
@@ -37,7 +38,7 @@ locale.addResourceBundle('ru', translationNS, locale_ru);
  * Layout
  */
 const Layout: FunctionComponent<PropsWithChildren> = ({ children }) => (
-    <div className="h-dvh w-full">
+    <div className="h-dvh w-screen">
         <div className="absolute inset-0 h-full w-full bg-[url('/assets/images/auth_bg.jpg')] bg-cover bg-[left_-10rem_top] md:bg-center">
             <div className="absolute bottom-0 h-1/2 w-full bg-gradient-to-t from-background from-45% to-transparent" />
             <div className="grid h-full w-full grid-cols-1 grid-rows-[auto_max-content]">
@@ -115,7 +116,7 @@ export const AuthPage: FunctionComponent = () => {
     /**
      * Page
      */
-    const pageTitle = `${t('page_title')} | ${APP_NAME}`;
+    const pageTitle = `${t('page_title')} | ${APP_NAME} - `;
     useDocumentTitle(pageTitle);
 
     /*
@@ -125,6 +126,7 @@ export const AuthPage: FunctionComponent = () => {
     const [callResetModal] = useUnit([
         widgetResetUserPasswordModalModel.callResetModal,
     ]);
+
     /**
      * Handlers
      */
@@ -170,7 +172,7 @@ export const AuthPage: FunctionComponent = () => {
                     <Spacer y={1} />
                 </Section>
             </Layout>
-            <AuthUserModal />
+            <AuthUserByEmailModal />
             <ResetPasswordModal />
         </>
     );

@@ -1,4 +1,5 @@
-import { createEvent, createStore, sample } from 'effector';
+import { createEffect, createEvent, createStore, sample } from 'effector';
+import { AuthByEmail } from '@/features/auth/authByEmail';
 
 /**
  * Global
@@ -18,4 +19,14 @@ export const $isAuthUserModalOpened = createStore<boolean>(false)
 sample({
     clock: callAuthModal,
     target: setModalOpened,
+});
+
+/**
+ * Auth form
+ */
+
+const authUserFx = createEffect((data) => console.log(data));
+
+export const authUserByEmailModel = AuthByEmail.factory.createModel({
+    registerFx: authUserFx,
 });

@@ -8,11 +8,14 @@ import {
     Spacer,
 } from '@nextui-org/react';
 import { AuthByEmail } from '@/features/auth/authByEmail';
-import { authUserByEmailModel } from '@/pages/authPage/model';
 import { sharedConfigRoutes, sharedConfigLocale } from '@/shared/config';
 import { useTranslation } from 'react-i18next';
 import { useUnit } from 'effector-react';
-import { $isAuthUserModalOpened, setModalClosed } from '../model';
+import {
+    $isAuthUserModalOpened,
+    authUserByEmailModel,
+    setModalClosed,
+} from '../model';
 
 import { translationNS } from '../config';
 import locale_ru from '../locales/ru.locale.json';
@@ -36,7 +39,7 @@ locale.addResourceBundle('ru', translationNS, locale_ru);
  * @param onOpenChange
  * @constructor
  */
-export const AuthUserModal: FunctionComponent = () => {
+export const AuthUserByEmailModal: FunctionComponent = () => {
     const [isOpened, setClosed] = useUnit([
         $isAuthUserModalOpened,
         setModalClosed,

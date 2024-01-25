@@ -1,1 +1,1 @@
-export * from './AuthUserModal';
+export * from './AuthUserByEmailModal';
