@@ -1,7 +1,9 @@
 {
-  "email": "Email",
-  "email_placeholder": "Введите email",
-  "password": "Пароль",
-  "password_placeholder": "Введите пароль",
-  "sign_in": "Авторизоваться"
+  "email.label": "Email",
+  "email.placeholder": "Введите email",
+  "password.label": "Пароль",
+  "password.placeholder": "Введите пароль",
+  "password.validation.rules": "Минимальна длина 8 символов, буквы, цифры и спецсимволы.",
+  "error.validation": "Проверьте правильность ввода данных",
+  "signIn": "Войти в аккаунт"
 }

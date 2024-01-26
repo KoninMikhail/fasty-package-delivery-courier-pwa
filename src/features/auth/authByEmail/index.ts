@@ -1,5 +1,5 @@
-import { Form } from './ui/ui';
-import { factory } from './model/model';
+import { Form } from './ui';
+import { factory } from './model';
 
 export const AuthByEmail = {
     factory,

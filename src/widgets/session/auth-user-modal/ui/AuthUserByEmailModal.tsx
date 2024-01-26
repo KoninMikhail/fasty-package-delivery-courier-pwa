@@ -65,28 +65,16 @@ export const AuthUserByEmailModal: FunctionComponent = () => {
                         <span>
                             {t('modal.acceptance')}
                             {' : '}
-                            <Link
-                                size="sm"
-                                isExternal
-                                href={PRIVACY_POLICY_PAGE}
-                            >
+                            <Link size="sm" href={PRIVACY_POLICY_PAGE}>
                                 {t('modal.acceptance.privacy')}
                             </Link>
                             {', '}
-                            <Link
-                                size="sm"
-                                isExternal
-                                href={TERMS_OF_SERVICE_PAGE}
-                            >
+                            <Link size="sm" href={TERMS_OF_SERVICE_PAGE}>
                                 {t('modal.acceptance.terms')}
                             </Link>
                             {', '}
 
-                            <Link
-                                size="sm"
-                                isExternal
-                                href={COOKIES_POLICY_PAGE}
-                            >
+                            <Link size="sm" href={COOKIES_POLICY_PAGE}>
                                 {t('modal.acceptance.cookies')}
                             </Link>
                         </span>

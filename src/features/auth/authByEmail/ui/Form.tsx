@@ -2,9 +2,8 @@ import { useUnit } from 'effector-react';
 import { modelView } from 'effector-factorio';
 
 import { ChangeEvent, useState } from 'react';
-import { Button, ButtonProps, Input } from '@nextui-org/react';
+import { Button, Input } from '@nextui-org/react';
 import { sharedConfigLocale } from '@/shared/config';
-import { InputProps } from '@nextui-org/input/dist/input';
 import { useTranslation } from 'react-i18next';
 import { sharedUiIcons } from '@/shared/ui';
 import { factory } from '../model/model';
@@ -17,6 +16,16 @@ const { locale } = sharedConfigLocale;
 const { EyeSlashFilledIcon, EyeFilledIcon } = sharedUiIcons;
 
 /**
+ * Constants
+ */
+const EMAIL_LABEL_TEXT_KEY = 'email.label';
+const EMAIL_PLACEHOLDER_TEXT_KEY = 'email.placeholder';
+const PASSWORD_LABEL_TEXT_KEY = 'password.label';
+const PASSWORD_PLACEHOLDER_TEXT_KEY = 'password.placeholder';
+const PASSWORD_VALIDATION_RULES_TEXT_KEY = 'password.validation.rules';
+const SIGN_IN_TEXT_KEY = 'signIn';
+
+/**
  * locale
  */
 locale.addResourceBundle('en', translationNS, locale_en);
@@ -25,11 +34,19 @@ locale.addResourceBundle('ru', translationNS, locale_ru);
 /**
  * Components
  */
-const EmailField: FunctionComponent<
-    Pick<InputProps, 'label' | 'placeholder'>
-> = ({ label, placeholder }) => {
+const EmailField: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
     const model = factory.useModel();
-    const email = useUnit(model.$login);
+
+    const value = useUnit(model.$login);
+
+    /**
+     * Error
+     */
+    const [isInvalid, errorMessage] = useUnit([
+        model.$fail,
+        model.$failMessage,
+    ]);
 
     /**
      * Handlers
@@ -45,24 +62,33 @@ const EmailField: FunctionComponent<
 
     return (
         <Input
+            isRequired
             isClearable
-            isInvalid
-            errorMessage="Please enter a valid email"
-            label={label}
-            placeholder={placeholder}
+            isInvalid={isInvalid}
+            errorMessage={t(errorMessage)}
+            label={t(EMAIL_LABEL_TEXT_KEY)}
+            placeholder={t(EMAIL_PLACEHOLDER_TEXT_KEY)}
             variant="flat"
-            value={email}
+            value={value}
             onChange={onStateChangeHandler}
             onClear={onClearHandler}
         />
     );
 };
 
-const PasswordField: FunctionComponent<
-    Pick<InputProps, 'label' | 'placeholder'>
-> = ({ label, placeholder }) => {
+const PasswordField: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
     const model = factory.useModel();
-    const password = useUnit(model.$password);
+
+    const value = useUnit(model.$password);
+
+    /**
+     * Error
+     */
+    const [isInvalid, errorMessage] = useUnit([
+        model.$fail,
+        model.$failMessage,
+    ]);
 
     /**
      * Handlers
@@ -81,12 +107,15 @@ const PasswordField: FunctionComponent<
 
     return (
         <Input
-            label={label}
-            placeholder={placeholder}
+            isRequired
+            type={isVisible ? 'text' : 'password'}
             variant="flat"
-            isInvalid
-            errorMessage="Please enter a valid email"
-            value={password}
+            isInvalid={isInvalid}
+            errorMessage={t(errorMessage)}
+            value={value}
+            label={t(PASSWORD_LABEL_TEXT_KEY)}
+            placeholder={t(PASSWORD_PLACEHOLDER_TEXT_KEY)}
+            description={t(PASSWORD_VALIDATION_RULES_TEXT_KEY)}
             endContent={
                 <button
                     className="focus:outline-none"
@@ -100,19 +129,16 @@ const PasswordField: FunctionComponent<
                     )}
                 </button>
             }
-            type={isVisible ? 'text' : 'password'}
             onChange={onStateChangeHandler}
         />
     );
 };
-
-const SignInButton: FunctionComponent<Omit<ButtonProps, 'isLoading'>> = ({
-    children,
-    ...rest
-}) => {
+const SignInButton: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
     const model = factory.useModel();
+
     const pending = useUnit(model.$pending);
-    const errors = true;
+    const allowSignIn = useUnit(model.$allowSubmit);
 
     const onPressButtonHandler = (): void => {
         model.submitPressed();
@@ -120,34 +146,23 @@ const SignInButton: FunctionComponent<Omit<ButtonProps, 'isLoading'>> = ({
 
     return (
         <Button
-            isDisabled={errors}
+            isDisabled={!allowSignIn}
             color="primary"
             isLoading={pending}
             onPress={onPressButtonHandler}
-            {...rest}
         >
-            {children}
+            {t(SIGN_IN_TEXT_KEY)}
         </Button>
     );
 };
 
 /**
- * Form
+ * View
  */
-export const Form = modelView(factory, () => {
-    const { t } = useTranslation(translationNS);
-
-    return (
-        <form className="flex flex-col gap-4">
-            <EmailField
-                label={t('email')}
-                placeholder={t('email_placeholder')}
-            />
-            <PasswordField
-                label={t('password')}
-                placeholder={t('password_placeholder')}
-            />
-            <SignInButton>{t('sign_in')}</SignInButton>
-        </form>
-    );
-});
+export const Form = modelView(factory, () => (
+    <form className="flex flex-col gap-4">
+        <EmailField />
+        <PasswordField />
+        <SignInButton />
+    </form>
+));

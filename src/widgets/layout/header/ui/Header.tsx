@@ -55,11 +55,7 @@ export const Header: FunctionComponent = () => {
                 <User
                     name="Junior Garcia"
                     description={
-                        <Link
-                            href="https://twitter.com/jrgarciadev"
-                            size="sm"
-                            isExternal
-                        >
+                        <Link href="https://twitter.com/jrgarciadev" size="sm">
                             @jrgarciadev
                         </Link>
                     }

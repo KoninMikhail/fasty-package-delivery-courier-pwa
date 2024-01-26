@@ -1,7 +1,9 @@
 {
-  "email": "Email",
-  "email_placeholder": "Enter your email",
-  "password": "Password",
-  "password_placeholder": "Enter your password",
-  "sign_in": "Sign In"
+  "email.label": "Email",
+  "email.placeholder": "Enter your email",
+  "password.label": "Password",
+  "password.placeholder": "Enter your password",
+  "password.validation.rules": "Minimum 8 characters, letters, numbers and special characters.",
+  "error.validation": "Please check your data and try again.",
+  "signIn": "Sign In"
 }

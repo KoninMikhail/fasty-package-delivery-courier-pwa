@@ -11,6 +11,7 @@ import {
 } from '@nextui-org/react';
 import { sharedConfigLocale } from '@/shared/config';
 import { sharedUiComponents } from '@/shared/ui';
+import { sharedAssetsDocs } from '@/shared/assets';
 
 import locale_en from '../locales/en.locale.json';
 import locale_ru from '../locales/ru.locale.json';
@@ -18,8 +19,7 @@ import locale_ru from '../locales/ru.locale.json';
 import { translationNS } from '../config';
 import { getContentForLocale } from '../lib';
 
-import enTermsOfUse from '../assets/en.terms.md?raw';
-import ruTermsOfUse from '../assets/ru.terms.md?raw';
+const { enTermsOfUse, ruTermsOfUse } = sharedAssetsDocs;
 
 const { locale } = sharedConfigLocale;
 const { Markdown } = sharedUiComponents;

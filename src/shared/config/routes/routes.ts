@@ -8,9 +8,9 @@ export enum RouteName {
     DELIVERIES_MAP_PAGE = '/deliveries/map',
     PROFILE_PAGE = '/profile',
     SETTINGS_PAGE = '/settings',
-    PRIVACY_POLICY_PAGE = '/privacy-policy',
-    TERMS_OF_SERVICE_PAGE = '/terms-of-service',
-    COOKIES_POLICY_PAGE = '/cookies-policy',
+    PRIVACY_POLICY_PAGE = '/docs/privacy-policy',
+    TERMS_OF_SERVICE_PAGE = '/docs/terms-of-service',
+    COOKIES_POLICY_PAGE = '/docs/cookies-policy',
 }
 
 export interface RouteDescription {

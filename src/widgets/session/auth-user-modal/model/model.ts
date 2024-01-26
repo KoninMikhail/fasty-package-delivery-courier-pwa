@@ -25,7 +25,13 @@ sample({
  * Auth form
  */
 
-const authUserFx = createEffect((data) => console.log(data));
+const authUserFx = createEffect(async (data) => {
+    await new Promise((resolve) => {
+        setTimeout(resolve, 1000);
+    });
+    console.log(data);
+    throw new Error('error.validation');
+});
 
 export const authUserByEmailModel = AuthByEmail.factory.createModel({
     registerFx: authUserFx,
