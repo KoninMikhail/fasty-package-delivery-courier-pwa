@@ -1,62 +1,58 @@
-import { combine, createEvent, createStore, Effect, sample } from 'effector';
+import { createEvent, createStore, Effect, sample } from 'effector';
 import { modelFactory } from 'effector-factorio';
 import { Email } from '@/shared/lib/type-guards/isEmail';
 import isEmail from '@/shared/lib/type-guards/isEmail/isEmail';
 
 interface FactoryOptions {
-    resetFx: Effect<{ login: Email }, any>;
+    resetFx: Effect<{ login: Email }, Error>;
 }
 
 export const factory = modelFactory((options: FactoryOptions) => {
     const loginChanged = createEvent<string>();
     const submitPressed = createEvent();
-    const reset = createEvent();
+    const resetFormState = createEvent();
 
-    const $login = createStore('');
-    const $form = combine({ login: $login });
+    const $login = createStore<string>('')
+        .on(loginChanged, (_, next) => next)
+        .reset(resetFormState, options.resetFx.done);
 
-    const $allowedSend = createStore<boolean>(false);
+    const $allowedSend = $login.map(
+        (login) => login.length > 0 && isEmail(login),
+    );
     const $pending = options.resetFx.pending;
-    const $done = createStore<boolean>(false);
-    const $fail = createStore<boolean>(false);
+    const $done = createStore<boolean>(false)
+        .on(options.resetFx.done, () => true)
+        .reset(resetFormState, options.resetFx.fail);
 
-    $login.on(loginChanged, (previous, next) => next).on(reset, () => '');
+    const $fail = createStore<boolean>(false)
+        .on(options.resetFx.fail, () => true)
+        .reset(resetFormState, options.resetFx.done);
+    const $failMessage = createStore<string>('')
+        .on(options.resetFx.failData, (state, error) => error.message)
+        .reset(resetFormState);
 
-    sample({
-        source: $login,
-        clock: loginChanged,
-        fn: (login) => {
-            const nonEmpty = login.length > 0;
-            const validEmail = isEmail(login);
-            return !!(nonEmpty && validEmail);
-        },
-        target: $allowedSend,
-    });
+    // Create a form object that can be updated with a single handler
+    const $form = createStore<{ login: Email }>({ login: '' }).on(
+        $login,
+        (state, login) => ({ ...state, login }),
+    );
 
+    // Only trigger the effect when allowed to send
     sample({
         source: $form,
-        clock: submitPressed,
+        clock: submitPressed.filter({ fn: () => $allowedSend.getState() }),
         target: options.resetFx,
-    });
-
-    sample({
-        clock: options.resetFx.done,
-        fn: () => true,
-        target: $done,
-    });
-
-    sample({
-        clock: options.resetFx.fail,
-        fn: () => true,
-        target: $fail,
     });
 
     return {
         $login,
         $pending,
+        $done,
+        $fail,
+        $failMessage,
         $allowedSend,
         loginChanged,
         submitPressed,
-        reset,
+        resetFormState,
     };
 });

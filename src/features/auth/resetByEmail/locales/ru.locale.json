@@ -1,5 +1,6 @@
 {
-  "email": "Email",
-  "email_placeholder": "Введите email",
-  "send_request": "Сбросить пароль"
+  "email.label": "Email",
+  "email.placeholder": "Введите email",
+  "request.send": "Сбросить пароль",
+  "request.success": "Проверьте почту для сброса пароля"
 }

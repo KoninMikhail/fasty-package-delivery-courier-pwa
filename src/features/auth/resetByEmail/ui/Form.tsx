@@ -6,7 +6,6 @@ import { modelView } from 'effector-factorio';
 import { useTranslation } from 'react-i18next';
 import { sharedConfigLocale } from '@/shared/config';
 import { useEffectOnce } from 'usehooks-ts';
-import { data } from 'autoprefixer';
 import { factory } from '../model';
 
 import { translationNS } from '../config';
@@ -14,6 +13,14 @@ import locale_en from '../locales/en.locale.json';
 import locale_ru from '../locales/ru.locale.json';
 
 const { locale } = sharedConfigLocale;
+
+/**
+ * Constants
+ */
+const EMAIL_LABEL_TEXT_KEY = 'email.label';
+const EMAIL_PLACEHOLDER_TEXT_KEY = 'email.placeholder';
+const SEND_REQUEST_TEXT_KEY = 'request.send';
+const SEND_SUCCESS_TEXT_KEY = 'request.success';
 
 /*
  * locale
@@ -30,6 +37,9 @@ const EmailField: FunctionComponent<
     const model = factory.useModel();
     const email = useUnit(model.$login);
     const pending = useUnit(model.$pending);
+    const done = useUnit(model.$done);
+    const failed = useUnit(model.$fail);
+    const failedMessage = useUnit(model.$failMessage);
 
     /**
      * Handlers
@@ -46,7 +56,9 @@ const EmailField: FunctionComponent<
     return (
         <Input
             isClearable
-            isDisabled={pending}
+            isInvalid={failed}
+            errorMessage={failedMessage}
+            isDisabled={pending || done}
             label={label}
             placeholder={placeholder}
             variant="flat"
@@ -58,11 +70,15 @@ const EmailField: FunctionComponent<
 };
 
 const SendResetRequestButton: FunctionComponent<
-    Omit<ButtonProps, 'isLoading'>
-> = ({ children, ...rest }) => {
+    Omit<ButtonProps, 'isLoading' | 'children'> & {
+        defaultText: string;
+        successRequestText: string;
+    }
+> = ({ defaultText, successRequestText, ...rest }) => {
     const model = factory.useModel();
     const pending = useUnit(model.$pending);
     const allowedSend = useUnit(model.$allowedSend);
+    const done = useUnit(model.$done);
 
     const onPressButtonHandler = (): void => {
         model.submitPressed();
@@ -70,32 +86,37 @@ const SendResetRequestButton: FunctionComponent<
 
     return (
         <Button
-            isDisabled={!allowedSend}
-            color="primary"
+            isDisabled={!allowedSend || pending || done}
+            color={done ? 'default' : 'primary'}
             isLoading={pending}
             onPress={onPressButtonHandler}
             {...rest}
         >
-            {children}
+            {done ? successRequestText : defaultText}
         </Button>
     );
 };
 
+/**
+ * View
+ */
 export const Form = modelView(factory, () => {
     const { t } = useTranslation(translationNS);
     const model = factory.useModel();
+    const resetForm = useUnit(model.resetFormState);
 
-    useEffectOnce(() => {
-        console.log('Triggered only once, on mount', { data });
-    });
+    useEffectOnce(() => resetForm());
 
     return (
         <form className="flex flex-col gap-4">
             <EmailField
-                label={t('email')}
-                placeholder={t('email_placeholder')}
+                label={t(EMAIL_LABEL_TEXT_KEY)}
+                placeholder={t(EMAIL_PLACEHOLDER_TEXT_KEY)}
             />
-            <SendResetRequestButton>{t('send_request')}</SendResetRequestButton>
+            <SendResetRequestButton
+                successRequestText={t(SEND_SUCCESS_TEXT_KEY)}
+                defaultText={t(SEND_REQUEST_TEXT_KEY)}
+            />
         </form>
     );
 });
