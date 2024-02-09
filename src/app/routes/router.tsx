@@ -1,30 +1,33 @@
 import { Route, Routes } from 'react-router-dom';
 
-import { authPageUi } from '@/pages/authPage';
-import { deliveriesExchangePageUi } from '@/pages/deliveriesExchangePage';
-import { deliveryItemPageUi } from '@/pages/deliveryItemPage';
-import { mapPageUi } from '@/pages/mapPage';
-import { notfoundPageUi } from '@/pages/notFoundPage';
-import { profilePageUi } from '@/pages/profilePage';
+import { notfoundPageUi } from '@/pages/errors/notFoundPage';
 import { sharedConfigRoutes } from '@/shared/config';
 import { sharedUiLayouts } from '@/shared/ui';
+import { profilePageUi } from '@/pages/profile/profilePage';
+import { rootPageUi } from '@/pages/deliveries/rootPage';
+import { settingsPageUi } from '@/pages/system/settingsPage';
+import { deliveriesHistoryPageUi } from '@/pages/profile/deliveriesHistoryPage';
+import { deliveryDetailsPageUi } from '@/pages/deliveries/deliveryDetailsPage';
+import { authPageUi } from '@/pages/auth/authPage';
 
 const { RouteName } = sharedConfigRoutes;
 const { SuspenseLayout } = sharedUiLayouts;
 
-const { AuthPage } = authPageUi;
-const { DeliveriesExchangePage } = deliveriesExchangePageUi;
-const { DeliveryItemPage } = deliveryItemPageUi;
+const { RootPage } = rootPageUi;
 const { NotFoundPage } = notfoundPageUi;
-const { MapPage } = mapPageUi;
 const { ProfilePage } = profilePageUi;
+const { SettingsPage } = settingsPageUi;
+const { DeliveriesHistoryPage } = deliveriesHistoryPageUi;
+const { DeliveryDetailsPage } = deliveryDetailsPageUi;
+const { AuthPage } = authPageUi;
 
 const {
-    DELIVERIES_LIST_PAGE,
+    ROOT_PAGE,
     AUTH_PAGE,
-    DELIVERY_ITEM_PAGE,
     PROFILE_PAGE,
-    MAP_PAGE,
+    SETTINGS_PAGE,
+    DELIVERIES_HISTORY_PAGE,
+    DELIVERY_DETAILS_PAGE,
 } = RouteName;
 
 const routes: sharedConfigRoutes.RouteDescription[] = [
@@ -33,20 +36,24 @@ const routes: sharedConfigRoutes.RouteDescription[] = [
         component: AuthPage,
     },
     {
-        path: DELIVERIES_LIST_PAGE,
-        component: DeliveriesExchangePage,
-    },
-    {
-        path: DELIVERY_ITEM_PAGE,
-        component: DeliveryItemPage,
-    },
-    {
-        path: MAP_PAGE,
-        component: MapPage,
+        path: ROOT_PAGE,
+        component: RootPage,
     },
     {
         path: PROFILE_PAGE,
         component: ProfilePage,
+    },
+    {
+        path: DELIVERY_DETAILS_PAGE,
+        component: DeliveryDetailsPage,
+    },
+    {
+        path: DELIVERIES_HISTORY_PAGE,
+        component: DeliveriesHistoryPage,
+    },
+    {
+        path: SETTINGS_PAGE,
+        component: SettingsPage,
     },
 ];
 
@@ -54,7 +61,7 @@ const routesContent = routes.map(({ path, component: Component }) => (
     <Route key={path} path={path} element={<Component />} />
 ));
 
-export const AppRouter = () => (
+export const AppRouter: FunctionComponent = () => (
     <SuspenseLayout>
         <Routes>
             {routesContent}

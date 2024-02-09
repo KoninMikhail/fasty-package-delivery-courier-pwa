@@ -16,7 +16,7 @@
 		"skipLibCheck": true,
 		"strict": true,
 		"target": "ESNext",
-		"types": ["vite/client", "vitest/globals", "vite-plugin-pwa/client"]
+		"types": ["vite/client", "vitest/globals", "vite-plugin-pwa/client", "vite-plugin-svgr/client"]
 	},
 	"include": ["src", "src/**/*.d.ts"],
 	"references": [{ "path": "./tsconfig.node.json" }]

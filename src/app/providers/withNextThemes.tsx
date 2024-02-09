@@ -3,7 +3,7 @@ import type React from 'react';
 
 // eslint-disable-next-line react/display-name
 export const withNextThemes = (component: () => React.ReactNode) => () => (
-    <NextThemesProvider attribute="class" defaultTheme="light">
+    <NextThemesProvider attribute="class" enableSystem>
         {component()}
     </NextThemesProvider>
 );

@@ -1,0 +1,35 @@
+# Dependency directories
+node_modules/
+dist/
+build/
+
+# Version control directories
+.git/
+.svn/
+.hg/
+
+# Build output directories
+out/
+lib/
+temp/
+
+# Various configuration files
+*.conf
+*.config.js
+*.min.js
+*.d.ts
+
+# Ignore specific files or directories
+/public/        # Ignore built files in public
+/coverage/      # Ignore coverage reports
+
+# Ignore specific file patterns
+**/*.spec.tsx   # Ignore test files
+**/*.spec.ts
+**/*.test.ts
+**/*.test.tsx
+
+# Other common directories to ignore
+/.vscode/
+/.idea/
+/.next/
