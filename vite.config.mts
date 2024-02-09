@@ -11,6 +11,9 @@ import { vitePluginVersionMark } from "vite-plugin-version-mark";
 import version from "vite-plugin-package-version";
 
 export default defineConfig(({ mode }) => ({
+  build: {
+    target: 'esnext',
+  },
   test: {
     css: false,
     include: ["src/**/__tests__/*", "src/**/**/*.{spec,test}.{js,jsx,ts,tsx}"],

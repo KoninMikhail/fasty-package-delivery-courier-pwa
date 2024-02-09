@@ -99,6 +99,7 @@
     "@typescript-eslint/no-implicit-any-catch": "off",
     "@typescript-eslint/member-ordering": "off",
     "@typescript-eslint/prefer-includes": "off",
+    "react/require-default-props": "off",
     "@typescript-eslint/no-restricted-imports": "off",
     // import/export
     "import/no-deprecated": "error",
@@ -173,6 +174,7 @@
     "unicorn/no-nested-ternary": [
       "error"
     ],
+    "unicorn/no-keyword-prefix": "off",
     "unicorn/no-null": "off",
     // Code formatting with prettier
     "prettier/prettier": [
