@@ -34,6 +34,7 @@ const NavbarContainer: FunctionComponent<PropsWithChildren> = ({
  */
 export const NavbarMobile: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
+
     return (
         <NavbarContainer>
             <Menu

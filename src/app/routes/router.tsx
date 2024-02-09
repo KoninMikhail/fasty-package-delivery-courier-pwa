@@ -1,17 +1,14 @@
 import { Route, Routes } from 'react-router-dom';
 
-import { notfoundPageUi } from '@/pages/notFoundPage';
+import { notfoundPageUi } from '@/pages/errors/notFoundPage';
 import { sharedConfigRoutes } from '@/shared/config';
 import { sharedUiLayouts } from '@/shared/ui';
-import { profilePageUi } from '@/pages/profilePage';
-import { rootPageUi } from '@/pages/rootPage';
-import { settingsPageUi } from '@/pages/settingsPage';
-import { deliveriesHistoryPageUi } from '@/pages/deliveriesHistoryPage';
-import { deliveryDetailsPageUi } from '@/pages/deliveryDetailsPage';
-import { authPageUi } from '@/pages/authPage';
-import { cookiePageUi } from '@/pages/polices/cookiePolicyPage';
-import { privacyPageUi } from '@/pages/polices/privacyPolicyPage';
-import { termsPageUi } from '@/pages/polices/termsPage';
+import { profilePageUi } from '@/pages/profile/profilePage';
+import { rootPageUi } from '@/pages/deliveries/rootPage';
+import { settingsPageUi } from '@/pages/system/settingsPage';
+import { deliveriesHistoryPageUi } from '@/pages/profile/deliveriesHistoryPage';
+import { deliveryDetailsPageUi } from '@/pages/deliveries/deliveryDetailsPage';
+import { authPageUi } from '@/pages/auth/authPage';
 
 const { RouteName } = sharedConfigRoutes;
 const { SuspenseLayout } = sharedUiLayouts;
@@ -22,9 +19,6 @@ const { ProfilePage } = profilePageUi;
 const { SettingsPage } = settingsPageUi;
 const { DeliveriesHistoryPage } = deliveriesHistoryPageUi;
 const { DeliveryDetailsPage } = deliveryDetailsPageUi;
-const { CookiePolicyPage } = cookiePageUi;
-const { PrivacyPolicyPage } = privacyPageUi;
-const { TermsOfServicePage } = termsPageUi;
 const { AuthPage } = authPageUi;
 
 const {
@@ -34,27 +28,12 @@ const {
     SETTINGS_PAGE,
     DELIVERIES_HISTORY_PAGE,
     DELIVERY_DETAILS_PAGE,
-    PRIVACY_POLICY_PAGE,
-    TERMS_OF_SERVICE_PAGE,
-    COOKIES_POLICY_PAGE,
 } = RouteName;
 
 const routes: sharedConfigRoutes.RouteDescription[] = [
     {
         path: AUTH_PAGE,
         component: AuthPage,
-    },
-    {
-        path: PRIVACY_POLICY_PAGE,
-        component: PrivacyPolicyPage,
-    },
-    {
-        path: TERMS_OF_SERVICE_PAGE,
-        component: TermsOfServicePage,
-    },
-    {
-        path: COOKIES_POLICY_PAGE,
-        component: CookiePolicyPage,
     },
     {
         path: ROOT_PAGE,

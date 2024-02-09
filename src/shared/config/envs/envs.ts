@@ -1,8 +1,8 @@
-const getEnvironmentVariable = (key: string) => {
+const getEnvironmentVariable = (key: string): string => {
     if (import.meta.env[key] === undefined) {
         throw new Error(`Env variable ${key} is required`);
     }
-    return import.meta.env[key] || '';
+    return (import.meta.env[key] || '') as string;
 };
 
 // region hosts
@@ -12,4 +12,5 @@ const getEnvironmentVariable = (key: string) => {
 
 export const NODE_ENV = getEnvironmentVariable('MODE');
 export const isDevEnv = NODE_ENV === 'development';
+export const isDemoEnv = NODE_ENV === 'demo';
 export const isProdEnv = NODE_ENV === 'production';

@@ -12,15 +12,15 @@ import {
 import { sharedConfigLocale } from '@/shared/config';
 import { sharedUiComponents } from '@/shared/ui';
 import { sharedAssetsDocs } from '@/shared/assets';
+import { sharedLibHelpers } from '@/shared/lib';
 
+import { translationNS } from '../config';
 import locale_en from '../locales/en.locale.json';
 import locale_ru from '../locales/ru.locale.json';
 
-import { translationNS } from '../config';
-import { getContentForLocale } from '../lib';
-
 const { enTermsOfUse, ruTermsOfUse } = sharedAssetsDocs;
 
+const { getContentForLocale } = sharedLibHelpers;
 const { locale } = sharedConfigLocale;
 const { Markdown } = sharedUiComponents;
 
@@ -55,7 +55,7 @@ export const LegalInformationModal: FunctionComponent = () => {
     const content = getContentForLocale(i18n.language, {
         en: enTermsOfUse,
         ru: ruTermsOfUse,
-    }) as unknown as string;
+    }) as string;
 
     return (
         <>
