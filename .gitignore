@@ -15,6 +15,9 @@ cypress/videos/*
 
 ### dotenv ###
 .env
+.env.development
+.env.test
+.env.production
 
 ### Git ###
 # Created by git for backups. To disable backups in Git:
