@@ -1,3 +1,4 @@
+// eslint-disable-next-line unicorn/prevent-abbreviations
 const getEnvironmentVariable = (key: string): string => {
     if (import.meta.env[key] === undefined) {
         throw new Error(`Env variable ${key} is required`);
@@ -5,12 +6,7 @@ const getEnvironmentVariable = (key: string): string => {
     return (import.meta.env[key] || '') as string;
 };
 
-// region hosts
-// export const DELIVERIES_API_HOST = getEnvVar('VITE_DELIVERIES_API_HOST');
-
-// endregion
-
 export const NODE_ENV = getEnvironmentVariable('MODE');
-export const isDevEnv = NODE_ENV === 'development';
-export const isDemoEnv = NODE_ENV === 'demo';
-export const isProdEnv = NODE_ENV === 'production';
+export const isDevelopmentEnvironment = NODE_ENV === 'development';
+export const isPreviewEnvironment = NODE_ENV === 'preview';
+export const isProductionEnvironment = NODE_ENV === 'production';
