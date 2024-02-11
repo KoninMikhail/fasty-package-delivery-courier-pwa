@@ -188,8 +188,8 @@ export const AuthPage: FunctionComponent = () => {
     /**
      * Redirect
      */
-    const isAuth = useUnit(viewerSessionModel.$$isAuthViewer);
-    if (isAuth) return <Navigate to={RouteName.ROOT_PAGE} replace />;
+    const session = useUnit(viewerSessionModel.$session);
+    if (session) return <Navigate to={RouteName.ROOT_PAGE} replace />;
 
     return (
         <>
