@@ -10,7 +10,7 @@ import {
     Session,
 } from './schemas';
 
-const API_BASE_URL = import.meta.env.VITE_COURIERS_API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_AUTH_API_BASE_URL;
 const API_LOGIN_URL = `${API_BASE_URL}/api/login`;
 const API_RESET_PASSWORD_URL = `${API_BASE_URL}/api/forgotPassword`;
 const JWT_TOKEN_COOKIE_KEY = import.meta.env.VITE_JWT_TOKEN_COOKIE_KEY;
@@ -42,14 +42,13 @@ export const removeSessionFx = createEffect<void, void, Error>(() => {
 });
 
 // Effect for token validation and renewal
-export const validateTokenFx = createEffect<void, Session, Error>(async () => {
+export const revalidateTokenFx = createEffect<void, void, Error>(async () => {
     const token = Cookies.get(JWT_TOKEN_COOKIE_KEY);
     if (token) {
         Cookies.set(JWT_TOKEN_COOKIE_KEY, token, {
             expires: SESSION_EXPIRATION_DAYS,
         });
-        return { token };
+    } else {
+        await removeSessionFx();
     }
-    void removeSessionFx();
-    throw new Error('No token');
 });
