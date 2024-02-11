@@ -1,2 +1,2 @@
-export * as viewerSessionModel from './model/sessionModel';
+export { viewerSessionModel, viewerProfileModel } from './model';
 export * as viewerUi from './ui';
