@@ -1,11 +1,10 @@
 import { InputProps } from '@nextui-org/input/dist/input';
 import { useUnit } from 'effector-react';
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useEffect } from 'react';
 import { Button, ButtonProps, Input } from '@nextui-org/react';
 import { modelView } from 'effector-factorio';
 import { useTranslation } from 'react-i18next';
 import { sharedConfigLocale } from '@/shared/config';
-import { useEffectOnce } from 'usehooks-ts';
 import { factory } from '../model';
 
 import { translationNS } from '../config';
@@ -105,7 +104,7 @@ export const Form = modelView(factory, () => {
     const model = factory.useModel();
     const resetForm = useUnit(model.resetFormState);
 
-    useEffectOnce(() => resetForm());
+    useEffect(() => resetForm(), []);
 
     return (
         <form className="flex flex-col gap-4">
