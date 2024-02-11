@@ -8,8 +8,8 @@ import { IoLogoYoutube } from 'react-icons/io';
 import { widgetLegalUi } from '@/widgets/system/legal';
 import { widgetAboutAppUi } from '@/widgets/system/about';
 import { useTranslation } from 'react-i18next';
-import { ChangeColorModeSwitchButton } from '@/features/system/change-color-mode';
-import { ChangeLanguageButton } from '@/features/system/change-language';
+import { ChangeColorModeSwitchButton } from '@/features/viewer/changeColorMode';
+import { ChangeLanguageButton } from '@/features/viewer/changeLanguage';
 import { translationNS } from '../../config';
 
 const { Section } = sharedUiLayouts;

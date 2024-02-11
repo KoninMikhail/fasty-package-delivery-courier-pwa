@@ -1,4 +1,9 @@
-export const MoonIcon = (properties) => (
+import { JSX } from 'react/jsx-runtime';
+import React, { ReactNode } from 'react';
+
+export const MoonIcon = (
+    properties: JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>,
+): ReactNode => (
     <svg
         aria-hidden="true"
         focusable="false"

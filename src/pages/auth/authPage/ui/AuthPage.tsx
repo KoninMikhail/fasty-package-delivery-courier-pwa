@@ -13,7 +13,7 @@ import { ImKey } from 'react-icons/im';
 import { useUnit } from 'effector-react';
 import { FaGithub } from 'react-icons/fa6';
 
-import { ChangeLanguageIconButton } from '@/features/system/change-language';
+import { ChangeLanguageIconButton } from '@/features/viewer/changeLanguage';
 
 import { widgetCookiePolicyModalUi } from '@/widgets/polices/cookie-policy-modal';
 import { widgetResetPasswordModalUi } from '@/widgets/viewer/reset-password-modal';

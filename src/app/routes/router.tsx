@@ -3,12 +3,12 @@ import { Route, Routes } from 'react-router-dom';
 import { notfoundPageUi } from '@/pages/errors/notFoundPage';
 import { sharedConfigRoutes } from '@/shared/config';
 import { sharedUiLayouts } from '@/shared/ui';
-import { profilePageUi } from '@/pages/profile/profilePage';
-import { rootPageUi } from '@/pages/deliveries/rootPage';
-import { settingsPageUi } from '@/pages/system/settingsPage';
-import { deliveriesHistoryPageUi } from '@/pages/profile/deliveriesHistoryPage';
+import { profilePageUi } from '@/pages/deliveries/deliveriesCurrentPage';
 import { deliveryDetailsPageUi } from '@/pages/deliveries/deliveryDetailsPage';
 import { authPageUi } from '@/pages/auth/authPage';
+import { rootPageUi } from '@/pages/deliveries/deliveriesMarketPage';
+import { settingsPageUi } from '@/pages/viewer/settingsPage';
+import { deliveriesHistoryPageUi } from '@/pages/deliveries/deliveriesHistoryPage';
 
 const { RouteName } = sharedConfigRoutes;
 const { SuspenseLayout } = sharedUiLayouts;

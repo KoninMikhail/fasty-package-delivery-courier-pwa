@@ -1,4 +1,9 @@
-export const AddNoteIcon = (properties) => (
+import { ReactNode, SVGProps } from 'react';
+import { JSX } from 'react/jsx-runtime';
+
+export const AddNoteIcon = (
+    properties: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
+): ReactNode => (
     <svg
         aria-hidden="true"
         fill="none"
