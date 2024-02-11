@@ -4,19 +4,20 @@ import { widgetInProgressDeliveriesUi } from '@/widgets/deliveries/in-progress-d
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { widgetDeliveriesMarketUi } from '@/widgets/deliveries/deliveres-market';
 import { sharedUiComponents, sharedUiLayouts } from '@/shared/ui';
-import { widgetAccountDataEditorUi } from '@/widgets/account/account-data-editor';
 import { Button, Spacer } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { widgetMarketDeliveriesFilterUi } from '@/widgets/deliveries/market-deliveries-filter';
+import { widgetTopbarUi } from '@/widgets/viewer/welcome-topbar';
 import { translationNS } from '../../config';
 
-const { Heading, Text } = sharedUiComponents;
+const { Heading } = sharedUiComponents;
 const { InProgressDeliveriesSlider } = widgetInProgressDeliveriesUi;
 const { DeliveriesMarket } = widgetDeliveriesMarketUi;
 const { NavbarMobile } = widgetNavbarMobileUi;
-const { AccountDataEditor } = widgetAccountDataEditorUi;
 const { HorizontalScroll } = sharedUiLayouts;
 const { MarketDeliveriesFilter } = widgetMarketDeliveriesFilterUi;
+const { WelcomeTopbar } = widgetTopbarUi;
+
 /**
  * Layout
  */
@@ -38,15 +39,7 @@ const SectionBody: FunctionComponent<PropsWithChildren> = ({ children }) => (
 
 const Header: FunctionComponent = () => (
     <header className="w-full rounded-b-3xl bg-black p-6">
-        <div className="mx-auto grid w-full grid-cols-[auto_max-content] items-center gap-2 text-white lg:w-[750px]">
-            <div>
-                <Text weight="bold">Здравствуйте, Михаил</Text>
-                <Text size="small">Желаем хорошего дня!</Text>
-            </div>
-            <div>
-                <AccountDataEditor />
-            </div>
-        </div>
+        <WelcomeTopbar />
     </header>
 );
 
