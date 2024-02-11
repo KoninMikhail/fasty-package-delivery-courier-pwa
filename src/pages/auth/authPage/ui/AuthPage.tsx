@@ -32,7 +32,7 @@ import locale_en from '../locales/en.locale.json';
 
 const { locale } = sharedConfigLocale;
 const { APP_NAME, GITHUB_PAGE_URL, APP_DESCRIPTION } = sharedConfigConstants;
-const { isDemoEnv, isProdEnv, isDevEnv } = sharedConfigEnvs;
+const { isDevelopmentEnvironment } = sharedConfigEnvs;
 const { RouteName } = sharedConfigRoutes;
 const { SignInModal } = widgetSignInModalUi;
 
@@ -137,11 +137,6 @@ const GitHubButton: FunctionComponent<{
         <FaGithub /> {label}
     </Button>
 );
-const DemoModeChip: FunctionComponent = () => (
-    <Chip color="danger" size="sm" className="mb-2">
-        Demo Mode
-    </Chip>
-);
 
 const DeveloperModeChip: FunctionComponent = () => (
     <Chip color="warning" size="sm" className="mb-2">
@@ -213,8 +208,7 @@ export const AuthPage: FunctionComponent = () => {
                     </Navbar>
                 </Section>
                 <Section>
-                    {isDemoEnv ? <DemoModeChip /> : null}
-                    {isDevEnv ? <DeveloperModeChip /> : null}
+                    {isDevelopmentEnvironment ? <DeveloperModeChip /> : null}
                     <Greetings
                         headline={t('greetings.welcome')}
                         description={t('greetings.description')}
@@ -229,15 +223,11 @@ export const AuthPage: FunctionComponent = () => {
                         label={t('buttons.reset_password')}
                         onPress={onPressResetPassword}
                     />
-                    {!isProdEnv && (
-                        <>
-                            <Spacer y={2} />
-                            <GitHubButton
-                                label={t('buttons.github')}
-                                href={GITHUB_PAGE_URL}
-                            />
-                        </>
-                    )}
+                    <Spacer y={2} />
+                    <GitHubButton
+                        label={t('buttons.github')}
+                        href={GITHUB_PAGE_URL}
+                    />
                     <Spacer y={1} />
                 </Section>
             </Layout>
@@ -250,7 +240,7 @@ export const AuthPage: FunctionComponent = () => {
             <CookiePolicyModal size="5xl" />
             <PrivacyPolicyModal size="5xl" />
             <TermsOfUseModal size="5xl" />
-            {isDevEnv ? <AppVersion /> : null}
+            <AppVersion />
         </>
     );
 };
