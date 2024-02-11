@@ -1,18 +1,31 @@
-import { createStore, sample } from 'effector';
+import { createEvent, createStore, sample } from 'effector';
 import { Session, sharedAuthEffects } from '@/shared/auth';
-import { debug } from 'patronum';
 
-const { authByEMailRequestFx, validateTokenFx } = sharedAuthEffects;
+const { authByEMailRequestFx, revalidateTokenFx, removeSessionFx } =
+    sharedAuthEffects;
 
-export const $sessionViewer = createStore<Session | null>(null);
-export const $$isAuthViewer = $sessionViewer.map(
-    (session) => session && session?.token !== null,
-);
+export const requestProtectedContent = createEvent();
+export const $session = createStore<Session | null>(null);
 
+/**
+ * Load session from first time
+ */
 sample({
-    clock: [authByEMailRequestFx.doneData, validateTokenFx.doneData],
-    target: $sessionViewer,
+    clock: authByEMailRequestFx.doneData,
+    target: $session,
 });
 
-debug($sessionViewer);
-debug($$isAuthViewer);
+/**
+ * Validate token and remove session if token is invalid
+ */
+
+sample({
+    clock: requestProtectedContent,
+    target: revalidateTokenFx,
+});
+
+sample({
+    clock: removeSessionFx.done,
+    fn: () => null,
+    target: $session,
+});
