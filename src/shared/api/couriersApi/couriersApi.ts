@@ -10,7 +10,6 @@ const JWT_TOKEN_COOKIE_KEY = import.meta.env.VITE_JWT_TOKEN_COOKIE_KEY;
  * Couriers Api instance
  */
 export const couriersApi = new Zodios(API_BASE_URL, [
-    ...endpoints.authApi,
     ...endpoints.deliveriesApi,
     ...endpoints.usersApi,
 ]);

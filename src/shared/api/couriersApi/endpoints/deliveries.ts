@@ -6,6 +6,6 @@ export const deliveriesApi = makeApi([
         method: 'get',
         path: '/api/deliveries',
         alias: 'fetchUpcomingDeliveries',
-        response: z.boolean(),
+        response: z.any(),
     },
 ]);
