@@ -35,15 +35,15 @@ const PolicesLinks: FunctionComponent<PropsWithChildren> = ({ children }) => (
     </div>
 );
 
+/**
+ * View
+ */
 interface IAuthUserByEmailModalProperties {
     onClickPrivacyPolicyLink?: () => void;
     onClickTermsOfUseLink?: () => void;
     onClickCookiesPolicyLink?: () => void;
 }
 
-/**
- * View
- */
 export const SignInModal: FunctionComponent<
     IAuthUserByEmailModalProperties
 > = ({
