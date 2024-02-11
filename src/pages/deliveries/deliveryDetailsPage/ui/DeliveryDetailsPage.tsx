@@ -7,7 +7,13 @@ import {
 
 import { useTranslation } from 'react-i18next';
 import { useDocumentTitle } from 'usehooks-ts';
-import { DesktopRootPageView, MobileRootPageView } from './views';
+import { useGate } from 'effector-react';
+import { DeliveryDetailsPageGateway } from '@/pages/deliveries/deliveryDetailsPage/model';
+import { useParams } from 'react-router-dom';
+import {
+    DesktopDeliveryDetailsPageView,
+    MobileDeliveryDetailsPageView,
+} from './views';
 import { translationNS } from '../config';
 import locale_en from '../locales/en.locale.json';
 import locale_ru from '../locales/ru.locale.json';
@@ -34,19 +40,17 @@ locale.addResourceBundle('ru', translationNS, locale_ru);
  */
 export const DeliveryDetailsPage: FunctionComponent = () => {
     const { isDesktop } = useDeviceScreen();
+    const { deliveryId } = useParams();
     const { t } = useTranslation(translationNS);
 
     const pageTitle = `${t('page_title')} | ${APP_NAME}`;
 
     useDocumentTitle(pageTitle);
+    useGate(DeliveryDetailsPageGateway, { deliveryId });
 
     return isDesktop ? (
-        <Authorized>
-            <DesktopRootPageView />
-        </Authorized>
+        <DesktopDeliveryDetailsPageView deliveryId={deliveryId} />
     ) : (
-        <Authorized>
-            <MobileRootPageView />
-        </Authorized>
+        <MobileDeliveryDetailsPageView deliveryId={deliveryId} />
     );
 };
