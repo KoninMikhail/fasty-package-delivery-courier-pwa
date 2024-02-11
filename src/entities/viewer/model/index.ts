@@ -1,1 +1,2 @@
-export * as currentViewerModel from './viewerProfileDataModel';
+export * as viewerSessionModel from './sessionModel';
+export * as viewerProfileModel from './profileModel';
