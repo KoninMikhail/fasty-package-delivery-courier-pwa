@@ -14,11 +14,16 @@ const API_BASE_URL = import.meta.env.VITE_AUTH_API_BASE_URL;
 const API_LOGIN_URL = `${API_BASE_URL}/api/login`;
 const API_RESET_PASSWORD_URL = `${API_BASE_URL}/api/forgotPassword`;
 const JWT_TOKEN_COOKIE_KEY = import.meta.env.VITE_JWT_TOKEN_COOKIE_KEY;
+const APP_IDENTIFIER = `${import.meta.env.VITE_APP_IDENTIFIER}/${import.meta.env.PACKAGE_VERSION}`;
 
 // Effect for user login with Zod validation
 export const authByEMailRequestFx = createEffect<LoginRequest, Session, Error>(
     async (credentials) => {
-        const { data } = await axios.post<Session>(API_LOGIN_URL, credentials);
+        const { data } = await axios.post<Session>(API_LOGIN_URL, credentials, {
+            headers: {
+                'x-app-identifier': APP_IDENTIFIER,
+            },
+        });
         Cookies.set(JWT_TOKEN_COOKIE_KEY, data.token, {
             expires: SESSION_EXPIRATION_DAYS,
         });
