@@ -1,11 +1,15 @@
-import { createEvent, createStore, sample } from 'effector';
+import { createStore, sample } from 'effector';
 import { Session, sharedAuthEffects } from '@/shared/auth';
+import { createGate } from 'effector-react';
+import { debug } from 'patronum';
 
-const { authByEMailRequestFx, revalidateTokenFx, removeSessionFx } =
+const { authByEMailRequestFx, getSessionFx, removeSessionFx } =
     sharedAuthEffects;
 
-export const requestProtectedContent = createEvent();
+export const AuthGate = createGate<Session>();
+
 export const $session = createStore<Session | null>(null);
+export const $isAuthorized = $session.map((session) => session !== null);
 
 /**
  * Load session from first time
@@ -20,12 +24,27 @@ sample({
  */
 
 sample({
-    clock: requestProtectedContent,
-    target: revalidateTokenFx,
+    clock: AuthGate.open,
+    target: getSessionFx,
 });
 
+sample({
+    clock: getSessionFx.doneData,
+    target: $session,
+});
+
+sample({
+    clock: getSessionFx.fail,
+    target: removeSessionFx,
+});
+
+/**
+ * Remove session on logout
+ */
 sample({
     clock: removeSessionFx.done,
     fn: () => null,
     target: $session,
 });
+
+debug($session);

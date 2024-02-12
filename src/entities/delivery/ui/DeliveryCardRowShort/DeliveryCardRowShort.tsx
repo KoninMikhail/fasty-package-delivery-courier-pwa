@@ -9,7 +9,9 @@ import {
 } from '@nextui-org/react';
 import { Link } from 'react-router-dom';
 
-interface DeliveryDto {}
+interface DeliveryDto {
+    id: number;
+}
 
 interface IDeliveryCardRowShortProperties {
     delivery: DeliveryDto;
@@ -22,6 +24,7 @@ interface IDeliveryCardRowShortProperties {
 export const DeliveryCardRowShort: FunctionComponent<
     IDeliveryCardRowShortProperties
 > = ({ delivery, size, featureSlotTop, featureSlotBottom, onPress }) => {
+    console.log(delivery);
     return (
         <Card className="max-w-[600px] shadow-md " onPress={onPress}>
             <CardHeader className="flex gap-3">
@@ -33,21 +36,18 @@ export const DeliveryCardRowShort: FunctionComponent<
                     width={40}
                 />
                 <div className="flex flex-col">
-                    <p className="text-md">NextUI</p>
-                    <p className="text-small text-default-500">nextui.org</p>
+                    <p className="text-md">{delivery?.id}</p>
+                    <p className="text-small text-default-500">{`${delivery?.time_start} - ${delivery?.time_end}`}</p>
                 </div>
             </CardHeader>
             <Divider />
             <CardBody>
-                <p>
-                    Make beautiful websites regardless of your design
-                    experience.
-                </p>
+                <p>{delivery?.contents}</p>
             </CardBody>
             <Divider />
             <CardFooter>
                 <Link href="https://github.com/nextui-org/nextui">
-                    Visit source code on GitHub.
+                    {delivery?.contact?.name}
                 </Link>
             </CardFooter>
         </Card>
