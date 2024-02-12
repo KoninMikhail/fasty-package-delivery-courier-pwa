@@ -24,7 +24,7 @@ export const authByEMailRequestFx = createEffect<LoginRequest, Session, Error>(
                 'x-app-identifier': APP_IDENTIFIER,
             },
         });
-        Cookies.set(JWT_TOKEN_COOKIE_KEY, data.token, {
+        Cookies.set(JWT_TOKEN_COOKIE_KEY, JSON.stringify(data), {
             expires: SESSION_EXPIRATION_DAYS,
         });
         return data;
@@ -47,13 +47,13 @@ export const removeSessionFx = createEffect<void, void, Error>(() => {
 });
 
 // Effect for token validation and renewal
-export const revalidateTokenFx = createEffect<void, void, Error>(async () => {
-    const token = Cookies.get(JWT_TOKEN_COOKIE_KEY);
-    if (token) {
-        Cookies.set(JWT_TOKEN_COOKIE_KEY, token, {
+export const getSessionFx = createEffect<void, Session, Error>(() => {
+    const session = Cookies.get(JWT_TOKEN_COOKIE_KEY);
+    if (session) {
+        Cookies.set(JWT_TOKEN_COOKIE_KEY, session, {
             expires: SESSION_EXPIRATION_DAYS,
         });
-    } else {
-        await removeSessionFx();
+        return JSON.parse(session) as Session;
     }
+    throw new Error('No session');
 });
