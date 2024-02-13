@@ -49,8 +49,8 @@ export const DeliveryDetailsPage: FunctionComponent = () => {
     useGate(DeliveryDetailsPageGateway, { deliveryId });
 
     return isDesktop ? (
-        <DesktopDeliveryDetailsPageView deliveryId={deliveryId} />
+        <DesktopDeliveryDetailsPageView />
     ) : (
-        <MobileDeliveryDetailsPageView deliveryId={deliveryId} />
+        <MobileDeliveryDetailsPageView />
     );
 };

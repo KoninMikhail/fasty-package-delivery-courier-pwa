@@ -37,16 +37,12 @@ const Header: FunctionComponent = () => (
     <header className="w-full rounded-b-3xl bg-black p-6">fgdfg</header>
 );
 
-export const MobileDeliveryDetailsPageView: FunctionComponent<{
-    deliveryId?: string;
-}> = ({ deliveryId }) => {
+export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
     return (
         <>
             <Header />
             <Spacer y={4} />
-            <MainContainer>
-                <Authorized>{deliveryId}</Authorized>
-            </MainContainer>
+            <MainContainer>sdfsd</MainContainer>
             <NavbarMobile />
         </>
     );
