@@ -46,5 +46,5 @@ export const Authorized: FunctionComponent<IAuthorizedProperties> = ({
         };
     }, [awaitSessionTimeout, isAuthorized, navigate]);
 
-    return isAuthorized ? children : (fallback as ReactNode);
+    return isAuthorized ? children : fallback;
 };

@@ -15,7 +15,7 @@ const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
     </main>
 );
 
-export const DesktopRootPageView: FunctionComponent = () => {
+export const DesktopDeliveriesMarketPageView: FunctionComponent = () => {
     return (
         <>
             <Header />

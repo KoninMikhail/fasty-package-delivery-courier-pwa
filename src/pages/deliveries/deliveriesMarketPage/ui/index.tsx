@@ -1,1 +1,1 @@
-export * from './RootPage';
+export * from './DeliveriesMarketPage';

@@ -16,6 +16,12 @@ export const deliveriesApi = makeApi([
     },
     {
         method: 'get',
+        path: '/api/deliveries/:deliveryId',
+        alias: 'fetchDeliveryById',
+        response: z.any(),
+    },
+    {
+        method: 'get',
         path: '/api/deliveries/:startDate/:endDate',
         alias: 'fetchDeliveriesByDateRange',
         response: z.any(),

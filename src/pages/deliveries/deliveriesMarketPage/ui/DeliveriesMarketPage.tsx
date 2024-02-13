@@ -7,7 +7,10 @@ import {
 
 import { useTranslation } from 'react-i18next';
 import { useDocumentTitle } from 'usehooks-ts';
-import { DesktopRootPageView, MobileRootPageView } from './views';
+import {
+    DesktopDeliveriesMarketPageView,
+    MobileDeliveriesMarketPageView,
+} from './views';
 import { translationNS } from '../config';
 import locale_en from '../locales/en.locale.json';
 import locale_ru from '../locales/ru.locale.json';
@@ -28,11 +31,11 @@ locale.addResourceBundle('en', translationNS, locale_en);
 locale.addResourceBundle('ru', translationNS, locale_ru);
 
 /**
- * @name RootPage
+ * @name DeliveriesMarketPage
  * @description Page for deliveries exchange
  * @constructor
  */
-export const RootPage: FunctionComponent = () => {
+export const DeliveriesMarketPage: FunctionComponent = () => {
     const { isDesktop } = useDeviceScreen();
     const { t } = useTranslation(translationNS);
 
@@ -42,11 +45,11 @@ export const RootPage: FunctionComponent = () => {
 
     return isDesktop ? (
         <Authorized>
-            <DesktopRootPageView />
+            <DesktopDeliveriesMarketPageView />
         </Authorized>
     ) : (
         <Authorized>
-            <MobileRootPageView />
+            <MobileDeliveriesMarketPageView />
         </Authorized>
     );
 };

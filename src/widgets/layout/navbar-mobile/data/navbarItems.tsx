@@ -6,7 +6,7 @@ import { MdChecklistRtl } from 'react-icons/md';
 
 const { RouteName } = sharedConfigRoutes;
 
-const { ROOT_PAGE, PROFILE_PAGE, SETTINGS_PAGE, DELIVERIES_HISTORY_PAGE } =
+const { ROOT_PAGE, DELIVERIES, SETTINGS_PAGE, DELIVERIES_HISTORY_PAGE } =
     RouteName;
 
 export const navbarItems = [
@@ -20,7 +20,7 @@ export const navbarItems = [
         id: 'about',
         icon: <TbTruckDelivery />,
         label: 'nav.deliveries',
-        href: PROFILE_PAGE,
+        href: DELIVERIES,
     },
     {
         id: 'history',

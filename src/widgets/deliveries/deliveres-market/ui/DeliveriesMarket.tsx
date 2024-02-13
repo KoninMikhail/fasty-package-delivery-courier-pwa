@@ -2,11 +2,15 @@ import type { PropsWithChildren } from 'react';
 import { entityDeliveryUi } from '@/entities/delivery';
 import { useGate, useList, useUnit } from 'effector-react';
 import { Card, Skeleton } from '@nextui-org/react';
+import { Link } from 'react-router-dom';
+import { sharedConfigRoutes } from '@/shared/config';
 import {
     $avaliableDeliveries,
     $isDeliveriesLoading,
     MarketGate,
 } from '../model';
+
+const { RouteName } = sharedConfigRoutes;
 
 const { DeliveryCardRowShort } = entityDeliveryUi;
 
@@ -25,13 +29,18 @@ const Root: FunctionComponent<PropsWithChildren> = ({ children }) => (
 export const DeliveriesMarket: FunctionComponent<PropsWithChildren> = () => {
     const isPending = useUnit($isDeliveriesLoading);
 
-    const onPressCard = (): void => {
+    const onPressCard = () => {
         alert('work');
     };
 
     const deliveries = useList($avaliableDeliveries, (delivery) => {
         return (
-            <DeliveryCardRowShort onPress={onPressCard} delivery={delivery} />
+            <Link to={`/deliveries/${delivery.id}`} key={delivery.id}>
+                <DeliveryCardRowShort
+                    onPress={onPressCard}
+                    delivery={delivery}
+                />
+            </Link>
         );
     });
     useGate(MarketGate);

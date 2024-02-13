@@ -8,6 +8,7 @@ import { Button, Spacer } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { widgetMarketDeliveriesFilterUi } from '@/widgets/deliveries/market-deliveries-filter';
 import { widgetTopbarUi } from '@/widgets/viewer/welcome-topbar';
+import { Link } from 'react-router-dom';
 import { translationNS } from '../../config';
 
 const { Heading } = sharedUiComponents;
@@ -44,50 +45,68 @@ const Header: FunctionComponent = () => (
 );
 
 /**
- * @name RootPage
+ * Components
+ */
+
+const UpcomingDeliveries: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
+    const sectionHeading = t('upcoming_deliveries');
+
+    const allDeliveriesLabel = t('all_upcoming_deliveries');
+    const allDeliveriesButtonLink = '/deliveries/upcoming';
+
+    return (
+        <Section>
+            <SectionHead>
+                <h2 className="text-xl font-bold">{sectionHeading}</h2>
+                <Button
+                    as={Link}
+                    to={allDeliveriesButtonLink}
+                    size="sm"
+                    radius="full"
+                >
+                    {allDeliveriesLabel}
+                </Button>
+            </SectionHead>
+            <HorizontalScroll className="px-4">
+                <InProgressDeliveriesSlider />
+            </HorizontalScroll>
+        </Section>
+    );
+};
+
+const AvailableDeliveries: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
+    const sectionHeading = t('market');
+    return (
+        <Section>
+            <SectionHead>
+                <h2 className="text-xl font-bold">{sectionHeading}</h2>
+            </SectionHead>
+            <Spacer y={2} />
+            <MarketDeliveriesFilter />
+            <Spacer y={2} />
+            <SectionBody>
+                <DeliveriesMarket />
+            </SectionBody>
+        </Section>
+    );
+};
+
+/**
+ * @name MobileDeliveriesMarketPageView
  * @description Page for deliveries exchange
  * @constructor
  */
-export const MobileRootPageView: FunctionComponent = () => {
-    const { t } = useTranslation(translationNS);
-
+export const MobileDeliveriesMarketPageView: FunctionComponent = () => {
     return (
         <>
             <Header />
             <Spacer y={4} />
             <Content>
-                <Section>
-                    <SectionHead>
-                        <Heading
-                            tag="h2"
-                            className="flex-grow"
-                            size="large"
-                            weight="bold"
-                        >
-                            {t('upcoming_deliveries')}
-                        </Heading>
-                        <Button size="sm" radius="full">
-                            {t('all_deliveries')}
-                        </Button>
-                    </SectionHead>
-                    <HorizontalScroll className="px-4">
-                        <InProgressDeliveriesSlider />
-                    </HorizontalScroll>
-                </Section>
+                <UpcomingDeliveries />
                 <Spacer y={4} />
-                <Section>
-                    <SectionHead>
-                        <Heading size="large" weight="bold">
-                            {t('market')}
-                        </Heading>
-                    </SectionHead>
-                    <Spacer y={2} />
-                    <MarketDeliveriesFilter />
-                    <Spacer y={2} />
-                    <SectionBody>
-                        <DeliveriesMarket />
-                    </SectionBody>
-                </Section>
+                <AvailableDeliveries />
             </Content>
             <NavbarMobile />
         </>

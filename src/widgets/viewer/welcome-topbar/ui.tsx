@@ -1,4 +1,4 @@
-import { Avatar } from '@nextui-org/react';
+import { Avatar, Input } from '@nextui-org/react';
 import { PropsWithChildren } from 'react';
 import { useGate, useUnit } from 'effector-react';
 import { viewerProfileModel } from '@/entities/viewer';
@@ -37,6 +37,15 @@ export const WelcomeTopbar: FunctionComponent = () => {
                         src={viewerAvatar}
                     />
                 </div>
+            </div>
+            <div>
+                <Input
+                    type="email"
+                    label="Email"
+                    placeholder="00000000"
+                    labelPlacement="outside"
+                    startContent="#"
+                />
             </div>
         </Root>
     );

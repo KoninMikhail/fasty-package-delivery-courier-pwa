@@ -1,2 +1,2 @@
-export * from './mobileRootPageView';
-export * from './desktopRootPageView';
+export * from './mobileDeliveriesMarketPageView';
+export * from './desktopDeliveriesMarketPageView';
