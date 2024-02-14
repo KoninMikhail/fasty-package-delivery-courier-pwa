@@ -11,6 +11,7 @@ import {
 } from '../model';
 
 const { RouteName } = sharedConfigRoutes;
+const { DELIVERIES } = RouteName;
 
 const { DeliveryCardRowShort } = entityDeliveryUi;
 
@@ -35,7 +36,7 @@ export const DeliveriesMarket: FunctionComponent<PropsWithChildren> = () => {
 
     const deliveries = useList($avaliableDeliveries, (delivery) => {
         return (
-            <Link to={`/deliveries/${delivery.id}`} key={delivery.id}>
+            <Link to={DELIVERIES} key={delivery.id}>
                 <DeliveryCardRowShort
                     onPress={onPressCard}
                     delivery={delivery}

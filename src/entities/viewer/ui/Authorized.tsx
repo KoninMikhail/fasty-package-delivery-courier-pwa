@@ -7,7 +7,7 @@ import { $isAuthorized, AuthGate } from '../model/sessionModel';
 const { RouteName } = sharedConfigRoutes;
 const { AUTH_PAGE } = RouteName;
 
-const DEFAULT_AWAIT_SESSION_TIMEOUT = 5000;
+const DEFAULT_AWAIT_SESSION_TIMEOUT = 500;
 
 interface IAuthorizedProperties extends PropsWithChildren {
     awaitSessionTimeout?: number;

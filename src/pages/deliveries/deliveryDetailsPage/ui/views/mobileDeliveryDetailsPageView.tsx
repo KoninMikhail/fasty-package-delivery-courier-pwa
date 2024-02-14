@@ -64,7 +64,6 @@ const Header: FunctionComponent = () => (
 
 export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
     const data = useUnit($deliveryDetailsStore);
-    console.log(data);
     return (
         <>
             <Header />

@@ -3,6 +3,7 @@ import type { PropsWithChildren } from 'react';
 import { widgetInProgressDeliveriesUi } from '@/widgets/deliveries/in-progress-deliveries';
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { widgetDeliveriesMarketUi } from '@/widgets/deliveries/deliveres-market';
+import { sharedConfigRoutes } from '@/shared/config';
 import { sharedUiComponents, sharedUiLayouts } from '@/shared/ui';
 import { Button, Spacer } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +13,9 @@ import { Link } from 'react-router-dom';
 import { translationNS } from '../../config';
 
 const { Heading } = sharedUiComponents;
+const {
+    RouteName: { DELIVERIES },
+} = sharedConfigRoutes;
 const { InProgressDeliveriesSlider } = widgetInProgressDeliveriesUi;
 const { DeliveriesMarket } = widgetDeliveriesMarketUi;
 const { NavbarMobile } = widgetNavbarMobileUi;
@@ -53,18 +57,12 @@ const UpcomingDeliveries: FunctionComponent = () => {
     const sectionHeading = t('upcoming_deliveries');
 
     const allDeliveriesLabel = t('all_upcoming_deliveries');
-    const allDeliveriesButtonLink = '/deliveries/upcoming';
 
     return (
         <Section>
             <SectionHead>
                 <h2 className="text-xl font-bold">{sectionHeading}</h2>
-                <Button
-                    as={Link}
-                    to={allDeliveriesButtonLink}
-                    size="sm"
-                    radius="full"
-                >
+                <Button as={Link} to={DELIVERIES} size="sm" radius="full">
                     {allDeliveriesLabel}
                 </Button>
             </SectionHead>

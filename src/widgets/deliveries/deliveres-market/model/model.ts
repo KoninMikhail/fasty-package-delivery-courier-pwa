@@ -1,11 +1,11 @@
 import { createEffect, createStore, sample } from 'effector';
-import { couriersApi, Delivery } from '@/shared/api';
+import { apiClient, Delivery } from '@/shared/api';
 import { createGate } from 'effector-react';
 
 export const MarketGate = createGate();
 
 const fetchUpcomingDeliveriesFx = createEffect(async () => {
-    return couriersApi.fetchUpcomingDeliveries();
+    return apiClient.fetchUpcomingDeliveries();
 });
 
 export const $avaliableDeliveries = createStore<Delivery[]>([]);

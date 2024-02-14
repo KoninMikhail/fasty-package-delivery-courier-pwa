@@ -1,8 +1,9 @@
 import {createEffect, createStore} from 'effector';
-import {couriersApi} from "@/shared/api";
+import {apiClient} from "@/shared/api";
+import {debug} from "patronum";
 
 export const getMyDeliveriesFx = createEffect(async () => {
-    return couriersApi.fetchUpcomingDeliveries();
+    return apiClient.fetchUpcomingDeliveries();
 }
 
 export const $myDeliveries = createStore([]);

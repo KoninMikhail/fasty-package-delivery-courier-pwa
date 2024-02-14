@@ -1,6 +1,6 @@
 import { createGate } from 'effector-react';
 import { createEffect, createStore, sample } from 'effector';
-import { couriersApi } from '@/shared/api';
+import { apiClient } from '@/shared/api';
 
 /**
  * Gateway for the delivery details page
@@ -11,7 +11,7 @@ export const DeliveryDetailsPageGateway = createGate<{ deliveryId?: string }>();
  * Fetches delivery details by id
  */
 const fetchDeliveryDetailsFx = createEffect(async (data: string) => {
-    return couriersApi.fetchDeliveryById({ params: { deliveryId: data } });
+    return apiClient.fetchDeliveryById({ params: { deliveryId: data } });
 });
 
 sample({
