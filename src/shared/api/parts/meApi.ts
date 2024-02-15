@@ -13,14 +13,14 @@ export const meApi = makeApi([
     {
         method: 'get',
         path: '/deliveriesActive',
-        alias: 'fetchActiveDeliveries',
+        alias: 'getActiveDeliveries',
         description: 'Fetch active deliveries',
         response: z.any(),
     },
     {
         method: 'get',
         path: '/deliveriesHistory',
-        alias: 'fetchDeliveriesHistory',
+        alias: 'getDeliveriesHistory',
         description: 'Fetch deliveries history',
         response: z.any(),
     },

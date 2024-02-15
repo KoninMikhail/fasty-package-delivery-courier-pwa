@@ -5,7 +5,7 @@ export const searchApi = makeApi([
     {
         method: 'get',
         path: '/',
-        alias: 'searchByNumber',
+        alias: 'searchDeliveriesById',
         description: 'Search for a product',
         response: z.any(),
         parameters: [

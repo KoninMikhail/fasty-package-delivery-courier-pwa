@@ -1,4 +1,4 @@
-import type { PropsWithChildren } from 'react';
+import { PropsWithChildren, useEffect } from 'react';
 
 import { widgetInProgressDeliveriesUi } from '@/widgets/deliveries/in-progress-deliveries';
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
@@ -6,6 +6,7 @@ import { widgetAccountDeliveriesMapUi } from '@/widgets/deliveries/account-deliv
 import { sharedUiComponents } from '@/shared/ui';
 import { viewerUi } from '@/entities/viewer';
 import { useScroll } from 'framer-motion';
+import { apiClient } from '@/shared/api';
 
 const { Authorized } = viewerUi;
 const { InProgressDeliveriesList } = widgetInProgressDeliveriesUi;
@@ -48,6 +49,10 @@ const Header: FunctionComponent = () => {
 };
 
 export const MobileProfilePageView: FunctionComponent = () => {
+    useEffect(() => {
+        const data = async () => apiClient.getActiveDeliveries();
+        console.log(data());
+    }, []);
     return (
         <Authorized>
             <Wrapper>

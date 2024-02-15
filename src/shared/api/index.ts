@@ -9,7 +9,7 @@ export const apis = mergeApis({
     '/deliveries': deliveriesApi,
     '/users': usersApi,
     '/me': meApi,
-    '/deliveriesSearch': searchApi,
+    '/search': searchApi,
 });
 
 export const apiClient = new Zodios(apis, {

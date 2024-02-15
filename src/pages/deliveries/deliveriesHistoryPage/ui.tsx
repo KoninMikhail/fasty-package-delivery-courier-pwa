@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import { useDocumentTitle } from 'usehooks-ts';
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { viewerUi } from '@/entities/viewer';
+import { useEffect } from 'react';
+import { apiClient } from '@/shared/api';
 
 const { Authorized } = viewerUi;
 const { NavbarMobile } = widgetNavbarMobileUi;
@@ -17,6 +19,17 @@ const Header: FunctionComponent<{ header: string }> = ({ header }) => (
 
 export const DeliveriesHistoryPage: FunctionComponent = () => {
     useDocumentTitle(PAGE_TITLE);
+
+    useEffect(() => {
+        console.log(
+            apiClient.searchDeliveriesById({
+                queries: {
+                    query: '3',
+                },
+            }),
+        );
+    }, []);
+
     return (
         <Authorized>
             <Header header={PAGE_HEADING} />

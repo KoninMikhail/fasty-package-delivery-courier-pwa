@@ -46,3 +46,36 @@ instance.interceptors.response.use(
         return Promise.reject(error);
     },
 );
+
+const rewriteRules = [
+    {
+        source: '/me/deliveriesActive',
+        target: '/deliveriesActive',
+    },
+    {
+        source: '/me/deliveriesHistory',
+        target: '/deliveriesHistory',
+    },
+];
+
+instance.interceptors.request.use(
+    (config) => {
+        if (config.url) {
+            // Iterate over the rewriteRules to find a matching source URL
+            const rule = rewriteRules.find(
+                (rule) => config.url === rule.source,
+            );
+            if (rule) {
+                // If a match is found, rewrite the URL to the target
+                config.url = rule.target;
+            }
+        }
+
+        // Continue with the (potentially modified) config
+        return config;
+    },
+    (error) => {
+        // Handle the error
+        return Promise.reject(error);
+    },
+);
