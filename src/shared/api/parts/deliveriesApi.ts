@@ -180,6 +180,20 @@ export const deliveriesApi = makeApi([
         response: z.array(deliverySchema),
         errors: deliveriesErrors,
     },
+    {
+        method: 'get',
+        path: '/active',
+        alias: 'getActiveDeliveries',
+        description: 'Fetch active deliveries',
+        response: z.any(),
+    },
+    {
+        method: 'get',
+        path: '/history',
+        alias: 'getDeliveriesHistory',
+        description: 'Fetch deliveries history',
+        response: z.any(),
+    },
 ]);
 
 export type DeliveriesApi = typeof deliveriesApi;

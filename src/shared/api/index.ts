@@ -1,6 +1,5 @@
 import { mergeApis, Zodios } from '@zodios/core';
 import { searchApi } from './parts/searchApi';
-import { meApi } from './parts/meApi';
 import { instance } from './instance';
 import { deliveriesApi } from './parts/deliveriesApi';
 import { usersApi } from './parts/usersApi';
@@ -8,7 +7,6 @@ import { usersApi } from './parts/usersApi';
 export const apis = mergeApis({
     '/deliveries': deliveriesApi,
     '/users': usersApi,
-    '/me': meApi,
     '/search': searchApi,
 });
 

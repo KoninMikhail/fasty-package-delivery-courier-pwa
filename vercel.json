@@ -8,7 +8,11 @@
     },
     {
       "source": "/search/(.*)",
-      "destination": "/deliveriesSearch?query=$1"
+      "destination": "/deliveriesSearch/:path*"
+    },
+    {
+      "source": "/users/me",
+      "destination": "/me"
     }
   ],
   "headers": [
