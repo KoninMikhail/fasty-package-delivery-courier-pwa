@@ -1,7 +1,6 @@
 import { createStore, sample } from 'effector';
 import { Session, sharedAuthEffects } from '@/shared/auth';
 import { createGate } from 'effector-react';
-import { debug } from 'patronum';
 
 const { authByEMailRequestFx, getSessionFx, removeSessionFx } =
     sharedAuthEffects;
@@ -46,5 +45,3 @@ sample({
     fn: () => null,
     target: $session,
 });
-
-debug($session);

@@ -24,7 +24,6 @@ interface IDeliveryCardRowShortProperties {
 export const DeliveryCardRowShort: FunctionComponent<
     IDeliveryCardRowShortProperties
 > = ({ delivery, size, featureSlotTop, featureSlotBottom, onPress }) => {
-    console.log(delivery);
     return (
         <Card className="max-w-[600px] shadow-md " onPress={onPress}>
             <CardHeader className="flex gap-3">

@@ -1,12 +1,11 @@
 import { createEffect, createStore, sample } from 'effector';
-import { couriersApi, Delivery } from '@/shared/api';
-import { debug } from 'patronum';
+import { apiClient, Delivery } from '@/shared/api';
 import { createGate } from 'effector-react';
 
 export const MarketGate = createGate();
 
 const fetchUpcomingDeliveriesFx = createEffect(async () => {
-    return couriersApi.fetchUpcomingDeliveries();
+    return apiClient.fetchUpcomingDeliveries();
 });
 
 export const $avaliableDeliveries = createStore<Delivery[]>([]);
@@ -21,6 +20,3 @@ sample({
     clock: fetchUpcomingDeliveriesFx.doneData,
     target: $avaliableDeliveries,
 });
-
-debug($avaliableDeliveries);
-debug(fetchUpcomingDeliveriesFx);

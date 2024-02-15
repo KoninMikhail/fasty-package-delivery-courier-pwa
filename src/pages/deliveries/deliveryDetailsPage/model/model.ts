@@ -1,3 +1,29 @@
 import { createGate } from 'effector-react';
+import { createEffect, createStore, sample } from 'effector';
+import { apiClient } from '@/shared/api';
 
-export const DeliveryDetailsPageGateway = createGate();
+/**
+ * Gateway for the delivery details page
+ */
+export const DeliveryDetailsPageGateway = createGate<{ deliveryId?: string }>();
+
+/**
+ * Fetches delivery details by id
+ */
+const fetchDeliveryDetailsFx = createEffect(async (data: string) => {
+    return apiClient.fetchDeliveryById({ params: { deliveryId: data } });
+});
+
+sample({
+    clock: DeliveryDetailsPageGateway.open,
+    filter: (data) => !!data.deliveryId,
+    fn: (data) => data.deliveryId,
+    target: fetchDeliveryDetailsFx,
+});
+
+/**
+ * Delivery details store
+ */
+export const $deliveryDetailsStore = createStore<string>('')
+    .on(fetchDeliveryDetailsFx.doneData, (_, data) => data)
+    .reset(DeliveryDetailsPageGateway.close);

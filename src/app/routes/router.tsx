@@ -13,7 +13,7 @@ import { deliveriesHistoryPageUi } from '@/pages/deliveries/deliveriesHistoryPag
 const { RouteName } = sharedConfigRoutes;
 const { SuspenseLayout } = sharedUiLayouts;
 
-const { RootPage } = rootPageUi;
+const { DeliveriesMarketPage } = rootPageUi;
 const { NotFoundPage } = notfoundPageUi;
 const { ProfilePage } = profilePageUi;
 const { SettingsPage } = settingsPageUi;
@@ -24,10 +24,10 @@ const { AuthPage } = authPageUi;
 const {
     ROOT_PAGE,
     AUTH_PAGE,
-    PROFILE_PAGE,
+    DELIVERIES,
+    DELIVERIES_DETAIL_PAGE,
     SETTINGS_PAGE,
     DELIVERIES_HISTORY_PAGE,
-    DELIVERY_DETAILS_PAGE,
 } = RouteName;
 
 const routes: sharedConfigRoutes.RouteDescription[] = [
@@ -37,14 +37,14 @@ const routes: sharedConfigRoutes.RouteDescription[] = [
     },
     {
         path: ROOT_PAGE,
-        component: RootPage,
+        component: DeliveriesMarketPage,
     },
     {
-        path: PROFILE_PAGE,
+        path: DELIVERIES,
         component: ProfilePage,
     },
     {
-        path: DELIVERY_DETAILS_PAGE,
+        path: DELIVERIES_DETAIL_PAGE,
         component: DeliveryDetailsPage,
     },
     {

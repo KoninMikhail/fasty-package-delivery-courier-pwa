@@ -2,10 +2,9 @@ import { createEvent, createStore, Effect, sample } from 'effector';
 import { modelFactory } from 'effector-factorio';
 import { Email } from '@/shared/lib/type-guards/isEmail';
 import isEmail from '@/shared/lib/type-guards/isEmail/isEmail';
-import { ResetUserPasswordRequest } from '@/shared/api/couriersApi';
 
 interface FactoryOptions {
-    resetFx: Effect<ResetUserPasswordRequest, void, Error>;
+    resetFx: Effect<{ email: string }, void, Error>;
 }
 
 export const factory = modelFactory((options: FactoryOptions) => {

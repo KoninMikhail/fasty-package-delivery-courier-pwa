@@ -1,5 +1,16 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" },
+    { "source": "/me/deliveriesHistory", "destination": "/deliveriesHistory" },
+    {
+      "source": "/me/deliveriesActive",
+      "destination": "/deliveriesActive"
+    },
+    {
+      "source": "/search",
+      "destination": "/deliveriesSearch"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
