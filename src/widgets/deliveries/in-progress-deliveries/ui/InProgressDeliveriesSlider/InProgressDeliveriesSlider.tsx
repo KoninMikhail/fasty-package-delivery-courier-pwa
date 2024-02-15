@@ -1,14 +1,12 @@
 import { DeliveryCardRowShort } from '@/entities/delivery/ui';
+import { useList } from 'effector-react';
+import { $inProgressDeliveries } from '@/widgets/deliveries/in-progress-deliveries/model/model';
 
 export const InProgressDeliveriesSlider: FunctionComponent = () => {
-    const items = [1, 2, 3, 4, 5, 6];
+    const items = useList($inProgressDeliveries, (delivery) => (
+        <DeliveryCardRowShort delivery={delivery} />
+    ));
     return (
-        <div className="flex flex-nowrap justify-start gap-4 py-2">
-            {items.map((item) => (
-                <div className="block w-72" key={item}>
-                    <DeliveryCardRowShort />
-                </div>
-            ))}
-        </div>
+        <div className="flex flex-nowrap justify-start gap-4 py-2">{items}</div>
     );
 };

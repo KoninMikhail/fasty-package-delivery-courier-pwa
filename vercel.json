@@ -3,7 +3,7 @@
     { "source": "/(.*)", "destination": "/index.html" },
     {
       "source": "/users/me",
-      "destination": "/me"
+      "destination": "https://crm-api.a1stage.ru/api/me"
     }
   ],
   "headers": [

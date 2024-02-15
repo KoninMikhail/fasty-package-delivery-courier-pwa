@@ -2,11 +2,13 @@ import { Link } from 'react-router-dom';
 import { useDocumentTitle } from 'usehooks-ts';
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { viewerUi } from '@/entities/viewer';
+import { widgetsDeliveriesHistoryUi } from '@/widgets/deliveries/history-deliveries';
 import { useEffect } from 'react';
-import { apiClient } from '@/shared/api';
+import { getDeliveriesHistoryFx } from '@/widgets/deliveries/history-deliveries/model';
 
 const { Authorized } = viewerUi;
 const { NavbarMobile } = widgetNavbarMobileUi;
+const { DeliveriesHistoryList } = widgetsDeliveriesHistoryUi;
 
 const PAGE_TITLE = 'Доставки';
 const PAGE_HEADING = 'История доставок';
@@ -21,13 +23,7 @@ export const DeliveriesHistoryPage: FunctionComponent = () => {
     useDocumentTitle(PAGE_TITLE);
 
     useEffect(() => {
-        console.log(
-            apiClient.searchDeliveriesById({
-                queries: {
-                    query: '3',
-                },
-            }),
-        );
+        void getDeliveriesHistoryFx();
     }, []);
 
     return (
@@ -35,6 +31,7 @@ export const DeliveriesHistoryPage: FunctionComponent = () => {
             <Header header={PAGE_HEADING} />
             sss
             <Link to="/">GotoHome</Link>
+            <DeliveriesHistoryList />
             <NavbarMobile />
         </Authorized>
     );
