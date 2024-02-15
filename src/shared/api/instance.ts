@@ -46,3 +46,11 @@ instance.interceptors.response.use(
         return Promise.reject(error);
     },
 );
+
+instance.interceptors.request.use((config) => {
+    const urlToReplace = '/users/me';
+    if (config.url?.includes(urlToReplace)) {
+        return { ...config, url: config.url.replace(urlToReplace, '/me') };
+    }
+    return config;
+});

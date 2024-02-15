@@ -2,8 +2,8 @@
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" },
     {
-      "source": "/api/users/me",
-      "destination": "/api/me"
+      "source": "/users/me",
+      "destination": "/me"
     }
   ],
   "headers": [
