@@ -1,13 +1,13 @@
 {
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" },
-    { "source": "/me/deliveriesHistory", "destination": "/deliveriesHistory" },
+    { "source": "/deliveries/history", "destination": "/deliveriesHistory" },
     {
-      "source": "/me/deliveriesActive",
+      "source": "/deliveries/active",
       "destination": "/deliveriesActive"
     },
     {
-      "source": "/search/(.*)",
+      "source": "/search/:query",
       "destination": "/deliveriesSearch/:path*"
     },
     {
