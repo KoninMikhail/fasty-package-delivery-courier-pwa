@@ -1,14 +1,14 @@
 import { PropsWithChildren } from 'react';
 
-import { widgetInProgressDeliveriesUi } from '@/widgets/deliveries/in-progress-deliveries';
+import { widgetInProgressDeliveriesUi } from '@/widgets/deliveries/my-deliveries';
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
-import { widgetAccountDeliveriesMapUi } from '@/widgets/deliveries/account-deliveries-map';
 import { sharedUiComponents } from '@/shared/ui';
 import { viewerUi } from '@/entities/viewer';
 import { useScroll } from 'framer-motion';
+import { widgetAccountDeliveriesMapUi } from '@/widgets/deliveries/account-deliveries-map';
 
 const { Authorized } = viewerUi;
-const { InProgressDeliveriesList } = widgetInProgressDeliveriesUi;
+const { MyDeliveriesList } = widgetInProgressDeliveriesUi;
 const { AccountDeliveriesMap } = widgetAccountDeliveriesMapUi;
 const { NavbarMobile } = widgetNavbarMobileUi;
 const { Heading, Text, NativeScroll } = sharedUiComponents;
@@ -55,7 +55,7 @@ export const MobileProfilePageView: FunctionComponent = () => {
                 <FilterSection>filters</FilterSection>
                 <MapSection>map</MapSection>
                 <DeliveriesSection>
-                    <InProgressDeliveriesList />
+                    <MyDeliveriesList />
                 </DeliveriesSection>
             </Wrapper>
             <NavbarMobile />
