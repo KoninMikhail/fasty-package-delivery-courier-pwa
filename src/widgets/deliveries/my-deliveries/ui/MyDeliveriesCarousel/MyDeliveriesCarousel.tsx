@@ -1,6 +1,6 @@
 import { DeliveryCardRowShort } from '@/entities/delivery/ui';
 
-export const InProgressDeliveriesCarousel: FunctionComponent = () => {
+export const MyDeliveriesCarousel: FunctionComponent = () => {
     return (
         <div className="flex gap-4">
             <div className="block min-w-fit">

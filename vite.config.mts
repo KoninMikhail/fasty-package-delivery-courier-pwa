@@ -36,7 +36,7 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     tsconfigPaths(),
-    react(),
+    react({ plugins: [["@effector/swc-plugin", {}]] }),
     ...(mode === "test"
       ? []
       : [
