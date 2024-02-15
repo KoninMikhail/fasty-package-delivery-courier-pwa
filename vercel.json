@@ -7,8 +7,8 @@
       "destination": "/deliveriesActive"
     },
     {
-      "source": "/search/:query",
-      "destination": "/deliveriesSearch/:path*"
+      "source": "^/search(?:/?(.*))?$",
+      "destination": "/deliveriesSearch/$1"
     },
     {
       "source": "/users/me",
