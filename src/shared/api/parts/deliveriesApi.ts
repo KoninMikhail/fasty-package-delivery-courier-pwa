@@ -194,6 +194,21 @@ export const deliveriesApi = makeApi([
         description: 'Fetch deliveries history',
         response: z.any(),
     },
+    {
+        method: 'get',
+        path: '/search',
+        alias: 'searchDeliveriesById',
+        description: 'Search for a product',
+        response: z.any(),
+        parameters: [
+            {
+                name: 'query',
+                description: 'Search by delivery number',
+                type: 'Query',
+                schema: z.string(),
+            },
+        ],
+    },
 ]);
 
 export type DeliveriesApi = typeof deliveriesApi;
