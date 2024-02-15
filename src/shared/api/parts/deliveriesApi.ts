@@ -182,7 +182,7 @@ export const deliveriesApi = makeApi([
     },
     {
         method: 'get',
-        path: '/active',
+        path: '/my',
         alias: 'getActiveDeliveries',
         description: 'Fetch active deliveries',
         response: z.any(),
