@@ -1,7 +1,6 @@
 import type { PropsWithChildren } from 'react';
 import { entityDeliveryUi } from '@/entities/delivery';
 import { useGate, useList, useUnit } from 'effector-react';
-import { Link } from 'react-router-dom';
 import { sharedConfigRoutes } from '@/shared/config';
 import { Offline } from '@/entities/viewer/ui';
 import {
@@ -13,7 +12,7 @@ import {
 const { RouteName } = sharedConfigRoutes;
 const { DELIVERIES } = RouteName;
 
-const { DeliveryCardRowShort } = entityDeliveryUi;
+const { DeliveryPreviewCard } = entityDeliveryUi;
 
 /**
  * Layout
@@ -36,12 +35,7 @@ export const DeliveriesMarket: FunctionComponent<PropsWithChildren> = () => {
 
     const deliveries = useList($avaliableDeliveries, (delivery) => {
         return (
-            <Link to={DELIVERIES} key={delivery.id}>
-                <DeliveryCardRowShort
-                    onPress={onPressCard}
-                    delivery={delivery}
-                />
-            </Link>
+            <DeliveryPreviewCard onPress={onPressCard} delivery={delivery} />
         );
     });
 
