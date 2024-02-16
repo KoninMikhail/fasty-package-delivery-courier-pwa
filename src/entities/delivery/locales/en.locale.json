@@ -1,0 +1,10 @@
+{
+  "delivery.label.address": "Address",
+  "delivery.label.id": "ID",
+  "delivery.label.storage": "Includes",
+  "delivery.label.weight": "Weight",
+  "delivery.chip.onCar": "On car",
+  "delivery.chip.onFoot": "On Foot",
+  "delivery.chip.express": "Express",
+  "delivery.weight.kg": "kg"
+}

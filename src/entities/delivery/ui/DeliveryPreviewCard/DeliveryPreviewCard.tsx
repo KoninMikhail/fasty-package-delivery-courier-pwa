@@ -10,13 +10,29 @@ import {
     Spacer,
 } from '@nextui-org/react';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import { MdAssignmentAdd } from 'react-icons/md';
+import { sharedConfigLocale } from '@/shared/config';
+
+import locale_en from '../../locales/en.locale.json';
+import locale_ru from '../../locales/ru.locale.json';
+
+import { translationNS } from '../../config';
+
+const { locale } = sharedConfigLocale;
+
+/**
+ * locale
+ */
+locale.addResourceBundle('en', translationNS, locale_en);
+locale.addResourceBundle('ru', translationNS, locale_ru);
 
 const ID: FunctionComponent<{ id: number | string }> = ({ id }) => {
+    const { t } = useTranslation(translationNS);
     return (
         <div className="flex flex-col">
-            <span className="text-md">Номер доставки</span>
+            <span className="text-md">{t('delivery.label.id')}</span>
             <span className="text-md font-bold">{`# ${id}`}</span>
         </div>
     );
@@ -26,21 +42,30 @@ const Badges: FunctionComponent<{
     isExpress: boolean;
     isCar: boolean;
 }> = ({ isExpress, isCar }) => {
+    const { t } = useTranslation(translationNS);
+
+    /**
+     * Locale
+     */
+    const expressLabel = t('delivery.chip.express');
+    const onFootLabel = t('delivery.chip.onFoot');
+    const onCarLabel = t('delivery.chip.onCar');
+
     return (
         <div className="flex justify-end gap-1">
             {isExpress ? (
                 <Chip color="danger" size="sm" variant="solid">
-                    Срочно
+                    {expressLabel}
                 </Chip>
             ) : null}
 
             {isCar ? (
                 <Chip color="success" size="sm" variant="dot">
-                    Пешком
+                    {onFootLabel}
                 </Chip>
             ) : (
                 <Chip color="success" size="sm" variant="dot">
-                    На авто
+                    {onCarLabel}
                 </Chip>
             )}
         </div>
@@ -63,9 +88,16 @@ const PickupDateTime: FunctionComponent<{
 const Storage: FunctionComponent<{ contents: string }> = ({
     contents = 'не описано',
 }) => {
+    const { t } = useTranslation(translationNS);
+
+    /**
+     * Locale
+     */
+    const storageLabel = `${t('delivery.label.storage')}:`;
+
     return (
         <div>
-            <div className="font-bold">Содержимое:</div>
+            <div className="font-bold">{storageLabel}</div>
             <div>{contents}</div>
         </div>
     );
@@ -74,10 +106,22 @@ const Storage: FunctionComponent<{ contents: string }> = ({
 const Weight: FunctionComponent<{ weight: number | string }> = ({
     weight = 0,
 }) => {
+    const { t } = useTranslation(translationNS);
+
+    /**
+     * Values
+     */
+    const weightFormatted = Number(weight).toFixed(2);
+    /**
+     * Locale
+     */
+    const weightLabel = `${t('delivery.label.weight')}:`;
+    const weightValue = `${weightFormatted} ${t('delivery.weight.kg')}`;
+
     return (
         <div className="min-w-16 flex-grow-0">
-            <div className="font-bold">Вес:</div>
-            <div>{`${weight} кг`}</div>
+            <div className="font-bold">{weightLabel}</div>
+            <div>{weightValue}</div>
         </div>
     );
 };
@@ -85,9 +129,16 @@ const Weight: FunctionComponent<{ weight: number | string }> = ({
 const Address: FunctionComponent<{ address: string }> = ({
     address = 'не указан',
 }) => {
+    const { t } = useTranslation(translationNS);
+
+    /**
+     * Locale
+     */
+    const addressLabel = `${t('delivery.label.address')}:`;
+
     return (
         <div>
-            <div className="font-bold">Адрес:</div>
+            <div className="font-bold">{addressLabel}</div>
             <div>{address}</div>
         </div>
     );
