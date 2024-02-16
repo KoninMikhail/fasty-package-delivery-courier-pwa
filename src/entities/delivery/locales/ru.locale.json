@@ -1,0 +1,10 @@
+{
+  "delivery.label.address": "Адрес",
+  "delivery.label.id": "Номер заказа",
+  "delivery.label.storage": "Содержимое",
+  "delivery.label.weight": "Вес",
+  "delivery.chip.onCar": "На машине",
+  "delivery.chip.onFoot": "Пешком",
+  "delivery.chip.express": "Срочно",
+  "delivery.weight.kg": "кг"
+}
