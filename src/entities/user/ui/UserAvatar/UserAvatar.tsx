@@ -1,30 +1,33 @@
-import { Avatar, AvatarProps, Skeleton } from '@nextui-org/react';
+import { Avatar, AvatarProps } from '@nextui-org/react';
 import { User } from '@/shared/api';
-import { getUserInitials } from '../../lib/utils';
+import { forwardRef } from 'react';
 
-interface IUserAvatarProperties {
+/* eslint-disable unicorn/prevent-abbreviations */
+
+interface IUserAvatarProperties extends AvatarProps {
     user: Nullable<User>;
-    isBordered?: AvatarProps['isBordered'];
 }
 
-export const UserAvatar: FunctionComponent<IUserAvatarProperties> = ({
-    user,
-    isBordered,
-}) => {
-    const userInitials = (user && getUserInitials(user)) || undefined;
-    const userAvatar = user?.avatar || undefined;
+export const UserAvatar = forwardRef<HTMLButtonElement, IUserAvatarProperties>(
+    ({ user, ...rest }, ref) => {
+        const name = `${user?.first_name} ${user?.last_name}`;
+        const userAvatar = user?.avatar || undefined;
 
-    const isLoaded = !!user;
-
-    return (
-        <Skeleton isLoaded={isLoaded} className="rounded-full">
+        return (
             <Avatar
-                isBordered={isBordered}
-                name={userInitials}
+                ref={ref}
+                name={name}
                 as="button"
+                getInitials={(name) =>
+                    name
+                        ?.split(' ')
+                        .map((n) => n[0])
+                        .join('')
+                }
                 className="transition-transform"
                 src={userAvatar}
+                {...rest}
             />
-        </Skeleton>
-    );
-};
+        );
+    },
+);
