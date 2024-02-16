@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from 'react';
 import { Heading } from '@/shared/ui/components';
 import { DeliveriesMarket } from '@/widgets/deliveries/deliveres-market/ui';
-import { InProgressDeliveriesSlider } from '@/widgets/deliveries/in-progress-deliveries/ui';
+import { MyDeliveriesSlider } from '@/widgets/deliveries/my-deliveries/ui';
 import { widgetFooterUi } from '@/widgets/layout/footer';
 import { widgetHeaderUi } from '@/widgets/layout/header';
 import { Spacer } from '@nextui-org/react';
@@ -26,7 +26,7 @@ export const DesktopDeliveriesMarketPageView: FunctionComponent = () => {
                         Активные доставки
                     </Heading>
                     <Spacer y={8} />
-                    <InProgressDeliveriesSlider />
+                    <MyDeliveriesSlider />
                 </div>
                 <Spacer y={16} />
                 <div>

@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { useDocumentTitle } from 'usehooks-ts';
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { viewerUi } from '@/entities/viewer';
@@ -29,8 +28,6 @@ export const DeliveriesHistoryPage: FunctionComponent = () => {
     return (
         <Authorized>
             <Header header={PAGE_HEADING} />
-            sss
-            <Link to="/">GotoHome</Link>
             <DeliveriesHistoryList />
             <NavbarMobile />
         </Authorized>

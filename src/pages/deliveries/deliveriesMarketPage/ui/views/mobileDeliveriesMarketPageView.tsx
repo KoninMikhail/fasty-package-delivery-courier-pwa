@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react';
 
-import { widgetInProgressDeliveriesUi } from '@/widgets/deliveries/in-progress-deliveries';
+import { widgetInProgressDeliveriesUi } from '@/widgets/deliveries/my-deliveries';
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { widgetDeliveriesMarketUi } from '@/widgets/deliveries/deliveres-market';
 import { sharedConfigRoutes } from '@/shared/config';
@@ -16,7 +16,7 @@ const { Heading } = sharedUiComponents;
 const {
     RouteName: { DELIVERIES },
 } = sharedConfigRoutes;
-const { InProgressDeliveriesSlider } = widgetInProgressDeliveriesUi;
+const { MyDeliveriesSlider } = widgetInProgressDeliveriesUi;
 const { DeliveriesMarket } = widgetDeliveriesMarketUi;
 const { NavbarMobile } = widgetNavbarMobileUi;
 const { HorizontalScroll } = sharedUiLayouts;
@@ -67,7 +67,7 @@ const UpcomingDeliveries: FunctionComponent = () => {
                 </Button>
             </SectionHead>
             <HorizontalScroll className="px-4">
-                <InProgressDeliveriesSlider />
+                <MyDeliveriesSlider />
             </HorizontalScroll>
         </Section>
     );

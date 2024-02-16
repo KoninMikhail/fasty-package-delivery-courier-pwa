@@ -7,7 +7,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useDocumentTitle } from 'usehooks-ts';
 import { useEffect } from 'react';
-import { getInProgressDeliveriesFx } from '@/widgets/deliveries/in-progress-deliveries/model/model';
+import { getInProgressDeliveriesFx } from '@/widgets/deliveries/my-deliveries/model/model';
 import { DesktopProfilePageView, MobileProfilePageView } from './views';
 import { translationNS } from '../config';
 import locale_en from '../locales/en.locale.json';
