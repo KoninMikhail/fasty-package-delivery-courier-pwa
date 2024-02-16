@@ -4,12 +4,9 @@ import { widgetInProgressDeliveriesUi } from '@/widgets/deliveries/my-deliveries
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { sharedUiComponents } from '@/shared/ui';
 import { viewerUi } from '@/entities/viewer';
-import { useScroll } from 'framer-motion';
-import { widgetAccountDeliveriesMapUi } from '@/widgets/deliveries/account-deliveries-map';
 
 const { Authorized } = viewerUi;
 const { MyDeliveriesList } = widgetInProgressDeliveriesUi;
-const { AccountDeliveriesMap } = widgetAccountDeliveriesMapUi;
 const { NavbarMobile } = widgetNavbarMobileUi;
 const { Heading, Text, NativeScroll } = sharedUiComponents;
 
@@ -32,7 +29,6 @@ const MapSection: FunctionComponent = () => (
 );
 
 const Header: FunctionComponent = () => {
-    const { scrollY, scrollYProgress } = useScroll();
     return (
         <header className="max-w-full gap-4 bg-black px-4 pb-12 pt-6">
             <div>

@@ -12,6 +12,7 @@ const Root: FunctionComponent<PropsWithChildren> = ({ children }) => {
 export const WelcomeTopbar: FunctionComponent = () => {
     const profile = useUnit(viewerProfileModel.$profileDataStore);
     const viewerName = profile?.first_name || '';
+
     return (
         <Root>
             <WelcomeTopbarGate />

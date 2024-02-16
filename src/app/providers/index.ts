@@ -1,5 +1,6 @@
 import compose from 'compose-function';
 
+import { withNetworkInfo } from '@/app/providers/withNetworkInfo';
 import { withDeviceInfo } from './withDeviceInfo';
 import { withNextThemes } from './withNextThemes';
 import { withRouter } from './withRouter';
@@ -11,5 +12,6 @@ export const withProviders = compose(
     withLocale,
     withUi,
     withDeviceInfo,
+    withNetworkInfo,
     withNextThemes,
 );

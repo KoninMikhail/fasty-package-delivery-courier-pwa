@@ -1,6 +1,6 @@
 import { DeliveryCardRowShort } from '@/entities/delivery/ui';
 import { useList } from 'effector-react';
-import { $inProgressDeliveries } from '@/widgets/deliveries/in-progress-deliveries/model/model';
+import { $inProgressDeliveries } from '@/widgets/deliveries/my-deliveries/model';
 
 export const MyDeliveriesSlider: FunctionComponent = () => {
     const items = useList($inProgressDeliveries, (delivery) => (
