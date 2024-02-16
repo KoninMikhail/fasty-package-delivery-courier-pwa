@@ -1,4 +1,10 @@
-import { Input } from '@nextui-org/react';
+import {
+    Dropdown,
+    DropdownItem,
+    DropdownMenu,
+    DropdownTrigger,
+    Input,
+} from '@nextui-org/react';
 import { PropsWithChildren } from 'react';
 import { useUnit } from 'effector-react';
 import { viewerProfileModel } from '@/entities/viewer';
@@ -26,7 +32,28 @@ export const WelcomeTopbar: FunctionComponent = () => {
                     </div>
                 </div>
                 <div>
-                    <UserAvatar user={profile} isBordered />
+                    <Dropdown placement="bottom-end">
+                        <DropdownTrigger>
+                            <UserAvatar user={profile} isBordered />
+                        </DropdownTrigger>
+                        <DropdownMenu
+                            aria-label="Profile Actions"
+                            variant="flat"
+                        >
+                            <DropdownItem key="profile" className="h-14 gap-2">
+                                <p className="font-semibold">Signed in as</p>
+                                <p className="font-semibold">
+                                    zoey@example.com
+                                </p>
+                            </DropdownItem>
+                            <DropdownItem key="settings">
+                                My Settings
+                            </DropdownItem>
+                            <DropdownItem key="logout" color="danger">
+                                Log Out
+                            </DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
                 </div>
             </div>
             <div>
