@@ -9,71 +9,165 @@ import {
     Divider,
     Spacer,
 } from '@nextui-org/react';
+import clsx from 'clsx';
+import { format } from 'date-fns';
+import { MdAssignmentAdd } from 'react-icons/md';
+
+const ID: FunctionComponent<{ id: number | string }> = ({ id }) => {
+    return (
+        <div className="flex flex-col">
+            <span className="text-md">Номер доставки</span>
+            <span className="text-md font-bold">{`# ${id}`}</span>
+        </div>
+    );
+};
+
+const Badges: FunctionComponent<{
+    isExpress: boolean;
+    isCar: boolean;
+}> = ({ isExpress, isCar }) => {
+    return (
+        <div className="flex justify-end gap-1">
+            {isExpress ? (
+                <Chip color="danger" size="sm" variant="solid">
+                    Срочно
+                </Chip>
+            ) : null}
+
+            {isCar ? (
+                <Chip color="success" size="sm" variant="dot">
+                    Пешком
+                </Chip>
+            ) : (
+                <Chip color="success" size="sm" variant="dot">
+                    На авто
+                </Chip>
+            )}
+        </div>
+    );
+};
+
+const PickupDateTime: FunctionComponent<{
+    date: string;
+    timeStart: string;
+    timeEnd: string;
+}> = ({ date, timeStart, timeEnd }) => {
+    const deliveryDateFormatted = format(new Date(date), 'dd.MM.yyyy');
+    return (
+        <div>
+            <span className="text-small text-default-500">{`${deliveryDateFormatted} ${timeStart} - ${timeEnd}`}</span>
+        </div>
+    );
+};
+
+const Storage: FunctionComponent<{ contents: string }> = ({
+    contents = 'не описано',
+}) => {
+    return (
+        <div>
+            <div className="font-bold">Содержимое:</div>
+            <div>{contents}</div>
+        </div>
+    );
+};
+
+const Weight: FunctionComponent<{ weight: number | string }> = ({
+    weight = 0,
+}) => {
+    return (
+        <div className="min-w-16 flex-grow-0">
+            <div className="font-bold">Вес:</div>
+            <div>{`${weight} кг`}</div>
+        </div>
+    );
+};
+
+const Address: FunctionComponent<{ address: string }> = ({
+    address = 'не указан',
+}) => {
+    return (
+        <div>
+            <div className="font-bold">Адрес:</div>
+            <div>{address}</div>
+        </div>
+    );
+};
 
 interface DeliveryPreviewCardProperties {
     delivery: Delivery;
-    onPress?: () => void;
+    onPressPreview?: (deliveryId: Delivery['id']) => void;
+    onPressAssign?: (deliveryId: Delivery['id']) => void;
 }
 
 export const DeliveryPreviewCard: FunctionComponent<
     DeliveryPreviewCardProperties
-> = ({ delivery, onPress }) => {
-    console.log(delivery);
-    return (
-        <Card className="max-w-[600px] shadow-md " onPress={onPress}>
-            <CardHeader className="flex justify-between gap-3">
-                <div className="flex flex-col">
-                    <p className="text-md font-bold">Номер доставки</p>
-                    <p className="text-md font-bold">{delivery?.id}</p>
-                </div>
-                <div className="flex flex-col text-right">
-                    <div className="flex justify-end gap-1">
-                        {delivery?.express ? (
-                            <Chip color="danger" size="sm" variant="solid">
-                                Срочно
-                            </Chip>
-                        ) : null}
+> = ({ delivery, onPressPreview, onPressAssign }) => {
+    const isExpress = delivery?.express;
+    const isCar = delivery?.car;
 
-                        {delivery.car ? (
-                            <Chip color="success" size="sm" variant="dot">
-                                Пешком
-                            </Chip>
-                        ) : (
-                            <Chip color="success" size="sm" variant="dot">
-                                На авто
-                            </Chip>
-                        )}
-                    </div>
-                    <p className="text-small text-default-500">{`${delivery?.time_start} - ${delivery?.time_end}`}</p>
+    const onPressPreviewHandle = (): void => {
+        if (onPressPreview) {
+            onPressPreview(delivery.id);
+        }
+    };
+
+    const onPressAssignHandle = (): void => {
+        if (onPressAssign) {
+            onPressAssign(delivery.id);
+        }
+    };
+
+    const outputCardBodyClass = clsx('max-w-[600px] shadow-md', {
+        'border-2': isExpress,
+        'border-danger': isExpress,
+    });
+
+    return (
+        <Card className={outputCardBodyClass}>
+            <CardHeader className="flex justify-between gap-3">
+                <ID id={delivery?.id} />
+                <div className="flex flex-col text-right">
+                    <Badges isCar={isCar} isExpress={isExpress} />
+                    <PickupDateTime
+                        date={delivery?.date}
+                        timeStart={delivery?.time_start}
+                        timeEnd={delivery?.time_end}
+                    />
                 </div>
             </CardHeader>
             <Divider />
             <CardBody>
-                <div>
-                    <div className="font-bold">Содержимое:</div>
-                    <div>{delivery?.contents}</div>
-                </div>
+                <Storage contents={delivery?.contents} />
                 <Spacer y={2} />
                 <div className="flex gap-2">
                     <div className="flex-grow">
-                        {delivery?.address?.delivery_type === 'courier' && (
-                            <>
-                                <div className="font-bold">Адрес:</div>
-                                <div>{delivery?.address?.address}</div>
-                            </>
-                        )}
+                        <Address address={delivery?.address?.address} />
                     </div>
-                    <div className="min-w-16 flex-grow-0">
-                        <div className="font-bold">Вес:</div>
-                        <div>{`${delivery?.weight} кг`}</div>
-                    </div>
+                    <Weight weight={delivery?.weight} />
                 </div>
             </CardBody>
             <Divider />
             <CardFooter>
-                <Button fullWidth color="primary">
-                    Взять в работу
-                </Button>
+                <div className="flex w-full gap-2">
+                    <div className="w-full">
+                        <Button
+                            fullWidth
+                            color="primary"
+                            onPress={onPressPreviewHandle}
+                        >
+                            Посмотреть
+                        </Button>
+                    </div>
+                    <div className="flex-shrink">
+                        <Button
+                            color="secondary"
+                            onPress={onPressAssignHandle}
+                            isIconOnly
+                        >
+                            <MdAssignmentAdd className="text-lg" />
+                        </Button>
+                    </div>
+                </div>
             </CardFooter>
         </Card>
     );
