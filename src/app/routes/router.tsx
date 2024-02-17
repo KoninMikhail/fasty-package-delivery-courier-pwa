@@ -9,6 +9,7 @@ import { authPageUi } from '@/pages/auth/authPage';
 import { rootPageUi } from '@/pages/deliveries/deliveriesMarketPage';
 import { settingsPageUi } from '@/pages/viewer/settingsPage';
 import { deliveriesHistoryPageUi } from '@/pages/deliveries/deliveriesHistoryPage';
+import { pageProfileEditUi } from '@/pages/viewer/profileEditPage';
 
 const { RouteName } = sharedConfigRoutes;
 const { SuspenseLayout } = sharedUiLayouts;
@@ -17,6 +18,7 @@ const { DeliveriesMarketPage } = rootPageUi;
 const { NotFoundPage } = notfoundPageUi;
 const { ProfilePage } = profilePageUi;
 const { SettingsPage } = settingsPageUi;
+const { ProfileEditPage } = pageProfileEditUi;
 const { DeliveriesHistoryPage } = deliveriesHistoryPageUi;
 const { DeliveryDetailsPage } = deliveryDetailsPageUi;
 const { AuthPage } = authPageUi;
@@ -28,6 +30,7 @@ const {
     DELIVERIES_DETAIL_PAGE,
     SETTINGS_PAGE,
     DELIVERIES_HISTORY_PAGE,
+    PROFILE_EDIT_PAGE,
 } = RouteName;
 
 const routes: sharedConfigRoutes.RouteDescription[] = [
@@ -54,6 +57,10 @@ const routes: sharedConfigRoutes.RouteDescription[] = [
     {
         path: SETTINGS_PAGE,
         component: SettingsPage,
+    },
+    {
+        path: PROFILE_EDIT_PAGE,
+        component: ProfileEditPage,
     },
 ];
 
