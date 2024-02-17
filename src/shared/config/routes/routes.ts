@@ -6,6 +6,7 @@ export enum RouteName {
     DELIVERIES_HISTORY_PAGE = '/history',
     DELIVERIES = '/deliveries',
     DELIVERIES_DETAIL_PAGE = `/deliveries/:deliveryId`,
+    PROFILE_EDIT_PAGE = '/profile',
     SETTINGS_PAGE = '/settings',
 }
 
