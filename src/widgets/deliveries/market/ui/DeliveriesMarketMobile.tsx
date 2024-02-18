@@ -1,14 +1,10 @@
 import type { PropsWithChildren } from 'react';
 import { deliveryUi } from '@/entities/delivery';
-import { useGate, useList, useUnit } from 'effector-react';
+import { useList, useUnit } from 'effector-react';
 import { sharedConfigRoutes } from '@/shared/config';
 import { Offline } from '@/entities/viewer/ui';
 import { useNetworkInfo } from '@/shared/config/network';
-import {
-    $avaliableDeliveries,
-    $isDeliveriesLoading,
-    MarketGate,
-} from '../model';
+import { $avaliableDeliveries, $isDeliveriesLoading } from '../model';
 
 const { RouteName } = sharedConfigRoutes;
 const { DELIVERIES } = RouteName;
@@ -35,8 +31,6 @@ export const DeliveriesMarketMobile: FunctionComponent = () => {
     const content = useList($avaliableDeliveries, (delivery) => {
         return <DeliveryShortInfoCard delivery={delivery} />;
     });
-
-    useGate(MarketGate, { online, effectiveType });
 
     if (isPending) {
         return <Offline>you are offline</Offline>;
