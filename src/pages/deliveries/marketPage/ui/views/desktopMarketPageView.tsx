@@ -8,7 +8,7 @@ import { Spacer } from '@nextui-org/react';
 
 const { Footer } = widgetFooterUi;
 const { Header } = widgetHeaderUi;
-const { MyDeliveriesSlider } = widgetInProgressDeliveriesUi;
+const { UpcomingDeliveriesSlider } = widgetInProgressDeliveriesUi;
 const { DeliveriesMarketMobile } = widgetDeliveriesMarketUi;
 
 const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
@@ -28,7 +28,7 @@ export const DesktopMarketPageView: FunctionComponent = () => {
                         Активные доставки
                     </Heading>
                     <Spacer y={8} />
-                    <MyDeliveriesSlider />
+                    <UpcomingDeliveriesSlider />
                 </div>
                 <Spacer y={16} />
                 <div>

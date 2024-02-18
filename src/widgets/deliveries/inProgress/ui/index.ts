@@ -1,2 +1,3 @@
-export * from './MyDeliveriesList';
-export * from './MyDeliveriesSlider';
+export * from './AssignedDeliveriesList';
+export * from './UpcomingDeliveriesSlider';
+export * from './UpcomingDeliveriesCarousel';

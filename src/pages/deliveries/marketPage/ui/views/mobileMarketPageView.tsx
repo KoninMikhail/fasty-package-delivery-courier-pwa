@@ -14,7 +14,7 @@ import { translationNS } from '../../config';
 const {
     RouteName: { DELIVERIES },
 } = sharedConfigRoutes;
-const { MyDeliveriesSlider } = widgetInProgressDeliveriesUi;
+const { UpcomingDeliveriesSlider } = widgetInProgressDeliveriesUi;
 const { DeliveriesMarketMobile } = widgetDeliveriesMarketUi;
 const { NavbarMobile } = widgetNavbarMobileUi;
 const { HorizontalScroll } = sharedUiLayouts;
@@ -75,7 +75,7 @@ const UpcomingDeliveries: FunctionComponent = () => {
                 </Button>
             </SectionHead>
             <HorizontalScroll className="px-4">
-                <MyDeliveriesSlider />
+                <UpcomingDeliveriesSlider />
             </HorizontalScroll>
         </Section>
     );
@@ -91,7 +91,7 @@ const AvailableDeliveries: FunctionComponent = () => {
             </SectionHead>
             <Spacer y={2} />
             <SectionBody>
-                <MobileMarket />
+                <DeliveriesMarketMobile />
             </SectionBody>
         </Section>
     );
