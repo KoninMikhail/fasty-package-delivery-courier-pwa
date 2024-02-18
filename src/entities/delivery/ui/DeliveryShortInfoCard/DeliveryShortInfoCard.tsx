@@ -23,6 +23,19 @@ import { translationNS } from '../../config';
 const { locale } = sharedConfigLocale;
 
 /**
+ * Constants
+ */
+
+const DELIVERY_LABEL_ID = 'delivery.label.id';
+const DELIVERY_LABEL_ADDRESS = 'delivery.label.address';
+const DELIVERY_LABEL_WEIGHT = 'delivery.label.weight';
+const DELIVERY_CHIP_EXPRESS = 'delivery.chip.express';
+const DELIVERY_CHIP_ON_FOOT = 'delivery.chip.onFoot';
+const DELIVERY_CHIP_ON_CAR = 'delivery.chip.onCar';
+const DELIVERY_LABEL_STORAGE = 'delivery.label.storage';
+const DELIVERY_LABEL_WEIGHT_KG = 'delivery.weight.kg';
+
+/**
  * locale
  */
 locale.addResourceBundle('en', translationNS, locale_en);
@@ -32,7 +45,7 @@ const ID: FunctionComponent<{ id: number | string }> = ({ id }) => {
     const { t } = useTranslation(translationNS);
     return (
         <div className="flex flex-col">
-            <span className="text-md">{t('delivery.label.id')}</span>
+            <span className="text-md">{t(DELIVERY_LABEL_ID)}</span>
             <span className="text-md font-bold">{`# ${id}`}</span>
         </div>
     );
@@ -47,9 +60,9 @@ const Badges: FunctionComponent<{
     /**
      * Locale
      */
-    const expressLabel = t('delivery.chip.express');
-    const onFootLabel = t('delivery.chip.onFoot');
-    const onCarLabel = t('delivery.chip.onCar');
+    const expressLabel = t(DELIVERY_CHIP_EXPRESS);
+    const onFootLabel = t(DELIVERY_CHIP_ON_FOOT);
+    const onCarLabel = t(DELIVERY_CHIP_ON_CAR);
 
     return (
         <div className="flex justify-end gap-1">
@@ -93,7 +106,7 @@ const Storage: FunctionComponent<{ contents: string }> = ({
     /**
      * Locale
      */
-    const storageLabel = `${t('delivery.label.storage')}:`;
+    const storageLabel = `${t(DELIVERY_LABEL_STORAGE)}:`;
 
     return (
         <div>
@@ -115,8 +128,8 @@ const Weight: FunctionComponent<{ weight: number | string }> = ({
     /**
      * Locale
      */
-    const weightLabel = `${t('delivery.label.weight')}:`;
-    const weightValue = `${weightFormatted} ${t('delivery.weight.kg')}`;
+    const weightLabel = `${t(DELIVERY_LABEL_WEIGHT)}:`;
+    const weightValue = `${weightFormatted} ${t(DELIVERY_LABEL_WEIGHT_KG)}`;
 
     return (
         <div className="min-w-16 flex-grow-0">
@@ -134,7 +147,7 @@ const Address: FunctionComponent<{ address: string }> = ({
     /**
      * Locale
      */
-    const addressLabel = `${t('delivery.label.address')}:`;
+    const addressLabel = `${t(DELIVERY_LABEL_ADDRESS)}:`;
 
     return (
         <div>
@@ -153,8 +166,8 @@ interface DeliveryPreviewCardProperties {
 export const DeliveryShortInfoCard: FunctionComponent<
     DeliveryPreviewCardProperties
 > = ({ delivery, onPressPreview, onPressAssign }) => {
-    const isExpress = delivery?.express;
-    const isCar = delivery?.car;
+    const isExpress = delivery?.express ?? false;
+    const isCar = delivery?.car ?? false;
 
     const onPressPreviewHandle = (): void => {
         if (onPressPreview) {
