@@ -36,7 +36,7 @@ export const DesktopMarketPageView: FunctionComponent = () => {
                         Взять доставку
                     </Heading>
                     <Spacer y={8} />
-                    <MobileMarket />
+                    <DeliveriesMarketMobile />
                 </div>
             </MainContainer>
             <Spacer y={16} />

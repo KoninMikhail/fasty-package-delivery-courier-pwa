@@ -15,11 +15,11 @@ import { FaGithub } from 'react-icons/fa6';
 
 import { ChangeLanguageIconButton } from '@/features/viewer/changeLanguage';
 
-import { widgetCookiePolicyModalUi } from '@/widgets/polices/cookie-policy-modal';
+import { widgetCookiePolicyModalUi } from '@/widgets/polices/cookiePolicyModal';
 import { widgetResetPasswordModalUi } from '@/widgets/viewer/reset-password-modal';
-import { widgetPrivacyPolicyModalUi } from '@/widgets/polices/privacy-policy-modal';
+import { widgetPrivacyPolicyModalUi } from '@/widgets/polices/privacyPolicyModal';
 import { widgetSignInModalUi } from '@/widgets/viewer/sign-in-modal';
-import { widgetTermsOfUseModalUi } from '@/widgets/polices/terms-of-use-modal';
+import { widgetTermsOfUseModalUi } from '@/widgets/polices/termsOfUseModal';
 import { viewerSessionModel } from '@/entities/viewer';
 
 import { CompanyLogoIcon } from '@/shared/ui/icons/CompanyLogoIcon';

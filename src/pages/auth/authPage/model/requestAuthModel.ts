@@ -1,8 +1,8 @@
 import { createEffect, createEvent, sample } from 'effector';
 import { widgetSignInModalModel } from '@/widgets/viewer/sign-in-modal';
-import { widgetCookiePolicyModalModel } from '@/widgets/polices/cookie-policy-modal';
-import { widgetPrivacyPolicyModalModel } from '@/widgets/polices/privacy-policy-modal';
-import { widgetTermsOfUseModalModel } from '@/widgets/polices/terms-of-use-modal';
+import { widgetCookiePolicyModalModel } from '@/widgets/polices/cookiePolicyModal';
+import { widgetPrivacyPolicyModalModel } from '@/widgets/polices/privacyPolicyModal';
+import { widgetTermsOfUseModalModel } from '@/widgets/polices/termsOfUseModal';
 
 /**
  * Auth

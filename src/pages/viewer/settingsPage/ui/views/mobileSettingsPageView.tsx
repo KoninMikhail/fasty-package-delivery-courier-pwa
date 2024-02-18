@@ -36,7 +36,7 @@ export const MobileSettingsPageView: FunctionComponent = () => {
                             width={180}
                             src="https://nextui-docs-v2.vercel.app/images/album-cover.png"
                             alt="NextUI Album Cover"
-                            classNames="m-5"
+                            className="m-5"
                         />
                     </div>
                 </Section>

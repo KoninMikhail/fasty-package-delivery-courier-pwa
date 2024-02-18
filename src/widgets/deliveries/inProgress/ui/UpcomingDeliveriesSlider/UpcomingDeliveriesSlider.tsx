@@ -1,8 +1,8 @@
 import { DeliveryCountdownCard } from '@/entities/delivery/ui';
 import { useList } from 'effector-react';
-import { $inProgressDeliveries } from '@/widgets/deliveries/my-deliveries/model';
+import { $inProgressDeliveries } from '../../model';
 
-export const MyDeliveriesSlider: FunctionComponent = () => {
+export const UpcomingDeliveriesSlider: FunctionComponent = () => {
     const items = useList($inProgressDeliveries, (delivery) => (
         <DeliveryCountdownCard delivery={delivery} />
     ));
