@@ -1,6 +1,6 @@
+import { createGate } from 'effector-react';
 import { sample } from 'effector';
 import { viewerProfileModel } from '@/entities/viewer';
-import { createGate } from 'effector-react';
 import { debug } from 'patronum';
 import { getViewerProfileDataFx } from '@/entities/viewer/model/profileModel';
 
