@@ -44,6 +44,7 @@ export const NavbarMobile: FunctionComponent = () => {
                 renderItem={(item) => {
                     return (
                         <MenuItem
+                            key={item.href}
                             to={item.href}
                             icon={item.icon}
                             label={t(item.label)}
