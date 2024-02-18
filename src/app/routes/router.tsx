@@ -5,7 +5,7 @@ import { sharedConfigRoutes } from '@/shared/config';
 import { sharedUiLayouts } from '@/shared/ui';
 import { profilePageUi } from '@/pages/deliveries/deliveriesCurrentPage';
 import { deliveryDetailsPageUi } from '@/pages/deliveries/deliveryDetailsPage';
-import { authPageUi } from '@/pages/auth/authPage';
+import { pageAuthUi } from '@/pages/auth/authPage';
 import { rootPageUi } from '@/pages/deliveries/deliveriesMarketPage';
 import { settingsPageUi } from '@/pages/viewer/settingsPage';
 import { deliveriesHistoryPageUi } from '@/pages/deliveries/deliveriesHistoryPage';
@@ -21,7 +21,7 @@ const { SettingsPage } = settingsPageUi;
 const { ProfileEditPage } = pageProfileEditUi;
 const { DeliveriesHistoryPage } = deliveriesHistoryPageUi;
 const { DeliveryDetailsPage } = deliveryDetailsPageUi;
-const { AuthPage } = authPageUi;
+const { AuthPage } = pageAuthUi;
 
 const {
     ROOT_PAGE,

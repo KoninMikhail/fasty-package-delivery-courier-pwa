@@ -1,1 +1,1 @@
-export * as authPageUi from './ui';
+export * as pageAuthUi from './ui';
