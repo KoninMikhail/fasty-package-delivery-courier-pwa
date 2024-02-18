@@ -167,7 +167,7 @@ export const AuthPage: FunctionComponent = () => {
     /**
      * Page
      */
-    const pageTitle = `${t('page_title')} | ${APP_NAME} - ${APP_DESCRIPTION[currentLanguage]}`;
+    const pageTitle = `${t('page.title')} | ${APP_NAME} - ${APP_DESCRIPTION[currentLanguage]}`;
     useDocumentTitle(pageTitle);
 
     /**

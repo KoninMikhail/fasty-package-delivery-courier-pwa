@@ -1,27 +1,27 @@
 import { Route, Routes } from 'react-router-dom';
 
-import { notfoundPageUi } from '@/pages/errors/notFoundPage';
 import { sharedConfigRoutes } from '@/shared/config';
 import { sharedUiLayouts } from '@/shared/ui';
-import { profilePageUi } from '@/pages/deliveries/deliveriesCurrentPage';
-import { deliveryDetailsPageUi } from '@/pages/deliveries/deliveryDetailsPage';
-import { authPageUi } from '@/pages/auth/authPage';
-import { rootPageUi } from '@/pages/deliveries/deliveriesMarketPage';
-import { settingsPageUi } from '@/pages/viewer/settingsPage';
-import { deliveriesHistoryPageUi } from '@/pages/deliveries/deliveriesHistoryPage';
+import { pageAuthUi } from '@/pages/auth/authPage';
+import { pageSettingsUi } from '@/pages/viewer/settingsPage';
 import { pageProfileEditUi } from '@/pages/viewer/profileEditPage';
+import { pageMyActiveDeliveriesUi } from '@/pages/deliveries/myActiveDeliveriesPage';
+import { pageSingleDeliveryDetailsUi } from '@/pages/deliveries/singleDeliveryDetailsPage';
+import { pageMyHistoryUi } from '@/pages/deliveries/myHistoryPage';
+import { pageMarketUi } from '@/pages/deliveries/marketPage';
+import { pageNorFoundUi } from '@/pages/errors/notFoundPage';
 
 const { RouteName } = sharedConfigRoutes;
 const { SuspenseLayout } = sharedUiLayouts;
 
-const { DeliveriesMarketPage } = rootPageUi;
-const { NotFoundPage } = notfoundPageUi;
-const { ProfilePage } = profilePageUi;
-const { SettingsPage } = settingsPageUi;
+const { MarketPage } = pageMarketUi;
+const { NotFoundPage } = pageNorFoundUi;
+const { MyActiveDeliveriesPage } = pageMyActiveDeliveriesUi;
+const { SettingsPage } = pageSettingsUi;
 const { ProfileEditPage } = pageProfileEditUi;
-const { DeliveriesHistoryPage } = deliveriesHistoryPageUi;
-const { DeliveryDetailsPage } = deliveryDetailsPageUi;
-const { AuthPage } = authPageUi;
+const { MyHistoryPage } = pageMyHistoryUi;
+const { SingleDeliveryDetailsPage } = pageSingleDeliveryDetailsUi;
+const { AuthPage } = pageAuthUi;
 
 const {
     ROOT_PAGE,
@@ -40,19 +40,19 @@ const routes: sharedConfigRoutes.RouteDescription[] = [
     },
     {
         path: ROOT_PAGE,
-        component: DeliveriesMarketPage,
+        component: MarketPage,
     },
     {
         path: DELIVERIES,
-        component: ProfilePage,
+        component: MyActiveDeliveriesPage,
     },
     {
         path: DELIVERIES_DETAIL_PAGE,
-        component: DeliveryDetailsPage,
+        component: SingleDeliveryDetailsPage,
     },
     {
         path: DELIVERIES_HISTORY_PAGE,
-        component: DeliveriesHistoryPage,
+        component: MyHistoryPage,
     },
     {
         path: SETTINGS_PAGE,

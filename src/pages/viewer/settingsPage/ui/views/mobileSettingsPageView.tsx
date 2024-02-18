@@ -5,8 +5,6 @@ import { sharedUiLayouts } from '@/shared/ui';
 import { Image, Button, Divider, Spacer } from '@nextui-org/react';
 import { SlSocialVkontakte } from 'react-icons/sl';
 import { IoLogoYoutube } from 'react-icons/io';
-import { widgetLegalUi } from '@/widgets/system/legal';
-import { widgetAboutAppUi } from '@/widgets/system/about';
 import { useTranslation } from 'react-i18next';
 import { ChangeColorModeSwitchButton } from '@/features/viewer/changeColorMode';
 import { ChangeLanguageButton } from '@/features/viewer/changeLanguage';
@@ -14,9 +12,6 @@ import { translationNS } from '../../config';
 
 const { Section } = sharedUiLayouts;
 const { NavbarMobile } = widgetNavbarMobileUi;
-const { LegalInformationModal } = widgetLegalUi;
-const { AboutAppModal } = widgetAboutAppUi;
-
 /*
  * Layout
  */
@@ -90,13 +85,6 @@ export const MobileSettingsPageView: FunctionComponent = () => {
                     </div>
                 </Section>
                 <Spacer />
-                <Divider />
-                <Spacer />
-                <Section>
-                    <LegalInformationModal />
-                    <AboutAppModal />
-                </Section>
-                <Section />
             </MainContainer>
             <NavbarMobile />
         </>
