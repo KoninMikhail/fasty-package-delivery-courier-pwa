@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useTranslation } from 'react-i18next';
 import { User } from '@/shared/api';
+import { logoutModel } from '@/features/auth/logout';
 import { translationNS } from '../config';
 import locale_en from '../locales/en.locale.json';
 import locale_ru from '../locales/ru.locale.json';
@@ -119,11 +120,10 @@ const UserTool: FunctionComponent<{
 export const WelcomeTopbar: FunctionComponent = () => {
     const navigate = useNavigate();
     const profile = useUnit(viewerProfileModel.$profileDataStore);
+    const logout = useUnit(logoutModel.logout);
 
     const onPressProfile = (): void => navigate(PROFILE_EDIT_PAGE);
-    const onPressLogout = (): void => {
-        console.log('click logout');
-    };
+    const onPressLogout = (): void => logout();
 
     return (
         <Root>
