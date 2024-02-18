@@ -1,9 +1,9 @@
 import { useDocumentTitle } from 'usehooks-ts';
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { viewerUi } from '@/entities/viewer';
-import { widgetsDeliveriesHistoryUi } from '@/widgets/deliveries/history-deliveries';
+import { widgetsDeliveriesHistoryUi } from '@/widgets/deliveries/history';
 import { useEffect } from 'react';
-import { getDeliveriesHistoryFx } from '@/widgets/deliveries/history-deliveries/model';
+import { getDeliveriesHistoryFx } from '@/widgets/deliveries/history/model';
 
 const { Authorized } = viewerUi;
 const { NavbarMobile } = widgetNavbarMobileUi;

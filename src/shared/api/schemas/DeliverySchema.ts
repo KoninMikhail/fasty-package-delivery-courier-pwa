@@ -5,6 +5,13 @@ import { addressSchema } from '@/shared/api/schemas/AddressSchema';
 import { clientSchema } from '@/shared/api/schemas/ClientSchema';
 import { orderSchema } from '@/shared/api/schemas/OrderSchema';
 
+const timeSchema = z
+    .string()
+    .regex(
+        /^([01]?\d|2[0-3]):[0-5]\d$/,
+        'Invalid time format. Time must be in hh:mm format',
+    );
+
 export const deliverySchema = z.object({
     car: z.boolean(),
     client_id: z.number(),
@@ -18,8 +25,8 @@ export const deliverySchema = z.object({
     manager_id: z.number(),
     order_id: z.number(),
     states: z.string(),
-    time_end: z.string(),
-    time_start: z.string(),
+    time_end: timeSchema,
+    time_start: timeSchema,
     order: orderSchema,
     weight: z.string(),
     courier: userSchema,

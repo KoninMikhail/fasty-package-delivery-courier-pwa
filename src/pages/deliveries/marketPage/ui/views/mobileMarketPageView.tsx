@@ -1,8 +1,8 @@
 import type { PropsWithChildren } from 'react';
 
-import { widgetInProgressDeliveriesUi } from '@/widgets/deliveries/my-deliveries';
+import { widgetInProgressDeliveriesUi } from '@/widgets/deliveries/inProgress';
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
-import { widgetDeliveriesMarketUi } from '@/widgets/deliveries/deliveres-market';
+import { widgetDeliveriesMarketUi } from '@/widgets/deliveries/market';
 import { sharedConfigRoutes } from '@/shared/config';
 import { sharedUiLayouts } from '@/shared/ui';
 import { Button, Spacer } from '@nextui-org/react';
@@ -15,7 +15,7 @@ const {
     RouteName: { DELIVERIES },
 } = sharedConfigRoutes;
 const { MyDeliveriesSlider } = widgetInProgressDeliveriesUi;
-const { DeliveriesMarket } = widgetDeliveriesMarketUi;
+const { DeliveriesMarketMobile } = widgetDeliveriesMarketUi;
 const { NavbarMobile } = widgetNavbarMobileUi;
 const { HorizontalScroll } = sharedUiLayouts;
 const { WelcomeTopbar } = widgetTopbarUi;
@@ -91,7 +91,7 @@ const AvailableDeliveries: FunctionComponent = () => {
             </SectionHead>
             <Spacer y={2} />
             <SectionBody>
-                <DeliveriesMarket />
+                <MobileMarket />
             </SectionBody>
         </Section>
     );

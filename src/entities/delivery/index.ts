@@ -1,1 +1,1 @@
-export * as entityDeliveryUi from './ui';
+export * as deliveryUi from './ui';

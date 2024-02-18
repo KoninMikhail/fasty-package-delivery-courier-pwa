@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
 
-import { widgetInProgressDeliveriesUi } from '@/widgets/deliveries/my-deliveries';
+import { widgetInProgressDeliveriesUi } from '@/widgets/deliveries/inProgress';
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { sharedUiComponents } from '@/shared/ui';
 import { viewerUi } from '@/entities/viewer';
