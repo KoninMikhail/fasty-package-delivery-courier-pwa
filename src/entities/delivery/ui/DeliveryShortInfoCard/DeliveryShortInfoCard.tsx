@@ -7,7 +7,6 @@ import {
     CardHeader,
     Chip,
     Divider,
-    Skeleton,
     Spacer,
 } from '@nextui-org/react';
 import clsx from 'clsx';
@@ -177,9 +176,7 @@ export const DeliveryShortInfoCard: FunctionComponent<
     return (
         <Card className={outputCardBodyClass}>
             <CardHeader className="flex justify-between gap-3">
-                <Skeleton loading={!delivery}>
-                    <ID id={delivery?.id} />
-                </Skeleton>
+                <ID id={delivery?.id} />
                 <div className="flex flex-col text-right">
                     <Badges isCar={isCar} isExpress={isExpress} />
                     <PickupDateTime
