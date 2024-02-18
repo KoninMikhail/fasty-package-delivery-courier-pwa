@@ -7,7 +7,7 @@ import { profilePageUi } from '@/pages/deliveries/deliveriesCurrentPage';
 import { deliveryDetailsPageUi } from '@/pages/deliveries/deliveryDetailsPage';
 import { pageAuthUi } from '@/pages/auth/authPage';
 import { rootPageUi } from '@/pages/deliveries/deliveriesMarketPage';
-import { settingsPageUi } from '@/pages/viewer/settingsPage';
+import { pageSettingsUi } from '@/pages/viewer/settingsPage';
 import { deliveriesHistoryPageUi } from '@/pages/deliveries/deliveriesHistoryPage';
 import { pageProfileEditUi } from '@/pages/viewer/profileEditPage';
 
@@ -17,7 +17,7 @@ const { SuspenseLayout } = sharedUiLayouts;
 const { DeliveriesMarketPage } = rootPageUi;
 const { NotFoundPage } = notfoundPageUi;
 const { ProfilePage } = profilePageUi;
-const { SettingsPage } = settingsPageUi;
+const { SettingsPage } = pageSettingsUi;
 const { ProfileEditPage } = pageProfileEditUi;
 const { DeliveriesHistoryPage } = deliveriesHistoryPageUi;
 const { DeliveryDetailsPage } = deliveryDetailsPageUi;

@@ -1,1 +1,1 @@
-export * as settingsPageUi from './ui';
+export * as pageSettingsUi from './ui';
