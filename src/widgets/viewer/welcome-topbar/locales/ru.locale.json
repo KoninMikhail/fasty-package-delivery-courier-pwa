@@ -1,0 +1,8 @@
+{
+  "greetings.name": "Здравствуйте, {{name}}",
+  "greetings.withoutName": "Здравствуйте",
+  "greetings.wish": "Желаем хорошего дня!",
+  "signUp.title": "Вы вошли как",
+  "myProfile.label": "Изменить профиль",
+  "logout.label": "Выйти"
+}

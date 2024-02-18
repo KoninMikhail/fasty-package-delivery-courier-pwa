@@ -1,1 +1,1 @@
-export * as widgetTopbarUi from './ui';
+export * as widgetTopbarUi from './ui/ui';
