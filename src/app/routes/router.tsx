@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 
-import { notfoundPageUi } from '@/pages/errors/notFoundPage';
+import { pageNorFoundUi } from '@/pages/errors/notFoundPage';
 import { sharedConfigRoutes } from '@/shared/config';
 import { sharedUiLayouts } from '@/shared/ui';
 import { profilePageUi } from '@/pages/deliveries/deliveriesCurrentPage';
@@ -15,7 +15,7 @@ const { RouteName } = sharedConfigRoutes;
 const { SuspenseLayout } = sharedUiLayouts;
 
 const { DeliveriesMarketPage } = rootPageUi;
-const { NotFoundPage } = notfoundPageUi;
+const { NotFoundPage } = pageNorFoundUi;
 const { ProfilePage } = profilePageUi;
 const { SettingsPage } = pageSettingsUi;
 const { ProfileEditPage } = pageProfileEditUi;
