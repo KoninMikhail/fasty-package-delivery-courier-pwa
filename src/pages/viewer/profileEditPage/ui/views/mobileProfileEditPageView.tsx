@@ -1,4 +1,4 @@
-import type { PropsWithChildren } from 'react';
+import type { PropsWithChildren, ReactNode } from 'react';
 
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { sharedConfigRoutes } from '@/shared/config';
@@ -15,6 +15,8 @@ import {
     changePasswordModel,
 } from '@/pages/viewer/profileEditPage/model/model';
 import { ChangeAvatar } from '@/features/viewer/changeAvatar';
+import { useNavigate } from 'react-router-dom';
+import { IoMdArrowRoundBack } from 'react-icons/io';
 import { translationNS } from '../../config';
 
 const {
@@ -49,13 +51,35 @@ const Heading: FunctionComponent<PropsWithChildren> = ({ children }) => (
     <h2 className="text-xl font-bold">{children}</h2>
 );
 
-const Header: FunctionComponent = () => (
-    <header className="w-full">dsfsfd</header>
+const Header: FunctionComponent<{ backButton: ReactNode; title: string }> = ({
+    backButton,
+    title,
+}) => (
+    <header className="flex w-full items-center px-4 pt-4">
+        <div className="flex-shrink">{backButton}</div>
+        <div className="mx-auto">{title}</div>
+    </header>
 );
 
 /**
  * Components
  */
+const BackButton: FunctionComponent = () => {
+    const navigate = useNavigate();
+    const onPress = (): void => navigate(-1);
+
+    return (
+        <Button
+            size="sm"
+            href={DELIVERIES}
+            onPress={onPress}
+            variant="bordered"
+            className="flex items-center gap-1"
+        >
+            <IoMdArrowRoundBack />
+        </Button>
+    );
+};
 
 const AvatarTool: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
@@ -160,8 +184,11 @@ export const MobileProfileEditPageView: FunctionComponent = () => {
     const user = useUnit(viewerProfileModel.$profileDataStore);
     return (
         <>
-            <Header />
-            <Spacer y={4} />
+            <Header
+                backButton={<BackButton />}
+                title="Редактирование профиля"
+            />
+            <Spacer y={8} />
             <Content>
                 <AvatarTool />
                 <Spacer y={8} />

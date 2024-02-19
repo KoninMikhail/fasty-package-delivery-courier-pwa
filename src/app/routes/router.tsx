@@ -10,6 +10,7 @@ import { pageSingleDeliveryDetailsUi } from '@/pages/deliveries/singleDeliveryDe
 import { pageMyHistoryUi } from '@/pages/deliveries/myHistoryPage';
 import { pageMarketUi } from '@/pages/deliveries/marketPage';
 import { pageNorFoundUi } from '@/pages/errors/notFoundPage';
+import { pageSearchUi } from '@/pages/search/searchPage/';
 
 const { RouteName } = sharedConfigRoutes;
 const { SuspenseLayout } = sharedUiLayouts;
@@ -22,6 +23,7 @@ const { ProfileEditPage } = pageProfileEditUi;
 const { MyHistoryPage } = pageMyHistoryUi;
 const { SingleDeliveryDetailsPage } = pageSingleDeliveryDetailsUi;
 const { AuthPage } = pageAuthUi;
+const { SearchPage } = pageSearchUi;
 
 const {
     ROOT_PAGE,
@@ -31,6 +33,7 @@ const {
     SETTINGS_PAGE,
     DELIVERIES_HISTORY_PAGE,
     PROFILE_EDIT_PAGE,
+    SEARCH_PAGE,
 } = RouteName;
 
 const routes: sharedConfigRoutes.RouteDescription[] = [
@@ -62,6 +65,7 @@ const routes: sharedConfigRoutes.RouteDescription[] = [
         path: PROFILE_EDIT_PAGE,
         component: ProfileEditPage,
     },
+    { path: SEARCH_PAGE, component: SearchPage },
 ];
 
 const routesContent = routes.map(({ path, component: Component }) => (
