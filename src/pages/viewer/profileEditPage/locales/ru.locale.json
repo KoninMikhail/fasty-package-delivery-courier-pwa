@@ -1,0 +1,12 @@
+{
+  "page.title": "Изменить профиль",
+  "section.label.changePassword": "Изменить пароль",
+  "section.description.changePassword": "После изменения пароля, вы будете вынуждены войти в систему с новым паролем.",
+  "section.label.personalInfo": "Личная информация",
+  "section.label.fullName": "Полное имя",
+  "section.label.email": "Email",
+  "section.label.phone": "Телефон",
+  "section.description.avatarSize": "Рекомендуется не менее 200x200 пикселей.",
+  "section.description.avatarFormat": "Разрешается использование JPG или PNG.",
+  "section.label.unknown": "Неизвестно"
+}

@@ -1,5 +1,6 @@
 import { createEffect, createStore } from 'effector';
 import { apiClient, User } from '@/shared/api';
+import { debug } from 'patronum';
 
 /**
  * Effect for fetching profile data
@@ -16,3 +17,5 @@ export const $profileDataStore = createStore<Nullable<User>>(null).on(
     getViewerProfileDataFx.doneData,
     (_, data) => data,
 );
+
+debug($profileDataStore);

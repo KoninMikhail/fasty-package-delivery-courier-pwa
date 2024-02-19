@@ -1,11 +1,11 @@
 import { useUnit } from 'effector-react';
 import { modelView } from 'effector-factorio';
 
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent } from 'react';
 import { Button, Input } from '@nextui-org/react';
 import { sharedConfigLocale } from '@/shared/config';
 import { useTranslation } from 'react-i18next';
-import { sharedUiIcons } from '@/shared/ui';
+import { sharedUiComponents } from '@/shared/ui';
 import { factory } from '../model/model';
 
 import { translationNS } from '../config';
@@ -13,7 +13,7 @@ import locale_en from '../locales/en.locale.json';
 import locale_ru from '../locales/ru.locale.json';
 
 const { locale } = sharedConfigLocale;
-const { EyeSlashFilledIcon, EyeFilledIcon } = sharedUiIcons;
+const { PasswordField } = sharedUiComponents;
 
 /**
  * Constants
@@ -76,7 +76,7 @@ const EmailField: FunctionComponent = () => {
     );
 };
 
-const PasswordField: FunctionComponent = () => {
+const Password: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
     const model = factory.useModel();
 
@@ -99,16 +99,9 @@ const PasswordField: FunctionComponent = () => {
         model.passwordChanged(event_.target.value);
     };
 
-    /**
-     * Show/Hide password
-     */
-    const [isVisible, setIsVisible] = useState(false);
-    const onToggleVisibility = (): void => setIsVisible(!isVisible);
-
     return (
-        <Input
+        <PasswordField
             isRequired
-            type={isVisible ? 'text' : 'password'}
             variant="flat"
             isInvalid={isInvalid}
             errorMessage={t(errorMessage)}
@@ -116,19 +109,6 @@ const PasswordField: FunctionComponent = () => {
             label={t(PASSWORD_LABEL_TEXT_KEY)}
             placeholder={t(PASSWORD_PLACEHOLDER_TEXT_KEY)}
             description={t(PASSWORD_VALIDATION_RULES_TEXT_KEY)}
-            endContent={
-                <button
-                    className="focus:outline-none"
-                    type="button"
-                    onClick={onToggleVisibility}
-                >
-                    {isVisible ? (
-                        <EyeSlashFilledIcon className="pointer-events-none text-2xl text-default-400" />
-                    ) : (
-                        <EyeFilledIcon className="pointer-events-none text-2xl text-default-400" />
-                    )}
-                </button>
-            }
             onChange={onStateChangeHandler}
         />
     );
@@ -162,7 +142,7 @@ const SignInButton: FunctionComponent = () => {
 export const Form = modelView(factory, () => (
     <form className="flex flex-col gap-4">
         <EmailField />
-        <PasswordField />
+        <Password />
         <SignInButton />
     </form>
 ));
