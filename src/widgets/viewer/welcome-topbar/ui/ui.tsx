@@ -3,7 +3,6 @@ import {
     DropdownItem,
     DropdownMenu,
     DropdownTrigger,
-    Input,
 } from '@nextui-org/react';
 import { PropsWithChildren } from 'react';
 import { useUnit } from 'effector-react';
@@ -134,15 +133,6 @@ export const WelcomeTopbar: FunctionComponent = () => {
                     profile={profile}
                     onPressProfile={onPressProfile}
                     onPressLogout={onPressLogout}
-                />
-            </div>
-            <div>
-                <Input
-                    type="email"
-                    label="Email"
-                    placeholder="00000000"
-                    labelPlacement="outside"
-                    startContent="#"
                 />
             </div>
         </Root>
