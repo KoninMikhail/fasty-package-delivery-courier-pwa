@@ -5,14 +5,15 @@ import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { widgetDeliveriesMarketUi } from '@/widgets/deliveries/market';
 import { sharedConfigRoutes } from '@/shared/config';
 import { sharedUiLayouts } from '@/shared/ui';
-import { widgetSearchPopupUi } from '@/widgets/search/searchPopup';
-import { Button, Spacer } from '@nextui-org/react';
+import { Button, Input, Spacer } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { widgetTopbarUi } from '@/widgets/viewer/welcome-topbar';
 import { Link } from 'react-router-dom';
 import { useUnit } from 'effector-react/effector-react.mjs';
-import { clickSearchOpenTrigger } from '@/widgets/search/searchPopup/model';
-import { IdentifierField } from '@/shared/ui/components';
+import {
+    widgetSearchQueryPopupUi,
+    widgetSearchQueryPopupModel,
+} from '@/widgets/search/searchQueryPopup';
 import { translationNS } from '../../config';
 
 const {
@@ -23,7 +24,7 @@ const { DeliveriesMarketMobile } = widgetDeliveriesMarketUi;
 const { NavbarMobile } = widgetNavbarMobileUi;
 const { HorizontalScroll } = sharedUiLayouts;
 const { WelcomeTopbar } = widgetTopbarUi;
-const { SearchPopupFullScreen } = widgetSearchPopupUi;
+const { SearchQueryInputModal } = widgetSearchQueryPopupUi;
 
 /**
  * Constants
@@ -62,7 +63,9 @@ const SectionBody: FunctionComponent<PropsWithChildren> = ({ children }) => (
  */
 const Header: FunctionComponent = () => {
     const reference = useRef<HTMLInputElement>(null);
-    const [openSearchModal] = useUnit([clickSearchOpenTrigger]);
+    const [openSearchModal] = useUnit([
+        widgetSearchQueryPopupModel.clickTriggerElement,
+    ]);
 
     const onClickSearchInput = (): void => {
         reference?.current?.blur();
@@ -73,12 +76,17 @@ const Header: FunctionComponent = () => {
         <header className="w-full rounded-b-3xl bg-black p-6">
             <WelcomeTopbar />
             <Spacer y={4} />
-            <IdentifierField
+            <Input
                 ref={reference}
                 autoFocus={false}
-                placeholder="0000000"
+                placeholder="поиск по заказам"
                 labelPlacement="outside"
                 onClick={onClickSearchInput}
+                startContent={
+                    <div className="pointer-events-none flex items-center">
+                        <span className="text-small text-default-400">#</span>
+                    </div>
+                }
             />
         </header>
     );
@@ -135,7 +143,7 @@ export const MobileMarketPageView: FunctionComponent = () => {
                 <AvailableDeliveries />
             </Content>
             <NavbarMobile />
-            <SearchPopupFullScreen />
+            <SearchQueryInputModal size="full" />
         </>
     );
 };

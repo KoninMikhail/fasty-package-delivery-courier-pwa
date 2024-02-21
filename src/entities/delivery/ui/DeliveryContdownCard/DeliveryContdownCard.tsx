@@ -3,11 +3,12 @@ import {
     CardBody,
     CardFooter,
     CardHeader,
+    Chip,
     Divider,
-    Image,
 } from '@nextui-org/react';
-import { Link } from 'react-router-dom';
 import { Delivery } from '@/shared/api';
+import { differenceInMinutes, isPast } from 'date-fns';
+import { APP_TIMEZONE } from '@/shared/config/constants';
 
 const Address: FunctionComponent<{ address: string }> = ({ address }) => {
     return (
@@ -18,6 +19,26 @@ const Address: FunctionComponent<{ address: string }> = ({ address }) => {
     );
 };
 
+function calculateDifference(deadline) {
+    const now = new Date();
+    const deadlineDate = new Date(deadline);
+
+    if (isPast(deadlineDate)) return ''; // Deadline has passed
+
+    const diffMinutes = differenceInMinutes(deadlineDate, now);
+
+    return diffMinutes;
+}
+
+const convertMinutesToHours = (minutes: number) => {
+    const hours = Math.floor(minutes / 60);
+    const hoursString = hours < 10 ? `0${hours}` : hours;
+    const remainingMinutes = minutes % 60;
+    const remainingMinutesString =
+        remainingMinutes < 10 ? `0${remainingMinutes}` : remainingMinutes;
+    return `${hoursString} : ${remainingMinutesString}`;
+};
+
 interface IDeliveryCountdownCardProperties {
     delivery?: Delivery;
 }
@@ -25,23 +46,21 @@ interface IDeliveryCountdownCardProperties {
 export const DeliveryCountdownCard: FunctionComponent<
     IDeliveryCountdownCardProperties
 > = ({ delivery }) => {
+    const deadline = new Date(
+        new Date('2024-02-21T15:30:59.999Z').toLocaleString('en', {
+            timeZone: APP_TIMEZONE,
+        }),
+    );
+
     return (
-        <Card className="max-w-[600px]">
+        <Card className="px min-w-[300px] max-w-[600px]">
             <CardHeader className="flex gap-3">
                 <div className="flex gap-2">
-                    <div className="flex gap-2">
-                        <Image
-                            alt="nextui logo"
-                            height={40}
-                            radius="sm"
-                            src="https://avatars.githubusercontent.com/u/86160567?s=200&v=4"
-                            width={40}
-                        />
-                        <div className="flex flex-col">
-                            <p className="text-md">NextUI</p>
-                        </div>
-                    </div>
-                    <div>0:12:12</div>
+                    <Chip size="sm">
+                        {convertMinutesToHours(
+                            Number(calculateDifference(deadline)),
+                        )}
+                    </Chip>
                 </div>
             </CardHeader>
             <Divider />
@@ -52,13 +71,10 @@ export const DeliveryCountdownCard: FunctionComponent<
             </CardBody>
             <Divider />
             <CardFooter>
-                <Link
-                    isExternal
-                    showAnchorIcon
-                    href="https://github.com/nextui-org/nextui"
-                >
-                    Visit source code on GitHub.
-                </Link>
+                <div className="flex w-full justify-between gap-2">
+                    <div className="flex flex-grow">даные о клиенте</div>
+                    <div className="flex">звоноке</div>
+                </div>
             </CardFooter>
         </Card>
     );

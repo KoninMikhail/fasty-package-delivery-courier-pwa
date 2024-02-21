@@ -24,4 +24,11 @@
 		font-display: swap;
 		src: url('/fonts/Inter-Bold.woff2') format('woff2');
 	}
+
+	input[type="number"]::-webkit-inner-spin-button,
+	input[type="number"]::-webkit-outer-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
 }
+

@@ -1,2 +1,1 @@
-export * as searchUi from './ui';
-export * as searchModel from './model/model';
+export * as searchEffects from './model/effects';

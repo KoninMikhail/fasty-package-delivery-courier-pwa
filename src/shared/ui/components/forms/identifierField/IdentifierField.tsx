@@ -1,6 +1,9 @@
-import { forwardRef } from 'react';
+import { ChangeEvent, forwardRef } from 'react';
 import { Input } from '@nextui-org/react';
+import { sharedLibHelpers } from '@/shared/lib';
 import { InputProps } from '@nextui-org/input/dist/input';
+
+const { padCharacters, clearPaddedCharacters } = sharedLibHelpers;
 
 type IdentifierFieldProperties = Omit<InputProps, 'type' | 'startContent'> & {
     padLength?: number;
@@ -21,25 +24,25 @@ export const IdentifierField = forwardRef<
 
         const padWithZeros = (inputValue: string): string => {
             if (!inputValue) return '';
-            return inputValue.padStart(padLength || 8, '0');
+            return padCharacters(inputValue, padLength || 8, '0');
         };
 
-        const outputPlaceholder = padWithZeros(extractNumbers(placeholder));
-        const outputValue = padWithZeros(extractNumbers(value));
+        const sanitizeValue = (inputValue: string): string => {
+            if (!inputValue) return '';
+            return clearPaddedCharacters(extractNumbers(inputValue));
+        };
 
         const onValueChangeHandler = (inputValue: string): void => {
-            const numbers = extractNumbers(inputValue);
-            onValueChange?.(padWithZeros(numbers));
+            onValueChange?.(sanitizeValue(inputValue));
         };
-
         const onChangeHandler = (
-            event: React.ChangeEvent<HTMLInputElement>,
-        ): React.ChangeEvent<HTMLInputElement> => {
+            event: ChangeEvent<HTMLInputElement>,
+        ): ChangeEvent<HTMLInputElement> => {
             return {
                 ...event,
                 target: {
                     ...event.target,
-                    value: padWithZeros(extractNumbers(event.target.value)),
+                    value: sanitizeValue(event.target.value),
                 },
             };
         };
@@ -47,16 +50,13 @@ export const IdentifierField = forwardRef<
         return (
             <Input
                 ref={reference}
-                type="text"
-                value={outputValue}
-                placeholder={outputPlaceholder}
+                type="number"
+                min={0}
+                step={1}
+                value={value}
+                placeholder={placeholder}
                 onValueChange={onValueChangeHandler}
                 onChange={onChangeHandler}
-                startContent={
-                    <div className="pointer-events-none flex items-center">
-                        <span className="text-small text-default-400">#</span>
-                    </div>
-                }
                 {...rest}
             />
         );

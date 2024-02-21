@@ -34,6 +34,9 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "src"),
     },
   },
+  optimizeDeps: {
+    exclude: ['js-big-decimal']
+  },
   plugins: [
     tsconfigPaths(),
     react(),
