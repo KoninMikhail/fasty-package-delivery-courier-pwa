@@ -1,6 +1,10 @@
-import { createEffect, createStore } from 'effector';
-import { apiClient, User } from '@/shared/api';
-import { debug } from 'patronum';
+import { createEffect, createEvent, createStore, sample } from 'effector';
+import { apiClient, User, userSchema } from '@/shared/api';
+import { persist } from 'effector-storage/local';
+import { Done, Fail } from 'effector-storage';
+
+const getFromLocalStorageComplete = createEvent<Done<unknown>>();
+const getFromLocalStorageFail = createEvent<Fail<Error>>();
 
 /**
  * Effect for fetching profile data
@@ -18,4 +22,21 @@ export const $profileDataStore = createStore<Nullable<User>>(null).on(
     (_, data) => data,
 );
 
-debug($profileDataStore);
+persist({
+    store: $profileDataStore,
+    key: 'profileData',
+    contract: (raw): raw is User => {
+        const result = userSchema.safeParse(raw);
+        if (result.success) {
+            return true;
+        }
+        throw result.error;
+    },
+    done: getFromLocalStorageComplete,
+    fail: getFromLocalStorageFail,
+});
+
+sample({
+    clock: getFromLocalStorageFail,
+    target: getViewerProfileDataFx,
+});
