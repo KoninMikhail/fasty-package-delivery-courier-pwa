@@ -14,6 +14,7 @@ import {
     widgetSearchQueryPopupUi,
     widgetSearchQueryPopupModel,
 } from '@/widgets/search/searchQueryPopup';
+import { SubwayStationWithIcon } from '@/shared/lib/subway';
 import { translationNS } from '../../config';
 
 const {
@@ -137,6 +138,7 @@ export const MobileMarketPageView: FunctionComponent = () => {
         <>
             <Header />
             <Spacer y={4} />
+            <SubwayStationWithIcon value="Медведково" />
             <Content>
                 <UpcomingDeliveries />
                 <Spacer y={4} />
