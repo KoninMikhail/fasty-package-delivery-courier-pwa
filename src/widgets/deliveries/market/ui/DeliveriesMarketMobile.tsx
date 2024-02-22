@@ -26,8 +26,38 @@ const FILTER_CHECKBOXES_SIZE: CheckboxProps['size'] = 'lg';
  * Layout
  */
 const Root: FunctionComponent<PropsWithChildren> = ({ children }) => (
-    <div className="flex flex-col gap-6">{children}</div>
+    <div className="flex w-full flex-col gap-6">{children}</div>
 );
+
+/**
+ * Components
+ */
+const Filter: FunctionComponent = () => {
+    const filters = {
+        buenosAires: () => console.log('buenos-aires'),
+        sydney: () => console.log('sydney'),
+        sanFrancisco: () => console.log('san-francisco'),
+        london: () => console.log('london'),
+        tokyo: () => console.log('tokyo'),
+    };
+
+    return (
+        <HorizontalScroll>
+            <div className="flex flex-nowrap gap-2">
+                {Object.keys(filters).map((filter) => (
+                    <ChipCheckBox
+                        size={FILTER_CHECKBOXES_SIZE}
+                        value={filter}
+                        key={filter}
+                        onChange={filters[filter]}
+                    >
+                        {filter}
+                    </ChipCheckBox>
+                ))}
+            </div>
+        </HorizontalScroll>
+    );
+};
 
 /**
  * @name DeliveriesMarketMobile
@@ -44,45 +74,11 @@ export const DeliveriesMarketMobile: FunctionComponent = () => {
     if (isPending) {
         return <Offline>you are offline</Offline>;
     }
+
     return (
         <Root>
-            <div>
-                <HorizontalScroll>
-                    <div className="flex flex-nowrap gap-2">
-                        <ChipCheckBox
-                            size={FILTER_CHECKBOXES_SIZE}
-                            value="buenos-aires"
-                        >
-                            Buenos Aires
-                        </ChipCheckBox>
-                        <ChipCheckBox
-                            size={FILTER_CHECKBOXES_SIZE}
-                            value="sydney"
-                        >
-                            Sydney
-                        </ChipCheckBox>
-                        <ChipCheckBox
-                            size={FILTER_CHECKBOXES_SIZE}
-                            value="san-francisco"
-                        >
-                            San Francisco
-                        </ChipCheckBox>
-                        <ChipCheckBox
-                            size={FILTER_CHECKBOXES_SIZE}
-                            value="london"
-                        >
-                            London
-                        </ChipCheckBox>
-                        <ChipCheckBox
-                            size={FILTER_CHECKBOXES_SIZE}
-                            value="tokyo"
-                        >
-                            Tokyo
-                        </ChipCheckBox>
-                    </div>
-                </HorizontalScroll>
-            </div>
-            <div className="flex flex-col gap-4">{content}</div>
+            <Filter />
+            <div className="grid grid-cols-2 gap-4">{content}</div>
         </Root>
     );
 };
