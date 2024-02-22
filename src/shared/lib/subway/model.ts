@@ -137,3 +137,5 @@ sample({
     clock: AppGate.open,
     target: initSubwayModel,
 });
+
+debug($subwayStationsList);

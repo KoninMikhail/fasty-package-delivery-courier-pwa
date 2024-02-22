@@ -1,10 +1,14 @@
 {
   "delivery.label.address": "Address",
+  "delivery.label.address.notFound": "Not found",
   "delivery.label.id": "ID",
   "delivery.label.storage": "Includes",
   "delivery.label.weight": "Weight",
   "delivery.chip.onCar": "On car",
   "delivery.chip.onFoot": "On Foot",
   "delivery.chip.express": "Express",
-  "delivery.weight.kg": "kg"
+  "delivery.weight.kg": "kg",
+  "delivery.chip.expired": "Expired",
+  "delivery.chip.timeLeft": "{{hours}}h {{minutes}}m",
+  "delivery.client.name.notFound": "client not found"
 }

@@ -161,7 +161,12 @@ export const deliveriesApi = makeApi([
         path: '/',
         alias: 'fetchUpcomingDeliveries',
         description: 'Fetch upcoming deliveries',
-        response: z.any(),
+        response: z.any().transform((data) => {
+            return data.filter(
+                (item) => item.address.delivery_type === 'courier',
+            );
+        }),
+
         errors: deliveriesErrors,
     },
     {

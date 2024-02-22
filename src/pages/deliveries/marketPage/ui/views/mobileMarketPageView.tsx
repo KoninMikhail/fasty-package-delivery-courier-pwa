@@ -9,12 +9,11 @@ import { Button, Input, Spacer } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { widgetTopbarUi } from '@/widgets/viewer/welcome-topbar';
 import { Link } from 'react-router-dom';
-import { useUnit } from 'effector-react/effector-react.mjs';
+import { useUnit } from 'effector-react';
 import {
     widgetSearchQueryPopupUi,
     widgetSearchQueryPopupModel,
 } from '@/widgets/search/searchQueryPopup';
-import { SubwayStationWithIcon } from '@/shared/lib/subway';
 import { translationNS } from '../../config';
 
 const {
@@ -138,7 +137,6 @@ export const MobileMarketPageView: FunctionComponent = () => {
         <>
             <Header />
             <Spacer y={4} />
-            <SubwayStationWithIcon value="Медведково" />
             <Content>
                 <UpcomingDeliveries />
                 <Spacer y={4} />

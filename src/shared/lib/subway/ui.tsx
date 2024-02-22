@@ -1,29 +1,26 @@
 import { useUnit } from 'effector-react';
 import { $subwayStationsList } from './model';
 import { findSubwayByName } from "./utils";
+import {getSubwayStationIconSourceByName, SubwayLineID} from "@/shared/lib/subway/providers";
 
 interface SubwayViewProperties {
     value: string;
+    size?: 'sm' | 'md' | 'lg';
 }
 
 export const SubwayStationWithIcon: FunctionComponent<SubwayViewProperties> = ({
-    value,
+    value = 'неизвестно',
 }) => {
     const subways = useUnit($subwayStationsList);
     const foundSubway = findSubwayByName(subways, value);
-
-    if (!foundSubway) return value;
-
+    const iconSrc = getSubwayStationIconSourceByName(foundSubway?.line_id as SubwayLineID);
     return (
-        <div className="inline-flex items-center gap-2">
-            {/* <Icon
-                    as={foundSubway.icon}
-                    h={5}
-                    w={5}
-                    userSelect="none"
-                    verticalAlign="center"
-                /> */}
-            <span>{foundSubway?.name}</span>
+        <div className="inline-flex items-center gap-1.5">
+            <img
+                src={iconSrc}
+                alt={foundSubway?.name}
+                className="w-5 h-5"/>
+            <span>{foundSubway?.name || value}</span>
         </div>
     );
 };

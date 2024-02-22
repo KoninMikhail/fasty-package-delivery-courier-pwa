@@ -15,6 +15,7 @@ import { format } from 'date-fns';
 import { MdAssignmentAdd } from 'react-icons/md';
 import { sharedConfigLocale } from '@/shared/config';
 
+import { SubwayStationWithIcon } from '@/shared/lib/subway';
 import locale_en from '../../locales/en.locale.json';
 import locale_ru from '../../locales/ru.locale.json';
 
@@ -41,6 +42,9 @@ const DELIVERY_LABEL_WEIGHT_KG = 'delivery.weight.kg';
 locale.addResourceBundle('en', translationNS, locale_en);
 locale.addResourceBundle('ru', translationNS, locale_ru);
 
+/**
+ * Components
+ */
 const ID: FunctionComponent<{ id: number | string }> = ({ id }) => {
     const { t } = useTranslation(translationNS);
     return (
@@ -57,9 +61,6 @@ const Badges: FunctionComponent<{
 }> = ({ isExpress, isCar }) => {
     const { t } = useTranslation(translationNS);
 
-    /**
-     * Locale
-     */
     const expressLabel = t(DELIVERY_CHIP_EXPRESS);
     const onFootLabel = t(DELIVERY_CHIP_ON_FOOT);
     const onCarLabel = t(DELIVERY_CHIP_ON_CAR);
@@ -143,12 +144,7 @@ const Address: FunctionComponent<{ address: string }> = ({
     address = 'не указан',
 }) => {
     const { t } = useTranslation(translationNS);
-
-    /**
-     * Locale
-     */
     const addressLabel = `${t(DELIVERY_LABEL_ADDRESS)}:`;
-
     return (
         <div>
             <div className="font-bold">{addressLabel}</div>
@@ -157,6 +153,9 @@ const Address: FunctionComponent<{ address: string }> = ({
     );
 };
 
+/**
+ * View
+ */
 interface DeliveryPreviewCardProperties {
     delivery?: Delivery;
     onPressPreview?: (deliveryId: Delivery['id']) => void;
@@ -206,6 +205,10 @@ export const DeliveryShortInfoCard: FunctionComponent<
                 <div className="flex gap-2">
                     <div className="flex-grow">
                         <Address address={delivery?.address?.address} />
+                        <Spacer y={1} />
+                        <SubwayStationWithIcon
+                            value={delivery?.address?.metro}
+                        />
                     </div>
                     <Weight weight={delivery?.weight} />
                 </div>

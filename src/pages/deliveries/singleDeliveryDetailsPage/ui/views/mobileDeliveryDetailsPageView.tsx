@@ -4,14 +4,12 @@ import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { Button, Spacer } from '@nextui-org/react';
 import { useUnit } from 'effector-react';
 import { routeUi } from '@/entities/route';
-import { contactUi } from '@/entities/contact';
 import { useNavigate } from 'react-router-dom';
 import { LuArrowLeft } from 'react-icons/lu';
 import { $deliveryDetailsStore } from '../../model';
 
 const { NavbarMobile } = widgetNavbarMobileUi;
 const { Map } = routeUi;
-const { ContactCardRow } = contactUi;
 
 /**
  * Layout
@@ -77,9 +75,7 @@ export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
                     <div>{data?.id}</div>
                 </Section>
                 <Spacer y={4} />
-                <Section>
-                    <ContactCardRow />
-                </Section>
+                <Section>ghjgh</Section>
                 <Spacer y={4} />
             </MainContainer>
             <NavbarMobile />
