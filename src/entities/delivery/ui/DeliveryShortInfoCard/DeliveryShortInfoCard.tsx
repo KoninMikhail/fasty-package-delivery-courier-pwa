@@ -12,16 +12,20 @@ import {
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
-import { MdAssignmentAdd } from 'react-icons/md';
-import { sharedConfigLocale } from '@/shared/config';
+import { sharedConfigLocale, sharedConfigRoutes } from '@/shared/config';
 
 import { SubwayStationWithIcon } from '@/shared/lib/subway';
+import { useNavigate } from 'react-router-dom';
+import { ReactNode } from 'react';
 import locale_en from '../../locales/en.locale.json';
 import locale_ru from '../../locales/ru.locale.json';
 
 import { translationNS } from '../../config';
 
 const { locale } = sharedConfigLocale;
+const {
+    RouteName: { DELIVERIES },
+} = sharedConfigRoutes;
 
 /**
  * Constants
@@ -35,6 +39,7 @@ const DELIVERY_CHIP_ON_FOOT = 'delivery.chip.onFoot';
 const DELIVERY_CHIP_ON_CAR = 'delivery.chip.onCar';
 const DELIVERY_LABEL_STORAGE = 'delivery.label.storage';
 const DELIVERY_LABEL_WEIGHT_KG = 'delivery.weight.kg';
+const DELIVERY_BUTTON_SEE_MORE = 'delivery.button.seeMore';
 
 /**
  * locale
@@ -112,7 +117,7 @@ const Storage: FunctionComponent<{ contents: string }> = ({
     return (
         <div>
             <div className="font-bold">{storageLabel}</div>
-            <div>{contents}</div>
+            <div className="text-sm">{contents}</div>
         </div>
     );
 };
@@ -135,7 +140,7 @@ const Weight: FunctionComponent<{ weight: number | string }> = ({
     return (
         <div className="min-w-16 flex-grow-0">
             <div className="font-bold">{weightLabel}</div>
-            <div>{weightValue}</div>
+            <div className="text-sm">{weightValue}</div>
         </div>
     );
 };
@@ -148,8 +153,19 @@ const Address: FunctionComponent<{ address: string }> = ({
     return (
         <div>
             <div className="font-bold">{addressLabel}</div>
-            <div>{address}</div>
+            <div className="text-sm">{address}</div>
         </div>
+    );
+};
+
+const SeeMoreButton: FunctionComponent<{
+    onPress: () => void;
+}> = ({ onPress }) => {
+    const { t } = useTranslation(translationNS);
+    return (
+        <Button color="primary" fullWidth onPress={onPress}>
+            {t(DELIVERY_BUTTON_SEE_MORE)}
+        </Button>
     );
 };
 
@@ -157,26 +173,20 @@ const Address: FunctionComponent<{ address: string }> = ({
  * View
  */
 interface DeliveryPreviewCardProperties {
-    delivery?: Delivery;
-    onPressPreview?: (deliveryId: Delivery['id']) => void;
-    onPressAssign?: (deliveryId: Delivery['id']) => void;
+    delivery: Delivery;
+    featureSlot?: (deliveryId: Delivery['id']) => ReactNode;
 }
 
 export const DeliveryShortInfoCard: FunctionComponent<
     DeliveryPreviewCardProperties
-> = ({ delivery, onPressPreview, onPressAssign }) => {
+> = ({ delivery, featureSlot }) => {
+    const navigate = useNavigate();
     const isExpress = delivery?.express ?? false;
     const isCar = delivery?.car ?? false;
 
     const onPressPreviewHandle = (): void => {
-        if (onPressPreview) {
-            onPressPreview(delivery.id);
-        }
-    };
-
-    const onPressAssignHandle = (): void => {
-        if (onPressAssign) {
-            onPressAssign(delivery.id);
+        if (delivery) {
+            navigate(`${DELIVERIES}/${delivery.id}`);
         }
     };
 
@@ -205,7 +215,7 @@ export const DeliveryShortInfoCard: FunctionComponent<
                 <div className="flex gap-2">
                     <div className="flex-grow">
                         <Address address={delivery?.address?.address} />
-                        <Spacer y={1} />
+                        <Spacer y={2} />
                         <SubwayStationWithIcon
                             value={delivery?.address?.metro}
                         />
@@ -217,23 +227,13 @@ export const DeliveryShortInfoCard: FunctionComponent<
             <CardFooter>
                 <div className="flex w-full gap-2">
                     <div className="w-full">
-                        <Button
-                            fullWidth
-                            color="primary"
-                            onPress={onPressPreviewHandle}
-                        >
-                            Посмотреть
-                        </Button>
+                        <SeeMoreButton onPress={onPressPreviewHandle} />
                     </div>
-                    <div className="flex-shrink">
-                        <Button
-                            color="secondary"
-                            onPress={onPressAssignHandle}
-                            isIconOnly
-                        >
-                            <MdAssignmentAdd className="text-lg" />
-                        </Button>
-                    </div>
+                    {featureSlot ? (
+                        <div className="flex-shrink">
+                            {featureSlot(delivery.id)}
+                        </div>
+                    ) : null}
                 </div>
             </CardFooter>
         </Card>

@@ -2,7 +2,7 @@ import { PropsWithChildren, useRef } from 'react';
 
 import { widgetInProgressDeliveriesUi } from '@/widgets/deliveries/inProgress';
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
-import { widgetDeliveriesMarketUi } from '@/widgets/deliveries/market';
+import { widgetMarketUi } from '@/widgets/deliveries/market';
 import { sharedConfigRoutes } from '@/shared/config';
 import { sharedUiLayouts } from '@/shared/ui';
 import { Button, Input, Spacer } from '@nextui-org/react';
@@ -20,7 +20,7 @@ const {
     RouteName: { DELIVERIES },
 } = sharedConfigRoutes;
 const { UpcomingDeliveriesSlider } = widgetInProgressDeliveriesUi;
-const { DeliveriesMarketMobile } = widgetDeliveriesMarketUi;
+const { MarketContent, MarketFilterScrollable } = widgetMarketUi;
 const { NavbarMobile } = widgetNavbarMobileUi;
 const { HorizontalScroll } = sharedUiLayouts;
 const { WelcomeTopbar } = widgetTopbarUi;
@@ -104,9 +104,8 @@ const UpcomingDeliveries: FunctionComponent = () => {
                     {myDeliveriesLinkLabel}
                 </Button>
             </SectionHead>
-            <HorizontalScroll className="px-4">
-                <UpcomingDeliveriesSlider />
-            </HorizontalScroll>
+
+            <UpcomingDeliveriesSlider />
         </Section>
     );
 };
@@ -120,8 +119,10 @@ const AvailableDeliveries: FunctionComponent = () => {
                 <Heading>{heading}</Heading>
             </SectionHead>
             <Spacer y={2} />
+            <MarketFilterScrollable withOutPadding />
+            <Spacer y={6} />
             <SectionBody>
-                <DeliveriesMarketMobile />
+                <MarketContent />
             </SectionBody>
         </Section>
     );
@@ -136,7 +137,7 @@ export const MobileMarketPageView: FunctionComponent = () => {
     return (
         <>
             <Header />
-            <Spacer y={4} />
+            <Spacer y={6} />
             <Content>
                 <UpcomingDeliveries />
                 <Spacer y={4} />

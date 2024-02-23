@@ -10,5 +10,6 @@
   "delivery.weight.kg": "кг",
   "delivery.chip.expired": "Просрочено",
   "delivery.chip.timeLeft": "{{hours}}ч {{minutes}}м",
-  "delivery.client.name.notFound": "Клиент не найден"
+  "delivery.client.name.notFound": "Клиент не найден",
+  "delivery.button.seeMore": "Подробнее"
 }

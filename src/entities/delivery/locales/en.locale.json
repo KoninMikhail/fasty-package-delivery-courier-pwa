@@ -10,5 +10,6 @@
   "delivery.weight.kg": "kg",
   "delivery.chip.expired": "Expired",
   "delivery.chip.timeLeft": "{{hours}}h {{minutes}}m",
-  "delivery.client.name.notFound": "client not found"
+  "delivery.client.name.notFound": "client not found",
+  "delivery.button.seeMore": "See more"
 }
