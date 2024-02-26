@@ -22,7 +22,7 @@ const SEND_REQUEST_TEXT_KEY = 'request.send';
 const SEND_SUCCESS_TEXT_KEY = 'request.success';
 
 /*
- * locale
+ * locale.ts
  */
 locale.addResourceBundle('en', translationNS, locale_en);
 locale.addResourceBundle('ru', translationNS, locale_ru);

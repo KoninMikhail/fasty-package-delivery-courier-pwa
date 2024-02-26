@@ -44,7 +44,7 @@ const SEARCH_BUTTON_TEXT = 'action.search';
 const RECENT_QUERIES_TEXT = 'queries.recents';
 
 /**
- * locale
+ * locale.ts
  */
 locale.addResourceBundle('en', translationNS, locale_en);
 locale.addResourceBundle('ru', translationNS, locale_ru);

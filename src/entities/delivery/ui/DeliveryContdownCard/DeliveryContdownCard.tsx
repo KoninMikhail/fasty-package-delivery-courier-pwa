@@ -31,7 +31,7 @@ const DELIVERY_ADDRESS_NOT_FOUND = 'delivery.label.address.notFound';
 const DLIVERY_CLIENT_NOT_FOUND = 'delivery.client.name.notFound';
 
 /**
- * locale
+ * locale.ts
  */
 locale.addResourceBundle('en', translationNS, locale_en);
 locale.addResourceBundle('ru', translationNS, locale_ru);

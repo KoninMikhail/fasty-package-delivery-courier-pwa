@@ -23,7 +23,7 @@ const { getContentForLocale } = sharedLibHelpers;
 const { Markdown } = sharedUiComponents;
 
 /**
- * locale
+ * locale.ts
  */
 locale.addResourceBundle('en', translationNS, locale_en);
 locale.addResourceBundle('ru', translationNS, locale_ru);

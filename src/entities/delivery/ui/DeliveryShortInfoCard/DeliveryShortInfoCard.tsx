@@ -42,7 +42,7 @@ const DELIVERY_LABEL_WEIGHT_KG = 'delivery.weight.kg';
 const DELIVERY_BUTTON_SEE_MORE = 'delivery.button.seeMore';
 
 /**
- * locale
+ * locale.ts
  */
 locale.addResourceBundle('en', translationNS, locale_en);
 locale.addResourceBundle('ru', translationNS, locale_ru);
@@ -174,7 +174,7 @@ const SeeMoreButton: FunctionComponent<{
  */
 interface DeliveryPreviewCardProperties {
     delivery: Delivery;
-    featureSlot?: (deliveryId: Delivery['id']) => ReactNode;
+    featureSlot?: ReactNode;
 }
 
 export const DeliveryShortInfoCard: FunctionComponent<
@@ -230,9 +230,7 @@ export const DeliveryShortInfoCard: FunctionComponent<
                         <SeeMoreButton onPress={onPressPreviewHandle} />
                     </div>
                     {featureSlot ? (
-                        <div className="flex-shrink">
-                            {featureSlot(delivery.id)}
-                        </div>
+                        <div className="flex-shrink">{featureSlot}</div>
                     ) : null}
                 </div>
             </CardFooter>

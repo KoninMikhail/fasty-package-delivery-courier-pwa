@@ -2,7 +2,7 @@ import { describe } from "vitest";
 import getContentForLocale from "./getContentForLocale";
 
 describe("getContentForLocale", () => {
-  it("returns the appropriate content for a given locale", () => {
+  it("returns the appropriate content for a given locale.ts", () => {
     const localesList = {
       en: "Hello",
       fr: "Bonjour",
@@ -12,7 +12,7 @@ describe("getContentForLocale", () => {
     expect(content).toBe("Hola");
   });
 
-  it("defaults to English when the requested locale is not available", () => {
+  it("defaults to English when the requested locale.ts is not available", () => {
     const localesList = {
       en: "Hello",
       fr: "Bonjour",
@@ -21,7 +21,7 @@ describe("getContentForLocale", () => {
     expect(content).toBe("Hello");
   });
 
-  it("returns an empty string when neither the requested locale nor English are available", () => {
+  it("returns an empty string when neither the requested locale.ts nor English are available", () => {
     const localesList = {
       fr: "Bonjour",
       es: "Hola",
@@ -36,7 +36,7 @@ describe("getContentForLocale", () => {
     expect(content).toBe("");
   });
 
-  it("returns the content for English locale when requested specifically", () => {
+  it("returns the content for English locale.ts when requested specifically", () => {
     const localesList = {
       en: "Hello",
       fr: "Bonjour",

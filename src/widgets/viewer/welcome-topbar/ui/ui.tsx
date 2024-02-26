@@ -36,7 +36,7 @@ const LOGOUT_TEXT = 'logout.label';
 const PROFILE_TEXT = 'myProfile.label';
 
 /**
- * locale
+ * locale.ts
  */
 locale.addResourceBundle('en', translationNS, locale_en);
 locale.addResourceBundle('ru', translationNS, locale_ru);

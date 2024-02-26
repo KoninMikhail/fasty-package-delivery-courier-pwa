@@ -6,7 +6,12 @@ import { useNetworkInfo } from '@/shared/config/network';
 import { Skeleton } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { RiWifiOffLine } from 'react-icons/ri';
-import { $avaliableDeliveries, $isDeliveriesLoading } from '../model';
+import { AssignToDelivery } from '@/features/delivery/assignToDelivery';
+import {
+    $avaliableDeliveries,
+    $isDeliveriesLoading,
+    assignToDeliveryModel,
+} from '../model';
 
 const { RouteName } = sharedConfigRoutes;
 const { DELIVERIES } = RouteName;
@@ -83,7 +88,15 @@ export const MarketContent: FunctionComponent = () => {
                 }}
                 viewport={{ once: true }}
             >
-                <DeliveryShortInfoCard delivery={delivery} />
+                <DeliveryShortInfoCard
+                    delivery={delivery}
+                    featureSlot={
+                        <AssignToDelivery.AssignButton
+                            model={assignToDeliveryModel}
+                            deliveryId={delivery.id}
+                        />
+                    }
+                />
             </motion.div>
         );
     });

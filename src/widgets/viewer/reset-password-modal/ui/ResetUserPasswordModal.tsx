@@ -20,7 +20,7 @@ import locale_en from '../locales/en.locale.json';
 const { locale } = sharedConfigLocale;
 
 /**
- * locale
+ * locale.ts
  */
 locale.addResourceBundle('en', translationNS, locale_en);
 locale.addResourceBundle('ru', translationNS, locale_ru);

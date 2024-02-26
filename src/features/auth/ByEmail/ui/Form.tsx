@@ -26,7 +26,7 @@ const PASSWORD_VALIDATION_RULES_TEXT_KEY = 'password.validation.rules';
 const SIGN_IN_TEXT_KEY = 'signIn';
 
 /**
- * locale
+ * locale.ts
  */
 locale.addResourceBundle('en', translationNS, locale_en);
 locale.addResourceBundle('ru', translationNS, locale_ru);
