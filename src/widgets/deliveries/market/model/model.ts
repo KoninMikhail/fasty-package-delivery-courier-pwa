@@ -23,7 +23,6 @@ const assignToDeliveryFx = createEffect(
         console.log('assignToDeliveryFx', userId, deliveryId);
     },
 );
-const $filters = createStore({});
 
 export const assignToDeliveryModel = AssignToDelivery.factory.createModel({
     deliveriesStore: $avaliableDeliveries,
