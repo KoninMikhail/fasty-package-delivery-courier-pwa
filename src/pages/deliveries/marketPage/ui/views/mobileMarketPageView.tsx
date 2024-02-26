@@ -4,7 +4,6 @@ import { widgetInProgressDeliveriesUi } from '@/widgets/deliveries/inProgress';
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { widgetMarketUi } from '@/widgets/deliveries/market';
 import { sharedConfigRoutes } from '@/shared/config';
-import { sharedUiLayouts } from '@/shared/ui';
 import { Button, Input, Spacer } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { widgetTopbarUi } from '@/widgets/viewer/welcome-topbar';
@@ -20,9 +19,9 @@ const {
     RouteName: { DELIVERIES },
 } = sharedConfigRoutes;
 const { UpcomingDeliveriesSlider } = widgetInProgressDeliveriesUi;
-const { MarketContent, MarketFilterScrollable } = widgetMarketUi;
+const { MarketContent, MarketFilterScrollable, MarketDateSelector } =
+    widgetMarketUi;
 const { NavbarMobile } = widgetNavbarMobileUi;
-const { HorizontalScroll } = sharedUiLayouts;
 const { WelcomeTopbar } = widgetTopbarUi;
 const { SearchQueryInputModal } = widgetSearchQueryPopupUi;
 
@@ -118,6 +117,8 @@ const AvailableDeliveries: FunctionComponent = () => {
             <SectionHead>
                 <Heading>{heading}</Heading>
             </SectionHead>
+            <Spacer y={2} />
+            <MarketDateSelector withOutPadding />
             <Spacer y={2} />
             <MarketFilterScrollable withOutPadding />
             <Spacer y={6} />

@@ -1,6 +1,5 @@
 import { createEffect, createEvent, createStore, sample } from 'effector';
-import { apiClient, User, userSchema } from '@/shared/api';
-import { persist } from 'effector-storage/local';
+import { apiClient, User } from '@/shared/api';
 import { Done, Fail } from 'effector-storage';
 
 const getFromLocalStorageComplete = createEvent<Done<unknown>>();
@@ -21,20 +20,6 @@ export const $profileDataStore = createStore<Nullable<User>>(null).on(
     getViewerProfileDataFx.doneData,
     (_, data) => data,
 );
-
-persist({
-    store: $profileDataStore,
-    key: 'profileData',
-    contract: (raw): raw is User => {
-        const result = userSchema.safeParse(raw);
-        if (result.success) {
-            return true;
-        }
-        throw result.error;
-    },
-    done: getFromLocalStorageComplete,
-    fail: getFromLocalStorageFail,
-});
 
 sample({
     clock: getFromLocalStorageFail,

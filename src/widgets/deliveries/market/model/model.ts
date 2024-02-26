@@ -11,6 +11,10 @@ const fetchUpcomingDeliveriesFx = createEffect(async () => {
 export const $avaliableDeliveries = createStore<Delivery[]>([]);
 export const $isDeliveriesLoading = fetchUpcomingDeliveriesFx.pending;
 
+/**
+ * filters for deliveries
+ */
+
 const assignToDeliveryFx = createEffect(
     async ({ userId, deliveryId }: { userId: number; deliveryId: number }) => {
         await new Promise((res) => {
@@ -19,6 +23,7 @@ const assignToDeliveryFx = createEffect(
         console.log('assignToDeliveryFx', userId, deliveryId);
     },
 );
+const $filters = createStore({});
 
 export const assignToDeliveryModel = AssignToDelivery.factory.createModel({
     deliveriesStore: $avaliableDeliveries,

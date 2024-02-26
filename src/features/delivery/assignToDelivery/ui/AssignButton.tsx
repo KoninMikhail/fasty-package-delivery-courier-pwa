@@ -8,10 +8,40 @@ import {
 import { modelView } from 'effector-factorio';
 import { Delivery } from '@/shared/api';
 import { MdLibraryAdd } from 'react-icons/md';
-import { useState } from 'react';
+import { PropsWithChildren, useState } from 'react';
 import { FaCheck } from 'react-icons/fa';
 import { BiSolidError } from 'react-icons/bi';
 import { factory } from '../model/model';
+
+const ConfirmPopover: FunctionComponent<PropsWithChildren> = ({ children }) => {
+    return (
+        <Popover
+            isOpen={isOpen}
+            onOpenChange={(open) => setIsOpen(!open)}
+            showArrow
+            placement="top-end"
+            backdrop="opaque"
+        >
+            <PopoverTrigger>{children}</PopoverTrigger>
+            <PopoverContent>
+                <div className="flex flex-col gap-2 px-1 py-2">
+                    <div className="max-w-48 text-center text-2xl font-bold text-content3">
+                        #00
+                    </div>
+                    <div className="max-w-48 text-center font-bold">
+                        Уверены, что хотите начать эту доставку?
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <Button onPress={() => setIsOpen(false)}>Cancel</Button>
+                        <Button color="primary" onPress={onPressHandler}>
+                            Confirm
+                        </Button>
+                    </div>
+                </div>
+            </PopoverContent>
+        </Popover>
+    );
+};
 
 interface IAssignButtonProperties
     extends Omit<
@@ -59,24 +89,6 @@ export const AssignButton: FunctionComponent = modelView(
                         ))}
                     </Button>
                 </PopoverTrigger>
-                <PopoverContent>
-                    <div className="flex flex-col gap-2 px-1 py-2">
-                        <div className="max-w-48 text-center text-2xl font-bold text-content3">
-                            #00
-                        </div>
-                        <div className="max-w-48 text-center font-bold">
-                            Уверены, что хотите начать эту доставку?
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <Button onPress={() => setIsOpen(false)}>
-                                Cancel
-                            </Button>
-                            <Button color="primary" onPress={onPressHandler}>
-                                Confirm
-                            </Button>
-                        </div>
-                    </div>
-                </PopoverContent>
             </Popover>
         );
     },

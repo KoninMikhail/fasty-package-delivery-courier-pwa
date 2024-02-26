@@ -170,6 +170,20 @@ export const deliveriesApi = makeApi([
         errors: deliveriesErrors,
     },
     {
+        method: 'patch',
+        path: '/:deliveryId',
+        alias: 'assignToDelivery',
+        description: 'Assign a delivery to a courier',
+        parameters: [
+            {
+                name: 'courier_id',
+                type: 'Body',
+                schema: deliverySchema.pick({ courier_id: true }),
+            },
+        ],
+        response: z.any(),
+    },
+    {
         method: 'get',
         path: '/:deliveryId',
         alias: 'fetchDeliveryById',

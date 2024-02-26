@@ -3,15 +3,10 @@ import { deliveryUi } from '@/entities/delivery';
 import { useList, useUnit } from 'effector-react';
 import { sharedConfigRoutes } from '@/shared/config';
 import { useNetworkInfo } from '@/shared/config/network';
-import { Skeleton } from '@nextui-org/react';
+import { Button, Skeleton } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { RiWifiOffLine } from 'react-icons/ri';
-import { AssignToDelivery } from '@/features/delivery/assignToDelivery';
-import {
-    $avaliableDeliveries,
-    $isDeliveriesLoading,
-    assignToDeliveryModel,
-} from '../model';
+import { $avaliableDeliveries, $isDeliveriesLoading } from '../model';
 
 const { RouteName } = sharedConfigRoutes;
 const { DELIVERIES } = RouteName;
@@ -72,8 +67,10 @@ const Offline: FunctionComponent = () => {
 export const MarketContent: FunctionComponent = () => {
     const { online, effectiveType } = useNetworkInfo();
     const isPending = useUnit($isDeliveriesLoading);
+
     const content = useList($avaliableDeliveries, (delivery, index) => {
         const isFirst = index === 0;
+
         return (
             <motion.div
                 className="relative w-full"
@@ -90,12 +87,7 @@ export const MarketContent: FunctionComponent = () => {
             >
                 <DeliveryShortInfoCard
                     delivery={delivery}
-                    featureSlot={
-                        <AssignToDelivery.AssignButton
-                            model={assignToDeliveryModel}
-                            deliveryId={delivery.id}
-                        />
-                    }
+                    featureSlot={<Button>dsf</Button>}
                 />
             </motion.div>
         );

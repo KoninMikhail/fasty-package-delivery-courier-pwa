@@ -22,7 +22,7 @@ const { HorizontalScroll } = sharedUiLayouts;
 const { locale } = sharedConfigLocale;
 
 /**
- * locale.ts
+ * locale
  */
 locale.addResourceBundle('en', translationNS, locale_en);
 locale.addResourceBundle('ru', translationNS, locale_ru);

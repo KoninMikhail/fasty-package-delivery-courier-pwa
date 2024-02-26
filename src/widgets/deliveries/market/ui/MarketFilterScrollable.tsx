@@ -2,12 +2,63 @@ import { ChipCheckBox } from '@/shared/ui/components';
 import { HorizontalScroll } from '@/shared/ui/layouts';
 import { CheckboxProps } from '@nextui-org/react';
 import clsx from 'clsx';
+import { IoIosTimer } from 'react-icons/io';
 
 /**
  * Constants
  */
 
 const FILTER_CHECKBOXES_SIZE: CheckboxProps['size'] = 'lg';
+
+/**
+ * Components
+ */
+
+const Express: FunctionComponent = () => {
+    return (
+        <ChipCheckBox
+            size={FILTER_CHECKBOXES_SIZE}
+            onChange={() => console.log('work')}
+        >
+            <span>
+                <IoIosTimer /> срочно
+            </span>
+        </ChipCheckBox>
+    );
+};
+
+const DeliveryType: FunctionComponent = () => {
+    return (
+        <ChipCheckBox
+            size={FILTER_CHECKBOXES_SIZE}
+            onChange={() => console.log('work')}
+        >
+            тип доставки
+        </ChipCheckBox>
+    );
+};
+
+const Period: FunctionComponent = () => {
+    return (
+        <ChipCheckBox
+            size={FILTER_CHECKBOXES_SIZE}
+            onChange={() => console.log('work')}
+        >
+            тип доставки
+        </ChipCheckBox>
+    );
+};
+
+const Weight: FunctionComponent = () => {
+    return (
+        <ChipCheckBox
+            size={FILTER_CHECKBOXES_SIZE}
+            onChange={() => console.log('work')}
+        >
+            вес
+        </ChipCheckBox>
+    );
+};
 
 interface MarketFilterScrollableProperties {
     withOutPadding?: boolean;
@@ -21,13 +72,6 @@ interface MarketFilterScrollableProperties {
 export const MarketFilterScrollable: FunctionComponent<
     MarketFilterScrollableProperties
 > = ({ withOutPadding }) => {
-    const filters = [
-        { label: 'срочно', action: () => console.log('buenos-aires') },
-        { label: 'тип доставки', action: () => console.log('sydney') },
-        { label: 'промежуток', action: () => console.log('san-francisco') },
-        { label: 'вес', action: () => console.log('san-francisco') },
-    ];
-
     return (
         <HorizontalScroll>
             <div
@@ -36,15 +80,10 @@ export const MarketFilterScrollable: FunctionComponent<
                     withOutPadding && 'px-4',
                 )}
             >
-                {filters.map((filter) => (
-                    <ChipCheckBox
-                        size={FILTER_CHECKBOXES_SIZE}
-                        key={filter.label}
-                        onChange={filter.action}
-                    >
-                        {filter.label}
-                    </ChipCheckBox>
-                ))}
+                <Express />
+                <DeliveryType />
+                <Period />
+                <Weight />
             </div>
         </HorizontalScroll>
     );
