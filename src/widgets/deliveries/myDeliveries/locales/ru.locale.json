@@ -1,0 +1,5 @@
+{
+  "message.error.data": "Ошибка загрузки данных",
+  "message.error.empty": "Пока нет активных доставок",
+  "button.error.label.retry": "Попробовать снова"
+}

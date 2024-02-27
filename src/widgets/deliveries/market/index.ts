@@ -1,1 +1,1 @@
-export * as widgetDeliveriesMarketUi from './ui';
+export * as widgetMarketUi from './ui';

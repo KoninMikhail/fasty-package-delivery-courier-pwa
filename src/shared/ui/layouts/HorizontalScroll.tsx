@@ -13,7 +13,12 @@ const HorizontalScroll: FunctionComponent<
     return (
         <div className="block overflow-hidden">
             <div className="-mb-[30px] overflow-x-auto pb-[30px]">
-                <div className={clsx('inline-block align-top', className)}>
+                <div
+                    className={clsx(
+                        'float-left inline-flex align-top',
+                        className,
+                    )}
+                >
                     {children}
                 </div>
             </div>

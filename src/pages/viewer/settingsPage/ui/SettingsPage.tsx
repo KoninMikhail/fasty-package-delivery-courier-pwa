@@ -19,7 +19,7 @@ const { APP_NAME } = sharedConfigConstants;
 const { Authorized } = viewerUi;
 
 /**
- * locale
+ * locale.ts
  */
 locale.addResourceBundle('en', translationNS, locale_en);
 locale.addResourceBundle('ru', translationNS, locale_ru);

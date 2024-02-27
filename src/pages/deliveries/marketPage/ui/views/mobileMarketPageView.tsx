@@ -1,24 +1,29 @@
-import type { PropsWithChildren } from 'react';
+import { PropsWithChildren, useRef } from 'react';
 
-import { widgetInProgressDeliveriesUi } from '@/widgets/deliveries/inProgress';
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
-import { widgetDeliveriesMarketUi } from '@/widgets/deliveries/market';
+import { widgetMarketUi } from '@/widgets/deliveries/market';
 import { sharedConfigRoutes } from '@/shared/config';
-import { sharedUiLayouts } from '@/shared/ui';
-import { Button, Spacer } from '@nextui-org/react';
+import { Button, Input, Spacer } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { widgetTopbarUi } from '@/widgets/viewer/welcome-topbar';
 import { Link } from 'react-router-dom';
+import { useUnit } from 'effector-react';
+import {
+    widgetSearchQueryPopupUi,
+    widgetSearchQueryPopupModel,
+} from '@/widgets/search/searchQueryPopup';
+import { widgetUpcomingDeliveriesUi } from '@/widgets/deliveries/upcommingDeliveries';
 import { translationNS } from '../../config';
 
 const {
     RouteName: { DELIVERIES },
 } = sharedConfigRoutes;
-const { UpcomingDeliveriesSlider } = widgetInProgressDeliveriesUi;
-const { DeliveriesMarketMobile } = widgetDeliveriesMarketUi;
+const { MarketContent, MarketFilterScrollable, MarketDateSelector } =
+    widgetMarketUi;
 const { NavbarMobile } = widgetNavbarMobileUi;
-const { HorizontalScroll } = sharedUiLayouts;
 const { WelcomeTopbar } = widgetTopbarUi;
+const { UpcomingDeliveriesScroller } = widgetUpcomingDeliveriesUi;
+const { SearchQueryInputModal } = widgetSearchQueryPopupUi;
 
 /**
  * Constants
@@ -52,15 +57,39 @@ const SectionBody: FunctionComponent<PropsWithChildren> = ({ children }) => (
     <div className="px-4">{children}</div>
 );
 
-const Header: FunctionComponent = () => (
-    <header className="w-full rounded-b-3xl bg-black p-6">
-        <WelcomeTopbar />
-    </header>
-);
-
 /**
  * Components
  */
+const Header: FunctionComponent = () => {
+    const reference = useRef<HTMLInputElement>(null);
+    const [openSearchModal] = useUnit([
+        widgetSearchQueryPopupModel.clickTriggerElement,
+    ]);
+
+    const onClickSearchInput = (): void => {
+        reference?.current?.blur();
+        openSearchModal();
+    };
+
+    return (
+        <header className="w-full rounded-b-3xl bg-black p-6">
+            <WelcomeTopbar />
+            <Spacer y={4} />
+            <Input
+                ref={reference}
+                autoFocus={false}
+                placeholder="поиск по заказам"
+                labelPlacement="outside"
+                onClick={onClickSearchInput}
+                startContent={
+                    <div className="pointer-events-none flex items-center">
+                        <span className="text-small text-default-400">#</span>
+                    </div>
+                }
+            />
+        </header>
+    );
+};
 
 const UpcomingDeliveries: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
@@ -74,9 +103,8 @@ const UpcomingDeliveries: FunctionComponent = () => {
                     {myDeliveriesLinkLabel}
                 </Button>
             </SectionHead>
-            <HorizontalScroll className="px-4">
-                <UpcomingDeliveriesSlider />
-            </HorizontalScroll>
+
+            <UpcomingDeliveriesScroller />
         </Section>
     );
 };
@@ -90,8 +118,12 @@ const AvailableDeliveries: FunctionComponent = () => {
                 <Heading>{heading}</Heading>
             </SectionHead>
             <Spacer y={2} />
+            <MarketDateSelector withOutPadding />
+            <Spacer y={2} />
+            <MarketFilterScrollable withOutPadding />
+            <Spacer y={6} />
             <SectionBody>
-                <DeliveriesMarketMobile />
+                <MarketContent />
             </SectionBody>
         </Section>
     );
@@ -106,13 +138,14 @@ export const MobileMarketPageView: FunctionComponent = () => {
     return (
         <>
             <Header />
-            <Spacer y={4} />
+            <Spacer y={6} />
             <Content>
                 <UpcomingDeliveries />
                 <Spacer y={4} />
                 <AvailableDeliveries />
             </Content>
             <NavbarMobile />
+            <SearchQueryInputModal size="full" />
         </>
     );
 };

@@ -17,10 +17,19 @@ export const usersApi = makeApi([
         response: z.any(),
     },
     {
-        method: 'put',
+        method: 'patch',
         path: '/:userId',
-        alias: 'updateUser',
+        alias: 'changeUserPassword',
         description: 'Update a user by its ID',
         response: z.any(),
+        parameters: [
+            {
+                name: 'user',
+                type: 'Body',
+                schema: z.object({
+                    password: z.string(),
+                }),
+            },
+        ],
     },
 ]);

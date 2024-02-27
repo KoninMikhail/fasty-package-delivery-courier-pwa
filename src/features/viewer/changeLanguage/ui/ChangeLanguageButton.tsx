@@ -19,7 +19,7 @@ const { locale } = sharedConfigLocale;
 const { UsFlagIcon, RuFlagIcon } = sharedUiIcons;
 
 /**
- * locale
+ * locale.ts
  */
 locale.addResourceBundle('en', translationNS, locale_en);
 locale.addResourceBundle('ru', translationNS, locale_ru);

@@ -1,10 +1,15 @@
 {
   "delivery.label.address": "Адрес",
+  "delivery.label.address.notFound": "Не найден",
   "delivery.label.id": "Номер заказа",
   "delivery.label.storage": "Содержимое",
   "delivery.label.weight": "Вес",
   "delivery.chip.onCar": "На машине",
   "delivery.chip.onFoot": "Пешком",
   "delivery.chip.express": "Срочно",
-  "delivery.weight.kg": "кг"
+  "delivery.weight.kg": "кг",
+  "delivery.chip.expired": "Просрочено",
+  "delivery.chip.timeLeft": "{{hours}}ч {{minutes}}м",
+  "delivery.client.name.notFound": "Клиент не найден",
+  "delivery.button.seeMore": "Подробнее"
 }

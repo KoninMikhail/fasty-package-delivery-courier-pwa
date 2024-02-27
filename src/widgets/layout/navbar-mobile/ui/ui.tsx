@@ -11,7 +11,7 @@ const { locale } = sharedConfigLocale;
 const { Menu, MenuItem } = sharedUiComponents;
 
 /**
- * locale
+ * locale.ts
  */
 locale.addResourceBundle('en', translationNS, locale_en);
 locale.addResourceBundle('ru', translationNS, locale_ru);

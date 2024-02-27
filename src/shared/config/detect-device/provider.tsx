@@ -17,7 +17,7 @@ import { DeviceInfoContext } from './context';
  * Provides information about the device based on the User-Agent and screen dimensions.
  * It uses a context to pass down this information through the component tree.
  *
- * @param {PropsWithChildren} props - The props that contains children components.
+ * @param {PropsWithChildren} props - The props that contains children common.
  * @returns {ReactNode} - The Provider component wrapping its children with the device info context.
  */
 export const DeviceInfoProvider = ({
