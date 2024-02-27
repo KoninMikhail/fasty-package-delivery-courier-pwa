@@ -2,7 +2,7 @@ import { ChipCheckBox } from '@/shared/ui/components';
 import { HorizontalScroll } from '@/shared/ui/layouts';
 import { CheckboxProps } from '@nextui-org/react';
 import clsx from 'clsx';
-import { IoIosTimer } from 'react-icons/io';
+import { DeliveryTypeFilter, ExpressFilter } from '@/entities/filter';
 
 /**
  * Constants
@@ -13,30 +13,6 @@ const FILTER_CHECKBOXES_SIZE: CheckboxProps['size'] = 'lg';
 /**
  * Components
  */
-
-const Express: FunctionComponent = () => {
-    return (
-        <ChipCheckBox
-            size={FILTER_CHECKBOXES_SIZE}
-            onChange={() => console.log('work')}
-        >
-            <span>
-                <IoIosTimer /> срочно
-            </span>
-        </ChipCheckBox>
-    );
-};
-
-const DeliveryType: FunctionComponent = () => {
-    return (
-        <ChipCheckBox
-            size={FILTER_CHECKBOXES_SIZE}
-            onChange={() => console.log('work')}
-        >
-            тип доставки
-        </ChipCheckBox>
-    );
-};
 
 const Period: FunctionComponent = () => {
     return (
@@ -80,8 +56,8 @@ export const MarketFilterScrollable: FunctionComponent<
                     withOutPadding && 'px-4',
                 )}
             >
-                <Express />
-                <DeliveryType />
+                <ExpressFilter />
+                <DeliveryTypeFilter />
                 <Period />
                 <Weight />
             </div>

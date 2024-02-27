@@ -100,7 +100,7 @@ const ErrorState: FunctionComponent = () => {
 /**
  * View
  */
-export const UpcomingDeliveriesSlider: FunctionComponent = () => {
+export const UpcomingDeliveriesScroller: FunctionComponent = () => {
     const isLoading = useUnit($$loading);
     const isEmpty = useUnit($$empty);
     const hasError = useUnit($$hasError);
@@ -119,6 +119,7 @@ export const UpcomingDeliveriesSlider: FunctionComponent = () => {
     if (isEmpty) {
         return <EmptyState />;
     }
+
     return (
         <HorizontalScroll className="px-4">
             <div className="flex flex-nowrap justify-start gap-4 py-4">

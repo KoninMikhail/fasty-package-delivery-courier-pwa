@@ -1,6 +1,5 @@
 import { PropsWithChildren, useRef } from 'react';
 
-import { widgetInProgressDeliveriesUi } from '@/widgets/deliveries/inProgress';
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { widgetMarketUi } from '@/widgets/deliveries/market';
 import { sharedConfigRoutes } from '@/shared/config';
@@ -13,16 +12,17 @@ import {
     widgetSearchQueryPopupUi,
     widgetSearchQueryPopupModel,
 } from '@/widgets/search/searchQueryPopup';
+import { widgetUpcomingDeliveriesUi } from '@/widgets/deliveries/upcommingDeliveries';
 import { translationNS } from '../../config';
 
 const {
     RouteName: { DELIVERIES },
 } = sharedConfigRoutes;
-const { UpcomingDeliveriesSlider } = widgetInProgressDeliveriesUi;
 const { MarketContent, MarketFilterScrollable, MarketDateSelector } =
     widgetMarketUi;
 const { NavbarMobile } = widgetNavbarMobileUi;
 const { WelcomeTopbar } = widgetTopbarUi;
+const { UpcomingDeliveriesScroller } = widgetUpcomingDeliveriesUi;
 const { SearchQueryInputModal } = widgetSearchQueryPopupUi;
 
 /**
@@ -104,7 +104,7 @@ const UpcomingDeliveries: FunctionComponent = () => {
                 </Button>
             </SectionHead>
 
-            <UpcomingDeliveriesSlider />
+            <UpcomingDeliveriesScroller />
         </Section>
     );
 };
