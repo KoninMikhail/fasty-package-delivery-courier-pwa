@@ -7,7 +7,7 @@ import {
 import { PropsWithChildren } from 'react';
 import { useUnit } from 'effector-react';
 import { viewerProfileModel } from '@/entities/viewer';
-import { UserAvatar } from '@/entities/user/ui/UserAvatar/UserAvatar';
+import { UserAvatar } from '@/entities/user';
 import { sharedConfigLocale, sharedConfigRoutes } from '@/shared/config';
 import { useNavigate } from 'react-router-dom';
 

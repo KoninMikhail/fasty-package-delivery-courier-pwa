@@ -14,7 +14,7 @@ export const MonthWrapper: FunctionComponent<MonthWrapperProperties> = ({
     const monthLabel = t(`month.${month.toLowerCase()}.full`);
     return (
         <div className="relative">
-            <span className="sticky left-0 pl-4 text-xs uppercase text-content4">
+            <span className="sticky left-0 pl-1.5 text-xs uppercase text-content4">
                 {monthLabel}
             </span>
             <div className="flex flex-nowrap">{children}</div>

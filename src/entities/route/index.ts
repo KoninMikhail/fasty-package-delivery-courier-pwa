@@ -1,2 +1,2 @@
-export * as routeUi from './ui';
+export { Map } from './ui';
 export * as subwayModel from '../../shared/lib/subway/model';

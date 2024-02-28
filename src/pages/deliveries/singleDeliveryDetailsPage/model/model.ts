@@ -22,8 +22,18 @@ sample({
 });
 
 /**
+ * Page
+ */
+
+export const $deliveryId = createStore<string>('').on(
+    DeliveryDetailsPageGateway.open,
+    (_, data) => data.deliveryId,
+);
+
+/**
  * Delivery details store
  */
+
 export const $deliveryDetailsStore = createStore<string>('')
     .on(fetchDeliveryDetailsFx.doneData, (_, data) => data)
     .reset(DeliveryDetailsPageGateway.close);

@@ -1,5 +1,15 @@
-import { eachDayOfInterval, format, parse } from 'date-fns';
+import {
+    eachDayOfInterval,
+    endOfMonth,
+    format,
+    getDate,
+    getMonth,
+    getYear,
+    isEqual,
+    parse,
+} from 'date-fns';
 import { DayInfo } from '@/shared/ui/components/forms/horizontal-date-picker/parts/Day';
+import { DatePeriod } from './types';
 
 export function parseDateInput(dateInput: string): Date {
     // Парсим дату из формата dd-MM-yyyy
@@ -42,3 +52,38 @@ export function generateDatesInRange(
         return { month, year, days };
     });
 }
+
+/**
+ * Checks if the given date is the last day of its month.
+ * @param {Date} date A date to check.
+ * @returns {boolean} True if `date` is the last day of its month, otherwise false.
+ */
+export function isLastDayOfSpecificMonth(date: Date): boolean {
+    const lastDayOfMonth = endOfMonth(date);
+
+    // Compare only year, month, and day parts of the date
+    return (
+        getYear(date) === getYear(lastDayOfMonth) &&
+        getMonth(date) === getMonth(lastDayOfMonth) &&
+        getDate(date) === getDate(lastDayOfMonth)
+    );
+}
+
+export const generateDatesArray = ({
+    dateStart,
+    dateEnd,
+}: Partial<DatePeriod>): string[] => {
+    const startDate = parse(dateStart, 'dd-MM-yyyy', new Date());
+    const endDate = parse(dateEnd, 'dd-MM-yyyy', new Date());
+
+    const [start, end] =
+        startDate > endDate ? [endDate, startDate] : [startDate, endDate];
+
+    if (isEqual(start, end)) {
+        return [format(start, 'dd-MM-yyyy')];
+    }
+
+    return eachDayOfInterval({ start, end }).map((date) =>
+        format(date, 'dd-MM-yyyy'),
+    );
+};

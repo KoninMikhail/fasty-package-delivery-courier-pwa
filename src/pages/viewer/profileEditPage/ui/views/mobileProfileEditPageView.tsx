@@ -3,7 +3,7 @@ import type { PropsWithChildren, ReactNode } from 'react';
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { sharedConfigRoutes } from '@/shared/config';
 import { Button, Spacer } from '@nextui-org/react';
-import { UserAvatar } from '@/entities/user/ui/UserAvatar/UserAvatar';
+import { UserAvatar } from '@/entities/user';
 import { useUnit } from 'effector-react';
 import { viewerProfileModel } from '@/entities/viewer';
 import { useTranslation } from 'react-i18next';

@@ -1,1 +1,2 @@
-export * from './AccountCardRow';
+export * from './UserCardRow';
+export * from './UserAvatar';

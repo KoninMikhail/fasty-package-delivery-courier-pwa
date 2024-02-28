@@ -1,10 +1,15 @@
-import { useMemo } from 'react';
-import { generateDatesInRange } from '@/shared/ui/components/forms/horizontal-date-picker/utils';
-import { MonthWrapper } from '@/shared/ui/components/forms/horizontal-date-picker/parts/MonthWrapper';
-import { Day } from '@/shared/ui/components/forms/horizontal-date-picker/parts/Day';
+import { useMemo, useState } from 'react';
 import { format, add } from 'date-fns';
 import { sharedConfigLocale } from '@/shared/config';
-import { DayWrapper } from '@/shared/ui/components/forms/horizontal-date-picker/parts/DayWrapper';
+import {
+    generateDatesArray,
+    generateDatesInRange,
+    isLastDayOfSpecificMonth,
+} from './utils';
+import { MonthWrapper } from './parts/MonthWrapper';
+import { Day } from './parts/Day';
+import { DayWrapper } from './parts/DayWrapper';
+import { DatePeriod } from './types';
 import { translationNS } from './config';
 import locale_en from './locale/en.locale.json';
 import locale_ru from './locale/ru.locale.json';
@@ -19,47 +24,113 @@ locale.addResourceBundle('ru', translationNS, locale_ru);
 
 interface HorizontalDatePickerProperties {
     startDate?: string;
-    endDate?: string;
-    selectedDates?: string[];
-    onChangeDate: (date: string) => void;
+    periodDays?: number;
+    selectedDates?: DatePeriod;
+    onChangeDate: (date: DatePeriod) => void;
 }
 
 export const HorizontalDatePicker: FunctionComponent<
     HorizontalDatePickerProperties
 > = ({
     startDate = format(new Date(), 'dd-MM-yyyy'),
-    endDate = format(add(new Date(), { days: 90 }), 'dd-MM-yyyy'),
+    periodDays = 90,
     selectedDates,
     onChangeDate,
 }) => {
-    const generateDates = useMemo(
-        () => generateDatesInRange(startDate, endDate),
-        [startDate, endDate],
+    const [startPeriodState, setStartPeriodState] =
+        useState<Nullable<string>>(null);
+    const [endPeriodState, setEndPeriodState] =
+        useState<Nullable<string>>(null);
+
+    const startDateParsed = startDate;
+    const periodDaysParsed = format(
+        add(new Date(), { days: periodDays }),
+        'dd-MM-yyyy',
+    );
+
+    const generateDatesRange = useMemo(
+        () => generateDatesInRange(startDateParsed, periodDaysParsed),
+        [startDateParsed, periodDaysParsed],
+    );
+
+    const generateSelectedPeriod = useMemo(
+        () =>
+            selectedDates?.dateStart && selectedDates?.dateEnd
+                ? generateDatesArray(selectedDates)
+                : [],
+        [selectedDates],
     );
 
     const onPressDateHandle = (date: string): void => {
-        if (onChangeDate) {
-            onChangeDate(date);
+        if (!startPeriodState) {
+            setStartPeriodState(date);
+            onChangeDate({
+                dateStart: date,
+                dateEnd: date,
+            });
+        }
+        if (!endPeriodState && startPeriodState) {
+            setEndPeriodState(date);
+            onChangeDate({
+                dateStart: startPeriodState,
+                dateEnd: date,
+            });
+        }
+        if (startPeriodState && endPeriodState) {
+            setStartPeriodState(date);
+            setEndPeriodState(null);
+            onChangeDate({
+                dateStart: date,
+                dateEnd: date,
+            });
         }
     };
 
     return (
         <div className="flex flex-nowrap">
-            {generateDates.map((date) => {
+            {generateDatesRange?.map((date) => {
                 const days = date.days.map((day) => {
                     const dateSting = format(day.date, 'dd-MM-yyyy');
-                    const isSelected = selectedDates?.includes(dateSting);
+                    const isLastDayOfMonth = isLastDayOfSpecificMonth(day.date);
 
-                    /**
-                     * Period
-                     */
-                    const startPeriod = selectedDates?.[0];
-                    const endPeriod = selectedDates?.[1];
+                    const isSelectDay =
+                        (generateSelectedPeriod.length > 0 &&
+                            generateSelectedPeriod.at(-1) === dateSting) ||
+                        (generateSelectedPeriod.length > 0 &&
+                            generateSelectedPeriod[0] === dateSting);
+
+                    const isSelectWrapper =
+                        generateSelectedPeriod.includes(dateSting);
+                    const isFirstDayOfSelectWrapper =
+                        generateSelectedPeriod.length > 1 &&
+                        generateSelectedPeriod[0] === dateSting;
+                    const isLastDayOfSelectWrapper =
+                        generateSelectedPeriod.length > 1 &&
+                        generateSelectedPeriod.at(-1) === dateSting;
+
+                    if (generateSelectedPeriod.length === 1) {
+                        return (
+                            <DayWrapper key={dateSting} singleDay>
+                                <Day
+                                    isSelected={isSelectDay}
+                                    date={day.date}
+                                    onClick={onPressDateHandle}
+                                />
+                            </DayWrapper>
+                        );
+                    }
+
                     return (
-                        <DayWrapper>
+                        <DayWrapper
+                            key={dateSting}
+                            isSelectedDay={isSelectWrapper}
+                            firstDayOfSelect={isFirstDayOfSelectWrapper}
+                            lastDayOfSelect={isLastDayOfSelectWrapper}
+                            isLastMonthDay={isLastDayOfMonth}
+                            singleDay={generateSelectedPeriod.length === 1}
+                        >
                             <Day
-                                key={dateSting}
-                                isSelected={isSelected}
+                                isSelected={isSelectDay}
                                 date={day.date}
                                 onClick={onPressDateHandle}
                             />

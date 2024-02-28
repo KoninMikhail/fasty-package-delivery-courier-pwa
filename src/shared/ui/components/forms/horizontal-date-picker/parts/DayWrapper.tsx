@@ -1,35 +1,32 @@
 import { ReactNode } from 'react';
+import clsx from 'clsx';
 
 export const DayWrapper: FunctionComponent<{
     firstDayOfSelect?: boolean;
     lastDayOfSelect?: boolean;
-    lastMonthDay?: boolean;
-    selectedDay?: boolean;
+    isLastMonthDay?: boolean;
+    isSelectedDay?: boolean;
+    singleDay?: boolean;
     children: ReactNode;
 }> = ({
     children,
     firstDayOfSelect,
     lastDayOfSelect,
-    lastMonthDay,
-    selectedDay,
+    isLastMonthDay,
+    isSelectedDay,
+    singleDay,
 }) => {
-    if (firstDayOfSelect) {
-        return (
-            <div className="block rounded-l-2xl bg-gray-200">{children}</div>
-        );
-    }
-    if (lastDayOfSelect) {
-        return (
-            <div className="block rounded-r-2xl bg-gray-200">{children}</div>
-        );
-    }
-    if (lastMonthDay && !lastDayOfSelect) {
-        return <div className="block bg-gray-200">{children}</div>;
-    }
+    const outputStyles = clsx(
+        'relative min-w-12 h-16 after:absolute after:h-full after:top-0 after:right-0',
+        isLastMonthDay ? 'pr-6 after:w-6' : 'after:w-2 pr-1',
+        {
+            'rounded-l-2xl': !singleDay && firstDayOfSelect,
+            'rounded-r-2xl': !singleDay && lastDayOfSelect,
+            'after:bg-gray-100 bg-gray-100':
+                !singleDay && isSelectedDay && !lastDayOfSelect,
+            'bg-gray-100 pr-0': lastDayOfSelect,
+        },
+    );
 
-    if (selectedDay) {
-        return <div className="block bg-gray-200">{children}</div>;
-    }
-
-    return <div className="block">{children}</div>;
+    return <div className={outputStyles}>{children}</div>;
 };

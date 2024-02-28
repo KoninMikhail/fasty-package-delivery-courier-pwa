@@ -3,6 +3,7 @@ import { CheckboxProps } from '@nextui-org/react';
 import clsx from 'clsx';
 import { PropsWithChildren, useState } from 'react';
 import { HorizontalDatePicker } from '@/shared/ui/components';
+import { DatePeriod } from '@/shared/ui/components/forms/horizontal-date-picker/types';
 
 /**
  * Constants
@@ -65,22 +66,17 @@ const CalendarItem: FunctionComponent<{
 export const MarketDateSelector: FunctionComponent<
     MarketFilterScrollableProperties
 > = ({ withOutPadding }) => {
-    const [selectedDates, setSelectedDates] = useState<string[]>([]);
+    const [selectedDates, setSelectedDates] = useState<DatePeriod>();
+
+    const onChangeDate = (work: DatePeriod) => {
+        setSelectedDates(() => work);
+    };
 
     return (
         <HorizontalScroll>
             <HorizontalDatePicker
-                selected={selectedDates}
-                onChangeDate={(work) =>
-                    setSelectedDates(() => {
-                        if (selectedDates.includes(work)) {
-                            return selectedDates.filter(
-                                (date) => date !== work,
-                            );
-                        }
-                        return [...selectedDates, work];
-                    })
-                }
+                selectedDates={selectedDates}
+                onChangeDate={onChangeDate}
             />
         </HorizontalScroll>
     );

@@ -1,1 +1,1 @@
-export * as userUi from './ui';
+export { UserCardRow, UserAvatar } from './ui';

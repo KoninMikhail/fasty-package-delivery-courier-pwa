@@ -1,15 +1,15 @@
-import type { PropsWithChildren, ReactNode } from 'react';
+import { PropsWithChildren, ReactNode } from 'react';
 
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { Button, Spacer } from '@nextui-org/react';
 import { useUnit } from 'effector-react';
-import { routeUi } from '@/entities/route';
 import { useNavigate } from 'react-router-dom';
+import { Map } from '@/entities/route';
 import { LuArrowLeft } from 'react-icons/lu';
-import { $deliveryDetailsStore } from '../../model';
+import { UserCardRow } from '@/entities/user';
+import { $deliveryId } from '../../model';
 
 const { NavbarMobile } = widgetNavbarMobileUi;
-const { Map } = routeUi;
 
 /**
  * Layout
@@ -38,6 +38,18 @@ const Section: FunctionComponent<ISectionProperties> = ({
  * Components
  */
 
+const Status = () => {
+    return <div>Manager</div>;
+};
+
+const Manager: FunctionComponent = () => {
+    return (
+        <div>
+            <UserCardRow account={{ name: 'Manager' }} />
+        </div>
+    );
+};
+
 const BackButton: FunctionComponent = () => {
     const navigate = useNavigate();
 
@@ -52,30 +64,42 @@ const BackButton: FunctionComponent = () => {
     );
 };
 
-const Header: FunctionComponent = () => (
+const Header: FunctionComponent<{
+    backButton: ReactNode;
+    title: string;
+}> = ({ title, backButton }) => (
     <header className="absolute top-4 flex w-full items-center justify-between px-4">
-        <BackButton />
-        <h1 className="text-xl font-semibold">00000000</h1>
+        {backButton}
+        <h1 className="text-xl font-semibold">{title}</h1>
         <div className="w-8" />
     </header>
 );
 
 export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
-    const data = useUnit($deliveryDetailsStore);
+    const deliveryId = useUnit($deliveryId);
     return (
         <>
-            <Header />
+            <Header
+                backButton={<BackButton />}
+                title={deliveryId.padStart(6, '0')}
+            />
             <MainContainer>
                 <Section padding="none">
                     <Map />
                 </Section>
-
                 <Spacer y={4} />
                 <Section>
-                    <div>{data?.id}</div>
+                    <h3 className="font-bold">Delivery Info</h3>
                 </Section>
                 <Spacer y={4} />
-                <Section>ghjgh</Section>
+                <Section>
+                    <h3 className="font-bold">Delivery status</h3>
+                    <Status />
+                </Section>
+                <Spacer y={4} />
+                <Section>
+                    <Manager />
+                </Section>
                 <Spacer y={4} />
             </MainContainer>
             <NavbarMobile />
