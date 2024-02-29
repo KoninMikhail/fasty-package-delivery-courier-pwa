@@ -1,5 +1,5 @@
 import { createEvent, createStore } from 'effector';
-import { debounce, debug } from 'patronum';
+import { debounce } from 'patronum';
 import { persist } from 'effector-storage/local';
 import { sharedLibHelpers } from '@/shared/lib';
 import { MAX_RECENT_REQUESTS, RECENT_QUERIES_KEY } from '../config';
@@ -28,7 +28,6 @@ export const changeSearchQuery = createEvent<string>();
 export const $searchQuery = createStore<string>('')
     .on(changeSearchQuery, (_, query) => query)
     .reset(clickTriggerElement);
-debug($searchQuery);
 /**
  * Search query history
  */

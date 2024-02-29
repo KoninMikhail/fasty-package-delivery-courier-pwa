@@ -1,9 +1,9 @@
 import { createEvent, sample } from 'effector';
-import { removeSessionFx } from '@/shared/auth/effects';
+import { logoutFx } from '@/entities/viewer';
 
 export const logout = createEvent<void>();
 
 sample({
     clock: logout,
-    target: removeSessionFx,
+    target: logoutFx,
 });

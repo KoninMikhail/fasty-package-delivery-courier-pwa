@@ -4,9 +4,9 @@ import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { Button, Spacer } from '@nextui-org/react';
 import { useUnit } from 'effector-react';
 import { useNavigate } from 'react-router-dom';
-import { Map } from '@/entities/route';
 import { LuArrowLeft } from 'react-icons/lu';
 import { UserCardRow } from '@/entities/user';
+import clsx from 'clsx';
 import { $deliveryId } from '../../model';
 
 const { NavbarMobile } = widgetNavbarMobileUi;
@@ -22,16 +22,18 @@ const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
 
 interface ISectionProperties {
     children: ReactNode | ReactNode[];
+    className?: string;
     padding?: 'default' | 'none';
 }
 const Section: FunctionComponent<ISectionProperties> = ({
     children,
     padding = 'default',
+    className,
 }) =>
     padding === 'default' ? (
-        <section className="w-full px-4">{children}</section>
+        <section className={`w-full px-4 ${className}`}>{children}</section>
     ) : (
-        <section className="w-full">{children}</section>
+        <section className={`w-full ${className}`}>{children}</section>
     );
 
 /**
@@ -67,8 +69,14 @@ const BackButton: FunctionComponent = () => {
 const Header: FunctionComponent<{
     backButton: ReactNode;
     title: string;
-}> = ({ title, backButton }) => (
-    <header className="absolute top-4 flex w-full items-center justify-between px-4">
+    className?: string;
+}> = ({ title, backButton, className }) => (
+    <header
+        className={clsx(
+            'absolute top-4 flex w-full items-center justify-between px-4',
+            className,
+        )}
+    >
         {backButton}
         <h1 className="text-xl font-semibold">{title}</h1>
         <div className="w-8" />
@@ -80,13 +88,11 @@ export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
     return (
         <>
             <Header
+                className="z-[500]"
                 backButton={<BackButton />}
                 title={deliveryId.padStart(6, '0')}
             />
             <MainContainer>
-                <Section padding="none">
-                    <Map />
-                </Section>
                 <Spacer y={4} />
                 <Section>
                     <h3 className="font-bold">Delivery Info</h3>

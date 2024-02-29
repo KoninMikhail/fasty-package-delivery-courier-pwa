@@ -1,8 +1,6 @@
-import { createEvent, createStore } from 'effector';
-import { AuthByEmail } from '@/features/auth/ByEmail';
-import { sharedAuthEffects } from '@/shared/auth';
-
-const { authByEMailRequestFx } = sharedAuthEffects;
+import {createEvent, createStore} from 'effector';
+import {AuthByEmail} from '@/features/auth/ByEmail';
+import { authByEmailFx } from '@/entities/viewer';
 
 /**
  * Modal state
@@ -18,5 +16,5 @@ export const $isSignInModalVisible = createStore<boolean>(false)
  */
 
 export const authByEmailModel = AuthByEmail.factory.createModel({
-    registerFx: authByEMailRequestFx,
+    registerFx: authByEmailFx,
 });

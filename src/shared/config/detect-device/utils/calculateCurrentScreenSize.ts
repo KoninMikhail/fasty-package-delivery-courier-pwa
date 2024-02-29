@@ -19,7 +19,7 @@ export const calculateCurrentScreenSize = (
     // Expected screen configuration from TailwindCSS theme.
     const { screens } = fullConfig.theme;
 
-    // Map screen sizes from configuration to an array of {name, size}.
+    // SimpleMapContainer screen sizes from configuration to an array of {name, size}.
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const screenSizes = Object.entries(screens).map(([key, value]) => ({
         name: key,

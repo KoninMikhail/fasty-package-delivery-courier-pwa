@@ -1,2 +1,10 @@
-export { Map } from './ui';
-export * as subwayModel from '../../shared/lib/subway/model';
+import { mapFactory } from './factories/mapFactory';
+
+import { SimpleMap } from './ui';
+
+export const Route = {
+    Map: {
+        mapFactory,
+        SimpleMap,
+    },
+};

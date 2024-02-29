@@ -1,8 +1,6 @@
 import { createEvent, createStore } from 'effector';
 import { ResetByEmail } from '@/features/reset/ByEmail';
-import { sharedAuthEffects } from '@/shared/auth';
-
-const { resetByEmailRequestFx } = sharedAuthEffects;
+import { resetByEmailRequestFx } from '@/entities/viewer';
 
 /**
  * Modal state

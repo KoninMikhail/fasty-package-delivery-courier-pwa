@@ -1,27 +1,53 @@
 import { mergeApis, Zodios } from '@zodios/core';
-import { subwayApi } from './parts/subwayApi';
+import Cookies from 'js-cookie';
+import { SESSION_EXPIRATION_DAYS } from './config';
+import { pluginApiKey, pluginSetApiKey, pluginRemoveApiKey } from './plugins';
+import {
+    logoutApi,
+    authApi,
+    deliveriesApi,
+    usersApi,
+    subwayApi,
+    forgotPasswordApi,
+} from './parts';
 import { instance } from './instance';
-import { deliveriesApi } from './parts/deliveriesApi';
-import { usersApi } from './parts/usersApi';
+
+const COOKIE_NAME = import.meta.env.VITE_JWT_TOKEN_COOKIE_KEY;
 
 export const apis = mergeApis({
+    '/login': authApi,
     '/deliveries': deliveriesApi,
     '/users': usersApi,
     '/subways': subwayApi,
+    '/logout': logoutApi,
+    '/forgotPassword': forgotPasswordApi,
 });
 
 export const apiClient = new Zodios(apis, {
     axiosInstance: instance,
 });
 
-export * from './schemas/ClientSchema';
-export * from './schemas/ContactSchema';
-export * from './schemas/DeliverySchema';
-export * from './schemas/OrderSchema';
-export * from './schemas/UserSchema';
-
 /**
- * Subway
+ * Plugins
  */
-export * from './schemas/SubwaySchema';
-export * from './types/SubwayTypes';
+apiClient.use(
+    pluginApiKey({
+        getApiKey: async () => {
+            return Cookies.get(COOKIE_NAME) || '';
+        },
+    }),
+);
+apiClient.use(
+    'authByEmail',
+    pluginSetApiKey({
+        setApiKey: async (token) => {
+            Cookies.set(COOKIE_NAME, token, {
+                expires: SESSION_EXPIRATION_DAYS,
+            });
+        },
+    }),
+);
+apiClient.use('logoutMe', pluginRemoveApiKey({ cookieName: COOKIE_NAME }));
+
+export * from './schemas';
+export * from './types';

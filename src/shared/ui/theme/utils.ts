@@ -1,6 +1,6 @@
 import resolveConfig from 'tailwindcss/resolveConfig';
-import tailwindConfig from '../../../../tailwind.config';
 import { useEffect, useState } from 'react';
+import tailwindConfig from '../../../../tailwind.config';
 
 const fullConfig = resolveConfig(tailwindConfig);
 
@@ -24,7 +24,7 @@ export const useCurrentScreen = (): string | null => {
             // Expected screen configuration from TailwindCSS theme.
             const { screens } = fullConfig.theme;
 
-            // Map screen sizes from configuration to an array of {name, size}.
+            // SimpleMapContainer screen sizes from configuration to an array of {name, size}.
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             const screenSizes: ScreenSize[] = Object.entries(screens).map(
                 ([key, value]) => ({
