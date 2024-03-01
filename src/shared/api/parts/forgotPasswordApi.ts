@@ -1,6 +1,6 @@
 import { makeApi } from '@zodios/core';
 import { z } from 'zod';
-import { ForgotPasswordSchema } from '@/shared/api';
+import { ForgotPasswordSchema } from '../schemas';
 
 export const forgotPasswordApi = makeApi([
     {

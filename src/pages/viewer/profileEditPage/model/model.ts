@@ -1,6 +1,6 @@
 import { ChangePassword } from '@/features/viewer/changePassword';
-import { viewerProfileModel } from '@/entities/viewer';
-import { createEffect } from 'effector/effector.umd';
+import { createEffect } from 'effector';
+import { sessionModel } from '@/entities/viewer';
 import { apiClient } from '@/shared/api';
 import { ChangeAvatar } from '@/features/viewer/changeAvatar';
 
@@ -23,7 +23,7 @@ const resetPasswordFx = createEffect({
 });
 
 export const changePasswordModel = ChangePassword.factory.createModel({
-    targetUser: viewerProfileModel.$profileDataStore,
+    targetUser: sessionModel.$viewerProfileStore,
     updateUserFx: resetPasswordFx,
 });
 

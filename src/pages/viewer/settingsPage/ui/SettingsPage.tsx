@@ -3,7 +3,7 @@ import {
     sharedConfigConstants,
     sharedConfigLocale,
 } from '@/shared/config';
-import { viewerUi } from '@/entities/viewer';
+import { Authorized } from '@/entities/viewer';
 import { useTranslation } from 'react-i18next';
 import { useDocumentTitle } from 'usehooks-ts';
 import { DesktopSettingsPageView, MobileSettingsPageView } from './views';
@@ -16,7 +16,6 @@ import locale_ru from '../locales/ru.locale.json';
 const { useDeviceScreen } = sharedConfigDetectDevice;
 const { locale } = sharedConfigLocale;
 const { APP_NAME } = sharedConfigConstants;
-const { Authorized } = viewerUi;
 
 /**
  * locale.ts

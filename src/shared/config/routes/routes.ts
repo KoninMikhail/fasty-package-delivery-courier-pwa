@@ -9,6 +9,7 @@ export enum RouteName {
     SEARCH_PAGE = '/search',
     PROFILE_EDIT_PAGE = '/profile',
     SETTINGS_PAGE = '/settings',
+    LOGOUT_PAGE = '/logout',
 }
 
 export interface RouteDescription {

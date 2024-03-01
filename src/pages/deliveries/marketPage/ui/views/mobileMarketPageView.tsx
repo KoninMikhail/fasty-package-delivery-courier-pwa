@@ -13,6 +13,7 @@ import {
     widgetSearchQueryPopupModel,
 } from '@/widgets/search/searchQueryPopup';
 import { widgetUpcomingDeliveriesUi } from '@/widgets/deliveries/upcommingDeliveries';
+import { Offline, SlowNetwork } from '@/entities/viewer';
 import { translationNS } from '../../config';
 
 const {
@@ -129,6 +130,15 @@ const AvailableDeliveries: FunctionComponent = () => {
     );
 };
 
+export const FloatingInfo: FunctionComponent = () => {
+    return (
+        <div className="fixed top-0 w-full text-center">
+            <Offline>dsfsdfdfs</Offline>
+            <SlowNetwork>слоу нетворк</SlowNetwork>
+        </div>
+    );
+};
+
 /**
  * @name MobileMarketPageView
  * @description Page for deliveries exchange
@@ -137,6 +147,7 @@ const AvailableDeliveries: FunctionComponent = () => {
 export const MobileMarketPageView: FunctionComponent = () => {
     return (
         <>
+            <FloatingInfo />
             <Header />
             <Spacer y={6} />
             <Content>

@@ -1,4 +1,8 @@
 import axios from 'axios';
+import { sharedConfigRoutes } from '@/shared/config';
+
+const { RouteName } = sharedConfigRoutes;
+const { LOGOUT_PAGE } = RouteName;
 
 /**
  * Create an axios instance with default configuration
@@ -12,10 +16,19 @@ const API_BASE_URL = import.meta.env.VITE_COURIERS_API_BASE_URL;
 export const instance = axios.create({
     baseURL: `${API_BASE_URL}/api`,
     headers: {
-        'Content-Type': 'application/json',
         'x-app-identifier': `${VITE_APP_IDENTIFIER}/${PACKAGE_VERSION}`,
     },
 });
+
+instance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401) {
+            return Promise.reject(error);
+        }
+        return Promise.reject(error);
+    },
+);
 
 /**
  * Rewrite the URL to replace `/users/me` with `/me`

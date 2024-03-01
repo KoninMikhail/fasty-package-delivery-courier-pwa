@@ -3,9 +3,8 @@ import { PropsWithChildren } from 'react';
 import { widgetInProgressDeliveriesUi } from '@/widgets/deliveries/inProgress';
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { sharedUiComponents } from '@/shared/ui';
-import { viewerUi } from '@/entities/viewer';
+import { Authorized, Offline, SlowNetwork } from '@/entities/viewer';
 
-const { Authorized } = viewerUi;
 const { MyDeliveriesList } = widgetInProgressDeliveriesUi;
 const { NavbarMobile } = widgetNavbarMobileUi;
 const { Heading, Text, NativeScroll } = sharedUiComponents;
@@ -46,6 +45,8 @@ const Header: FunctionComponent = () => {
 export const MobileProfilePageView: FunctionComponent = () => {
     return (
         <Authorized>
+            <Offline>dsfsdfdfs</Offline>
+            <SlowNetwork>слоу нетворк</SlowNetwork>
             <Wrapper>
                 <Header />
                 <FilterSection>filters</FilterSection>

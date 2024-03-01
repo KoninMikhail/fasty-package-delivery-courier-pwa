@@ -1,8 +1,5 @@
 import { createEffect, createStore, sample } from 'effector';
 import { apiClient, Delivery } from '@/shared/api';
-import { AppGate } from '@/shared/lib/app';
-import { AssignToDelivery } from '@/features/delivery/assignToDelivery';
-import { $profileDataStore } from '@/entities/viewer/model/profileModel';
 
 const fetchUpcomingDeliveriesFx = createEffect(async () => {
     return apiClient.fetchUpcomingDeliveries();
@@ -23,17 +20,6 @@ const assignToDeliveryFx = createEffect(
         console.log('assignToDeliveryFx', userId, deliveryId);
     },
 );
-
-export const assignToDeliveryModel = AssignToDelivery.factory.createModel({
-    deliveriesStore: $avaliableDeliveries,
-    userStore: $profileDataStore,
-    assignToDeliveryEffect: assignToDeliveryFx,
-});
-
-sample({
-    clock: AppGate.open,
-    target: fetchUpcomingDeliveriesFx,
-});
 
 sample({
     clock: fetchUpcomingDeliveriesFx.doneData,

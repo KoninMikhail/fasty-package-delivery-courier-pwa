@@ -1,4 +1,4 @@
-import { viewerUi } from '@/entities/viewer';
+import { Authorized } from '@/entities/viewer';
 import {
     sharedConfigDetectDevice,
     sharedConfigLocale,
@@ -14,11 +14,6 @@ import locale_ru from '../locales/ru.locale.json';
 const { useDeviceScreen } = sharedConfigDetectDevice;
 const { locale } = sharedConfigLocale;
 const { APP_NAME } = sharedConfigConstants;
-
-/**
- * Components
- */
-const { Authorized } = viewerUi;
 
 /**
  * locale.ts

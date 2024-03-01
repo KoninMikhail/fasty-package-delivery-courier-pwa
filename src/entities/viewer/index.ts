@@ -1,3 +1,3 @@
 export * from './api';
-export { viewerSessionModel, viewerProfileModel } from './model';
-export * as viewerUi from './ui';
+export * from './ui';
+export * as sessionModel from './model/sessionModel';

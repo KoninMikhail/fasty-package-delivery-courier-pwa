@@ -6,7 +6,7 @@ import {
 } from '@nextui-org/react';
 import { PropsWithChildren } from 'react';
 import { useUnit } from 'effector-react';
-import { viewerProfileModel } from '@/entities/viewer';
+import { sessionModel } from '@/entities/viewer';
 import { UserAvatar } from '@/entities/user';
 import { sharedConfigLocale, sharedConfigRoutes } from '@/shared/config';
 import { useNavigate } from 'react-router-dom';
@@ -118,7 +118,7 @@ const UserTool: FunctionComponent<{
 
 export const WelcomeTopbar: FunctionComponent = () => {
     const navigate = useNavigate();
-    const profile = useUnit(viewerProfileModel.$profileDataStore);
+    const profile = useUnit(sessionModel.$sessionProfileStore);
     const logout = useUnit(logoutModel.logout);
 
     const onPressProfile = (): void => navigate(PROFILE_EDIT_PAGE);

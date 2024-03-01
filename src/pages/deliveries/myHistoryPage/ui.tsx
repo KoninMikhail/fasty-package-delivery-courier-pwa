@@ -1,11 +1,10 @@
 import { useDocumentTitle } from 'usehooks-ts';
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
-import { viewerUi } from '@/entities/viewer';
+import { Authorized, Offline, SlowNetwork } from '@/entities/viewer';
 import { widgetsDeliveriesHistoryUi } from '@/widgets/deliveries/history';
 import { useEffect } from 'react';
 import { getDeliveriesHistoryFx } from '@/widgets/deliveries/history/model';
 
-const { Authorized } = viewerUi;
 const { NavbarMobile } = widgetNavbarMobileUi;
 const { DeliveriesHistoryList } = widgetsDeliveriesHistoryUi;
 
@@ -18,6 +17,15 @@ const Header: FunctionComponent<{ header: string }> = ({ header }) => (
     </div>
 );
 
+export const FloatingInfo: FunctionComponent = () => {
+    return (
+        <div className="fixed top-0 w-full text-center">
+            <Offline>dsfsdfdfs</Offline>
+            <SlowNetwork>слоу нетворк</SlowNetwork>
+        </div>
+    );
+};
+
 export const MyHistoryPage: FunctionComponent = () => {
     useDocumentTitle(pagetitle);
 
@@ -27,6 +35,7 @@ export const MyHistoryPage: FunctionComponent = () => {
 
     return (
         <Authorized>
+            <FloatingInfo />
             <Header header={PAGE_HEADING} />
             <DeliveriesHistoryList />
             <NavbarMobile />

@@ -20,11 +20,12 @@ import { widgetResetPasswordModalUi } from '@/widgets/viewer/reset-password-moda
 import { widgetPrivacyPolicyModalUi } from '@/widgets/polices/privacyPolicyModal';
 import { widgetSignInModalUi } from '@/widgets/viewer/sign-in-modal';
 import { widgetTermsOfUseModalUi } from '@/widgets/polices/termsOfUseModal';
-import { viewerSessionModel } from '@/entities/viewer';
 
 import { CompanyLogoIcon } from '@/shared/ui/icons/CompanyLogoIcon';
 
 import { Navigate } from 'react-router-dom';
+import { Guest } from '@/entities/viewer/ui/Guest';
+import { Offline, SlowNetwork } from '@/entities/viewer';
 import { requestAuthModel, requestRecoveryModel } from '../model';
 import { translationNS } from '../config';
 import locale_ru from '../locales/ru.locale.json';
@@ -50,7 +51,7 @@ locale.addResourceBundle('ru', translationNS, locale_ru);
 /**
  * Layout
  */
-const Layout: FunctionComponent<PropsWithChildren> = ({ children }) => (
+const Root: FunctionComponent<PropsWithChildren> = ({ children }) => (
     <div className="h-dvh w-screen">
         <div className="absolute inset-0 h-full w-full bg-[url('/assets/images/auth_bg.jpg')] bg-cover bg-[left_-10rem_top] md:bg-center">
             <div className="absolute bottom-0 h-1/2 w-full bg-gradient-to-t from-background from-45% to-transparent" />
@@ -185,15 +186,11 @@ export const AuthPage: FunctionComponent = () => {
         requestRecoveryModel.pressRecoveryButton,
     );
 
-    /**
-     * Redirect
-     */
-    const session = useUnit(viewerSessionModel.$session);
-    if (session) return <Navigate to={RouteName.ROOT_PAGE} replace />;
-
     return (
-        <>
-            <Layout>
+        <Guest fallback={<Navigate to={RouteName.ROOT_PAGE} replace />}>
+            <Offline>dsfsdfdfs</Offline>
+            <SlowNetwork>слоу нетворк</SlowNetwork>
+            <Root>
                 <Section>
                     <Navbar>
                         <NavbarBrand>
@@ -230,7 +227,7 @@ export const AuthPage: FunctionComponent = () => {
                     />
                     <Spacer y={1} />
                 </Section>
-            </Layout>
+            </Root>
             <SignInModal
                 onClickCookiesPolicyLink={onPressCookiePolicy}
                 onClickPrivacyPolicyLink={onPressPrivacyPolicy}
@@ -241,6 +238,6 @@ export const AuthPage: FunctionComponent = () => {
             <PrivacyPolicyModal size="5xl" />
             <TermsOfUseModal size="5xl" />
             <AppVersion />
-        </>
+        </Guest>
     );
 };

@@ -1,6 +1,7 @@
 import { apiClient } from '@/shared/api';
 import { createEffect } from 'effector';
 
-export const logoutFx = createEffect<void, void, Error>(async () => {
-    return apiClient.logoutMe({});
+export const logoutFx = createEffect<void, unknown, Error>({
+    name: 'logoutFx',
+    handler: async () => apiClient.logoutMe({}),
 });

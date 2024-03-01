@@ -5,7 +5,7 @@ import { sharedConfigRoutes } from '@/shared/config';
 import { Button, Spacer } from '@nextui-org/react';
 import { UserAvatar } from '@/entities/user';
 import { useUnit } from 'effector-react';
-import { viewerProfileModel } from '@/entities/viewer';
+import { sessionModel } from '@/entities/viewer';
 import { useTranslation } from 'react-i18next';
 import { User } from '@/shared/api';
 import { IoPencil } from 'react-icons/io5';
@@ -83,7 +83,7 @@ const BackButton: FunctionComponent = () => {
 
 const AvatarTool: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
-    const user = useUnit(viewerProfileModel.$profileDataStore);
+    const user = useUnit(sessionModel.$sessionProfileStore);
 
     const sizeDescription = t(AVATAR_SIZE_DESCRIPTION);
     const formatDescription = t(AVATAR_FORMAT_DESCRIPTION);
@@ -181,7 +181,7 @@ const PasswordTool: FunctionComponent = () => {
  * @constructor
  */
 export const MobileProfileEditPageView: FunctionComponent = () => {
-    const user = useUnit(viewerProfileModel.$profileDataStore);
+    const user = useUnit(sessionModel.$sessionProfileStore);
     return (
         <>
             <Header

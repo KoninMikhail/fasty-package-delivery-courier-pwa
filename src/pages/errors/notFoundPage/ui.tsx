@@ -1,6 +1,4 @@
-import { viewerUi } from '@/entities/viewer';
-
-const { Authorized } = viewerUi;
+import { Authorized } from '@/entities/viewer';
 
 export const NotFoundPage: FunctionComponent = () => {
     return (

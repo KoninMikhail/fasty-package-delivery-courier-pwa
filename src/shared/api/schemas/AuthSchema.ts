@@ -14,7 +14,7 @@ export const ForgotPasswordSchema = AuthByEmailCredentialsSchema.pick({
 });
 
 /**
- * Seesion
+ * Session
  */
 export const AuthResponseSchema = z.object({
     token: z.string(),
