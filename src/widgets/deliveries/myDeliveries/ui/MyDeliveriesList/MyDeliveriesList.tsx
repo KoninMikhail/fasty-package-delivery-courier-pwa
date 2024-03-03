@@ -1,8 +1,8 @@
-import { deliveryUi } from '@/entities/delivery';
+import { DeliveryShortInfoCard } from '@/entities/delivery';
 import { useList, useUnit } from 'effector-react';
 import { Chip } from '@nextui-org/react';
 import { HorizontalScroll } from '@/shared/ui/layouts';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { getTimeIntervalsInRange } from '@/widgets/deliveries/inProgress/lib/getTimeIntervalsInRange.test';
 import {
     $$empty,
@@ -10,9 +10,8 @@ import {
     $$loading,
     $inProgressDeliveries,
     $init,
+    getInProgressDeliveriesFx,
 } from '../../model';
-
-const { DeliveryShortInfoCard } = deliveryUi;
 
 const Filter: FunctionComponent = () => {
     const times = useMemo(() => {
@@ -40,6 +39,10 @@ export const MyDeliveriesList: FunctionComponent = () => {
         $$hasError,
         $$empty,
     ]);
+
+    useEffect(() => {
+        void getInProgressDeliveriesFx();
+    }, []);
 
     const items = useList($inProgressDeliveries, (delivery) => (
         <DeliveryShortInfoCard delivery={delivery} />

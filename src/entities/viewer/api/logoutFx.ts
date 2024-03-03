@@ -3,5 +3,7 @@ import { createEffect } from 'effector';
 
 export const logoutFx = createEffect<void, unknown, Error>({
     name: 'logoutFx',
-    handler: async () => apiClient.logoutMe({}),
+    handler: async () => {
+        return apiClient.logoutMe({});
+    },
 });

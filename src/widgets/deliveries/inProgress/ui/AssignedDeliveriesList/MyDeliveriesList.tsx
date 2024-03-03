@@ -1,8 +1,8 @@
-import { deliveryUi } from '@/entities/delivery';
+import { DeliveryShortInfoCard } from '@/entities/delivery';
 import { useList, useUnit } from 'effector-react';
 import { Chip } from '@nextui-org/react';
 import { HorizontalScroll } from '@/shared/ui/layouts';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { getTimeIntervalsInRange } from '@/widgets/deliveries/inProgress/lib/getTimeIntervalsInRange.test';
 import {
     $$empty,
@@ -10,9 +10,8 @@ import {
     $$loading,
     $inProgressDeliveries,
     $init,
+    initWidgetMyDeliveries,
 } from '../../model';
-
-const { DeliveryShortInfoCard } = deliveryUi;
 
 const Filter: FunctionComponent = () => {
     const times = useMemo(() => {
@@ -34,25 +33,24 @@ const Filter: FunctionComponent = () => {
 };
 
 export const MyDeliveriesList: FunctionComponent = () => {
-    const [isInit, isLoading, hasError, isEmpty] = useUnit([
+    const [init, isInit, isLoading, hasError, isEmpty] = useUnit([
+        initWidgetMyDeliveries,
         $init,
         $$loading,
         $$hasError,
         $$empty,
     ]);
 
+    useEffect(() => {
+        init();
+    }, []);
+
     const items = useList($inProgressDeliveries, (delivery) => (
         <DeliveryShortInfoCard delivery={delivery} />
     ));
 
     if (isLoading) {
-        return (
-            <>
-                <DeliveryShortInfoCard />
-                <DeliveryShortInfoCard />
-                <DeliveryShortInfoCard />
-            </>
-        );
+        return <div>Загрузка...</div>;
     }
 
     if (isInit && isEmpty) {

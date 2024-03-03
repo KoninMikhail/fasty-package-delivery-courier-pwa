@@ -12,20 +12,19 @@ import {
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
-import { sharedConfigLocale, sharedConfigRoutes } from '@/shared/config';
-
-import { SubwayStationWithIcon } from '@/shared/lib/subway';
-import { useNavigate } from 'react-router-dom';
 import { ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { sharedConfigLocale, sharedConfigRoutes } from '@/shared/config';
+import { sharedServicesSubway } from '@/shared/services';
+
+import { translationNS } from '../../config';
 import locale_en from '../../locales/en.locale.json';
 import locale_ru from '../../locales/ru.locale.json';
 
-import { translationNS } from '../../config';
-
+const { SubwayStationWithIcon } = sharedServicesSubway;
 const { locale } = sharedConfigLocale;
-const {
-    RouteName: { DELIVERIES },
-} = sharedConfigRoutes;
+const { RouteName } = sharedConfigRoutes;
+const { DELIVERIES } = RouteName;
 
 /**
  * Constants

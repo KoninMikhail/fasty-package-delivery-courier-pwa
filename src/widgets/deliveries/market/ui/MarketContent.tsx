@@ -1,17 +1,18 @@
-import type { PropsWithChildren } from 'react';
-import { deliveryUi } from '@/entities/delivery';
+import { PropsWithChildren, useEffect } from 'react';
+import { DeliveryShortInfoCard } from '@/entities/delivery';
 import { useList, useUnit } from 'effector-react';
-import { sharedConfigRoutes } from '@/shared/config';
 import { useNetworkInfo } from '@/shared/config/network';
-import { Button, Skeleton } from '@nextui-org/react';
+import { Skeleton } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { RiWifiOffLine } from 'react-icons/ri';
-import { $avaliableDeliveries, $isDeliveriesLoading } from '../model';
-
-const { RouteName } = sharedConfigRoutes;
-const { DELIVERIES } = RouteName;
-
-const { DeliveryShortInfoCard } = deliveryUi;
+import { AssignDeliveryToUser } from '@/features/delivery/assignDeliveryToUser';
+import { sessionModel } from '@/entities/viewer';
+import {
+    $avaliableDeliveries,
+    $isDeliveriesLoading,
+    assignDeliveryToUserModel,
+    fetchUpcomingDeliveriesFx,
+} from '../model';
 
 /* eslint-disable unicorn/consistent-function-scoping */
 
@@ -66,7 +67,15 @@ const Offline: FunctionComponent = () => {
  */
 export const MarketContent: FunctionComponent = () => {
     const { online, effectiveType } = useNetworkInfo();
+    const viewer = useUnit(sessionModel.$sessionStore);
+
     const isPending = useUnit($isDeliveriesLoading);
+
+    useEffect(() => {
+        if (online) {
+            fetchUpcomingDeliveriesFx();
+        }
+    }, []);
 
     const content = useList($avaliableDeliveries, (delivery, index) => {
         const isFirst = index === 0;
@@ -87,7 +96,13 @@ export const MarketContent: FunctionComponent = () => {
             >
                 <DeliveryShortInfoCard
                     delivery={delivery}
-                    featureSlot={<Button>dsf</Button>}
+                    featureSlot={
+                        <AssignDeliveryToUser.RequestButton
+                            model={assignDeliveryToUserModel}
+                            user={viewer}
+                            delivery={delivery}
+                        />
+                    }
                 />
             </motion.div>
         );

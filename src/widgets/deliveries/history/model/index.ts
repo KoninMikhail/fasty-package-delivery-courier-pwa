@@ -1,10 +1,6 @@
-import { createEffect, createStore } from 'effector';
-import { apiClient } from '@/shared/api';
+import { createStore } from 'effector';
+import { getDeliveriesHistoryFx } from '../api';
 
-export const getDeliveriesHistoryFx = createEffect(async () =>
-    apiClient.getDeliveriesHistory(),
-);
-export const $deliveriesHistoryList = createStore([]).on(
-    getDeliveriesHistoryFx.doneData,
-    (_, data) => data,
-);
+export const $deliveriesHistoryList = createStore([]);
+
+$deliveriesHistoryList.on(getDeliveriesHistoryFx.doneData, (_, data) => data);

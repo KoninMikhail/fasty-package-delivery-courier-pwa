@@ -26,6 +26,7 @@
 		"@nextui-org/react": "^2.2.9",
 		"@zodios/core": "^10.9.6",
 		"axios": "^1.6.7",
+		"axios-retry": "^4.0.0",
 		"clsx": "^2.1.0",
 		"compose-function": "^3.0.3",
 		"date-fns": "^3.3.1",

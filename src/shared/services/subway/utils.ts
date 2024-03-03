@@ -1,4 +1,4 @@
-import { SubwayStation } from "@/shared/api";
+import { SubwayStation } from "../../api";
 
 export const findSubwayByName = (
   haystack: SubwayStation[],

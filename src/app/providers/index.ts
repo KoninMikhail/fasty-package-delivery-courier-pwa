@@ -6,11 +6,11 @@ import { withNextThemes } from './withNextThemes';
 import { withRouter } from './withRouter';
 import { withUi } from './withUi';
 import { withLocale } from './withLocale';
-import { withAppGate } from './withAppGate';
+import { withAppInitGate } from './withAppInitGate';
 
 export const withProviders = compose(
     withRouter,
-    withAppGate,
+    withAppInitGate,
     withLocale,
     withUi,
     withDeviceInfo,

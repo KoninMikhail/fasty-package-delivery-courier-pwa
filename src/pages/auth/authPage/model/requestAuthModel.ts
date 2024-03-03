@@ -3,6 +3,7 @@ import { widgetSignInModalModel } from '@/widgets/viewer/sign-in-modal';
 import { widgetCookiePolicyModalModel } from '@/widgets/polices/cookiePolicyModal';
 import { widgetPrivacyPolicyModalModel } from '@/widgets/polices/privacyPolicyModal';
 import { widgetTermsOfUseModalModel } from '@/widgets/polices/termsOfUseModal';
+import { authByEmailFx } from '@/entities/viewer';
 
 /**
  * Auth
@@ -11,6 +12,11 @@ export const pressSignInButton = createEvent();
 sample({
     source: pressSignInButton,
     target: widgetSignInModalModel.setVisible,
+});
+
+sample({
+    clock: authByEmailFx.doneData,
+    target: widgetSignInModalModel.setHidden,
 });
 
 /**

@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-import { getDeliveriesHistoryFx } from '@/widgets/deliveries/history/model';
 import { Accordion, AccordionItem, Button, Chip } from '@nextui-org/react';
 import { LuPackage } from 'react-icons/lu';
 
@@ -46,9 +44,6 @@ const Item: FunctionComponent = () => {
  * View
  */
 export const DeliveriesHistoryList: FunctionComponent = () => {
-    useEffect(() => {
-        void getDeliveriesHistoryFx();
-    }, []);
     return (
         <div className="w-full px-2">
             <Accordion

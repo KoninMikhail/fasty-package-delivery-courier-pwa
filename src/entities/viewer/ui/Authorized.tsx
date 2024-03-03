@@ -1,14 +1,17 @@
 import { PropsWithChildren, ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { sharedConfigRoutes } from '@/shared/config';
-import { useUnit } from 'effector-react';
-import { useIsMounted } from 'usehooks-ts';
-import { $isSessionAuthorized } from '../model/sessionModel';
+import { useGate, useUnit } from 'effector-react';
+import { sharedLibInit } from '@/shared/lib';
+import {
+    $isSessionAuthorized,
+    $isSessionPending,
+    SessionInitGate,
+} from '../model/sessionModel';
 
 const { RouteName } = sharedConfigRoutes;
 const { AUTH_PAGE } = RouteName;
-
-const DEFAULT_AWAIT_SESSION_TIMEOUT = 300;
+const { $isAppStarted } = sharedLibInit;
 
 interface IAuthorizedProperties extends PropsWithChildren {
     awaitSessionTimeout?: number;
@@ -22,11 +25,19 @@ interface IAuthorizedProperties extends PropsWithChildren {
  */
 export const Authorized: FunctionComponent<IAuthorizedProperties> = ({
     children,
+    fallback = null,
 }) => {
-    const isMounted = useIsMounted();
+    const isStarted = useUnit($isAppStarted);
+    const isPending = useUnit($isSessionPending);
     const isAuthorized = useUnit($isSessionAuthorized);
 
-    if (!isAuthorized && isMounted()) {
+    useGate(SessionInitGate);
+
+    if (!isStarted || isPending) {
+        return fallback;
+    }
+
+    if (!isAuthorized && isStarted) {
         return <Navigate to={AUTH_PAGE} />;
     }
 

@@ -1,6 +1,10 @@
 import { createEffect, createEvent, createStore, sample } from 'effector';
+import { apiClient } from '@/shared/api';
 
-export const getInProgressDeliveriesFx = createEffect(async () => []);
+export const getInProgressDeliveriesFx = createEffect(async () => {
+    console.log('called');
+    return apiClient.getActiveDeliveries();
+});
 
 /**
  * Init

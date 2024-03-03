@@ -1,4 +1,9 @@
-import { makeApi, makeErrors, ZodiosResponseByPath } from '@zodios/core';
+import {
+    makeApi,
+    makeErrors,
+    ZodiosRequestOptionsByPath,
+    ZodiosResponseByPath,
+} from '@zodios/core';
 import { z } from 'zod';
 
 export const deliverySchema = z.object({
@@ -172,7 +177,7 @@ export const deliveriesApi = makeApi([
     {
         method: 'patch',
         path: '/:deliveryId',
-        alias: 'assignToDelivery',
+        alias: 'assignDeliveryToCourier',
         description: 'Assign a delivery to a courier',
         parameters: [
             {
@@ -235,5 +240,11 @@ export type DeliveriesApi = typeof deliveriesApi;
 export type GetDeliveryById = ZodiosResponseByPath<
     DeliveriesApi,
     'get',
+    '/:deliveryId'
+>;
+
+export type RequestAssignToCourier = ZodiosRequestOptionsByPath<
+    DeliveriesApi,
+    'patch',
     '/:deliveryId'
 >;

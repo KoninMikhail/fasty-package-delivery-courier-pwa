@@ -1,1 +1,1 @@
-export * as deliveryUi from './ui';
+export * from './ui';

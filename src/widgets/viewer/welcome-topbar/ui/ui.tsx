@@ -118,7 +118,7 @@ const UserTool: FunctionComponent<{
 
 export const WelcomeTopbar: FunctionComponent = () => {
     const navigate = useNavigate();
-    const profile = useUnit(sessionModel.$sessionProfileStore);
+    const profile = useUnit(sessionModel.$sessionStore);
     const logout = useUnit(logoutModel.logout);
 
     const onPressProfile = (): void => navigate(PROFILE_EDIT_PAGE);

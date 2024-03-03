@@ -2,8 +2,6 @@ import { useDocumentTitle } from 'usehooks-ts';
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { Authorized, Offline, SlowNetwork } from '@/entities/viewer';
 import { widgetsDeliveriesHistoryUi } from '@/widgets/deliveries/history';
-import { useEffect } from 'react';
-import { getDeliveriesHistoryFx } from '@/widgets/deliveries/history/model';
 
 const { NavbarMobile } = widgetNavbarMobileUi;
 const { DeliveriesHistoryList } = widgetsDeliveriesHistoryUi;
@@ -28,10 +26,6 @@ export const FloatingInfo: FunctionComponent = () => {
 
 export const MyHistoryPage: FunctionComponent = () => {
     useDocumentTitle(pagetitle);
-
-    useEffect(() => {
-        void getDeliveriesHistoryFx();
-    }, []);
 
     return (
         <Authorized>

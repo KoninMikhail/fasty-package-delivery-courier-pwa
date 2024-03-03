@@ -10,7 +10,7 @@ import {
 } from '@nextui-org/react';
 import { Delivery } from '@/shared/api';
 import { IoCall } from 'react-icons/io5';
-import { SubwayStationWithIcon } from '@/shared/lib/subway';
+import { sharedServicesSubway } from '@/shared/services';
 import { sharedConfigLocale } from '@/shared/config';
 import { useTranslation } from 'react-i18next';
 import { ReactNode } from 'react';
@@ -20,6 +20,7 @@ import locale_en from '../../locales/en.locale.json';
 import locale_ru from '../../locales/ru.locale.json';
 
 const { locale } = sharedConfigLocale;
+const { SubwayStationWithIcon } = sharedServicesSubway;
 
 /**
  * Constants

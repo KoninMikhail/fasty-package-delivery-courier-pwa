@@ -1,15 +1,15 @@
 import { createEffect, createEvent, createStore, sample } from 'effector';
 import { persist } from 'effector-storage/local';
 import Cookies from 'js-cookie';
-import { AppGate } from '@/shared/lib/app';
-import { condition, debug } from "patronum";
+import { condition, once } from 'patronum';
+import { Done, Fail } from 'effector-storage';
+import { AppInitGate } from '../../lib/init';
 import {
     apiClient,
     GetSubwayStationsListResponse,
     SubwayStation,
     subwayStationSchema,
-} from '@/shared/api';
-import { Done, Fail } from 'effector-storage';
+} from '../../api';
 
 /* eslint-disable unicorn/no-thenable */
 
@@ -85,11 +85,10 @@ persist({
     key: SUBWAY_LOCAL_STORAGE_KEY,
     contract: (raw): raw is SubwayStation[] => {
         const result = subwayStationSchema.array().safeParse(raw);
-        if (!result.success) {
-            throw result.error;
-        } else {
+        if (result.success) {
             return true;
         }
+        throw result.error;
     },
     done: getFromLocalStorageComplete,
     fail: getFromLocalStorageFail,
@@ -134,6 +133,6 @@ sample({
 });
 
 sample({
-    clock: AppGate.open,
+    clock: once({ source: AppInitGate.open }),
     target: initSubwayModel,
 });

@@ -16,6 +16,7 @@ import { sharedLibBrowser } from '@/shared/lib';
 import { forwardRef, PropsWithChildren, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Store } from 'effector';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
     $historyRequestsStore,
     $isOpened,
@@ -70,6 +71,7 @@ interface SearchFieldProperties {
 const SearchField = forwardRef<HTMLInputElement, SearchFieldProperties>(
     ({ query, onChangeValue, onPressSearch }, reference) => {
         const { t } = useTranslation(translationNS);
+        const buttonVisible = query.length > 0;
         return (
             <div className="flex flex-grow gap-2">
                 <Input
@@ -79,11 +81,27 @@ const SearchField = forwardRef<HTMLInputElement, SearchFieldProperties>(
                     variant="flat"
                     onValueChange={onChangeValue}
                     labelPlacement="outside"
+                    endContent={
+                        <AnimatePresence>
+                            {buttonVisible ? (
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ duration: 0.3 }}
+                                    exit={{ opacity: 0 }}
+                                >
+                                    <Button
+                                        color="secondary"
+                                        onPress={onPressSearch}
+                                    >
+                                        {t(SEARCH_BUTTON_TEXT)}
+                                    </Button>
+                                </motion.div>
+                            ) : null}
+                        </AnimatePresence>
+                    }
                     fullWidth
                 />
-                <Button color="secondary" onPress={onPressSearch}>
-                    {t(SEARCH_BUTTON_TEXT)}
-                </Button>
             </div>
         );
     },

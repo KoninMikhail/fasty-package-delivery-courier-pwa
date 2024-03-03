@@ -1,8 +1,9 @@
 import axios from 'axios';
-import { sharedConfigRoutes } from '@/shared/config';
-
-const { RouteName } = sharedConfigRoutes;
-const { LOGOUT_PAGE } = RouteName;
+import axiosRetry from 'axios-retry';
+import {
+    axiosAuthErrorInterceptor,
+    axiosRewriteUrlInterceptor,
+} from './middleware';
 
 /**
  * Create an axios instance with default configuration
@@ -20,23 +21,13 @@ export const instance = axios.create({
     },
 });
 
-instance.interceptors.response.use(
-    (response) => response,
-    (error) => {
-        if (error.response?.status === 401) {
-            return Promise.reject(error);
-        }
-        return Promise.reject(error);
-    },
-);
+axiosRetry(instance, { retries: 3 });
 
+/**
+ * Add an interceptor to handle 401 errors
+ */
+instance.interceptors.response.use(undefined, axiosAuthErrorInterceptor);
 /**
  * Rewrite the URL to replace `/users/me` with `/me`
  */
-instance.interceptors.request.use((config) => {
-    const urlToReplace = '/users/me';
-    if (config.url?.includes(urlToReplace)) {
-        return { ...config, url: config.url.replace(urlToReplace, '/me') };
-    }
-    return config;
-});
+instance.interceptors.request.use(axiosRewriteUrlInterceptor);

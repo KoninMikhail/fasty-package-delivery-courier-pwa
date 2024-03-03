@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+mport { describe, expect, it } from 'vitest';
 import {getTimeIntervalsInRange} from './getTimeIntervalsInRange';
 
 describe('getTimeIntervalsInRange', () => {

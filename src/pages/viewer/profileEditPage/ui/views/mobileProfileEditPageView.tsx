@@ -83,7 +83,7 @@ const BackButton: FunctionComponent = () => {
 
 const AvatarTool: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
-    const user = useUnit(sessionModel.$sessionProfileStore);
+    const user = useUnit(sessionModel.$sessionStore);
 
     const sizeDescription = t(AVATAR_SIZE_DESCRIPTION);
     const formatDescription = t(AVATAR_FORMAT_DESCRIPTION);
@@ -181,7 +181,7 @@ const PasswordTool: FunctionComponent = () => {
  * @constructor
  */
 export const MobileProfileEditPageView: FunctionComponent = () => {
-    const user = useUnit(sessionModel.$sessionProfileStore);
+    const user = useUnit(sessionModel.$sessionStore);
     return (
         <>
             <Header
