@@ -1,5 +1,5 @@
-import { HorizontalTimePicker } from '@/features/delivery/filterDeliveriesByTimeRange/ui/HorizontalTimePicker';
-import { factory } from './model/model';
+import { HorizontalTimePicker } from './ui';
+import { factory } from './model';
 
 export const FilterDeliveriesByTimeRange = {
     factory,

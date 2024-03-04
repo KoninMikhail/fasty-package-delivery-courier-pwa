@@ -1,41 +1,19 @@
-import { DeliveryShortInfoCard, getMyDeliveriesFx } from '@/entities/delivery';
+import { DeliveryShortInfoCard } from '@/entities/delivery';
 import { useList, useUnit } from 'effector-react';
-import { Chip, Spinner } from '@nextui-org/react';
-import { HorizontalScroll } from '@/shared/ui/layouts';
-import { useEffect, useMemo } from 'react';
-import { getTimeIntervalsInRange } from '@/widgets/deliveries/inProgress/lib/getTimeIntervalsInRange.test';
+import { Spinner } from '@nextui-org/react';
 import { FilterDeliveriesByTimeRange } from '@/features/delivery/filterDeliveriesByTimeRange';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
     $$empty,
     $$hasError,
     $$loading,
     $deliveriesList,
-    $init,
     filteredDeliveriesByTimeModel,
 } from '../../model';
 
 /**
  * Сomponents
  */
-const Filter: FunctionComponent = () => {
-    const times = useMemo(() => {
-        return getTimeIntervalsInRange('8:00', '20:00', 90);
-    }, []);
-    return (
-        <div className="relative grid grid-cols-1 gap-1">
-            <HorizontalScroll>
-                <div className="flex gap-1">
-                    {times.map((time) => (
-                        <Chip key={time} color="default" size="lg">
-                            {time}
-                        </Chip>
-                    ))}
-                </div>
-            </HorizontalScroll>
-        </div>
-    );
-};
-
 const Loader: FunctionComponent = () => {
     return (
         <div className="flex w-full justify-center gap-4">
@@ -50,30 +28,20 @@ const Error: FunctionComponent = () => {
 };
 
 export const MyDeliveriesList: FunctionComponent = () => {
-    const [isInit, isLoading, hasError, isEmpty] = useUnit([
-        $init,
+    const [isLoading, hasError, isEmpty] = useUnit([
         $$loading,
         $$hasError,
         $$empty,
     ]);
 
-    useEffect(() => {
-        void getMyDeliveriesFx();
-    }, []);
-
-    const items = useList($deliveriesList, (delivery) => (
-        <DeliveryShortInfoCard delivery={delivery} />
+    const items = useList($deliveriesList, (delivery, index) => (
+        <motion.div key={delivery.date} whileTap={{ scale: 0.9 }}>
+            <DeliveryShortInfoCard delivery={delivery} />
+        </motion.div>
     ));
 
-    if (isInit && isEmpty) {
-        return (
-            <div>
-                <FilterDeliveriesByTimeRange.HorizontalTimePicker
-                    model={filteredDeliveriesByTimeModel}
-                />
-                <div>Нет активных доставок</div>
-            </div>
-        );
+    if (isEmpty) {
+        return <div>Нет активных доставок</div>;
     }
 
     return (
@@ -82,8 +50,10 @@ export const MyDeliveriesList: FunctionComponent = () => {
                 model={filteredDeliveriesByTimeModel}
             />
             {isLoading ? <Loader /> : null}
-            {isInit && hasError ? <Error /> : null}
-            <div className="flex flex-col gap-4">{items}</div>
+            {hasError ? <Error /> : null}
+            <div className="flex flex-col gap-4">
+                <AnimatePresence>{items}</AnimatePresence>
+            </div>
         </div>
     );
 };

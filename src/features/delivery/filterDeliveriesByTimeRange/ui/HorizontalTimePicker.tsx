@@ -2,7 +2,7 @@ import { HorizontalScroll } from '@/shared/ui/layouts';
 import { Chip } from '@nextui-org/react';
 import { useUnit } from 'effector-react';
 import { modelView } from 'effector-factorio';
-import { factory } from '../model/model';
+import { factory } from '../model';
 
 export const HorizontalTimePicker = modelView(factory, () => {
     const model = factory.useModel();

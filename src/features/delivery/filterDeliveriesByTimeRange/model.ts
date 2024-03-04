@@ -2,7 +2,7 @@ import { modelFactory } from 'effector-factorio';
 import { combine, createEvent, createStore, Store } from 'effector';
 import { Delivery } from '@/shared/api';
 import { sharedLibHelpers } from '@/shared/lib';
-import { filterAndSortDeliveries } from '@/features/delivery/filterDeliveriesByTimeRange/lib/utils';
+import { filterAndSortDeliveries } from '@/features/delivery/filterDeliveriesByTimeRange/utils';
 import { debug, readonly } from 'patronum';
 
 const { getTimesRange } = sharedLibHelpers;
@@ -15,7 +15,6 @@ interface FactoryOptions {
 }
 export const factory = modelFactory((options: FactoryOptions) => {
     const timePicked = createEvent<string>();
-    console.log(getTimesRange('8:00', '20:00', 90));
     const timesRange = createStore<string[]>(
         getTimesRange(options.startTime, options.endTime, options.stepMins),
     );
