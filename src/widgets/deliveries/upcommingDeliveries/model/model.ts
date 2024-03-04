@@ -1,9 +1,8 @@
-import { combine, createEvent, createStore, sample, Unit } from 'effector';
+import { combine, createEvent, createStore, sample } from 'effector';
 import { getMyDeliveriesFx } from '@/entities/delivery';
 import { Delivery, deliverySchema } from '@/shared/api';
 import { persist } from 'effector-storage/local';
-import { Done, Finally } from 'effector-storage';
-import { delay } from 'patronum';
+import { Finally } from 'effector-storage';
 import {
     DELIVERY_ITEMS_STORE_LOCAL_STORAGE_KEY,
     OUTPUT_ITEMS_LIMIT_LOCAL_STORAGE_KEY,
@@ -29,14 +28,6 @@ export const $init = createStore<boolean>(false).on(
 
 // Fetch my deliveries
 const fetchDeliveries = createEvent();
-const delayedFetchDeliveries = delay(fetchDeliveries, 10_000);
-
-sample({
-    clock: delayedFetchDeliveries,
-    source: $init,
-    filter: (init) => init,
-    target: getMyDeliveriesFx,
-});
 
 /**
  * Settings
@@ -80,7 +71,6 @@ persist({
         if (result.success) return true;
         throw result.error;
     },
-    done: fetchDeliveries as unknown as Unit<Done<unknown>>,
     finally: initializeCompleted,
 });
 

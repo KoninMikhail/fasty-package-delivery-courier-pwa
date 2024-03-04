@@ -4,12 +4,14 @@ import { Chip, Spinner } from '@nextui-org/react';
 import { HorizontalScroll } from '@/shared/ui/layouts';
 import { useEffect, useMemo } from 'react';
 import { getTimeIntervalsInRange } from '@/widgets/deliveries/inProgress/lib/getTimeIntervalsInRange.test';
+import { FilterDeliveriesByTimeRange } from '@/features/delivery/filterDeliveriesByTimeRange';
 import {
     $$empty,
     $$hasError,
     $$loading,
-    $myDeliveries,
+    $deliveriesList,
     $init,
+    filteredDeliveriesByTimeModel,
 } from '../../model';
 
 /**
@@ -59,14 +61,16 @@ export const MyDeliveriesList: FunctionComponent = () => {
         void getMyDeliveriesFx();
     }, []);
 
-    const items = useList($myDeliveries, (delivery) => (
+    const items = useList($deliveriesList, (delivery) => (
         <DeliveryShortInfoCard delivery={delivery} />
     ));
 
     if (isInit && isEmpty) {
         return (
             <div>
-                <Filter />
+                <FilterDeliveriesByTimeRange.HorizontalTimePicker
+                    model={filteredDeliveriesByTimeModel}
+                />
                 <div>Нет активных доставок</div>
             </div>
         );
@@ -74,7 +78,9 @@ export const MyDeliveriesList: FunctionComponent = () => {
 
     return (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <Filter />
+            <FilterDeliveriesByTimeRange.HorizontalTimePicker
+                model={filteredDeliveriesByTimeModel}
+            />
             {isLoading ? <Loader /> : null}
             {isInit && hasError ? <Error /> : null}
             <div className="flex flex-col gap-4">{items}</div>
