@@ -1,11 +1,11 @@
 import { PropsWithChildren } from 'react';
 
-import { widgetInProgressDeliveriesUi } from '@/widgets/deliveries/inProgress';
+import { widgetMyDeliveriesUi } from '@/widgets/deliveries/myDeliveries';
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { sharedUiComponents } from '@/shared/ui';
 import { Authorized, Offline, SlowNetwork } from '@/entities/viewer';
 
-const { MyDeliveriesList } = widgetInProgressDeliveriesUi;
+const { MyDeliveriesList } = widgetMyDeliveriesUi;
 const { NavbarMobile } = widgetNavbarMobileUi;
 const { Heading, Text, NativeScroll } = sharedUiComponents;
 

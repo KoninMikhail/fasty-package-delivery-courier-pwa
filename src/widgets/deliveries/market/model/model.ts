@@ -36,3 +36,22 @@ sample({
     clock: fetchUpcomingDeliveriesFx.doneData,
     target: $avaliableDeliveries,
 });
+
+/**
+ * State
+ */
+export const $$deliveriesEmpty = $avaliableDeliveries.map(
+    (deliveries) => deliveries.length === 0,
+);
+
+/**
+ * Errors
+ */
+export const $error = createStore<Nullable<Error>>(null);
+export const $$hasError = $error.map((error) => error !== null);
+
+sample({
+    clock: fetchUpcomingDeliveriesFx.fail,
+    fn: (_, error) => error,
+    target: $error,
+});

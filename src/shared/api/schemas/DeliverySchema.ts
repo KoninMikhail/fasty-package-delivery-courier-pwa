@@ -13,6 +13,7 @@ const timeSchema = z
     );
 
 export const deliverySchema = z.object({
+    id: z.number(),
     car: z.boolean(),
     client_id: z.number(),
     comment: z.string(),
@@ -21,7 +22,6 @@ export const deliverySchema = z.object({
     deleted: z.boolean(),
     date: z.string(),
     express: z.boolean(),
-    id: z.number(),
     manager_id: z.number(),
     order_id: z.number(),
     states: z.string(),
@@ -36,5 +36,3 @@ export const deliverySchema = z.object({
     address: addressSchema,
     manager: userSchema,
 });
-
-export type Delivery = z.infer<typeof deliverySchema>;

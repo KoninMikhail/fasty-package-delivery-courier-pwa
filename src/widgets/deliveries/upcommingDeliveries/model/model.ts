@@ -1,35 +1,101 @@
-import { createEffect, createEvent, createStore, sample } from 'effector';
-
-export const getInProgressDeliveriesFx = createEffect(async () => []);
+import { combine, createEvent, createStore, sample, Unit } from 'effector';
+import { getMyDeliveriesFx } from '@/entities/delivery';
+import { Delivery, deliverySchema } from '@/shared/api';
+import { persist } from 'effector-storage/local';
+import { Done, Finally } from 'effector-storage';
+import { delay } from 'patronum';
+import {
+    DELIVERY_ITEMS_STORE_LOCAL_STORAGE_KEY,
+    OUTPUT_ITEMS_LIMIT_LOCAL_STORAGE_KEY,
+} from '../config';
 
 /**
  * Init
  */
+const initializeCompleted = createEvent<Finally<unknown, Error>>();
 
-export const initWidgetMyDeliveries = createEvent();
-export const $init = createStore<boolean>(false)
-    .on(getInProgressDeliveriesFx.done, () => true)
-    .on(getInProgressDeliveriesFx.fail, () => true);
+export const $init = createStore<boolean>(false).on(
+    initializeCompleted,
+    (_, payload) => {
+        return payload.status === 'done';
+    },
+);
+
+/**
+ * Fetch data
+ */
+
+// fetch data on interval
+
+// Fetch my deliveries
+const fetchDeliveries = createEvent();
+const delayedFetchDeliveries = delay(fetchDeliveries, 10_000);
 
 sample({
-    clock: initWidgetMyDeliveries,
+    clock: delayedFetchDeliveries,
     source: $init,
-    filter: (init) => !init,
-    target: getInProgressDeliveriesFx,
+    filter: (init) => init,
+    target: getMyDeliveriesFx,
+});
+
+/**
+ * Settings
+ */
+
+// Limit
+const initialLimit = 5;
+export const outputLimit = createStore<number>(initialLimit);
+
+persist({
+    store: outputLimit,
+    key: OUTPUT_ITEMS_LIMIT_LOCAL_STORAGE_KEY,
 });
 
 /**
  * Data
  */
-export const $inProgressDeliveries = createStore([]);
-export const $$empty = $inProgressDeliveries.map(
-    (deliveries) => deliveries.length === 0,
+
+// main store
+export const $deliveriesStore = createStore<Delivery[]>([]).on(
+    getMyDeliveriesFx.doneData,
+    (_, deliveries) => deliveries,
 );
 
+// limited store
+export const $$upcomingDeliveriesLimited = combine(
+    $deliveriesStore,
+    outputLimit,
+    (deliveries, limitIndex) => {
+        const startIndex = 0;
+        return deliveries.slice(startIndex, limitIndex);
+    },
+);
+
+// fetch data on init
+persist({
+    store: $deliveriesStore,
+    key: DELIVERY_ITEMS_STORE_LOCAL_STORAGE_KEY,
+    contract: (raw): raw is Delivery[] => {
+        const result = deliverySchema.array().safeParse(raw);
+        if (result.success) return true;
+        throw result.error;
+    },
+    done: fetchDeliveries as unknown as Unit<Done<unknown>>,
+    finally: initializeCompleted,
+});
+
 /**
- * Progress
+ * State
  */
-export const $$loading = getInProgressDeliveriesFx.pending;
+export const $loading = getMyDeliveriesFx.pending;
+export const $isFirstLoad = combine(
+    $loading,
+    $deliveriesStore,
+    (loading, deliveries) => deliveries.length === 0 && loading,
+);
+export const $$empty = $deliveriesStore.map(
+    (deliveries) => deliveries.length === 0,
+);
 
 /**
  * Errors
@@ -38,7 +104,7 @@ export const $error = createStore<Nullable<Error>>(null);
 export const $$hasError = $error.map((error) => error !== null);
 
 sample({
-    clock: getInProgressDeliveriesFx.fail,
+    clock: getMyDeliveriesFx.fail,
     fn: (_, error) => error,
     target: $error,
 });

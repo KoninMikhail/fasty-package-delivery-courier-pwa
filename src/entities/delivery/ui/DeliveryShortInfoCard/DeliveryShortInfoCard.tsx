@@ -180,12 +180,21 @@ export const DeliveryShortInfoCard: FunctionComponent<
     DeliveryPreviewCardProperties
 > = ({ delivery, featureSlot }) => {
     const navigate = useNavigate();
-    const isExpress = delivery?.express ?? false;
-    const isCar = delivery?.car ?? false;
+    const {
+        id,
+        car: isCar,
+        express: isExpress,
+        date: deliveryDate,
+        contents,
+        time_start: deliveryStartTime,
+        time_end: deliveryEndTime,
+        address: { address, metro },
+        weight,
+    } = delivery;
 
     const onPressPreviewHandle = (): void => {
         if (delivery) {
-            navigate(`${DELIVERIES}/${delivery.id}`);
+            navigate(`${DELIVERIES}/${id}`);
         }
     };
 
@@ -197,29 +206,27 @@ export const DeliveryShortInfoCard: FunctionComponent<
     return (
         <Card className={outputCardBodyClass}>
             <CardHeader className="flex justify-between gap-3">
-                <ID id={delivery?.id} />
+                <ID id={id} />
                 <div className="flex flex-col text-right">
                     <Badges isCar={isCar} isExpress={isExpress} />
                     <PickupDateTime
-                        date={delivery?.date}
-                        timeStart={delivery?.time_start}
-                        timeEnd={delivery?.time_end}
+                        date={deliveryDate}
+                        timeStart={deliveryStartTime}
+                        timeEnd={deliveryEndTime}
                     />
                 </div>
             </CardHeader>
             <Divider />
             <CardBody>
-                <Storage contents={delivery?.contents} />
+                <Storage contents={contents} />
                 <Spacer y={2} />
                 <div className="flex gap-2">
                     <div className="flex-grow">
-                        <Address address={delivery?.address?.address} />
+                        <Address address={address} />
                         <Spacer y={2} />
-                        <SubwayStationWithIcon
-                            value={delivery?.address?.metro}
-                        />
+                        <SubwayStationWithIcon value={metro} />
                     </div>
-                    <Weight weight={delivery?.weight} />
+                    <Weight weight={weight} />
                 </div>
             </CardBody>
             <Divider />

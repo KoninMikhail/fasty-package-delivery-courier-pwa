@@ -1,9 +1,13 @@
 import { createEffect, createEvent, createStore, sample } from 'effector';
 import { apiClient } from '@/shared/api';
+import { debug } from 'patronum';
 
 export const getInProgressDeliveriesFx = createEffect(async () =>
     apiClient.getActiveDeliveries(),
 );
+
+debug(getInProgressDeliveriesFx.doneData);
+
 /**
  * Init
  */

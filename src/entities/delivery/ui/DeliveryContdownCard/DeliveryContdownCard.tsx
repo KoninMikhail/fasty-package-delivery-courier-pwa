@@ -84,7 +84,7 @@ const ClientContact: FunctionComponent<{ name?: string; phone?: string }> = ({
     return (
         <div className="flex w-full justify-between gap-2">
             <div className="flex-grow">
-                <div className="text-sm font-bold">{name}</div>
+                <div className="truncate text-sm font-bold">{name}</div>
                 <div className="text-sm">{phone}</div>
             </div>
             <Button
@@ -144,7 +144,7 @@ export const DeliveryCountdownCard: FunctionComponent<{
     const contact = delivery?.contact;
 
     return (
-        <Card className="px min-w-[300px] max-w-[600px]">
+        <Card className="min-w-[300px] max-w-[600px]">
             <CardHeader className="flex gap-3">
                 <HeaderLayout
                     countdown={<Time date={deadline} />}

@@ -1,10 +1,7 @@
-import { createEffect, createEvent, createStore, sample } from 'effector';
-import { apiClient } from '@/shared/api';
-
-export const getInProgressDeliveriesFx = createEffect(async () => {
-    console.log('called');
-    return apiClient.getActiveDeliveries();
-});
+import { createEvent, createStore, sample } from 'effector';
+import { getMyDeliveriesFx } from '@/entities/delivery';
+import { Delivery, deliverySchema } from '@/shared/api';
+import { persist } from 'effector-storage/local';
 
 /**
  * Init
@@ -12,28 +9,32 @@ export const getInProgressDeliveriesFx = createEffect(async () => {
 
 export const initWidgetMyDeliveries = createEvent();
 export const $init = createStore<boolean>(false)
-    .on(getInProgressDeliveriesFx.done, () => true)
-    .on(getInProgressDeliveriesFx.fail, () => true);
+    .on(getMyDeliveriesFx.done, () => true)
+    .on(getMyDeliveriesFx.fail, () => true);
 
 sample({
     clock: initWidgetMyDeliveries,
     source: $init,
     filter: (init) => !init,
-    target: getInProgressDeliveriesFx,
+    target: getMyDeliveriesFx,
 });
 
 /**
  * Data
  */
-export const $inProgressDeliveries = createStore([]);
-export const $$empty = $inProgressDeliveries.map(
+export const $myDeliveries = createStore<Delivery[]>([]).on(
+    getMyDeliveriesFx.doneData,
+    (_, deliveries) => deliveries,
+);
+
+export const $$empty = $myDeliveries.map(
     (deliveries) => deliveries.length === 0,
 );
 
 /**
  * Progress
  */
-export const $$loading = getInProgressDeliveriesFx.pending;
+export const $$loading = getMyDeliveriesFx.pending;
 
 /**
  * Errors
@@ -42,7 +43,23 @@ export const $error = createStore<Nullable<Error>>(null);
 export const $$hasError = $error.map((error) => error !== null);
 
 sample({
-    clock: getInProgressDeliveriesFx.fail,
+    clock: getMyDeliveriesFx.fail,
     fn: (_, error) => error,
     target: $error,
+});
+
+/**
+ * Cache
+ */
+
+persist({
+    store: $myDeliveries,
+    key: 'myDeliveries',
+    contract: (raw): raw is Delivery[] => {
+        const result = deliverySchema.array().safeParse(raw);
+        if (result.success) {
+            return true;
+        }
+        throw result.error;
+    },
 });

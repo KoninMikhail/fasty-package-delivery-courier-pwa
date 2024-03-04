@@ -20,7 +20,7 @@ interface RequestButtonProperties {
     delivery: Delivery;
     user: Nullable<User>;
     popoverProps: Pick<PopoverProps, 'placement' | 'backdrop'>;
-    buttonProps: Omit<
+    buttonProps?: Omit<
         ButtonProps,
         'onPress' | 'isLoading' | 'isDisabled' | 'children' | 'isIconOnly'
     >;
@@ -37,20 +37,14 @@ export const RequestButton = modelView(
     }: RequestButtonProperties) => {
         const model = factory.useModel();
         const [isOpen, setIsOpen] = useState<boolean>(false);
-        const [
-            deliveryItem,
-            assignedItems,
-            assignPressed,
-            assignConfirmed,
-            assignRejected,
-        ] = useUnit([
-            model.$delivery,
-            model.$assignedItems,
-            model.assignPressed,
-            model.assignConfirmed,
-            model.assignRejected,
-            model.assignCompleted,
-        ]);
+        const [assignedItems, assignPressed, assignConfirmed, assignRejected] =
+            useUnit([
+                model.$assignedItems,
+                model.assignPressed,
+                model.assignConfirmed,
+                model.assignRejected,
+                model.assignCompleted,
+            ]);
 
         const isProcessing = useUnit(model.$processing);
         const isAssigned = delivery
@@ -61,7 +55,7 @@ export const RequestButton = modelView(
         const deliveryId = delivery.id.toString().padStart(6, '0');
 
         const onOpenChange = (open: boolean): void => {
-            if (open) {
+            if (open && delivery && user) {
                 assignPressed({ delivery, user });
                 setIsOpen(true);
             } else {

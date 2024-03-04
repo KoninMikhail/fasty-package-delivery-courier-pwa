@@ -9,10 +9,10 @@ type EventModifierKeys = Partial<Record<ModifierKey, boolean>>;
  *
  * Use it for bind callbacks on key press
  *
- * It takes an array of keys and a callback function, and calls the callback function whenever any of
- * the keys are pressed
+ * It takes an array of keys.ts and a callback function, and calls the callback function whenever any of
+ * the keys.ts are pressed
  *
- * @param keys - An array of keys that we want to listen for.
+ * @param keys.ts - An array of keys.ts that we want to listen for.
  * @param callback - (event: KeyboardEvent) => void
  * @param modifiers - An object of modifiers that we also want to listen for.
  */

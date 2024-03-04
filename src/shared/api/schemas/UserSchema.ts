@@ -12,12 +12,12 @@ export const userSchema = z.object({
     last_name: z.string(),
     gender: z.string(),
     email: z.string().email(),
-    email_verified_at: z.null().or(z.date()),
+    email_verified_at: z.null().or(z.string().datetime()),
     deleted: z.boolean(),
     created_at: z.string().datetime().nullable(),
     updated_at: z.string().datetime().nullable(),
     user_role: userRoleSchema,
-    avatar: z.string().nullable(),
+    avatar: z.string().nullable().optional(),
 });
 
 export type User = z.infer<typeof userSchema>;
