@@ -1,5 +1,6 @@
 import { makeApi, makeErrors } from '@zodios/core';
 import { z } from 'zod';
+import { format, parse } from 'date-fns';
 import { deliverySchema } from '../schemas';
 
 export const deliveriesErrors = makeErrors([]);
@@ -14,12 +15,30 @@ export const deliveriesApi = makeApi([
             {
                 name: 'from',
                 type: 'Query',
-                schema: z.string().optional(),
+                schema: z
+                    .string()
+                    .optional()
+                    .transform((value) => {
+                        if (typeof value === 'string') {
+                            const date = parse(value, 'dd-MM-yyyy', new Date());
+                            console.log('date', date, value);
+                            return format(date, 'yyyy-MM-dd');
+                        }
+                    }),
             },
             {
                 name: 'to',
                 type: 'Query',
-                schema: z.string().optional(),
+                schema: z
+                    .string()
+                    .optional()
+                    .transform((value) => {
+                        if (typeof value === 'string') {
+                            const date = parse(value, 'dd-MM-yyyy', new Date());
+                            console.log('date', date, value);
+                            return format(date, 'yyyy-MM-dd');
+                        }
+                    }),
             },
         ],
         response: z
