@@ -3,7 +3,7 @@ import { combine, createEvent, createStore, Store } from 'effector';
 import { Delivery } from '@/shared/api';
 import { sharedLibHelpers } from '@/shared/lib';
 import { filterAndSortDeliveries } from '@/features/delivery/filterDeliveriesByTimeRange/utils';
-import { debug, readonly } from 'patronum';
+import { readonly } from 'patronum';
 
 const { getTimesRange } = sharedLibHelpers;
 
@@ -19,8 +19,6 @@ export const factory = modelFactory((options: FactoryOptions) => {
         getTimesRange(options.startTime, options.endTime, options.stepMins),
     );
     const $readOnlyTimesRange = readonly(timesRange);
-
-    debug(timesRange);
 
     const $selectedTimeRange = createStore<string[]>([]).on(
         timePicked,

@@ -1,6 +1,7 @@
 import { createEffect, createStore, sample } from 'effector';
 import { apiClient, Delivery } from '@/shared/api';
 import { AssignDeliveryToUser } from '@/features/delivery/assignDeliveryToUser';
+import { FilterDeliveriesByParams } from '@/features/delivery/filterDeliveriesByParams';
 
 export const fetchUpcomingDeliveriesFx = createEffect(async () => {
     return apiClient.fetchUpcomingDeliveries();
@@ -8,6 +9,10 @@ export const fetchUpcomingDeliveriesFx = createEffect(async () => {
 
 export const $avaliableDeliveries = createStore<Delivery[]>([]);
 export const $isDeliveriesLoading = fetchUpcomingDeliveriesFx.pending;
+
+export const marketFilterModel = FilterDeliveriesByParams.factory.createModel({
+    sourceStore: $avaliableDeliveries,
+});
 
 /**
  * filters for deliveries

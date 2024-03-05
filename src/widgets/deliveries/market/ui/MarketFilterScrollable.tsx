@@ -2,7 +2,8 @@ import { ChipCheckBox } from '@/shared/ui/components';
 import { HorizontalScroll } from '@/shared/ui/layouts';
 import { CheckboxProps } from '@nextui-org/react';
 import clsx from 'clsx';
-import { DeliveryTypeFilter, ExpressFilter } from '@/entities/filter';
+import { FilterDeliveriesByParams } from '@/features/delivery/filterDeliveriesByParams';
+import { marketFilterModel } from '../model';
 
 /**
  * Constants
@@ -13,17 +14,6 @@ const FILTER_CHECKBOXES_SIZE: CheckboxProps['size'] = 'lg';
 /**
  * Components
  */
-
-const Period: FunctionComponent = () => {
-    return (
-        <ChipCheckBox
-            size={FILTER_CHECKBOXES_SIZE}
-            onChange={() => console.log('work')}
-        >
-            тип доставки
-        </ChipCheckBox>
-    );
-};
 
 const Weight: FunctionComponent = () => {
     return (
@@ -56,10 +46,15 @@ export const MarketFilterScrollable: FunctionComponent<
                     withOutPadding && 'px-4',
                 )}
             >
-                <ExpressFilter />
-                <DeliveryTypeFilter />
-                <Period />
-                <Weight />
+                <FilterDeliveriesByParams.ExpressSelector
+                    model={marketFilterModel}
+                />
+                <FilterDeliveriesByParams.TypeSelector
+                    model={marketFilterModel}
+                />
+                <FilterDeliveriesByParams.WeightSelector
+                    model={marketFilterModel}
+                />
             </div>
         </HorizontalScroll>
     );

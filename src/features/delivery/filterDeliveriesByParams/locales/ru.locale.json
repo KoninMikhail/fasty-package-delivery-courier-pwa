@@ -1,0 +1,12 @@
+{
+  "label.type.onCar": "На машине",
+  "label.type.onFoot": "Пешком",
+  "label.type.notSelected": "Не выбрано",
+  "label.type.selectType": "Тип доставки",
+  "label.weight.popoverTitle": "Желаемый вес груза:",
+  "label.weight.popoverSelectedRangeLabel": "Выбранный вес:",
+  "value.weight": "{{value}}кг",
+  "content.weight.text.selectWeight": "Выберите вес",
+  "content.weight.text.inRange": "в заданном диапазоне",
+  "label.express": "Cрочно"
+}

@@ -19,7 +19,7 @@ import { factory } from '../model/model';
 interface RequestButtonProperties {
     delivery: Delivery;
     user: Nullable<User>;
-    popoverProps: Pick<PopoverProps, 'placement' | 'backdrop'>;
+    popoverProps?: Pick<PopoverProps, 'placement' | 'backdrop'>;
     buttonProps?: Omit<
         ButtonProps,
         'onPress' | 'isLoading' | 'isDisabled' | 'children' | 'isIconOnly'
