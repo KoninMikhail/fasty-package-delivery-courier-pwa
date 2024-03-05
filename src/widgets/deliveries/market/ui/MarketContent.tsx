@@ -15,8 +15,8 @@ import { BsBoxSeam } from 'react-icons/bs';
 import {
     $$deliveriesEmpty,
     $$hasError,
-    $avaliableDeliveries,
     $isDeliveriesLoading,
+    $outputStore,
     assignDeliveryToUserModel,
 } from '../model';
 
@@ -134,7 +134,7 @@ export const MarketContent: FunctionComponent = () => {
         $$deliveriesEmpty,
     ]);
 
-    const content = useList($avaliableDeliveries, (delivery, index) => (
+    const content = useList($outputStore, (delivery, index) => (
         <EaseIn isFirst={index === 0}>
             <DeliveryShortInfoCard
                 delivery={delivery}

@@ -35,7 +35,7 @@ export const ExpressSelector = modelView(factory, () => {
     return (
         <Button
             color="danger"
-            className="rounded-full uppercase"
+            className="rounded-full normal-case"
             size="sm"
             variant={isSelected ? 'solid' : 'bordered'}
             onPress={onPress}

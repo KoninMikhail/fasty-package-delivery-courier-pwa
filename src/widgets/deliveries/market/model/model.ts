@@ -2,17 +2,26 @@ import { createEffect, createStore, sample } from 'effector';
 import { apiClient, Delivery } from '@/shared/api';
 import { AssignDeliveryToUser } from '@/features/delivery/assignDeliveryToUser';
 import { FilterDeliveriesByParams } from '@/features/delivery/filterDeliveriesByParams';
+import { AppInitGate } from '@/shared/lib/init';
+import { once } from 'patronum';
 
 export const fetchUpcomingDeliveriesFx = createEffect(async () => {
     return apiClient.fetchUpcomingDeliveries();
 });
 
-export const $avaliableDeliveries = createStore<Delivery[]>([]);
+sample({
+    clock: once(AppInitGate.open),
+    target: fetchUpcomingDeliveriesFx,
+});
+
+export const $fetchedDeliveries = createStore<Delivery[]>([]);
 export const $isDeliveriesLoading = fetchUpcomingDeliveriesFx.pending;
 
 export const marketFilterModel = FilterDeliveriesByParams.factory.createModel({
-    sourceStore: $avaliableDeliveries,
+    sourceStore: $fetchedDeliveries,
 });
+
+export const $outputStore = marketFilterModel.$filteredStore;
 
 /**
  * filters for deliveries
@@ -39,13 +48,13 @@ export const assignDeliveryToUserModel =
 
 sample({
     clock: fetchUpcomingDeliveriesFx.doneData,
-    target: $avaliableDeliveries,
+    target: $fetchedDeliveries,
 });
 
 /**
  * State
  */
-export const $$deliveriesEmpty = $avaliableDeliveries.map(
+export const $$deliveriesEmpty = $fetchedDeliveries.map(
     (deliveries) => deliveries.length === 0,
 );
 

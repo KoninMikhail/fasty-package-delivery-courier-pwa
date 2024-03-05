@@ -73,7 +73,7 @@ const Header: FunctionComponent = () => {
     };
 
     return (
-        <header className="w-full rounded-b-3xl bg-black p-6">
+        <header className="w-full rounded-b-3xl bg-black p-6 dark:bg-content1">
             <WelcomeTopbar />
             <Spacer y={4} />
             <Input
