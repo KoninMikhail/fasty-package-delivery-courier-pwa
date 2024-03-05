@@ -1,26 +1,74 @@
-import { createEffect, createStore, sample } from 'effector';
+import { createEffect, createEvent, createStore, sample } from 'effector';
 import { apiClient, Delivery } from '@/shared/api';
 import { AssignDeliveryToUser } from '@/features/delivery/assignDeliveryToUser';
 import { FilterDeliveriesByParams } from '@/features/delivery/filterDeliveriesByParams';
 import { AppInitGate } from '@/shared/lib/init';
-import { once } from 'patronum';
 
-export const fetchUpcomingDeliveriesFx = createEffect(async () => {
-    return apiClient.fetchUpcomingDeliveries();
-});
+export const fetchDeliveriesFx = createEffect(
+    async (dates: { dateStart?: string; dateEnd?: string }) => {
+        if (dates.dateStart && dates.dateEnd) {
+            return apiClient.fetchUpcomingDeliveries({
+                queries: {
+                    from: dates.dateStart,
+                    to: dates.dateEnd,
+                },
+            });
+        }
+        return apiClient.fetchUpcomingDeliveries();
+    },
+);
 
 sample({
-    clock: once(AppInitGate.open),
-    target: fetchUpcomingDeliveriesFx,
+    clock: AppInitGate.open,
+    target: fetchDeliveriesFx,
 });
 
-export const $fetchedDeliveries = createStore<Delivery[]>([]);
-export const $isDeliveriesLoading = fetchUpcomingDeliveriesFx.pending;
+/**
+ * Events
+ */
 
+export const deliveriesDatesRangeChanged = createEvent<{
+    dateStart: string;
+    dateEnd: string;
+}>();
+
+/**
+ * State
+ */
+export const $isDeliveriesLoading = fetchDeliveriesFx.pending;
+
+/**
+ * Data
+ */
+export const $fetchedDeliveries = createStore<Delivery[]>([]);
 export const marketFilterModel = FilterDeliveriesByParams.factory.createModel({
     sourceStore: $fetchedDeliveries,
 });
 
+/**
+ * Params
+ */
+
+const $deliveriesDatesRange = createStore<{
+    dateStart: string;
+    dateEnd: string;
+}>({ dateStart: '', dateEnd: '' }).on(
+    deliveriesDatesRangeChanged,
+    (state, dates) => ({
+        ...state,
+        ...dates,
+    }),
+);
+
+sample({
+    clock: $deliveriesDatesRange,
+    filter: (data) => data.dateStart !== '' && data.dateEnd !== '',
+    target: fetchDeliveriesFx,
+});
+
+/**
+ * Exports
+ */
 export const $outputStore = marketFilterModel.$filteredStore;
 
 /**
@@ -47,7 +95,7 @@ export const assignDeliveryToUserModel =
     });
 
 sample({
-    clock: fetchUpcomingDeliveriesFx.doneData,
+    clock: fetchDeliveriesFx.doneData,
     target: $fetchedDeliveries,
 });
 
@@ -65,7 +113,7 @@ export const $error = createStore<Nullable<Error>>(null);
 export const $$hasError = $error.map((error) => error !== null);
 
 sample({
-    clock: fetchUpcomingDeliveriesFx.fail,
+    clock: fetchDeliveriesFx.fail,
     fn: (_, error) => error,
     target: $error,
 });

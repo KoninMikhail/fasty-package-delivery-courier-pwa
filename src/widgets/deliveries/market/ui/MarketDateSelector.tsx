@@ -4,6 +4,8 @@ import clsx from 'clsx';
 import { PropsWithChildren, useState } from 'react';
 import { HorizontalDatePicker } from '@/shared/ui/components';
 import { DatePeriod } from '@/shared/ui/components/forms/horizontal-date-picker/types';
+import { useUnit } from 'effector-react';
+import { deliveriesDatesRangeChanged } from '../model';
 
 /**
  * Constants
@@ -68,7 +70,10 @@ export const MarketDateSelector: FunctionComponent<
 > = ({ withOutPadding }) => {
     const [selectedDates, setSelectedDates] = useState<DatePeriod>();
 
+    const setDatesRange = useUnit(deliveriesDatesRangeChanged);
+
     const onChangeDate = (work: DatePeriod) => {
+        setDatesRange(work);
         setSelectedDates(() => work);
     };
 

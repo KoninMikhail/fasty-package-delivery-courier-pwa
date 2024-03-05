@@ -10,6 +10,18 @@ export const deliveriesApi = makeApi([
         path: '/',
         alias: 'fetchUpcomingDeliveries',
         description: 'Fetch upcoming deliveries',
+        parameters: [
+            {
+                name: 'from',
+                type: 'Query',
+                schema: z.string().optional(),
+            },
+            {
+                name: 'to',
+                type: 'Query',
+                schema: z.string().optional(),
+            },
+        ],
         response: z
             .array(deliverySchema)
             .transform((data) =>
@@ -39,14 +51,6 @@ export const deliveriesApi = makeApi([
         alias: 'fetchDeliveryById',
         description: 'Fetch a delivery by its ID',
         response: deliverySchema,
-        errors: deliveriesErrors,
-    },
-    {
-        method: 'get',
-        path: '/:startDate/:endDate',
-        alias: 'fetchDeliveriesByDatesRange',
-        description: 'Fetch deliveries by dates range',
-        response: z.array(deliverySchema),
         errors: deliveriesErrors,
     },
     {

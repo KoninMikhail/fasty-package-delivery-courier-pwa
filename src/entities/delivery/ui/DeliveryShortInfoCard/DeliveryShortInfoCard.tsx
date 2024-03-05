@@ -64,7 +64,6 @@ const Badges: FunctionComponent<{
     isCar: boolean;
 }> = ({ isExpress, isCar }) => {
     const { t } = useTranslation(translationNS);
-    console.log(isCar);
     const expressLabel = t(DELIVERY_CHIP_EXPRESS);
     const onFootLabel = t(DELIVERY_CHIP_ON_FOOT);
     const onCarLabel = t(DELIVERY_CHIP_ON_CAR);
@@ -180,7 +179,6 @@ export const DeliveryShortInfoCard: FunctionComponent<
     DeliveryPreviewCardProperties
 > = ({ delivery, featureSlot }) => {
     const navigate = useNavigate();
-    console.log('delivery', delivery.id, delivery.car);
     const {
         id,
         car: isCar,
