@@ -1,0 +1,13 @@
+{
+  "label.selector": "New status to change",
+  "label.selector.placeholder": "select status",
+  "label.status.created": "Created",
+  "label.status.delivering": "Delivering",
+  "label.status.done": "Delivered",
+  "label.status.canceled": "Canceled",
+  "label.button.cancel": "Cancel",
+  "label.button.set": "Submit",
+  "label.reason.reject": "Reject reason (required)",
+  "label.reason.success": "message to the manager",
+  "textarea.placeholder": "Minimum 3 characters"
+}

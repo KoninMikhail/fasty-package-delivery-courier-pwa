@@ -1,4 +1,4 @@
-import { PropsWithChildren, ReactNode } from 'react';
+import { PropsWithChildren, ReactNode, useEffect, useState } from 'react';
 
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { Button, Spacer } from '@nextui-org/react';
@@ -7,7 +7,9 @@ import { useNavigate } from 'react-router-dom';
 import { LuArrowLeft } from 'react-icons/lu';
 import { UserCardRow } from '@/entities/user';
 import clsx from 'clsx';
-import { $deliveryId } from '../../model';
+import { SetDeliveryStatus } from '@/features/delivery/setDeliveryStatus';
+import { setDeliveryStatus } from '@/entities/delivery/api/setDeliveryStatus';
+import { $deliveryId, changeDeliveryStatusModel } from '../../model';
 
 const { NavbarMobile } = widgetNavbarMobileUi;
 
@@ -85,6 +87,18 @@ const Header: FunctionComponent<{
 
 export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
     const deliveryId = useUnit($deliveryId);
+    const [click, setClick] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (deliveryId && click) {
+            void setDeliveryStatus({
+                id: Number(deliveryId),
+                state: 'canceled',
+                comment: 'comment',
+            });
+        }
+    }, [click]);
+
     return (
         <>
             <Header
@@ -100,7 +114,11 @@ export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
                 <Spacer y={4} />
                 <Section>
                     <h3 className="font-bold">Delivery status</h3>
+                    <Button onPress={() => setClick(true)}>Set status</Button>
                     <Status />
+                    <SetDeliveryStatus.ChangeStatusDropdown
+                        model={changeDeliveryStatusModel}
+                    />
                 </Section>
                 <Spacer y={4} />
                 <Section>

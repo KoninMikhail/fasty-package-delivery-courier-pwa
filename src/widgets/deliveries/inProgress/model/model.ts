@@ -3,7 +3,7 @@ import { apiClient } from '@/shared/api';
 import { debug } from 'patronum';
 
 export const getInProgressDeliveriesFx = createEffect(async () =>
-    apiClient.getActiveDeliveries(),
+    apiClient.getMyDeliveries(),
 );
 
 debug(getInProgressDeliveriesFx.doneData);

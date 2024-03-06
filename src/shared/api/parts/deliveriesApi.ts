@@ -21,7 +21,6 @@ export const deliveriesApi = makeApi([
                     .transform((value) => {
                         if (typeof value === 'string') {
                             const date = parse(value, 'dd-MM-yyyy', new Date());
-                            console.log('date', date, value);
                             return format(date, 'yyyy-MM-dd');
                         }
                     }),
@@ -35,7 +34,6 @@ export const deliveriesApi = makeApi([
                     .transform((value) => {
                         if (typeof value === 'string') {
                             const date = parse(value, 'dd-MM-yyyy', new Date());
-                            console.log('date', date, value);
                             return format(date, 'yyyy-MM-dd');
                         }
                     }),
@@ -51,20 +49,6 @@ export const deliveriesApi = makeApi([
         errors: deliveriesErrors,
     },
     {
-        method: 'patch',
-        path: '/:deliveryId',
-        alias: 'assignDeliveryToCourier',
-        description: 'Assign a delivery to a courier',
-        parameters: [
-            {
-                name: 'courier_id',
-                type: 'Body',
-                schema: deliverySchema.pick({ courier_id: true }),
-            },
-        ],
-        response: deliverySchema,
-    },
-    {
         method: 'get',
         path: '/:deliveryId',
         alias: 'fetchDeliveryById',
@@ -73,9 +57,23 @@ export const deliveriesApi = makeApi([
         errors: deliveriesErrors,
     },
     {
+        method: 'patch',
+        path: '/:deliveryId',
+        alias: 'patchDelivery',
+        description: 'Patch a delivery by its ID',
+        parameters: [
+            {
+                name: 'Body',
+                type: 'Body',
+                schema: deliverySchema.omit({ id: true }).partial(),
+            },
+        ],
+        response: deliverySchema,
+    },
+    {
         method: 'get',
         path: '/my',
-        alias: 'getActiveDeliveries',
+        alias: 'getMyDeliveries',
         description: 'Fetch active deliveries',
         response: z
             .array(deliverySchema)
@@ -95,7 +93,7 @@ export const deliveriesApi = makeApi([
     {
         method: 'get',
         path: '/search',
-        alias: 'searchDeliveriesById',
+        alias: 'searchDeliveriesByQuery',
         description: 'Search for a product',
         response: z.any(),
         parameters: [
