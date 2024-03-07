@@ -48,13 +48,11 @@ export const factory = modelFactory((options: FactoryOptions) => {
 
     const $formValid = combine($status, $message, (status, message) => {
         if (status instanceof Set && status.size === 0) return false;
-        if (
+        return !(
             status instanceof Set &&
             status.has('canceled') &&
             message.length < 3
-        )
-            return false;
-        return true;
+        );
     });
     const $pending = options?.patchDeliveryStatusFx.pending;
 

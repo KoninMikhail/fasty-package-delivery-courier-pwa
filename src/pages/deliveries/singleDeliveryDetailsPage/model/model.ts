@@ -1,26 +1,21 @@
 import { createGate } from 'effector-react';
-import { createEffect, createStore, sample } from 'effector';
-import { apiClient } from '@/shared/api';
+import { sample } from 'effector';
 import { SetDeliveryStatus } from '@/features/delivery/setDeliveryStatus';
 import { setDeliveryStatus } from '@/entities/delivery';
+import { getDeliveryById } from '@/entities/delivery/api/getDeliveryById';
 
 /**
  * Gateway for the delivery details page
  */
-export const DeliveryDetailsPageGateway = createGate<{ deliveryId?: string }>();
-
-/**
- * Fetches delivery details by id
- */
-const fetchDeliveryDetailsFx = createEffect(async (data: string) => {
-    return apiClient.fetchDeliveryById({ params: { deliveryId: data } });
-});
+export const DeliveryDetailsPageGateway = createGate<{
+    deliveryId?: string;
+}>();
 
 sample({
     clock: DeliveryDetailsPageGateway.open,
     filter: (data) => !!data.deliveryId,
-    fn: (data) => data.deliveryId,
-    target: fetchDeliveryDetailsFx,
+    fn: (data) => ({ deliveryId: Number(data.deliveryId) }),
+    target: getDeliveryById,
 });
 
 /**
@@ -34,11 +29,6 @@ export const $deliveryId = DeliveryDetailsPageGateway.state.map(
 /**
  * Delivery details store
  */
-
-export const $deliveryDetailsStore = createStore<string>('')
-    .on(fetchDeliveryDetailsFx.doneData, (_, data) => data)
-    .reset(DeliveryDetailsPageGateway.close);
-
 export const changeDeliveryStatusModel = SetDeliveryStatus.factory.createModel({
     patchDeliveryStatusFx: setDeliveryStatus,
 });

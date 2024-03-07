@@ -1,1 +1,1 @@
-export * as pageMyActiveDeliveriesUi from './ui';
+export * as pageMyDeliveriesUi from './ui';

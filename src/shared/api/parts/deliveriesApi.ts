@@ -88,14 +88,14 @@ export const deliveriesApi = makeApi([
         path: '/history',
         alias: 'getDeliveriesHistory',
         description: 'Fetch deliveries history',
-        response: z.any(),
+        response: z.array(deliverySchema),
     },
     {
         method: 'get',
         path: '/search',
         alias: 'searchDeliveriesByQuery',
         description: 'Search for a product',
-        response: z.any(),
+        response: z.array(deliverySchema),
         parameters: [
             {
                 name: 'query',

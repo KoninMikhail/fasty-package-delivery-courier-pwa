@@ -1,1 +1,1 @@
-export * as pageMyHistoryUi from './ui';
+export * as pageMyDeliveriesHistoryUi from './ui';

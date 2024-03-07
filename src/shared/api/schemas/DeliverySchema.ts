@@ -39,5 +39,7 @@ export const deliverySchema = z.object({
     contact: contactSchema,
     client: clientSchema,
     address: addressSchema,
+    created_at: z.coerce.date(),
+    updated_at: z.coerce.date(),
     manager: userSchema,
 });

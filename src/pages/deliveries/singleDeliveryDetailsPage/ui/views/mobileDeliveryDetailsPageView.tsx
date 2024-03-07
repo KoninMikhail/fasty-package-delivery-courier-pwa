@@ -1,18 +1,19 @@
-import { PropsWithChildren, ReactNode, useEffect, useState } from 'react';
+import { PropsWithChildren, ReactNode } from 'react';
 
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
-import { Button, Spacer } from '@nextui-org/react';
+import { Button, Divider, Spacer } from '@nextui-org/react';
 import { useUnit } from 'effector-react';
 import { useNavigate } from 'react-router-dom';
 import { LuArrowLeft } from 'react-icons/lu';
 import { UserCardRow } from '@/entities/user';
 import clsx from 'clsx';
-import { SetDeliveryStatus } from '@/features/delivery/setDeliveryStatus';
-import { setDeliveryStatus } from '@/entities/delivery/api/setDeliveryStatus';
-import { $deliveryId, changeDeliveryStatusModel } from '../../model';
+import { widgetDeliveryStatusUi } from '@/widgets/deliveries/deliveryStatus';
+import { sessionModel } from '@/entities/viewer';
+import { User } from '@/shared/api';
+import { $deliveryId } from '../../model';
 
 const { NavbarMobile } = widgetNavbarMobileUi;
-
+const { DeliveryStatusControlWithTimeline } = widgetDeliveryStatusUi;
 /**
  * Layout
  */
@@ -42,14 +43,22 @@ const Section: FunctionComponent<ISectionProperties> = ({
  * Components
  */
 
-const Status = () => {
-    return <div>Manager</div>;
+const Heading: FunctionComponent<{ content: string }> = ({ content }) => {
+    return <h3 className="font-bold">{content}</h3>;
 };
 
-const Manager: FunctionComponent = () => {
+const Manager: FunctionComponent<{ user: User }> = ({ user }) => {
     return (
         <div>
-            <UserCardRow account={{ name: 'Manager' }} />
+            <UserCardRow account={user} />
+        </div>
+    );
+};
+
+const Courier: FunctionComponent<{ user: User }> = ({ user }) => {
+    return (
+        <div>
+            <UserCardRow account={user} />
         </div>
     );
 };
@@ -87,18 +96,7 @@ const Header: FunctionComponent<{
 
 export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
     const deliveryId = useUnit($deliveryId);
-    const [click, setClick] = useState<boolean>(false);
-
-    useEffect(() => {
-        if (deliveryId && click) {
-            void setDeliveryStatus({
-                id: Number(deliveryId),
-                state: 'canceled',
-                comment: 'comment',
-            });
-        }
-    }, [click]);
-
+    const user = useUnit(sessionModel.$sessionStore);
     return (
         <>
             <Header
@@ -107,25 +105,35 @@ export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
                 title={deliveryId.padStart(6, '0')}
             />
             <MainContainer>
+                <div className="flex h-[50vh] w-full flex-col items-center justify-center bg-content1">
+                    <span>карта</span>
+                </div>
                 <Spacer y={4} />
                 <Section>
-                    <h3 className="font-bold">Delivery Info</h3>
+                    <Heading content={`Delivery ID: ${deliveryId}`} />
                 </Section>
                 <Spacer y={4} />
                 <Section>
-                    <h3 className="font-bold">Delivery status</h3>
-                    <Button onPress={() => setClick(true)}>Set status</Button>
-                    <Status />
-                    <SetDeliveryStatus.ChangeStatusDropdown
-                        model={changeDeliveryStatusModel}
-                    />
+                    <Heading content="Delivery Status" />
+                    <DeliveryStatusControlWithTimeline />
                 </Section>
-                <Spacer y={4} />
+                <Spacer y={6} />
+                <Divider className="px-2" />
+                <Spacer y={6} />
                 <Section>
-                    <Manager />
+                    <Heading content="Курьер" />
+                    <Spacer y={2} />
+                    <Courier user={user} />
+                </Section>
+                <Spacer y={6} />
+                <Section>
+                    <Heading content="Менеджер" />
+                    <Spacer y={2} />
+                    <Manager user={user} />
                 </Section>
                 <Spacer y={4} />
             </MainContainer>
+            <Spacer y={24} />
             <NavbarMobile />
         </>
     );

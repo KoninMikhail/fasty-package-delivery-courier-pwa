@@ -38,13 +38,11 @@ const Header: FunctionComponent = () => (
     <div className="flex-col px-2 lg:mx-auto lg:w-[1200px]" />
 );
 
-export const DesktopDeliveryDetailsPageView: FunctionComponent<{
-    deliveryId?: string;
-}> = ({ deliveryId }) => {
+export const DesktopDeliveryDetailsPageView: FunctionComponent = () => {
     return (
         <Container>
             <Header />
-            <MainContainer>{deliveryId}</MainContainer>
+            <MainContainer>sdf</MainContainer>
         </Container>
     );
 };

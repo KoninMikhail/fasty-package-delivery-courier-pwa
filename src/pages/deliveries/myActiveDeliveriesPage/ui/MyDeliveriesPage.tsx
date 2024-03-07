@@ -24,11 +24,11 @@ locale.addResourceBundle('en', translationNS, locale_en);
 locale.addResourceBundle('ru', translationNS, locale_ru);
 
 /**
- * @name MyActiveDeliveriesPage
+ * @name MyDeliveriesPage
  * @description Page for deliveries exchange
  * @constructor
  */
-export const MyActiveDeliveriesPage: FunctionComponent = () => {
+export const MyDeliveriesPage: FunctionComponent = () => {
     const { isDesktop } = useDeviceScreen();
     const { t } = useTranslation(translationNS);
 

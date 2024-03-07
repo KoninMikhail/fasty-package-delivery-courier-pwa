@@ -1,1 +1,1 @@
-export * from './MyActiveDeliveriesPage';
+export * from './MyDeliveriesPage';

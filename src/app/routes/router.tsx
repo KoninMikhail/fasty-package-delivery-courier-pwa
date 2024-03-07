@@ -5,9 +5,9 @@ import { sharedUiLayouts } from '@/shared/ui';
 import { pageAuthUi } from '@/pages/auth/authPage';
 import { pageSettingsUi } from '@/pages/viewer/settingsPage';
 import { pageProfileEditUi } from '@/pages/viewer/profileEditPage';
-import { pageMyActiveDeliveriesUi } from '@/pages/deliveries/myActiveDeliveriesPage';
+import { pageMyDeliveriesUi } from '@/pages/deliveries/myActiveDeliveriesPage';
 import { pageSingleDeliveryDetailsUi } from '@/pages/deliveries/singleDeliveryDetailsPage';
-import { pageMyHistoryUi } from '@/pages/deliveries/myHistoryPage';
+import { pageMyDeliveriesHistoryUi } from '@/pages/deliveries/myHistoryPage';
 import { pageMarketUi } from '@/pages/deliveries/marketPage';
 import { pageNorFoundUi } from '@/pages/errors/notFoundPage';
 import { pageSearchUi } from '@/pages/search/searchPage/';
@@ -17,10 +17,10 @@ const { SuspenseLayout } = sharedUiLayouts;
 
 const { MarketPage } = pageMarketUi;
 const { NotFoundPage } = pageNorFoundUi;
-const { MyActiveDeliveriesPage } = pageMyActiveDeliveriesUi;
+const { MyDeliveriesPage } = pageMyDeliveriesUi;
 const { SettingsPage } = pageSettingsUi;
 const { ProfileEditPage } = pageProfileEditUi;
-const { MyHistoryPage } = pageMyHistoryUi;
+const { MyDeliveriesHistoryPage } = pageMyDeliveriesHistoryUi;
 const { SingleDeliveryDetailsPage } = pageSingleDeliveryDetailsUi;
 const { AuthPage } = pageAuthUi;
 const { SearchPage } = pageSearchUi;
@@ -47,7 +47,7 @@ const routes: sharedConfigRoutes.RouteDescription[] = [
     },
     {
         path: DELIVERIES,
-        component: MyActiveDeliveriesPage,
+        component: MyDeliveriesPage,
     },
     {
         path: DELIVERIES_DETAIL_PAGE,
@@ -55,7 +55,7 @@ const routes: sharedConfigRoutes.RouteDescription[] = [
     },
     {
         path: DELIVERIES_HISTORY_PAGE,
-        component: MyHistoryPage,
+        component: MyDeliveriesHistoryPage,
     },
     {
         path: SETTINGS_PAGE,

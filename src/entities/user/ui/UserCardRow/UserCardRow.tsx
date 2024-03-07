@@ -1,41 +1,66 @@
 import { Avatar } from '@nextui-org/react';
+import { User } from '@/shared/api';
 
-interface User {
-    name: string;
-    email: string;
-    avatar: string;
-}
 interface IUserCardRowProperties {
     account: User;
     size?: 'lg' | 'md' | 'sm';
     avatarPosition?: 'left' | 'right';
 }
-export const UserCardRow = ({
+
+interface IUserInfoProperties {
+    name: string;
+    role: string;
+    avatarPosition: 'left' | 'right';
+}
+
+const UserInfo: FunctionComponent<IUserInfoProperties> = ({
+    name,
+    role,
+    avatarPosition,
+}: IUserInfoProperties) => (
+    <div
+        className={`flex flex-col ${avatarPosition === 'left' ? 'items-start' : 'items-end'} justify-center gap-1`}
+    >
+        <span className="font-bold">{name}</span>
+        <span className="text-tiny text-default-500">{role}</span>
+    </div>
+);
+
+export const UserCardRow: FunctionComponent<IUserCardRowProperties> = ({
     account,
     size,
     avatarPosition = 'left',
 }: IUserCardRowProperties) => {
-    if (avatarPosition === 'left') {
-        return (
-            <div className="flex items-center gap-5">
-                <div className="flex flex-col items-start justify-center gap-1">
-                    <span className="font-bold">{account.name}</span>
-                    <span className="text-tiny text-default-500">
-                        {account.email}
-                    </span>
-                </div>
-            </div>
-        );
-    }
+    const name = `${account.first_name} ${account.last_name}`;
+    const initials = `${account.first_name[0]}${account.last_name[0]}`;
+    const role = account.user_role.name;
+
     return (
-        <div className="flex items-center gap-5">
-            <div className="flex flex-col items-end justify-center gap-1">
-                <span className="font-bold">{account.name}</span>
-                <span className="text-tiny text-default-500">
-                    {account.email}
-                </span>
-            </div>
-            <Avatar src={account.avatar} size={size} />
+        <div className="flex items-center gap-2">
+            {avatarPosition === 'left' ? (
+                <>
+                    <Avatar src={account.avatar} size={size} name={initials} />
+                    <UserInfo
+                        name={name}
+                        role={role}
+                        avatarPosition={avatarPosition}
+                    />
+                </>
+            ) : (
+                <>
+                    <UserInfo
+                        name={name}
+                        role={role}
+                        avatarPosition={avatarPosition}
+                    />
+                    <Avatar
+                        isBordered
+                        src={account.avatar}
+                        size={size}
+                        name={initials}
+                    />
+                </>
+            )}
         </div>
     );
 };
