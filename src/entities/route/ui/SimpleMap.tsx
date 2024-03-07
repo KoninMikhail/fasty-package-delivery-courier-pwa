@@ -27,7 +27,12 @@ export const SimpleMap = modelView(mapFactory, () => {
                 <ZoomControl position="bottomright" />
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                 {markers?.map((marker, index) => (
-                    <Marker key={index} position={[marker.lat, marker.lng]}>
+                    <Marker
+                        key={index}
+                        position={[
+                            37.635_209_057_633_32, 55.763_310_201_892_79,
+                        ]}
+                    >
                         <Popup>
                             A pretty CSS3 popup. <br /> Easily customizable.
                         </Popup>
