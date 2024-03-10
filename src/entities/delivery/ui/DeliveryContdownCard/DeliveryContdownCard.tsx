@@ -13,6 +13,8 @@ import { IoCall } from 'react-icons/io5';
 import { sharedServicesSubway } from '@/shared/services';
 import { useTranslation } from 'react-i18next';
 import { ReactNode } from 'react';
+import { getDeliveryAddress } from '../../lib/utils/getDeliveryAdress';
+import { getDeliveryMetro } from '../../lib/utils/getDeliveryMetro';
 import { useEstimatedTime } from '../../lib/hooks/useEstimatedTime';
 import { translationNS } from '../../config';
 
@@ -21,12 +23,10 @@ const { SubwayStationWithIcon } = sharedServicesSubway;
 /**
  * Constants
  */
-const DEFAULT_STATION_PLACEHOLDER = '-------';
 const TRANSLATIONS = {
     EXPIRED: 'delivery.card.chip.expired',
     TIME_LEFT: 'delivery.card.chip.timeLeft',
     ADDRESS: 'delivery.card.label.address',
-    ADDRESS_NOT_FOUND: 'delivery.card.label.address.notFound',
     CLIENT_NOT_FOUND: 'delivery.card.client.name.notFound',
 };
 
@@ -54,15 +54,13 @@ export const HeaderLayout: FunctionComponent<HeaderLayoutProperties> = ({
  * Renders the address section of the delivery card.
  */
 export const AddressDisplay: FunctionComponent<{
-    address?: Nullable<string>;
+    address: string;
 }> = ({ address }) => {
     const { t } = useTranslation(translationNS);
     return (
         <div className="flex flex-col">
             <span className="text-md">{`${t(TRANSLATIONS.ADDRESS)}:`}</span>
-            <span className="text-md font-bold">
-                {address || t(TRANSLATIONS.ADDRESS_NOT_FOUND)}
-            </span>
+            <span className="text-md font-bold">{address}</span>
         </div>
     );
 };
@@ -157,26 +155,21 @@ export const DeliveryCountdownCard: FunctionComponent<
     const deadline = new Date(
         `${delivery?.date || '2024-01-01'}T${delivery?.time_end || '00:00'}:00.999`,
     );
-    const address = delivery?.address;
+    const address = getDeliveryAddress(delivery);
     const contact = delivery?.contact;
+    const metro = getDeliveryMetro(delivery);
 
     return (
         <Card className="min-w-[300px] max-w-[600px]">
             <CardHeader className="flex gap-3">
                 <HeaderLayout
                     countdown={<DeliveryTimer date={deadline} />}
-                    station={
-                        <SubwayStationWithIcon
-                            value={
-                                address?.metro || DEFAULT_STATION_PLACEHOLDER
-                            }
-                        />
-                    }
+                    station={<SubwayStationWithIcon value={metro} />}
                 />
             </CardHeader>
             <Divider />
             <CardBody>
-                <AddressDisplay address={address?.address} />
+                <AddressDisplay address={address} />
             </CardBody>
             <Divider />
             <CardFooter>

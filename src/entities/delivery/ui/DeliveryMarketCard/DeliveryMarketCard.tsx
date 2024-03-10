@@ -11,12 +11,19 @@ import {
 } from '@nextui-org/react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { format } from 'date-fns';
 import { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { sharedConfigRoutes } from '@/shared/config';
 import { sharedServicesSubway } from '@/shared/services';
 
+import { getDeliveryAddress } from '@/entities/delivery/lib/utils/getDeliveryAdress';
+import { getDeliveryMetro } from '@/entities/delivery/lib/utils/getDeliveryMetro';
+import { getDeliveryWeight } from '@/entities/delivery/lib/utils/getDeliveryWeight';
+import { getDeliveryContents } from '@/entities/delivery/lib/utils/getDeliveryContents';
+import { getDeliveryType } from '@/entities/delivery/lib/utils/getDeliveryType';
+import { getDeliveryExpressState } from '@/entities/delivery/lib/utils/getDeliveryExpressState';
+import { getDeliveryId } from '@/entities/delivery/lib/utils/getDeliveryId';
+import { getDeliveryPickupDateTime } from '@/entities/delivery/lib/utils/getDeliveryPickupDateTime';
 import { translationNS } from '../../config';
 
 const { SubwayStationWithIcon } = sharedServicesSubway;
@@ -33,8 +40,8 @@ const TRANSLATION = {
     TYPE_EXPRESS: 'delivery.type.express',
     LABEL_ADDRESS: 'delivery.card.label.address',
     LABEL_WEIGHT: 'delivery.card.label.weight',
+    WEIGHT_VALUE: 'delivery.card.weight.kg',
     LABEL_STORAGE: 'delivery.card.label.storage',
-    LABEL_WEIGHT_KG: 'delivery.card.weight.kg',
     BUTTON_MORE: 'delivery.card.button.more',
 };
 
@@ -52,13 +59,16 @@ const DeliveryId: FunctionComponent<{ id: number | string }> = ({ id }) => {
 };
 
 const DeliveryChips: FunctionComponent<{
-    isExpress: boolean;
-    isCar: boolean;
-}> = ({ isExpress, isCar }) => {
+    type: string;
+    express: boolean;
+}> = ({ type, express }) => {
     const { t } = useTranslation(translationNS);
+
+    const isCar = type === 'car';
+
     return (
         <div className="flex justify-end gap-1">
-            {isExpress ? (
+            {express ? (
                 <Chip color="danger" size="sm" variant="solid">
                     {t(TRANSLATION.TYPE_EXPRESS)}
                 </Chip>
@@ -72,54 +82,39 @@ const DeliveryChips: FunctionComponent<{
 };
 
 const DeliverySchedule: FunctionComponent<{
-    date: string;
-    timeStart: string;
-    timeEnd: string;
-}> = ({ date, timeStart, timeEnd }) => {
-    const deliveryDateFormatted = format(new Date(date), 'dd.MM.yyyy');
-    return (
-        <div>
-            <span className="text-small text-default-500">{`${deliveryDateFormatted} ${timeStart} - ${timeEnd}`}</span>
-        </div>
-    );
-};
+    value: string;
+}> = ({ value }) => (
+    <div>
+        <span className="text-small text-default-500">{value}</span>
+    </div>
+);
 
 const DeliveryContents: FunctionComponent<{ contents: string }> = ({
     contents = 'не описано',
 }) => {
     const { t } = useTranslation(translationNS);
-
-    /**
-     * Locale
-     */
-    const storageLabel = `${t(TRANSLATION.LABEL_STORAGE)}:`;
-
     return (
         <div>
-            <div className="font-bold">{storageLabel}</div>
+            <div className="font-bold">{t(TRANSLATION.LABEL_STORAGE)}</div>
             <div className="text-sm">{contents}</div>
         </div>
     );
 };
 
-const DeliveryWeight: FunctionComponent<{ weight: number | string }> = ({
-    weight = 0,
-}) => {
+const DeliveryWeight: FunctionComponent<{ weight: string }> = ({ weight }) => {
     const { t } = useTranslation(translationNS);
     return (
         <div className="min-w-16 flex-grow-0">
             <div className="font-bold">{t(TRANSLATION.LABEL_WEIGHT)}</div>
             <div className="text-sm">
-                {t(TRANSLATION.LABEL_WEIGHT_KG, {
-                    weight: Number(weight).toFixed(2),
-                })}
+                {t(TRANSLATION.WEIGHT_VALUE, { weight })}
             </div>
         </div>
     );
 };
 
 const DeliveryAddress: FunctionComponent<{ address: string }> = ({
-    address = 'не указан',
+    address,
 }) => {
     const { t } = useTranslation(translationNS);
     return (
@@ -149,17 +144,15 @@ export const DeliveryMarketCard: FunctionComponent<{
     featureSlot?: ReactNode;
 }> = ({ delivery, featureSlot }) => {
     const navigate = useNavigate();
-    const {
-        id,
-        car: isCar,
-        express: isExpress,
-        date: deliveryDate,
-        contents,
-        time_start: deliveryStartTime,
-        time_end: deliveryEndTime,
-        address: { address, metro },
-        weight,
-    } = delivery;
+
+    const id = getDeliveryId(delivery);
+    const address = getDeliveryAddress(delivery);
+    const metro = getDeliveryMetro(delivery);
+    const weight = getDeliveryWeight(delivery);
+    const contents = getDeliveryContents(delivery);
+    const type = getDeliveryType(delivery);
+    const isExpress = getDeliveryExpressState(delivery);
+    const pickupDateTime = getDeliveryPickupDateTime(delivery, true, true);
 
     const onPressMore = (): void => {
         if (delivery) {
@@ -177,12 +170,8 @@ export const DeliveryMarketCard: FunctionComponent<{
             <CardHeader className="flex justify-between gap-3">
                 <DeliveryId id={id} />
                 <div className="flex flex-col text-right">
-                    <DeliveryChips isCar={isCar} isExpress={isExpress} />
-                    <DeliverySchedule
-                        date={deliveryDate}
-                        timeStart={deliveryStartTime}
-                        timeEnd={deliveryEndTime}
-                    />
+                    <DeliveryChips type={type} express={isExpress} />
+                    <DeliverySchedule value={pickupDateTime} />
                 </div>
             </CardHeader>
             <Divider />

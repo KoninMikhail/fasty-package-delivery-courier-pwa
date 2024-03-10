@@ -4,10 +4,12 @@ import {
     GetAvailableDeliveriesResponseSchema,
     GetAvailableDeliveriesParametersSchema,
     PatchDeliveryToCourierParametersSchema,
+    delveryTypeSchema,
     PatchDeliveryToCourierResponseSchema,
 } from '../schemas';
 
 export type Delivery = z.infer<typeof deliverySchema>;
+export type DeliveryType = z.infer<typeof delveryTypeSchema>;
 
 export type GetAvailableDeliveriesParams = z.infer<
     typeof GetAvailableDeliveriesParametersSchema

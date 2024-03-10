@@ -12,6 +12,12 @@ const timeSchema = z
         'Invalid time format. Time must be in hh:mm format',
     );
 
+export const delveryTypeSchema = z.union([
+    z.literal('car'),
+    z.literal('foot'),
+    z.literal('unknown'),
+]);
+
 export const deliverySchema = z.object({
     id: z.number(),
     car: z.boolean(),
