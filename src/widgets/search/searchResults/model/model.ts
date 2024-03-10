@@ -1,29 +1,40 @@
 import { createEvent, createStore, sample } from 'effector';
-import { searchEffects } from '@/entities/search/';
+import {
+    searchDeliveriesByQueryFx,
+    searchHistoryModel,
+} from '@/entities/search/';
 import { Delivery } from '@/shared/api';
+import { GetDeliveriesByQuery } from '@/features/search/getDeliveriesByQuery';
+import { sessionModel } from '@/entities/viewer';
 
-export const setSearchQuery = createEvent();
+export const setSearchQuery = createEvent<string>();
 
-export const searchQuery = createStore<string>('').on(
-    setSearchQuery,
-    (_, query) => query,
-);
-
-const setSearchResults = createEvent<Delivery[]>();
-export const $searchResults = createStore<string[]>([
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9',
-    '10',
-]);
+const searchDeliveryByQueryModel = GetDeliveriesByQuery.factory.createModel({
+    debounceTime: 300,
+    minQueryLength: 1,
+    searchFx: searchDeliveriesByQueryFx,
+});
 
 sample({
-    clock: searchEffects.getSearchResults.doneData,
-    target: setSearchResults,
+    clock: setSearchQuery,
+    target: searchDeliveryByQueryModel.queryChanged,
 });
+
+sample({
+    clock: setSearchQuery,
+    source: sessionModel.$sessionStore,
+    fn: (viewer, query) => {
+        const userId = viewer?.id || 0;
+        return {
+            query,
+            id: userId,
+            timestamp: Date.now(),
+        };
+    },
+    target: searchHistoryModel.addQueryToHistory,
+});
+
+export const $searchResults = createStore<Delivery[]>([]).on(
+    searchDeliveryByQueryModel.$searchResults,
+    (_, results) => results,
+);

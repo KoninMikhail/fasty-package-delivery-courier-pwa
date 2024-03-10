@@ -1,1 +1,3 @@
-export * as searchEffects from './model/effects';
+export * from './model';
+export * from './types';
+export * from './ui';

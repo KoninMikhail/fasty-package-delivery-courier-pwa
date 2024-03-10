@@ -24,15 +24,36 @@ export const deliverySchema = z.object({
     express: z.boolean(),
     manager_id: z.number(),
     order_id: z.number(),
-    states: z.string(),
+    states: z.union([
+        z.literal('created'),
+        z.literal('delivering'),
+        z.literal('canceled'),
+        z.literal('done'),
+    ]),
     time_end: timeSchema,
     time_start: timeSchema,
     order: orderSchema,
     weight: z.string(),
-    courier: userSchema,
-    courier_id: z.number(),
+    courier: userSchema.nullable(),
+    courier_id: z.number().nullable(),
     contact: contactSchema,
     client: clientSchema,
     address: addressSchema,
+    created_at: z.coerce.date(),
+    updated_at: z.coerce.date(),
     manager: userSchema,
 });
+
+export const GetAvailableDeliveriesParametersSchema = z.void().or(
+    z.object({
+        fromDate: z.string(),
+        toDate: z.string(),
+    }),
+);
+export const GetAvailableDeliveriesResponseSchema = z.array(deliverySchema);
+
+export const PatchDeliveryToCourierParametersSchema = z.object({
+    deliveryId: deliverySchema.pick({ id: true }).transform((data) => data.id),
+    userId: userSchema.pick({ id: true }).transform((data) => data.id),
+});
+export const PatchDeliveryToCourierResponseSchema = deliverySchema;

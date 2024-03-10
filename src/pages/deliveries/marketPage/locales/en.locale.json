@@ -1,5 +1,5 @@
 {
-  "page.title": "Deliveries Exchange",
+  "page.title": "Deliveries Exchange | {{APP_NAME}}",
   "section.label.upcoming": "Upcoming deliveries",
   "section.label.market": "Market",
   "section.link.myDeliveries": "All"

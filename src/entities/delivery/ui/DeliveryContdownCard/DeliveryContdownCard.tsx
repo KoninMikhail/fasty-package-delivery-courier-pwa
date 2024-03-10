@@ -11,40 +11,39 @@ import {
 import { Delivery } from '@/shared/api';
 import { IoCall } from 'react-icons/io5';
 import { sharedServicesSubway } from '@/shared/services';
-import { sharedConfigLocale } from '@/shared/config';
 import { useTranslation } from 'react-i18next';
 import { ReactNode } from 'react';
 import { useEstimatedTime } from '../../lib/hooks/useEstimatedTime';
 import { translationNS } from '../../config';
-import locale_en from '../../locales/en.locale.json';
-import locale_ru from '../../locales/ru.locale.json';
 
-const { locale } = sharedConfigLocale;
 const { SubwayStationWithIcon } = sharedServicesSubway;
 
 /**
  * Constants
  */
-const DELIVERY_EXPIRED_CHIP_LABEL = 'delivery.chip.expired';
-const DELILERY_COUNTDOWN_CHIP_LABEL = 'delivery.chip.timeLeft';
-const DELIVERY_ADDRESS_LABEL = 'delivery.label.address';
-const DELIVERY_ADDRESS_NOT_FOUND = 'delivery.label.address.notFound';
-const DLIVERY_CLIENT_NOT_FOUND = 'delivery.client.name.notFound';
+const DEFAULT_STATION_PLACEHOLDER = '-------';
+const TRANSLATIONS = {
+    EXPIRED: 'delivery.card.chip.expired',
+    TIME_LEFT: 'delivery.card.chip.timeLeft',
+    ADDRESS: 'delivery.card.label.address',
+    ADDRESS_NOT_FOUND: 'delivery.card.label.address.notFound',
+    CLIENT_NOT_FOUND: 'delivery.card.client.name.notFound',
+};
 
 /**
- * locale.ts
- */
-locale.addResourceBundle('en', translationNS, locale_en);
-locale.addResourceBundle('ru', translationNS, locale_ru);
-
-/**
- * layout
+ * @name HeaderLayout
+ * @description Represents the header layout of a card, showing the subway station and the countdown timer.
  */
 
-const HeaderLayout: FunctionComponent<{
+interface HeaderLayoutProperties {
     station: ReactNode;
     countdown: ReactNode;
-}> = ({ station, countdown }) => (
+}
+
+export const HeaderLayout: FunctionComponent<HeaderLayoutProperties> = ({
+    station,
+    countdown,
+}) => (
     <div className="flex w-full items-center gap-2">
         <div className="flex-grow">{station}</div>
         <div className="flex items-center gap-1.5">{countdown}</div>
@@ -52,44 +51,50 @@ const HeaderLayout: FunctionComponent<{
 );
 
 /**
- * Components
- * @param address
+ * Renders the address section of the delivery card.
  */
-const Address: FunctionComponent<{ address: string }> = ({ address }) => {
+export const AddressDisplay: FunctionComponent<{
+    address?: Nullable<string>;
+}> = ({ address }) => {
     const { t } = useTranslation(translationNS);
-    const addressLabel = `${t(DELIVERY_ADDRESS_LABEL)}:`;
-    const addressValue = address || t(DELIVERY_ADDRESS_NOT_FOUND);
     return (
         <div className="flex flex-col">
-            <span className="text-md">{addressLabel}</span>
-            <span className="text-md font-bold">{addressValue}</span>
+            <span className="text-md">{`${t(TRANSLATIONS.ADDRESS)}:`}</span>
+            <span className="text-md font-bold">
+                {address || t(TRANSLATIONS.ADDRESS_NOT_FOUND)}
+            </span>
         </div>
     );
 };
 
-const ClientContact: FunctionComponent<{ name?: string; phone?: string }> = ({
-    name,
-    phone,
-}) => {
+/**
+ * Displays the contact information of the client, including name and phone number, with a direct call action button.
+ */
+export const ContactDetails: FunctionComponent<{
+    name?: string;
+    phone?: string;
+}> = ({ name, phone }) => {
     const { t } = useTranslation(translationNS);
 
-    if (!name || !phone) {
+    if (!name || !phone)
         return (
             <div className="text-md font-bold">
-                {t(DLIVERY_CLIENT_NOT_FOUND)}
+                {t(TRANSLATIONS.CLIENT_NOT_FOUND)}
             </div>
         );
-    }
 
     return (
         <div className="flex w-full justify-between gap-2">
             <div className="flex-grow">
                 <div className="truncate text-sm font-bold">{name}</div>
-                <div className="text-sm">{phone}</div>
+                <div className="text-sm">
+                    {phone.replace('(', ' (').replace(')', ') ')}
+                </div>
             </div>
             <Button
                 as={Link}
-                href={`tel:${phone}`}
+                role="link"
+                href={`tel:+${phone.replaceAll(/\D/g, '')}`}
                 isIconOnly
                 color="success"
                 className="text-lg text-content1"
@@ -100,30 +105,35 @@ const ClientContact: FunctionComponent<{ name?: string; phone?: string }> = ({
     );
 };
 
-const Time: FunctionComponent<{
+/**
+ * Renders a time chip that shows either the estimated time until delivery or indicates that the delivery is expired.
+ */
+export const DeliveryTimer: FunctionComponent<{
     date: Date;
 }> = ({ date }) => {
     const { t } = useTranslation(translationNS);
 
+    const EXPIRED_MINS_COUNT = 0;
+    const MINUTES_IN_HOUR = 60;
+    const CLOSE_TO_EXPIRED_THRESHOLD = 30; // Minutes before considered close to expired
+
     const estimatedMinutes = useEstimatedTime(date);
-    const hoursLeft = Math.floor(estimatedMinutes / 60);
-    const minutesLeft = estimatedMinutes % 60;
+    const hoursLeft = Math.floor(estimatedMinutes / MINUTES_IN_HOUR);
+    const minutesLeft = estimatedMinutes % MINUTES_IN_HOUR;
 
-    const isExpired = estimatedMinutes <= 0;
-    const isCloseToExpired = estimatedMinutes <= 30;
+    const isExpired = estimatedMinutes <= EXPIRED_MINS_COUNT;
+    const isCloseToExpired = estimatedMinutes <= CLOSE_TO_EXPIRED_THRESHOLD;
 
-    if (isExpired) {
-        const expiredLabel = t(DELIVERY_EXPIRED_CHIP_LABEL);
+    if (isExpired)
         return (
             <Chip color="danger" size="sm">
-                {expiredLabel}
+                {t(TRANSLATIONS.EXPIRED)}
             </Chip>
         );
-    }
 
     return (
         <Chip color={isCloseToExpired ? 'warning' : 'default'}>
-            {t(DELILERY_COUNTDOWN_CHIP_LABEL, {
+            {t(TRANSLATIONS.TIME_LEFT, {
                 hours: hoursLeft,
                 minutes: minutesLeft,
             })}
@@ -132,11 +142,18 @@ const Time: FunctionComponent<{
 };
 
 /**
- * View
+ * A card component that displays a countdown to a delivery date, along with relevant delivery information.
+ *
+ * @param {Delivery} [delivery] - Optional. The delivery details including date, time end, address, and contact information.
+ * @returns {JSX.Element} The delivery countdown card with delivery information.
  */
-export const DeliveryCountdownCard: FunctionComponent<{
-    delivery?: Delivery;
-}> = ({ delivery }) => {
+interface DeliveryCountdownCardProperties {
+    delivery: Delivery;
+}
+
+export const DeliveryCountdownCard: FunctionComponent<
+    DeliveryCountdownCardProperties
+> = ({ delivery }) => {
     const deadline = new Date(
         `${delivery?.date || '2024-01-01'}T${delivery?.time_end || '00:00'}:00.999`,
     );
@@ -147,21 +164,23 @@ export const DeliveryCountdownCard: FunctionComponent<{
         <Card className="min-w-[300px] max-w-[600px]">
             <CardHeader className="flex gap-3">
                 <HeaderLayout
-                    countdown={<Time date={deadline} />}
+                    countdown={<DeliveryTimer date={deadline} />}
                     station={
                         <SubwayStationWithIcon
-                            value={address?.metro || '-------'}
+                            value={
+                                address?.metro || DEFAULT_STATION_PLACEHOLDER
+                            }
                         />
                     }
                 />
             </CardHeader>
             <Divider />
             <CardBody>
-                <Address address={address?.address} />
+                <AddressDisplay address={address?.address} />
             </CardBody>
             <Divider />
             <CardFooter>
-                <ClientContact name={contact?.name} phone={contact?.phone} />
+                <ContactDetails name={contact?.name} phone={contact?.phone} />
             </CardFooter>
         </Card>
     );

@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { DeliveryShortInfoCard } from '@/entities/delivery';
+import { DeliveryMarketCard } from '@/entities/delivery';
 import { useList, useUnit } from 'effector-react';
 import { useNetworkInfo } from '@/shared/config/network';
 import { Button, Skeleton, Spacer } from '@nextui-org/react';
@@ -95,9 +95,11 @@ const Error: FunctionComponent = () => {
 };
 const Offline: FunctionComponent = () => {
     return (
-        <div className="flex w-full flex-col items-center justify-center gap-4 py-8">
-            <RiWifiOffLine className="text-5xl text-content3" />
-            <div className="text-content3">No internet connection</div>
+        <div className="block p-4">
+            <div className="flex h-56 w-full flex-col items-center justify-center gap-4 pb-24">
+                <RiWifiOffLine className="text-5xl text-content3" />
+                <div className="text-content3">No internet connection</div>
+            </div>
         </div>
     );
 };
@@ -105,13 +107,10 @@ const Empty: FunctionComponent = () => {
     return (
         <Root>
             <div className="block p-4">
-                <div className="flex h-44 w-full flex-col items-center justify-center p-4">
-                    <BsBoxSeam className="text-4xl text-content3" />
-                    <Spacer y={3} />
-                    <div>
-                        <span className="text-lg text-content3">
-                            Пока нет доступных доставок
-                        </span>
+                <div className="flex h-56 w-full flex-col items-center justify-center gap-4 p-4 pb-24">
+                    <BsBoxSeam className="text-5xl text-content3" />
+                    <div className="w-full text-center text-content3">
+                        Пока нет доступных доставок
                     </div>
                 </div>
             </div>
@@ -136,7 +135,7 @@ export const MarketContent: FunctionComponent = () => {
 
     const content = useList($outputStore, (delivery, index) => (
         <EaseIn isFirst={index === 0}>
-            <DeliveryShortInfoCard
+            <DeliveryMarketCard
                 delivery={delivery}
                 featureSlot={
                     <AssignDeliveryToUser.RequestButton
@@ -152,14 +151,14 @@ export const MarketContent: FunctionComponent = () => {
     if (!online) {
         return <Offline />;
     }
+    if (isPending) {
+        return <Loading />;
+    }
     if (hasError) {
         return <Error />;
     }
     if (isEmpty) {
         return <Empty />;
-    }
-    if (isPending) {
-        return <Loading />;
     }
     return (
         <Root>

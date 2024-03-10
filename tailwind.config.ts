@@ -13,6 +13,10 @@ export default {
         fontFamily: {
             sans: ['Inter', ...defaultTheme.fontFamily.sans],
         },
+        backgroundImage: {
+            'map-light': "url('/assets/images/map-bg-light.jpg')",
+            'map-dark': "url('/assets/images/map-bg-dark.jpg')",
+        },
     },
     darkMode: 'class',
     experimental: { optimizeUniversalDefaults: true },

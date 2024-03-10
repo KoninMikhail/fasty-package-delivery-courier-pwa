@@ -1,6 +1,5 @@
 import type { PropsWithChildren } from 'react';
 import { Heading } from '@/shared/ui/components';
-import { widgetInProgressDeliveriesUi } from '@/widgets/deliveries/inProgress';
 import { widgetMarketUi } from '@/widgets/deliveries/market';
 import { widgetFooterUi } from '@/widgets/layout/footer';
 import { widgetHeaderUi } from '@/widgets/layout/header';
@@ -8,7 +7,6 @@ import { Spacer } from '@nextui-org/react';
 
 const { Footer } = widgetFooterUi;
 const { Header } = widgetHeaderUi;
-const { UpcomingDeliveriesSlider } = widgetInProgressDeliveriesUi;
 const { MarketContent } = widgetMarketUi;
 
 const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
@@ -28,7 +26,6 @@ export const DesktopMarketPageView: FunctionComponent = () => {
                         Активные доставки
                     </Heading>
                     <Spacer y={8} />
-                    <UpcomingDeliveriesSlider />
                 </div>
                 <Spacer y={16} />
                 <div>

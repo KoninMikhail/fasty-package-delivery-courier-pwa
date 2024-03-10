@@ -2,6 +2,7 @@ import { modelView } from 'effector-factorio';
 import { useMemo } from 'react';
 import {
     Button,
+    ButtonProps,
     Dropdown,
     DropdownItem,
     DropdownMenu,
@@ -39,64 +40,73 @@ type OptionsDictionary = {
     };
 };
 
-export const TypeSelector = modelView(factory, () => {
-    const model = factory.useModel();
-    const { t } = useTranslation(translationNS);
+interface TypeSelectorProperties
+    extends Pick<ButtonProps, 'className' | 'size' | 'fullWidth'> {}
 
-    const [selectedKeys, onSelectKeys] = useUnit([
-        model.$type,
-        model.typeSelected,
-    ]);
-    const selectedValue = useMemo(
-        () => [...selectedKeys].join(', ').replaceAll('_', ' '),
-        [selectedKeys],
-    );
+export const TypeSelector = modelView(
+    factory,
+    (properties: TypeSelectorProperties) => {
+        const model = factory.useModel();
+        const { t } = useTranslation(translationNS);
 
-    const options = useMemo<OptionsDictionary>(
-        () => ({
-            unset: { text: t(LABEL_UNSET_KEY), icon: null },
-            car: { text: t(LABEL_ONCAR_KEY), icon: <FaCar /> },
-            foot: { text: t(LABEL_ONFOOT_KEY), icon: <GiGymBag /> },
-        }),
-        [t],
-    );
+        const [selectedKeys, onSelectKeys] = useUnit([
+            model.$type,
+            model.typeSelected,
+        ]);
+        const selectedValue = useMemo(
+            () => [...selectedKeys].join(', ').replaceAll('_', ' '),
+            [selectedKeys],
+        );
 
-    const isSelected = selectedValue !== 'unset';
-    const icon = isSelected ? options[selectedValue.toLowerCase()].icon : null;
+        const options = useMemo<OptionsDictionary>(
+            () => ({
+                unset: { text: t(LABEL_UNSET_KEY), icon: null },
+                car: { text: t(LABEL_ONCAR_KEY), icon: <FaCar /> },
+                foot: { text: t(LABEL_ONFOOT_KEY), icon: <GiGymBag /> },
+            }),
+            [t],
+        );
 
-    const label = isSelected
-        ? options[selectedValue.toLowerCase()].text
-        : t(LABEL_SELECT_TYPE_KEY);
+        const isSelected = selectedValue !== 'unset';
+        const icon = isSelected
+            ? options[selectedValue.toLowerCase()].icon
+            : null;
 
-    return (
-        <Dropdown>
-            <DropdownTrigger>
-                <Button
-                    variant={isSelected ? 'solid' : 'bordered'}
-                    className="rounded-full normal-case"
-                    size="sm"
-                >
-                    {icon}
-                    {label}
-                </Button>
-            </DropdownTrigger>
-            <DropdownMenu
-                aria-label="Single selection example"
-                variant="flat"
-                disallowEmptySelection
-                selectionMode="single"
-                selectedKeys={selectedKeys}
-                onSelectionChange={onSelectKeys}
-            >
-                {Object.keys(options).map((key) => (
-                    <DropdownItem
-                        key={key}
-                        startContent={options[key as DeliveryType].icon}
+        const label = isSelected
+            ? options[selectedValue.toLowerCase()].text
+            : t(LABEL_SELECT_TYPE_KEY);
+
+        return (
+            <Dropdown>
+                <DropdownTrigger>
+                    <Button
+                        variant={isSelected ? 'solid' : 'bordered'}
+                        className={properties.className}
+                        size={properties.size}
+                        fullWidth={properties.fullWidth}
                     >
-                        {options[key as DeliveryType].text}
-                    </DropdownItem>
-                ))}
-            </DropdownMenu>
-        </Dropdown>
-    );
-});
+                        {icon}
+                        {label}
+                    </Button>
+                </DropdownTrigger>
+                <DropdownMenu
+                    aria-label="Single selection example"
+                    variant="flat"
+                    disallowEmptySelection
+                    selectionMode="single"
+                    selectedKeys={selectedKeys}
+                    onSelectionChange={onSelectKeys}
+                >
+                    {Object.keys(options).map((key) => (
+                        <DropdownItem
+                            key={key}
+                            startContent={options[key as DeliveryType].icon}
+                        >
+                            {options[key as DeliveryType].text}
+                        </DropdownItem>
+                    ))}
+                </DropdownMenu>
+            </Dropdown>
+        );
+    },
+);

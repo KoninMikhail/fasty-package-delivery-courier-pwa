@@ -1,4 +1,4 @@
-import { modelFactory } from 'effector-factorio';
+import { Model, modelFactory } from 'effector-factorio';
 import { combine, createEvent, createStore, sample, Store } from 'effector';
 import { Delivery } from '@/shared/api';
 import { debounce, debug } from 'patronum';
@@ -79,3 +79,5 @@ export const factory = modelFactory((options: FactoryOptions) => {
         filtersReset,
     };
 });
+
+export type FilterDeliveriesByParametersModel = Model<typeof factory>;
