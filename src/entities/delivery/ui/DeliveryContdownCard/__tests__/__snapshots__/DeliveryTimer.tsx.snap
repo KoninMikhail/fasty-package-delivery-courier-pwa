@@ -1,0 +1,15 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`DeliveryTimer > renders correctly 1`] = `
+<DocumentFragment>
+  <div
+    class="relative max-w-fit inline-flex items-center justify-between box-border whitespace-nowrap px-1 h-6 text-tiny rounded-full bg-danger text-danger-foreground"
+  >
+    <span
+      class="flex-1 text-inherit font-normal px-1"
+    >
+      Expired
+    </span>
+  </div>
+</DocumentFragment>
+`;
