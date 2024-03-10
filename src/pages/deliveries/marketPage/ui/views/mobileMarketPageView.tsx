@@ -155,6 +155,7 @@ export const MobileMarketPageView: FunctionComponent = () => {
                 <Spacer y={4} />
                 <AvailableDeliveries />
             </Content>
+
             <NavbarMobile />
             <SearchQueryInputModal size="full" />
         </>

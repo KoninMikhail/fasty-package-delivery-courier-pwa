@@ -1,2 +1,2 @@
 export * from './DeliveryContdownCard';
-export * from './DeliveryShortInfoCard';
+export * from './DeliveryMarketCard';

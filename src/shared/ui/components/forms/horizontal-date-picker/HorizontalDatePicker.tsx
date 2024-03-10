@@ -25,8 +25,9 @@ locale.addResourceBundle('ru', translationNS, locale_ru);
 interface HorizontalDatePickerProperties {
     startDate?: string;
     periodDays?: number;
-    selectedDates?: DatePeriod;
+    selectedDates: Nullable<DatePeriod>;
     onChangeDate: (date: DatePeriod) => void;
+    offsetY?: TailwindSize;
 }
 
 export const HorizontalDatePicker: FunctionComponent<
@@ -36,6 +37,7 @@ export const HorizontalDatePicker: FunctionComponent<
     periodDays = 90,
     selectedDates,
     onChangeDate,
+    offsetY,
 }) => {
     const [startPeriodState, setStartPeriodState] =
         useState<Nullable<string>>(null);
@@ -88,7 +90,7 @@ export const HorizontalDatePicker: FunctionComponent<
 
     return (
         <div className="flex flex-nowrap">
-            {generateDatesRange?.map((date) => {
+            {generateDatesRange?.map((date, index) => {
                 const days = date.days.map((day) => {
                     const dateSting = format(day.date, 'dd-MM-yyyy');
                     const isLastDayOfMonth = isLastDayOfSpecificMonth(day.date);
@@ -138,7 +140,16 @@ export const HorizontalDatePicker: FunctionComponent<
                     );
                 });
                 return (
-                    <MonthWrapper month={date.month} key={date.month}>
+                    <MonthWrapper
+                        month={date.month}
+                        key={date.month}
+                        offsetStart={index === 0 ? offsetY : undefined}
+                        offsetEnd={
+                            index === generateDatesRange.length - 1
+                                ? offsetY
+                                : undefined
+                        }
+                    >
                         {days}
                     </MonthWrapper>
                 );

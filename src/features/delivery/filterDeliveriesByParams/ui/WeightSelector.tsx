@@ -83,7 +83,7 @@ export const WeightSelector = modelView(factory, () => {
                         {popoverSelectWeight} <br />
                         {popoverWeightRange}
                     </div>
-                    <div className="text-tiny">
+                    <div className="min-w-64 text-tiny">
                         <Slider
                             aria-label="weight-slider"
                             step={2}

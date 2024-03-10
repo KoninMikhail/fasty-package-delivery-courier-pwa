@@ -3,9 +3,11 @@ import { PropsWithChildren } from 'react';
 import { widgetMyDeliveriesUi } from '@/widgets/deliveries/myDeliveries';
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { sharedUiComponents } from '@/shared/ui';
-import { Authorized, Offline, SlowNetwork } from '@/entities/viewer';
+import { Offline, SlowNetwork } from '@/entities/viewer';
+import { Spacer } from '@nextui-org/react';
 
-const { MyDeliveriesList } = widgetMyDeliveriesUi;
+const { MyDeliveriesList, MyDeliveriesFilters, MyDeliveriesMap } =
+    widgetMyDeliveriesUi;
 const { NavbarMobile } = widgetNavbarMobileUi;
 const { Heading, Text, NativeScroll } = sharedUiComponents;
 
@@ -15,21 +17,19 @@ const Wrapper: FunctionComponent<PropsWithChildren> = ({ children }) => (
     </div>
 );
 
-const FilterSection: FunctionComponent = () => <div className="">фильтры</div>;
+const MapSection: FunctionComponent<PropsWithChildren> = ({ children }) => (
+    <div className="z-10">{children}</div>
+);
 
-const DeliveriesSection: FunctionComponent<PropsWithChildren> = ({
-    children,
-}) => <div className="-mt-4 rounded-t-2xl bg-background p-2">{children}</div>;
-
-const MapSection: FunctionComponent = () => (
-    <div className="flex h-36 items-center justify-center rounded-t-2xl bg-amber-200">
-        карта
+const ListSection: FunctionComponent<PropsWithChildren> = ({ children }) => (
+    <div className="relative -mt-8 block w-full rounded-t-2xl bg-background p-2">
+        {children}
     </div>
 );
 
 const Header: FunctionComponent = () => {
     return (
-        <header className="max-w-full gap-4 bg-black px-4 pb-12 pt-6">
+        <header className="max-w-full gap-4 px-4 pt-4">
             <div>
                 <Heading size="large" weight="bold">
                     Ваши доставки
@@ -44,18 +44,24 @@ const Header: FunctionComponent = () => {
 
 export const MobileProfilePageView: FunctionComponent = () => {
     return (
-        <Authorized>
+        <>
             <Offline>dsfsdfdfs</Offline>
             <SlowNetwork>слоу нетворк</SlowNetwork>
             <Wrapper>
                 <Header />
-                <FilterSection>filters</FilterSection>
-                <MapSection>map</MapSection>
-                <DeliveriesSection>
+                <Spacer y={4} />
+                <MyDeliveriesFilters />
+                <Spacer y={6} />
+
+                <MapSection>
+                    <MyDeliveriesMap />
+                </MapSection>
+
+                <ListSection>
                     <MyDeliveriesList />
-                </DeliveriesSection>
+                </ListSection>
             </Wrapper>
             <NavbarMobile />
-        </Authorized>
+        </>
     );
 };

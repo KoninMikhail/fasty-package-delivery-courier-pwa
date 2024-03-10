@@ -9,7 +9,7 @@ export const deliveriesApi = makeApi([
     {
         method: 'get',
         path: '/',
-        alias: 'fetchUpcomingDeliveries',
+        alias: 'fetchAvailableAssignDeliveries',
         description: 'Fetch upcoming deliveries',
         parameters: [
             {
@@ -46,7 +46,6 @@ export const deliveriesApi = makeApi([
                     (delivery) => delivery.address.delivery_type === 'courier',
                 ),
             ),
-        errors: deliveriesErrors,
     },
     {
         method: 'get',
@@ -54,7 +53,14 @@ export const deliveriesApi = makeApi([
         alias: 'fetchDeliveryById',
         description: 'Fetch a delivery by its ID',
         response: deliverySchema,
-        errors: deliveriesErrors,
+        errors: [
+            {
+                status: 'default',
+                schema: z.object({
+                    message: z.string(),
+                }),
+            },
+        ],
     },
     {
         method: 'patch',
@@ -95,7 +101,7 @@ export const deliveriesApi = makeApi([
         path: '/search',
         alias: 'searchDeliveriesByQuery',
         description: 'Search for a product',
-        response: z.array(deliverySchema),
+        response: z.any(),
         parameters: [
             {
                 name: 'query',

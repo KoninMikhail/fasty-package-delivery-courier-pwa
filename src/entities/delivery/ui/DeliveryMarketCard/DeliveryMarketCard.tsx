@@ -14,82 +14,64 @@ import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { sharedConfigLocale, sharedConfigRoutes } from '@/shared/config';
+import { sharedConfigRoutes } from '@/shared/config';
 import { sharedServicesSubway } from '@/shared/services';
 
 import { translationNS } from '../../config';
-import locale_en from '../../locales/en.locale.json';
-import locale_ru from '../../locales/ru.locale.json';
 
 const { SubwayStationWithIcon } = sharedServicesSubway;
-const { locale } = sharedConfigLocale;
 const { RouteName } = sharedConfigRoutes;
 const { DELIVERIES } = RouteName;
 
 /**
  * Constants
  */
-
-const DELIVERY_LABEL_ID = 'delivery.label.id';
-const DELIVERY_LABEL_ADDRESS = 'delivery.label.address';
-const DELIVERY_LABEL_WEIGHT = 'delivery.label.weight';
-const DELIVERY_CHIP_EXPRESS = 'delivery.chip.express';
-const DELIVERY_CHIP_ON_FOOT = 'delivery.chip.onFoot';
-const DELIVERY_CHIP_ON_CAR = 'delivery.chip.onCar';
-const DELIVERY_LABEL_STORAGE = 'delivery.label.storage';
-const DELIVERY_LABEL_WEIGHT_KG = 'delivery.weight.kg';
-const DELIVERY_BUTTON_SEE_MORE = 'delivery.button.seeMore';
-
-/**
- * locale.ts
- */
-locale.addResourceBundle('en', translationNS, locale_en);
-locale.addResourceBundle('ru', translationNS, locale_ru);
+const TRANSLATION = {
+    LABEL_ID: 'delivery.card.label.id',
+    TYPE_ON_CAR: 'delivery.type.onCar',
+    TYPE_ON_FOOT: 'delivery.type.onFoot',
+    TYPE_EXPRESS: 'delivery.type.express',
+    LABEL_ADDRESS: 'delivery.card.label.address',
+    LABEL_WEIGHT: 'delivery.card.label.weight',
+    LABEL_STORAGE: 'delivery.card.label.storage',
+    LABEL_WEIGHT_KG: 'delivery.card.weight.kg',
+    BUTTON_MORE: 'delivery.card.button.more',
+};
 
 /**
  * Components
  */
-const ID: FunctionComponent<{ id: number | string }> = ({ id }) => {
+const DeliveryId: FunctionComponent<{ id: number | string }> = ({ id }) => {
     const { t } = useTranslation(translationNS);
     return (
         <div className="flex flex-col">
-            <span className="text-md">{t(DELIVERY_LABEL_ID)}</span>
+            <span className="text-md">{t(TRANSLATION.LABEL_ID)}</span>
             <span className="text-md font-bold">{`# ${id}`}</span>
         </div>
     );
 };
 
-const Badges: FunctionComponent<{
+const DeliveryChips: FunctionComponent<{
     isExpress: boolean;
     isCar: boolean;
 }> = ({ isExpress, isCar }) => {
     const { t } = useTranslation(translationNS);
-    const expressLabel = t(DELIVERY_CHIP_EXPRESS);
-    const onFootLabel = t(DELIVERY_CHIP_ON_FOOT);
-    const onCarLabel = t(DELIVERY_CHIP_ON_CAR);
-
     return (
         <div className="flex justify-end gap-1">
             {isExpress ? (
                 <Chip color="danger" size="sm" variant="solid">
-                    {expressLabel}
+                    {t(TRANSLATION.TYPE_EXPRESS)}
                 </Chip>
             ) : null}
 
-            {isCar ? (
-                <Chip color="success" size="sm" variant="dot">
-                    {onCarLabel}
-                </Chip>
-            ) : (
-                <Chip color="success" size="sm" variant="dot">
-                    {onFootLabel}
-                </Chip>
-            )}
+            <Chip color="success" size="sm" variant="dot">
+                {t(isCar ? TRANSLATION.TYPE_ON_CAR : TRANSLATION.TYPE_ON_FOOT)}
+            </Chip>
         </div>
     );
 };
 
-const PickupDateTime: FunctionComponent<{
+const DeliverySchedule: FunctionComponent<{
     date: string;
     timeStart: string;
     timeEnd: string;
@@ -102,7 +84,7 @@ const PickupDateTime: FunctionComponent<{
     );
 };
 
-const Storage: FunctionComponent<{ contents: string }> = ({
+const DeliveryContents: FunctionComponent<{ contents: string }> = ({
     contents = 'не описано',
 }) => {
     const { t } = useTranslation(translationNS);
@@ -110,7 +92,7 @@ const Storage: FunctionComponent<{ contents: string }> = ({
     /**
      * Locale
      */
-    const storageLabel = `${t(DELIVERY_LABEL_STORAGE)}:`;
+    const storageLabel = `${t(TRANSLATION.LABEL_STORAGE)}:`;
 
     return (
         <div>
@@ -120,49 +102,41 @@ const Storage: FunctionComponent<{ contents: string }> = ({
     );
 };
 
-const Weight: FunctionComponent<{ weight: number | string }> = ({
+const DeliveryWeight: FunctionComponent<{ weight: number | string }> = ({
     weight = 0,
 }) => {
     const { t } = useTranslation(translationNS);
-
-    /**
-     * Values
-     */
-    const weightFormatted = Number(weight).toFixed(2);
-    /**
-     * Locale
-     */
-    const weightLabel = `${t(DELIVERY_LABEL_WEIGHT)}:`;
-    const weightValue = `${weightFormatted} ${t(DELIVERY_LABEL_WEIGHT_KG)}`;
-
     return (
         <div className="min-w-16 flex-grow-0">
-            <div className="font-bold">{weightLabel}</div>
-            <div className="text-sm">{weightValue}</div>
+            <div className="font-bold">{t(TRANSLATION.LABEL_WEIGHT)}</div>
+            <div className="text-sm">
+                {t(TRANSLATION.LABEL_WEIGHT_KG, {
+                    weight: Number(weight).toFixed(2),
+                })}
+            </div>
         </div>
     );
 };
 
-const Address: FunctionComponent<{ address: string }> = ({
+const DeliveryAddress: FunctionComponent<{ address: string }> = ({
     address = 'не указан',
 }) => {
     const { t } = useTranslation(translationNS);
-    const addressLabel = `${t(DELIVERY_LABEL_ADDRESS)}:`;
     return (
         <div>
-            <div className="font-bold">{addressLabel}</div>
+            <div className="font-bold">{t(TRANSLATION.LABEL_ADDRESS)}</div>
             <div className="text-sm">{address}</div>
         </div>
     );
 };
 
-const SeeMoreButton: FunctionComponent<{
+const MoreButton: FunctionComponent<{
     onPress: () => void;
 }> = ({ onPress }) => {
     const { t } = useTranslation(translationNS);
     return (
         <Button color="primary" fullWidth onPress={onPress}>
-            {t(DELIVERY_BUTTON_SEE_MORE)}
+            {t(TRANSLATION.BUTTON_MORE)}
         </Button>
     );
 };
@@ -170,14 +144,10 @@ const SeeMoreButton: FunctionComponent<{
 /**
  * View
  */
-interface DeliveryPreviewCardProperties {
+export const DeliveryMarketCard: FunctionComponent<{
     delivery: Delivery;
     featureSlot?: ReactNode;
-}
-
-export const DeliveryShortInfoCard: FunctionComponent<
-    DeliveryPreviewCardProperties
-> = ({ delivery, featureSlot }) => {
+}> = ({ delivery, featureSlot }) => {
     const navigate = useNavigate();
     const {
         id,
@@ -191,24 +161,24 @@ export const DeliveryShortInfoCard: FunctionComponent<
         weight,
     } = delivery;
 
-    const onPressPreviewHandle = (): void => {
+    const onPressMore = (): void => {
         if (delivery) {
             navigate(`${DELIVERIES}/${id}`);
         }
     };
 
-    const outputCardBodyClass = clsx('max-w-[600px] shadow-md', {
-        'border-2': isExpress,
-        'border-danger': isExpress,
-    });
-
     return (
-        <Card className={outputCardBodyClass}>
+        <Card
+            className={clsx(
+                'max-w-[600px] shadow-md',
+                isExpress && 'border-2 border-danger',
+            )}
+        >
             <CardHeader className="flex justify-between gap-3">
-                <ID id={id} />
+                <DeliveryId id={id} />
                 <div className="flex flex-col text-right">
-                    <Badges isCar={isCar} isExpress={isExpress} />
-                    <PickupDateTime
+                    <DeliveryChips isCar={isCar} isExpress={isExpress} />
+                    <DeliverySchedule
                         date={deliveryDate}
                         timeStart={deliveryStartTime}
                         timeEnd={deliveryEndTime}
@@ -217,22 +187,22 @@ export const DeliveryShortInfoCard: FunctionComponent<
             </CardHeader>
             <Divider />
             <CardBody>
-                <Storage contents={contents} />
+                <DeliveryContents contents={contents} />
                 <Spacer y={2} />
                 <div className="flex gap-2">
                     <div className="flex-grow">
-                        <Address address={address} />
+                        <DeliveryAddress address={address} />
                         <Spacer y={2} />
-                        <SubwayStationWithIcon value={metro} />
                     </div>
-                    <Weight weight={weight} />
+                    <DeliveryWeight weight={weight} />
                 </div>
+                <SubwayStationWithIcon value={metro} />
             </CardBody>
             <Divider />
             <CardFooter>
                 <div className="flex w-full gap-2">
                     <div className="w-full">
-                        <SeeMoreButton onPress={onPressPreviewHandle} />
+                        <MoreButton onPress={onPressMore} />
                     </div>
                     {featureSlot ? (
                         <div className="flex-shrink">{featureSlot}</div>

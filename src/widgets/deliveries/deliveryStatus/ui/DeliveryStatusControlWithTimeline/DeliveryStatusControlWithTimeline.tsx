@@ -79,15 +79,9 @@ const StatusInDelivery: FunctionComponent = () => {
         </li>
     );
 };
-const StatusDelivered: FunctionComponent<{ updateDate?: Date }> = ({
-    updateDate,
-}) => {
-    const { i18n } = useTranslation();
-    // @ts-expect-error i18n
-    const currentLocale = timeLocales[i18n.language] || enUS;
-    const updateDateFormatted = updateDate
-        ? format(updateDate, 'PPP', { locale: currentLocale })
-        : 'неизвестно';
+const StatusDelivered: FunctionComponent<{
+    comment?: string;
+}> = ({ comment }) => {
     return (
         <li className="ms-8">
             <span className="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 ring-8 ring-white dark:bg-blue-900 dark:ring-gray-900">
@@ -96,21 +90,15 @@ const StatusDelivered: FunctionComponent<{ updateDate?: Date }> = ({
             <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-content1-foreground">
                 Доставлен
             </h3>
-            <time className="mb-2 block text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
-                {`Последнее изменение: ${updateDateFormatted}`}
-            </time>
+            <div className="mb-2 block text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                <div>{`Пометки: ${comment}`}</div>
+            </div>
         </li>
     );
 };
-const StatusCanceled: FunctionComponent<{ updateDate?: Date }> = ({
-    updateDate,
-}) => {
-    const { i18n } = useTranslation();
-    // @ts-expect-error i18n
-    const currentLocale = timeLocales[i18n.language] || enUS;
-    const updateDateFormatted = updateDate
-        ? format(updateDate, 'PPP', { locale: currentLocale })
-        : 'неизвестно';
+const StatusCanceled: FunctionComponent<{
+    comment?: string;
+}> = ({ comment }) => {
     return (
         <li className="ms-8">
             <span className="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 ring-8 ring-white dark:bg-blue-900 dark:ring-gray-900">
@@ -119,10 +107,26 @@ const StatusCanceled: FunctionComponent<{ updateDate?: Date }> = ({
             <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-content1-foreground">
                 Отмена
             </h3>
-            <time className="mb-2 block text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
-                {`Последнее изменение: ${updateDateFormatted}`}
-            </time>
+            <div className="mb-2 block text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                <div>{`Причина: ${comment}`}</div>
+            </div>
         </li>
+    );
+};
+
+const LastEdited: FunctionComponent<{
+    updateDate?: Date;
+}> = ({ updateDate }) => {
+    const { i18n } = useTranslation();
+    // @ts-expect-error i18n
+    const currentLocale = timeLocales[i18n.language] || enUS;
+    const updateDateFormatted = updateDate
+        ? format(updateDate, 'PPP', { locale: currentLocale })
+        : 'неизвестно';
+    return (
+        <div className="mb-2 block text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+            <div>{`Последнее изменение: ${updateDateFormatted}`}</div>
+        </div>
     );
 };
 
@@ -161,6 +165,7 @@ export const DeliveryStatusControlWithTimeline: FunctionComponent = () => {
                     <Spacer y={4} />
                     <StatusInDelivery />
                 </StatusList>
+                <LastEdited updateDate={updateDate} />
                 <SetDeliveryStatus.ChangeStatusDropdown
                     model={setStatusModel}
                 />
@@ -176,8 +181,9 @@ export const DeliveryStatusControlWithTimeline: FunctionComponent = () => {
                     <Spacer y={4} />
                     <StatusInDelivery />
                     <Spacer y={4} />
-                    <StatusCanceled updateDate={updateDate} />
+                    <StatusCanceled comment={comment} />
                 </StatusList>
+                <LastEdited updateDate={updateDate} />
             </Root>
         );
     }
@@ -190,8 +196,9 @@ export const DeliveryStatusControlWithTimeline: FunctionComponent = () => {
                     <Spacer y={4} />
                     <StatusInDelivery />
                     <Spacer y={4} />
-                    <StatusDelivered updateDate={updateDate} />
+                    <StatusDelivered comment={comment} />
                 </StatusList>
+                <LastEdited updateDate={updateDate} />
             </Root>
         );
     }

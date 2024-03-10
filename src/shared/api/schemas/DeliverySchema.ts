@@ -43,3 +43,17 @@ export const deliverySchema = z.object({
     updated_at: z.coerce.date(),
     manager: userSchema,
 });
+
+export const GetAvailableDeliveriesParametersSchema = z.void().or(
+    z.object({
+        fromDate: z.string(),
+        toDate: z.string(),
+    }),
+);
+export const GetAvailableDeliveriesResponseSchema = z.array(deliverySchema);
+
+export const PatchDeliveryToCourierParametersSchema = z.object({
+    deliveryId: deliverySchema.pick({ id: true }).transform((data) => data.id),
+    userId: userSchema.pick({ id: true }).transform((data) => data.id),
+});
+export const PatchDeliveryToCourierResponseSchema = deliverySchema;

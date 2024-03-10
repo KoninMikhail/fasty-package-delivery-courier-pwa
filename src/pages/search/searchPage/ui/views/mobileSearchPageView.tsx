@@ -21,20 +21,6 @@ const Content: FunctionComponent<PropsWithChildren> = ({ children }) => (
 /**
  * Components
  */
-const SearchHeader: FunctionComponent<{
-    query?: string;
-}> = ({ query }) => {
-    return (
-        <div>
-            <h1 className="text-xl font-light">
-                <span className="block font-bold">
-                    Резултаты поиска по запросу:
-                </span>{' '}
-                {query}
-            </h1>
-        </div>
-    );
-};
 const Header: FunctionComponent = () => {
     const [query, setQuery] = useSearchParams();
     const [value, setValue] = useState<string>('');
@@ -84,10 +70,9 @@ export const MobileSearchPageView: FunctionComponent = () => {
         <>
             <Header />
             <Content>
-                <SearchHeader query={query} />
-                <Spacer y={4} />
+                <Spacer y={2} />
                 <Divider />
-                <Spacer y={4} />
+                <Spacer y={2} />
                 <SearchResultsMobile />
                 <Spacer y={4} />
                 <NavbarMobile />

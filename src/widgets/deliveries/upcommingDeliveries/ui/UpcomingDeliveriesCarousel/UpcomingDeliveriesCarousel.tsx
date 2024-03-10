@@ -1,25 +1,25 @@
-import { DeliveryShortInfoCard } from '@/entities/delivery/ui';
+import { DeliveryMarketCard } from '@/entities/delivery/ui';
 
 export const UpcomingDeliveriesCarousel: FunctionComponent = () => {
     return (
         <div className="flex gap-4">
             <div className="block min-w-fit">
-                <DeliveryShortInfoCard />
+                <DeliveryMarketCard />
             </div>
             <div className="block min-w-fit">
-                <DeliveryShortInfoCard />
+                <DeliveryMarketCard />
             </div>
             <div className="block min-w-fit">
-                <DeliveryShortInfoCard />
+                <DeliveryMarketCard />
             </div>
             <div className="block min-w-fit">
-                <DeliveryShortInfoCard />
+                <DeliveryMarketCard />
             </div>
             <div className="block min-w-fit">
-                <DeliveryShortInfoCard />
+                <DeliveryMarketCard />
             </div>
             <div className="block min-w-fit">
-                <DeliveryShortInfoCard />
+                <DeliveryMarketCard />
             </div>
         </div>
     );

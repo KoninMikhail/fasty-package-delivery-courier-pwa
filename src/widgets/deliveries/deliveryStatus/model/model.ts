@@ -1,31 +1,50 @@
 import { SetDeliveryStatus } from '@/features/delivery/setDeliveryStatus';
-import { setDeliveryStatus } from '@/entities/delivery';
-import { createStore } from 'effector';
+import { createStore, sample } from 'effector';
 import { AssignDeliveryToUser } from '@/features/delivery/assignDeliveryToUser';
-import { assignUserToDeliveryFx } from '@/entities/delivery/api/assignUserToDelivery';
-import type { Delivery } from '@/shared/api';
-import { getDeliveryById } from '@/entities/delivery/api/getDeliveryById';
+import {
+    assignUserToDeliveryFx,
+    getDeliveryByIdFx,
+    setDeliveryStatus,
+} from '@/entities/delivery';
+import { Delivery } from '@/shared/api';
 
-const $id = createStore<number>(4);
-
+/**
+ * Data
+ */
 export const $delivery = createStore<Nullable<Delivery>>(null)
     .on(assignUserToDeliveryFx.doneData, (_, delivery) => delivery)
-    .on(getDeliveryById.doneData, (_, delivery) => delivery);
-export const $$deliveryStatus = $delivery.map((delivery) => delivery?.states);
-export const $$deliveryComment = $delivery.map((delivery) => delivery?.comment);
+    .on(getDeliveryByIdFx.doneData, (_, delivery) => delivery)
+    .on(setDeliveryStatus.doneData, (_, delivery) => delivery);
+export const $$deliveryStatus = $delivery.map(
+    (delivery) => delivery && delivery?.states, 
+);
+export const $$deliveryComment = $delivery.map((delivery) => delivery && delivery?.comment);
 export const $$deliveryCreateDate = $delivery.map(
-    (delivery) => delivery?.created_at,
+    (delivery) => delivery && delivery?.created_at,
 );
 export const $$deliveryUpdateDate = $delivery.map(
-    (delivery) => delivery?.updated_at,
+    (delivery) => delivery && delivery?.updated_at,
 );
 
+/**
+ * Feature models
+ */
 export const assignToDeliveryModel = AssignDeliveryToUser.factory.createModel({
     assignToDeliveryEffect: assignUserToDeliveryFx,
 });
 
 export const setStatusModel = SetDeliveryStatus.factory.createModel({
-    deliveryStore: $id,
     allowedStatuses: ['canceled', 'done'],
     patchDeliveryStatusFx: setDeliveryStatus,
+});
+
+/**
+ * Handlers
+ */
+
+sample({
+    clock: getDeliveryByIdFx.doneData,
+    filter: ({ id }) => !!id,
+    fn: ({ id }) => id,
+    target: setStatusModel.setDeliveryId,
 });

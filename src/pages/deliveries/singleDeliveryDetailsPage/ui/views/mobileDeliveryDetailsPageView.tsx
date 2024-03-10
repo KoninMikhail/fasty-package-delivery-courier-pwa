@@ -1,19 +1,30 @@
 import { PropsWithChildren, ReactNode } from 'react';
 
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
-import { Button, Divider, Spacer } from '@nextui-org/react';
+import { Button, Chip, Divider, Spacer } from '@nextui-org/react';
 import { useUnit } from 'effector-react';
 import { useNavigate } from 'react-router-dom';
 import { LuArrowLeft } from 'react-icons/lu';
-import { UserCardRow } from '@/entities/user';
 import clsx from 'clsx';
+import { User } from "@/shared/api";
+import { Route } from '@/entities/route';
+import { lazily } from 'react-lazily';
+import { SuspenseLayout } from '@/shared/ui/layouts';
 import { widgetDeliveryStatusUi } from '@/widgets/deliveries/deliveryStatus';
-import { sessionModel } from '@/entities/viewer';
-import { User } from '@/shared/api';
-import { $deliveryId } from '../../model';
+import {
+    $$deliveryCourier, $$deliveryId,
+    $$deliveryManager, $$hasError,
+    $$isViewerDelivery,
+    $$notFound,
+    mapModel
+} from "../../model";
 
+const { UserCardRow } = lazily(() => import('@/entities/user'));
 const { NavbarMobile } = widgetNavbarMobileUi;
 const { DeliveryStatusControlWithTimeline } = widgetDeliveryStatusUi;
+
+const DELIVERY_ID_LENGTH = 6;
+
 /**
  * Layout
  */
@@ -49,17 +60,17 @@ const Heading: FunctionComponent<{ content: string }> = ({ content }) => {
 
 const Manager: FunctionComponent<{ user: User }> = ({ user }) => {
     return (
-        <div>
+        <SuspenseLayout>
             <UserCardRow account={user} />
-        </div>
+        </SuspenseLayout>
     );
 };
 
 const Courier: FunctionComponent<{ user: User }> = ({ user }) => {
     return (
-        <div>
+        <SuspenseLayout>
             <UserCardRow account={user} />
-        </div>
+        </SuspenseLayout>
     );
 };
 
@@ -94,46 +105,93 @@ const Header: FunctionComponent<{
     </header>
 );
 
+const NotFound: FunctionComponent = () => {
+    return (
+        <div className="flex h-full w-full items-center justify-center">
+            <h1>Not Found</h1>
+        </div>
+    );
+};
+
 export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
-    const deliveryId = useUnit($deliveryId);
-    const user = useUnit(sessionModel.$sessionStore);
+    const [id, manager, courier, isMyDelivery] = useUnit([
+        $$deliveryId,
+        $$deliveryManager,
+        $$deliveryCourier,
+        $$isViewerDelivery,
+    ]);
+    const deliveryId = id?.toString().padStart(DELIVERY_ID_LENGTH, '0') ?? '';
+
+
+    const [hasError, notFound] = useUnit([$$hasError, $$notFound]);
+
+
+    if (hasError && notFound) {
+        return (
+            <>
+                <NotFound />
+                <NavbarMobile />
+            </>
+        );
+    }
+
+    console.log(notFound);
+
     return (
         <>
             <Header
                 className="z-[500]"
                 backButton={<BackButton />}
-                title={deliveryId.padStart(6, '0')}
+                title={deliveryId}
             />
             <MainContainer>
-                <div className="flex h-[50vh] w-full flex-col items-center justify-center bg-content1">
-                    <span>карта</span>
-                </div>
+                <Route.Map.SimpleMap
+                    model={mapModel}
+                    className="h-[50vh] w-full"
+                />
                 <Spacer y={4} />
                 <Section>
                     <Heading content={`Delivery ID: ${deliveryId}`} />
                 </Section>
                 <Spacer y={4} />
+                <Divider className="px-2" />
+                <Spacer y={4} />
+                <Section>
+                    <div className="flex items-center">
+                        <div className="flex-grow">
+                            <Heading content="Курьер" />
+                        </div>
+                        <div>
+                            {isMyDelivery ? (
+                                <Chip color="warning" variant="solid" size="sm">
+                                    Моя доставка
+                                </Chip>
+                            ) : null}
+                        </div>
+                    </div>
+                    <Spacer y={2} />
+                    {courier ? <Courier user={courier} /> : null}
+                </Section>
+                <Spacer y={4} />
+                <Divider className="px-2" />
+                <Spacer y={4} />
                 <Section>
                     <Heading content="Delivery Status" />
+                    <Spacer y={4} />
                     <DeliveryStatusControlWithTimeline />
                 </Section>
-                <Spacer y={6} />
+                <Spacer y={4} />
                 <Divider className="px-2" />
-                <Spacer y={6} />
+                <Spacer y={4} />
+
                 <Section>
-                    <Heading content="Курьер" />
+                    <Heading content="Ответственный" />
                     <Spacer y={2} />
-                    <Courier user={user} />
-                </Section>
-                <Spacer y={6} />
-                <Section>
-                    <Heading content="Менеджер" />
-                    <Spacer y={2} />
-                    <Manager user={user} />
+                    {manager ? <Manager user={manager} /> : null}
                 </Section>
                 <Spacer y={4} />
             </MainContainer>
-            <Spacer y={24} />
+            <Spacer y={20} />
             <NavbarMobile />
         </>
     );

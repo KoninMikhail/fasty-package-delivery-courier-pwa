@@ -1,12 +1,5 @@
 import { modelFactory } from 'effector-factorio';
-import {
-    combine,
-    createEvent,
-    createStore,
-    Effect,
-    sample,
-    Store,
-} from 'effector';
+import { combine, createEvent, createStore, Effect, sample } from 'effector';
 import { Selection } from '@nextui-org/react';
 import { Delivery, DeliveryStates } from '@/shared/api';
 import {
@@ -16,7 +9,6 @@ import {
 import { statuses } from '../data';
 
 interface FactoryOptions {
-    deliveryStore: Store<Delivery['id']>;
     allowedStatuses?: DeliveryStates[];
     patchDeliveryStatusFx: Effect<
         SetDeliveryStatusParameters,
@@ -26,14 +18,14 @@ interface FactoryOptions {
 }
 
 export const factory = modelFactory((options: FactoryOptions) => {
+    const setDeliveryId = createEvent<Delivery['id']>();
     const messageChanged = createEvent<Delivery['comment']>();
     const statusChanged = createEvent<Selection>();
     const submitPressed = createEvent();
-    const idChanged = createEvent<Delivery['id']>();
     const reset = createEvent();
 
     const $deliveryId = createStore<Nullable<Delivery['id']>>(null).on(
-        idChanged,
+        setDeliveryId,
         (_, id) => id,
     );
     const $status = createStore<Selection>(new Set())
@@ -75,6 +67,8 @@ export const factory = modelFactory((options: FactoryOptions) => {
                 };
             },
         ),
+        filter: ({ id }) => !!id,
+        fn: (data) => data as SetDeliveryStatusParameters,
         target: options.patchDeliveryStatusFx,
     });
 
@@ -88,7 +82,7 @@ export const factory = modelFactory((options: FactoryOptions) => {
         messageChanged,
         statusChanged,
         submitPressed,
-        idChanged,
+        setDeliveryId,
         reset,
     };
 });

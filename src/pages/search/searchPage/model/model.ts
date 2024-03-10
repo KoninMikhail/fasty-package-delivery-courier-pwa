@@ -1,12 +1,12 @@
 import { createGate } from 'effector-react';
 import { sample } from 'effector';
-import { widgetSearchQueryPopupModel } from '@/widgets/search/searchQueryPopup';
+import { widgetSearchResultsModel } from '@/widgets/search/searchResults';
 
 export const SearchPageGateway = createGate<{ query: string }>();
 
 sample({
-    source: SearchPageGateway.state,
     clock: SearchPageGateway.open,
+    filter: (state) => state.query.length > 0,
     fn: (state) => state.query,
-    target: widgetSearchQueryPopupModel.addSearchRequest,
+    target: widgetSearchResultsModel.setSearchQuery,
 });

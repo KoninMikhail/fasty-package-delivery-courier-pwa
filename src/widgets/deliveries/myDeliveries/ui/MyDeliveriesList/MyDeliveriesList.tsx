@@ -1,15 +1,8 @@
-import { DeliveryShortInfoCard } from '@/entities/delivery';
+import { DeliveryMarketCard } from '@/entities/delivery';
 import { useList, useUnit } from 'effector-react';
 import { Spinner } from '@nextui-org/react';
-import { FilterDeliveriesByTimeRange } from '@/features/delivery/filterDeliveriesByTimeRange';
 import { AnimatePresence, motion } from 'framer-motion';
-import {
-    $$empty,
-    $$hasError,
-    $$loading,
-    $deliveriesList,
-    filteredDeliveriesByTimeModel,
-} from '../../model';
+import { $$empty, $$hasError, $$loading, $deliveriesList } from '../../model';
 
 /**
  * Сomponents
@@ -36,7 +29,7 @@ export const MyDeliveriesList: FunctionComponent = () => {
 
     const items = useList($deliveriesList, (delivery, index) => (
         <motion.div key={delivery.date} whileTap={{ scale: 0.9 }}>
-            <DeliveryShortInfoCard delivery={delivery} />
+            <DeliveryMarketCard delivery={delivery} />
         </motion.div>
     ));
 
@@ -46,9 +39,6 @@ export const MyDeliveriesList: FunctionComponent = () => {
 
     return (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <FilterDeliveriesByTimeRange.HorizontalTimePicker
-                model={filteredDeliveriesByTimeModel}
-            />
             {isLoading ? <Loader /> : null}
             {hasError ? <Error /> : null}
             <div className="flex flex-col gap-4">

@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useDocumentTitle } from 'usehooks-ts';
 import { useGate } from 'effector-react';
 import { useEffect } from 'react';
-import { searchDeliveriesByQueryFx } from '@/entities/search/api/searchDeliveriesByQuery';
+import { searchDeliveriesByQueryFx } from '@/entities/search';
 import {
     DesktopMyDeliveriesHistoryView,
     MobileMyDeliveriesHistoryView,
