@@ -57,11 +57,13 @@ export default defineConfig(({ mode }) => ({
               "apple-touch-icon.png",
               "icons/*.svg",
               "fonts/*.woff2",
+              "assets/**/*",
             ],
             manifest: {
               name: "Fasty - Delivery Exchange For Couriers",
               short_name: "Fasty",
               theme_color: "#BD34FE",
+              background_color: "#000000",
               icons: [
                 {
                   src: "/android-chrome-192x192.png",
