@@ -16,14 +16,17 @@ import { useNavigate } from 'react-router-dom';
 import { sharedConfigRoutes } from '@/shared/config';
 import { sharedServicesSubway } from '@/shared/services';
 
-import { getDeliveryAddress } from '@/entities/delivery/lib/utils/getDeliveryAdress';
-import { getDeliveryMetro } from '@/entities/delivery/lib/utils/getDeliveryMetro';
-import { getDeliveryWeight } from '@/entities/delivery/lib/utils/getDeliveryWeight';
-import { getDeliveryContents } from '@/entities/delivery/lib/utils/getDeliveryContents';
-import { getDeliveryType } from '@/entities/delivery/lib/utils/getDeliveryType';
-import { getDeliveryExpressState } from '@/entities/delivery/lib/utils/getDeliveryExpressState';
-import { getDeliveryId } from '@/entities/delivery/lib/utils/getDeliveryId';
-import { getDeliveryPickupDateTime } from '@/entities/delivery/lib/utils/getDeliveryPickupDateTime';
+import {
+    getDeliveryAddress,
+    getDeliveryMetro,
+    getDeliveryWeight,
+    getDeliveryContents,
+    getDeliveryType,
+    getDeliveryPickupDateTime,
+    getDeliveryExpressState,
+    getDeliveryId,
+} from '../../lib';
+
 import { translationNS } from '../../config';
 
 const { SubwayStationWithIcon } = sharedServicesSubway;
