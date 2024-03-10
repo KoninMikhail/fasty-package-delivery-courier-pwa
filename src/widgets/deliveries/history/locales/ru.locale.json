@@ -1,0 +1,8 @@
+{
+  "history.accordion.item.label.count.success_single": "Всего {{count}} доставка",
+  "history.accordion.item.label.count.success_plural": "Всего {{count}} доставок",
+  "history.accordion.item.label.count.success_multi": "Всего {{count}} доставки",
+  "history.accordion.item.label.count.cancel_single": "{{count}} отменена",
+  "history.accordion.item.label.count.cancel_plural": "{{count}} отменены",
+  "history.accordion.item.label.count.cancel_multi": "{{count}} отменены"
+}
