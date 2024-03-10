@@ -1,7 +1,7 @@
 import { Model, modelFactory } from 'effector-factorio';
 import { combine, createEvent, createStore, sample, Store } from 'effector';
 import { Delivery } from '@/shared/api';
-import { debounce, debug } from 'patronum';
+import { debounce } from 'patronum';
 import { MAX_WEIGHT_KG } from '@/features/delivery/filterDeliveriesByParams/config';
 
 export type DeliveryType = 'unset' | 'car' | 'foot';
@@ -60,8 +60,6 @@ export const factory = modelFactory((options: FactoryOptions) => {
             return deliveries;
         },
     );
-
-    debug($filteredStore);
 
     sample({
         clock: debounce(weightChanged, 500),

@@ -1,9 +1,3 @@
-import { createEvent, sample } from 'effector';
-import { getDeliveriesHistoryFx } from '@/widgets/deliveries/history/api';
+import { enUS, ru } from 'date-fns/locale';
 
-export const initHistoryDeliveryWidget = createEvent();
-
-sample({
-    clock: initHistoryDeliveryWidget,
-    target: getDeliveriesHistoryFx,
-});
+export const timeLocales = { en: enUS, ru };

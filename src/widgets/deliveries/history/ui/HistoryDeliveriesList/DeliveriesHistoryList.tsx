@@ -1,5 +1,12 @@
 import { Accordion, AccordionItem, Button, Chip } from '@nextui-org/react';
 import { LuPackage } from 'react-icons/lu';
+import { useEffect } from 'react';
+import { useUnit } from 'effector-react';
+import { enUS } from 'date-fns/locale';
+import { timeLocales } from '@/widgets/deliveries/history/init';
+import { useTranslation } from 'react-i18next';
+import { format } from 'date-fns';
+import { $sortedDeliveriesHistory, getDeliveriesHistoryFx } from '../../model';
 
 /**
  * Components
@@ -44,9 +51,97 @@ const Item: FunctionComponent = () => {
  * View
  */
 export const DeliveriesHistoryList: FunctionComponent = () => {
+    const history = useUnit($sortedDeliveriesHistory);
+    const { i18n } = useTranslation();
+    useEffect(() => {
+        void getDeliveriesHistoryFx();
+    }, []);
+
     return (
         <div className="w-full px-2">
             <Accordion
+                motionProps={{
+                    variants: {
+                        enter: {
+                            y: 0,
+                            opacity: 1,
+                            height: 'auto',
+                            transition: {
+                                height: {
+                                    type: 'spring',
+                                    stiffness: 500,
+                                    damping: 30,
+                                    duration: 1,
+                                },
+                                opacity: {
+                                    easings: 'ease',
+                                    duration: 1,
+                                },
+                            },
+                        },
+                        exit: {
+                            y: -10,
+                            opacity: 0,
+                            height: 0,
+                            transition: {
+                                height: {
+                                    easings: 'ease',
+                                    duration: 0.25,
+                                },
+                                opacity: {
+                                    easings: 'ease',
+                                    duration: 0.3,
+                                },
+                            },
+                        },
+                    },
+                }}
+            >
+                {history.map((item) => {
+                    const currentLocale = timeLocales[i18n.language] || enUS;
+                    const title = format(item.date, 'PPP', {
+                        locale: currentLocale,
+                    });
+
+                    const subtitle = item.canceled
+                        ? `You have ${item.count} deliveries, ${item.canceled} uncompleted`
+                        : `You have ${item.count} deliveries`;
+                    const items = item.items.map((delivery) => {
+                        return (
+                            <li key={delivery.id}>
+                                <div className="relative pb-8">
+                                    <span
+                                        className="absolute left-5 top-5 -ml-px h-full w-0.5 bg-gray-200"
+                                        aria-hidden="true"
+                                    />
+                                    <div className="relative flex items-start space-x-3">
+                                        <div>
+                                            <div className="relative px-1">
+                                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 ring-8 ring-white">
+                                                    <LuPackage className="h-5 w-5 text-white" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <Item />
+                                    </div>
+                                </div>
+                            </li>
+                        );
+                    });
+                    return (
+                        <AccordionItem
+                            aria-label="Accordion 1"
+                            subtitle={subtitle}
+                            title={title}
+                        >
+                            <div className="flow-root">
+                                <ul className="-mb-8">{items}</ul>
+                            </div>
+                        </AccordionItem>
+                    );
+                })}
+            </Accordion>
+            {/* <Accordion
                 motionProps={{
                     variants: {
                         enter: {
@@ -588,7 +683,7 @@ export const DeliveriesHistoryList: FunctionComponent = () => {
                         </ul>
                     </div>
                 </AccordionItem>
-            </Accordion>
+            </Accordion> */}
         </div>
     );
 };
