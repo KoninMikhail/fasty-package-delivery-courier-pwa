@@ -29,7 +29,7 @@ export const deliverySchema = z.object({
     date: z.string(),
     express: z.boolean(),
     manager_id: z.number(),
-    order_id: z.number(),
+    order_id: z.number().optional(),
     states: z.union([
         z.literal('created'),
         z.literal('delivering'),
@@ -38,7 +38,7 @@ export const deliverySchema = z.object({
     ]),
     time_end: timeSchema,
     time_start: timeSchema,
-    order: orderSchema,
+    order: orderSchema.optional(),
     weight: z.string(),
     courier: userSchema.nullable(),
     courier_id: z.number().nullable(),

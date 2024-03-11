@@ -26,7 +26,7 @@ interface RequestButtonProperties {
     >;
 }
 
-export const RequestButton = modelView(
+export const FastAssignRequestButton = modelView(
     factory,
     ({
         delivery,

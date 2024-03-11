@@ -7,5 +7,5 @@ export const getDeliveryContents = (delivery: Delivery) => {
   const fallback = locale.t('delivery.data.fallback.contents', {
     ns: translationNS
   });
-  return delivery.contents || fallback;
+  return delivery?.contents || fallback;
 }

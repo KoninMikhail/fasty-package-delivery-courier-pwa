@@ -138,7 +138,7 @@ export const MarketContent: FunctionComponent = () => {
             <DeliveryMarketCard
                 delivery={delivery}
                 featureSlot={
-                    <AssignDeliveryToUser.RequestButton
+                    <AssignDeliveryToUser.FastAssignRequestButton
                         model={assignDeliveryToUserModel}
                         user={viewer}
                         delivery={delivery}

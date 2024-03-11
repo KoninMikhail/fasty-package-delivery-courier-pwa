@@ -6,5 +6,5 @@ const { locale } = sharedConfigLocale;
 
 export const getDeliveryAddress = (delivery: Delivery) => {
   const fallback = locale.t('delivery.data.fallback.address', {ns: translationNS});
-  return delivery.address.address || fallback;
+  return delivery?.address?.address || fallback;
 }

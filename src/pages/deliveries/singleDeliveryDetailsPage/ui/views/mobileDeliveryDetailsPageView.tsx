@@ -6,18 +6,30 @@ import { useUnit } from 'effector-react';
 import { useNavigate } from 'react-router-dom';
 import { LuArrowLeft } from 'react-icons/lu';
 import clsx from 'clsx';
-import { User } from "@/shared/api";
+import { User } from '@/shared/api';
 import { Route } from '@/entities/route';
 import { lazily } from 'react-lazily';
 import { SuspenseLayout } from '@/shared/ui/layouts';
 import { widgetDeliveryStatusUi } from '@/widgets/deliveries/deliveryStatus';
+import { SubwayStationWithIcon } from '@/shared/services/subway';
+import { ClientContactCardList, getDefaultContact } from '@/entities/contact';
 import {
-    $$deliveryCourier, $$deliveryId,
-    $$deliveryManager, $$hasError,
+    $$deliveryAddress,
+    $$deliveryClient,
+    $$deliveryContents,
+    $$deliveryCourier,
+    $$deliveryId,
+    $$deliveryManager,
+    $$deliveryMetro,
+    $$deliveryPickupDateTime,
+    $$deliveryStatus,
+    $$deliveryWeight,
+    $$hasError,
     $$isViewerDelivery,
     $$notFound,
-    mapModel
-} from "../../model";
+    mapModel,
+} from '../../model';
+import { NotFound } from './common';
 
 const { UserCardRow } = lazily(() => import('@/entities/user'));
 const { NavbarMobile } = widgetNavbarMobileUi;
@@ -105,37 +117,50 @@ const Header: FunctionComponent<{
     </header>
 );
 
-const NotFound: FunctionComponent = () => {
-    return (
-        <div className="flex h-full w-full items-center justify-center">
-            <h1>Not Found</h1>
-        </div>
-    );
-};
-
 export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
-    const [id, manager, courier, isMyDelivery] = useUnit([
+    const [
+        id,
+        address,
+        pickupDateTime,
+        status,
+        contents,
+        weight,
+        manager,
+        client,
+        courier,
+        metro,
+        isMyDelivery,
+    ] = useUnit([
         $$deliveryId,
+        $$deliveryAddress,
+        $$deliveryPickupDateTime,
+        $$deliveryStatus,
+        $$deliveryContents,
+        $$deliveryWeight,
         $$deliveryManager,
+        $$deliveryClient,
         $$deliveryCourier,
+        $$deliveryMetro,
         $$isViewerDelivery,
     ]);
     const deliveryId = id?.toString().padStart(DELIVERY_ID_LENGTH, '0') ?? '';
 
-
     const [hasError, notFound] = useUnit([$$hasError, $$notFound]);
 
+    console.log(address);
 
     if (hasError && notFound) {
         return (
-            <>
-                <NotFound />
-                <NavbarMobile />
-            </>
+            <div className="flex h-full w-full items-center justify-center">
+                <MainContainer>
+                    <NotFound />
+                    <NavbarMobile />
+                </MainContainer>
+            </div>
         );
     }
 
-    console.log(notFound);
+    const contact = getDefaultContact(client.contacts);
 
     return (
         <>
@@ -152,6 +177,64 @@ export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
                 <Spacer y={4} />
                 <Section>
                     <Heading content={`Delivery ID: ${deliveryId}`} />
+                </Section>
+                <Spacer y={4} />
+                <Divider className="px-2" />
+                <Spacer y={4} />
+                <Section>
+                    <Heading content="Клиент" />
+                    <p>{client.name}</p>
+                </Section>
+                <Spacer y={4} />
+                <Section>
+                    <Heading content="Тип клиента" />
+                    <p>имя</p>
+                </Section>
+                <Spacer y={4} />
+                <Section>
+                    <Heading content="Дата и время доставки" />
+                    <p>{pickupDateTime}</p>
+                </Section>
+                <Spacer y={4} />
+                <Section>
+                    <div className="flex gap-4">
+                        <div className="flex-grow">
+                            <Heading content="Тип доставки" />
+                            <p>На машине</p>
+                        </div>
+                        <div className="flex-grow">
+                            <Heading content="Срочная" />
+                            <p>да</p>
+                        </div>
+                    </div>
+                </Section>
+                <Spacer y={4} />
+                <Section>
+                    <Heading content="Адресс" />
+                    <p>{address}</p>
+                </Section>
+                <Spacer y={4} />
+                <Section>
+                    <Heading content="Метро" />
+                    <SubwayStationWithIcon value={metro} />
+                </Section>
+                <Spacer y={4} />
+                <Section>
+                    <Heading content="Cодержимое" />
+                    <p>{contents}</p>
+                </Section>
+                <Spacer y={4} />
+                <Section>
+                    <Heading content="Вес" />
+                    <p>{weight}</p>
+                </Section>
+                <Spacer y={4} />
+                <Divider className="px-2" />
+                <Spacer y={4} />
+                <Section>
+                    <Heading content="Контактное лицо" />
+                    <Spacer y={4} />
+                    <ClientContactCardList contact={contact} />
                 </Section>
                 <Spacer y={4} />
                 <Divider className="px-2" />

@@ -6,6 +6,8 @@ export const addressSchema = z.object({
     client_id: z.number(),
     delivery_type: z.string().nullable(),
     region: z.any(),
+    longitude: z.string().nullable(),
+    latitude: z.string().nullable(),
     city: z.any(),
     metro: z.string().nullable(),
     address: z.string().nullable().or(z.undefined()),

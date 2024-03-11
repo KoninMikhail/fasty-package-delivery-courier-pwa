@@ -1,1 +1,1 @@
-export * from './RequestButton';
+export * from './FastAssignRequestButton';

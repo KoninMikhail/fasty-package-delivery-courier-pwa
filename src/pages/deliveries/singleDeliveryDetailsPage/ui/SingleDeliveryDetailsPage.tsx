@@ -9,7 +9,10 @@ import { useTranslation } from 'react-i18next';
 import { useDocumentTitle } from 'usehooks-ts';
 import { useGate, useUnit } from 'effector-react';
 import { useParams } from 'react-router-dom';
-import {selectedDeliveryModel} from '@/entities/delivery';
+import {
+    $delivery,
+    DeliveryDetailsPageGateway,
+} from '@/pages/deliveries/singleDeliveryDetailsPage/model';
 import {
     DesktopDeliveryDetailsPageView,
     MobileDeliveryDetailsPageView,
@@ -17,7 +20,6 @@ import {
 import { translationNS } from '../config';
 import locale_en from '../locales/en.locale.json';
 import locale_ru from '../locales/ru.locale.json';
-import { DeliveryDetailsPageGateway } from "@/pages/deliveries/singleDeliveryDetailsPage/model";
 
 const { useDeviceScreen } = sharedConfigDetectDevice;
 const { locale } = sharedConfigLocale;
@@ -43,6 +45,8 @@ export const SingleDeliveryDetailsPage: FunctionComponent = () => {
 
     useDocumentTitle(pageTitle);
     useGate(DeliveryDetailsPageGateway, { deliveryId });
+
+    const delivery = useUnit($delivery);
 
     return isDesktop ? (
         <Authorized>

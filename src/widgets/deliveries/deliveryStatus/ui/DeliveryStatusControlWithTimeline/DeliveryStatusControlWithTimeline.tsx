@@ -143,7 +143,7 @@ export const DeliveryStatusControlWithTimeline: FunctionComponent = () => {
                 <StatusList>
                     <StatusCreated createDate={createDate} />
                 </StatusList>
-                <AssignDeliveryToUser.RequestButton
+                <AssignDeliveryToUser.FastAssignRequestButton
                     model={assignToDeliveryModel}
                     user={user}
                     delivery={{
