@@ -14,7 +14,9 @@ import { FaCheck } from 'react-icons/fa';
 import { BiSolidError } from 'react-icons/bi';
 import { useUnit } from 'effector-react';
 import type { User } from '@/shared/api';
+import { useTranslation } from 'react-i18next';
 import { factory } from '../model/model';
+import { translationNS } from '../config';
 
 interface RequestButtonProperties {
     delivery: Delivery;
@@ -36,6 +38,7 @@ export const FastAssignRequestButton = modelView(
         ...rest
     }: RequestButtonProperties) => {
         const model = factory.useModel();
+        const { t } = useTranslation(translationNS);
         const [isOpen, setIsOpen] = useState<boolean>(false);
         const [assignedItems, assignPressed, assignConfirmed, assignRejected] =
             useUnit([

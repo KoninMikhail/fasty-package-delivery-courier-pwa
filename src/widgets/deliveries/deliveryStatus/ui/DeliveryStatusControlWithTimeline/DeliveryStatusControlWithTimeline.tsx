@@ -15,6 +15,7 @@ import {
     $$deliveryCreateDate,
     $$deliveryStatus,
     $$deliveryUpdateDate,
+    $delivery,
     assignToDeliveryModel,
     setStatusModel,
 } from '../../model';
@@ -131,6 +132,7 @@ const LastEdited: FunctionComponent<{
 };
 
 export const DeliveryStatusControlWithTimeline: FunctionComponent = () => {
+    const delivery = useUnit($delivery);
     const status = useUnit($$deliveryStatus);
     const createDate = useUnit($$deliveryCreateDate);
     const updateDate = useUnit($$deliveryUpdateDate);
@@ -143,15 +145,10 @@ export const DeliveryStatusControlWithTimeline: FunctionComponent = () => {
                 <StatusList>
                     <StatusCreated createDate={createDate} />
                 </StatusList>
-                <AssignDeliveryToUser.FastAssignRequestButton
+                <AssignDeliveryToUser.AssignRequestButton
                     model={assignToDeliveryModel}
                     user={user}
-                    delivery={{
-                        id: 1,
-                        status: 'created',
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
-                    }}
+                    delivery={delivery}
                 />
             </Root>
         );

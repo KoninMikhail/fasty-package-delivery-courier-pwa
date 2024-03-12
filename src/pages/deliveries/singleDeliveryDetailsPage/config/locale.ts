@@ -1,1 +1,1 @@
-export const translationNS = 'page:root';
+export const translationNS = 'page:single_delivery_details';

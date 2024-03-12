@@ -8,12 +8,14 @@ import {
     getDeliveryClient,
     getDeliveryContents,
     getDeliveryCourier,
+    getDeliveryExpressStateTranslated,
     getDeliveryId,
     getDeliveryManager,
     getDeliveryMetro,
     getDeliveryPickupDateTime,
     getDeliveryStatus,
-    getDeliveryWeight,
+    getDeliveryTypeTranslated,
+    getDeliveryWeightPersisted,
     setDeliveryStatus,
 } from '@/entities/delivery';
 import { Route } from '@/entities/route';
@@ -21,7 +23,8 @@ import { sessionModel } from '@/entities/viewer';
 import { getCachedDeliveryByIdFx } from '@/entities/delivery/model';
 import { Delivery } from '@/shared/api';
 import { isDeliveryAssignedToCourier } from '@/entities/delivery/lib';
-import { debug } from 'patronum';
+import { getClientType } from '@/entities/client/lib/utils/getClientType';
+import { getClientName } from '@/entities/client';
 
 /* eslint-disable unicorn/no-array-method-this-argument */
 
@@ -85,6 +88,8 @@ const initialDelivery: Delivery = {
                 delivery_type: 'self',
                 region: null,
                 city: null,
+                latitude: '0',
+                longitude: '0',
                 metro: null,
                 address: null,
                 point_id: null,
@@ -138,11 +143,9 @@ export const $delivery = createStore<Delivery>(initialDelivery)
     .on(setDeliveryStatus.doneData, (_, delivery) => delivery)
     .reset(DeliveryDetailsPageGateway.close);
 
-debug($delivery);
-
 // Derived stores to decompose the delivery object for easier consumption
 export const $$deliveryId = $delivery.map((delivery) =>
-    getDeliveryId(delivery),
+    getDeliveryId(delivery, 6),
 );
 
 export const $$deliveryStatus = $delivery.map((delivery) =>
@@ -152,7 +155,13 @@ export const $$deliveryContents = $delivery.map((delivery) =>
     getDeliveryContents(delivery),
 );
 export const $$deliveryWeight = $delivery.map((delivery) =>
-    getDeliveryWeight(delivery),
+    getDeliveryWeightPersisted(delivery),
+);
+export const $$deliveryType = $delivery.map((delivery) =>
+    getDeliveryTypeTranslated(delivery),
+);
+export const $$deliveryIsExpress = $delivery.map((delivery) =>
+    getDeliveryExpressStateTranslated(delivery),
 );
 export const $$deliveryAddress = $delivery.map((delivery) =>
     getDeliveryAddress(delivery),
@@ -163,11 +172,20 @@ export const $$deliveryMetro = $delivery.map((delivery) =>
 export const $$deliveryPickupDateTime = $delivery.map((delivery) =>
     getDeliveryPickupDateTime(delivery, true, true),
 );
+
+export const $$deliveryContact = $delivery.map((delivery) => delivery.contact);
+
+/**
+ * Client
+ */
 export const $$deliveryClient = $delivery.map((delivery) =>
     getDeliveryClient(delivery),
 );
-export const $$deliveryUpdateDate = $delivery.map(
-    (delivery) => delivery && delivery?.updated_at,
+export const $$deliveryClientName = $$deliveryClient.map((client) =>
+    getClientName(client),
+);
+export const $$deliveryClientType = $$deliveryClient.map((client) =>
+    getClientType(client),
 );
 export const $$deliveryManager = $delivery.map((delivery) =>
     getDeliveryManager(delivery),
@@ -217,12 +235,6 @@ export const changeDeliveryStatusModel = SetDeliveryStatus.factory.createModel({
 export const mapModel = Route.Map.factory.createModel({
     center: [55.763_359_839_794_52, 37.634_951_406_515_2],
     zoom: 16,
-    markers: [
-        {
-            lat: 55.763_359_839_794_52,
-            lng: 37.634_951_406_515_2,
-        },
-    ],
 });
 
 /* sample({

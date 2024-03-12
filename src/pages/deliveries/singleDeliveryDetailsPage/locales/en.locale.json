@@ -1,5 +1,18 @@
 {
-  "page.title": "Deliveries Exchange",
-  "active_deliveries": "Active deliveries",
-  "exchange_deliveries": "exchange deliveries"
+  "page.title": "Delivery #{{id}} | {{appName}}",
+  "page.section.label.id": "Delivery ID",
+  "page.section.label.client": "Client",
+  "page.section.label.client.type": "Client type",
+  "page.section.label.pickup": "Pickup date and time",
+  "page.section.label.type": "Delivery type",
+  "page.section.label.express": "Express",
+  "page.section.label.address": "Address",
+  "page.section.label.metro": "Metro",
+  "page.section.label.contents": "Contents",
+  "page.section.label.weight": "Weight",
+  "page.section.label.contactPerson": "Contact person",
+  "page.section.label.manager": "Manager",
+  "page.section.label.courier": "Courier",
+  "page.section.label.courier.chip.my": "My delivery",
+  "page.section.label.deliveryStatus": "Delivery status"
 }

@@ -6,23 +6,25 @@ import { useUnit } from 'effector-react';
 import { useNavigate } from 'react-router-dom';
 import { LuArrowLeft } from 'react-icons/lu';
 import clsx from 'clsx';
-import { User } from '@/shared/api';
 import { Route } from '@/entities/route';
 import { lazily } from 'react-lazily';
-import { SuspenseLayout } from '@/shared/ui/layouts';
 import { widgetDeliveryStatusUi } from '@/widgets/deliveries/deliveryStatus';
 import { SubwayStationWithIcon } from '@/shared/services/subway';
-import { ClientContactCardList, getDefaultContact } from '@/entities/contact';
+import { useTranslation } from 'react-i18next';
+import { ClientContactCardList } from '@/entities/client';
 import {
     $$deliveryAddress,
-    $$deliveryClient,
+    $$deliveryClientName,
+    $$deliveryClientType,
+    $$deliveryContact,
     $$deliveryContents,
     $$deliveryCourier,
     $$deliveryId,
+    $$deliveryIsExpress,
     $$deliveryManager,
     $$deliveryMetro,
     $$deliveryPickupDateTime,
-    $$deliveryStatus,
+    $$deliveryType,
     $$deliveryWeight,
     $$hasError,
     $$isViewerDelivery,
@@ -30,12 +32,30 @@ import {
     mapModel,
 } from '../../model';
 import { NotFound } from './common';
+import { translationNS } from '../../config';
 
 const { UserCardRow } = lazily(() => import('@/entities/user'));
 const { NavbarMobile } = widgetNavbarMobileUi;
 const { DeliveryStatusControlWithTimeline } = widgetDeliveryStatusUi;
 
 const DELIVERY_ID_LENGTH = 6;
+const TRANSLATION = {
+    LABEL_CLIENT: 'page.section.label.client',
+    LABEL_CLIENT_TYPE: 'page.section.label.client.type',
+    LABEL_PICKUP: 'page.section.label.pickup',
+    LABEL_TYPE: 'page.section.label.type',
+    LABEL_EXPRESS: 'page.section.label.express',
+    LABEL_ADDRESS: 'page.section.label.address',
+    LABEL_METRO: 'page.section.label.metro',
+    LABEL_CONTENTS: 'page.section.label.contents',
+    LABEL_WEIGHT: 'page.section.label.weight',
+    LABEL_CONTACT_PERSON: 'page.section.label.contactPerson',
+    LABEL_MANAGER: 'page.section.label.manager',
+    LABEL_COURIER: 'page.section.label.courier',
+    LABEL_DELIVERY_STATUS: 'page.section.label.deliveryStatus',
+    LABEL_MY_DELIVERY: 'page.section.label.courier.chip.my',
+    LABEL_ID: 'page.section.label.id',
+};
 
 /**
  * Layout
@@ -70,26 +90,76 @@ const Heading: FunctionComponent<{ content: string }> = ({ content }) => {
     return <h3 className="font-bold">{content}</h3>;
 };
 
-const Manager: FunctionComponent<{ user: User }> = ({ user }) => {
-    return (
-        <SuspenseLayout>
-            <UserCardRow account={user} />
-        </SuspenseLayout>
-    );
+const Client: FunctionComponent = () => {
+    const name = useUnit($$deliveryClientName);
+    return <p>{name}</p>;
+};
+const ClientType: FunctionComponent = () => {
+    const type = useUnit($$deliveryClientType);
+    return <p>{type}</p>;
 };
 
-const Courier: FunctionComponent<{ user: User }> = ({ user }) => {
-    return (
-        <SuspenseLayout>
-            <UserCardRow account={user} />
-        </SuspenseLayout>
-    );
+const DeliveryId: FunctionComponent = () => {
+    const id = useUnit($$deliveryId);
+    return <p>{id}</p>;
+};
+
+const DeliveryPickup: FunctionComponent = () => {
+    const pickup = useUnit($$deliveryPickupDateTime);
+    return <p>{pickup}</p>;
+};
+
+const DeliveryTypeTransport: FunctionComponent = () => {
+    const type = useUnit($$deliveryType);
+    return <p>{type}</p>;
+};
+const DeliveryTypeExpress: FunctionComponent = () => {
+    const express = useUnit($$deliveryIsExpress);
+    return <p>{express}</p>;
+};
+const DeliveryAddress: FunctionComponent = () => {
+    const address = useUnit($$deliveryAddress);
+    return <p>{address}</p>;
+};
+const DeliveryAddressSubway: FunctionComponent = () => {
+    const metro = useUnit($$deliveryMetro);
+    return <SubwayStationWithIcon value={metro} />;
+};
+const DeliveryContents: FunctionComponent = () => {
+    const contents = useUnit($$deliveryContents);
+    return <p>{contents}</p>;
+};
+const DeliveryWeight: FunctionComponent = () => {
+    const weight = useUnit($$deliveryWeight);
+    return <p>{weight}</p>;
+};
+
+const DeliveryCourier: FunctionComponent = () => {
+    const courier = useUnit($$deliveryCourier);
+    return courier ? <UserCardRow account={courier} /> : null;
+};
+
+const MyDeliveryChip: FunctionComponent<PropsWithChildren> = ({ children }) => {
+    const isMyDelivery = useUnit($$isViewerDelivery);
+    return isMyDelivery ? (
+        <Chip color="warning" size="sm">
+            {children}
+        </Chip>
+    ) : null;
+};
+const DeliveryManager: FunctionComponent = () => {
+    const manager = useUnit($$deliveryManager);
+    return <UserCardRow account={manager} />;
+};
+const DeliveryContactPerson: FunctionComponent = () => {
+    const contact = useUnit($$deliveryContact);
+    return <ClientContactCardList contact={contact} />;
 };
 
 const BackButton: FunctionComponent = () => {
     const navigate = useNavigate();
 
-    const onClick = () => {
+    const onClick = (): void => {
         navigate(-1);
     };
 
@@ -118,36 +188,9 @@ const Header: FunctionComponent<{
 );
 
 export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
-    const [
-        id,
-        address,
-        pickupDateTime,
-        status,
-        contents,
-        weight,
-        manager,
-        client,
-        courier,
-        metro,
-        isMyDelivery,
-    ] = useUnit([
-        $$deliveryId,
-        $$deliveryAddress,
-        $$deliveryPickupDateTime,
-        $$deliveryStatus,
-        $$deliveryContents,
-        $$deliveryWeight,
-        $$deliveryManager,
-        $$deliveryClient,
-        $$deliveryCourier,
-        $$deliveryMetro,
-        $$isViewerDelivery,
-    ]);
-    const deliveryId = id?.toString().padStart(DELIVERY_ID_LENGTH, '0') ?? '';
+    const { t } = useTranslation(translationNS);
 
     const [hasError, notFound] = useUnit([$$hasError, $$notFound]);
-
-    console.log(address);
 
     if (hasError && notFound) {
         return (
@@ -160,15 +203,9 @@ export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
         );
     }
 
-    const contact = getDefaultContact(client.contacts);
-
     return (
         <>
-            <Header
-                className="z-[500]"
-                backButton={<BackButton />}
-                title={deliveryId}
-            />
+            <Header className="z-[500]" backButton={<BackButton />} />
             <MainContainer>
                 <Route.Map.SimpleMap
                     model={mapModel}
@@ -176,65 +213,68 @@ export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
                 />
                 <Spacer y={4} />
                 <Section>
-                    <Heading content={`Delivery ID: ${deliveryId}`} />
+                    <div className="flex gap-2">
+                        <Heading content={t(TRANSLATION.LABEL_ID)} />
+                        <DeliveryId />
+                    </div>
                 </Section>
                 <Spacer y={4} />
                 <Divider className="px-2" />
                 <Spacer y={4} />
                 <Section>
-                    <Heading content="Клиент" />
-                    <p>{client.name}</p>
+                    <Heading content={t(TRANSLATION.LABEL_CLIENT)} />
+                    <Client />
                 </Section>
                 <Spacer y={4} />
                 <Section>
-                    <Heading content="Тип клиента" />
-                    <p>имя</p>
+                    <Heading content={t(TRANSLATION.LABEL_CLIENT_TYPE)} />
+                    <ClientType />
                 </Section>
                 <Spacer y={4} />
                 <Section>
-                    <Heading content="Дата и время доставки" />
-                    <p>{pickupDateTime}</p>
+                    <Heading content={t(TRANSLATION.LABEL_PICKUP)} />
+                    <DeliveryPickup />
                 </Section>
                 <Spacer y={4} />
                 <Section>
                     <div className="flex gap-4">
                         <div className="flex-grow">
-                            <Heading content="Тип доставки" />
-                            <p>На машине</p>
+                            <Heading content={t(TRANSLATION.LABEL_TYPE)} />
+                            <DeliveryTypeTransport />
                         </div>
                         <div className="flex-grow">
-                            <Heading content="Срочная" />
-                            <p>да</p>
+                            <Heading content={t(TRANSLATION.LABEL_EXPRESS)} />
+                            <DeliveryTypeExpress />
                         </div>
                     </div>
                 </Section>
                 <Spacer y={4} />
                 <Section>
-                    <Heading content="Адресс" />
-                    <p>{address}</p>
+                    <Heading content={t(TRANSLATION.LABEL_ADDRESS)} />
+                    <DeliveryAddress />
                 </Section>
                 <Spacer y={4} />
                 <Section>
-                    <Heading content="Метро" />
-                    <SubwayStationWithIcon value={metro} />
+                    <Heading content={t(TRANSLATION.LABEL_METRO)} />
+                    <DeliveryAddressSubway />
                 </Section>
                 <Spacer y={4} />
                 <Section>
-                    <Heading content="Cодержимое" />
-                    <p>{contents}</p>
+                    <Heading content={t(TRANSLATION.LABEL_CONTENTS)} />
+                    <DeliveryContents />
                 </Section>
                 <Spacer y={4} />
                 <Section>
-                    <Heading content="Вес" />
-                    <p>{weight}</p>
+                    <Heading content={t(TRANSLATION.LABEL_WEIGHT)} />
+                    <DeliveryWeight />
                 </Section>
                 <Spacer y={4} />
                 <Divider className="px-2" />
                 <Spacer y={4} />
                 <Section>
-                    <Heading content="Контактное лицо" />
+                    <Heading content={t(TRANSLATION.LABEL_CONTACT_PERSON)} />
                     <Spacer y={4} />
-                    <ClientContactCardList contact={contact} />
+                    <DeliveryContactPerson />
                 </Section>
                 <Spacer y={4} />
                 <Divider className="px-2" />
@@ -242,35 +282,32 @@ export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
                 <Section>
                     <div className="flex items-center">
                         <div className="flex-grow">
-                            <Heading content="Курьер" />
+                            <Heading content={t(TRANSLATION.LABEL_COURIER)} />
                         </div>
                         <div>
-                            {isMyDelivery ? (
-                                <Chip color="warning" variant="solid" size="sm">
-                                    Моя доставка
-                                </Chip>
-                            ) : null}
+                            <MyDeliveryChip>
+                                {t(TRANSLATION.LABEL_MY_DELIVERY)}
+                            </MyDeliveryChip>
                         </div>
                     </div>
                     <Spacer y={2} />
-                    {courier ? <Courier user={courier} /> : null}
+                    <DeliveryCourier />
                 </Section>
                 <Spacer y={4} />
                 <Divider className="px-2" />
                 <Spacer y={4} />
                 <Section>
-                    <Heading content="Delivery Status" />
+                    <Heading content={t(TRANSLATION.LABEL_DELIVERY_STATUS)} />
                     <Spacer y={4} />
                     <DeliveryStatusControlWithTimeline />
                 </Section>
                 <Spacer y={4} />
                 <Divider className="px-2" />
                 <Spacer y={4} />
-
                 <Section>
-                    <Heading content="Ответственный" />
+                    <Heading content={t(TRANSLATION.LABEL_MANAGER)} />
                     <Spacer y={2} />
-                    {manager ? <Manager user={manager} /> : null}
+                    <DeliveryManager />
                 </Section>
                 <Spacer y={4} />
             </MainContainer>

@@ -12,3 +12,6 @@ export * from './getDeliveryComment';
 export * from './getDeliveryStatus';
 export * from './getDeliveryClient';
 export * from './getDeliveryClientName';
+export * from './getDeliveryExpressStateTranslated';
+export * from './getDeliveryTypeTranslated';
+export * from './getDeliveryWeightPersisted';

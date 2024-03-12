@@ -4,7 +4,7 @@ import { addressSchema } from '@/shared/api/schemas/AddressSchema';
 
 export const clientSchema = z.object({
     id: z.number(),
-    client_type: z.string(),
+    client_type: z.union([z.literal('organization'), z.literal('person')]),
     name: z.string(),
     deleted: z.boolean(),
     created_at: z.string().datetime().nullable(),

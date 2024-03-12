@@ -1,9 +1,9 @@
 import { SimpleMap } from './ui';
-import { mapFactory } from './factories/mapFactory';
+import { singleLocationFactory } from './factories/singleLocationFactory';
 
 export const Route = {
     Map: {
-        factory: mapFactory,
+        factory: singleLocationFactory,
         SimpleMap,
     },
 };

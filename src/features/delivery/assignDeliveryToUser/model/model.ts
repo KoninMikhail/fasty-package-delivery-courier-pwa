@@ -1,7 +1,7 @@
 import { modelFactory } from 'effector-factorio';
 import { combine, createEvent, createStore, Effect, sample } from 'effector';
 import { Delivery, User } from '@/shared/api';
-import { AssignUserToDeliveryParameters } from '@/entities/delivery/model/effects/assignUserToDelivery';
+import { AssignUserToDeliveryParameters } from '@/entities/delivery';
 
 type FactoryOptions = {
     assignToDeliveryEffect: Effect<
