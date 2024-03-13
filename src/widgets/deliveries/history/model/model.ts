@@ -1,6 +1,7 @@
-import { Delivery } from '@/shared/api';
+import { Delivery, DeliveryPagination } from '@/shared/api';
 import { createStore } from 'effector';
 import { compareDesc, parseISO } from 'date-fns';
+import { InfiniteScroll } from '@/features/page/infinite-scroll';
 import { debug } from 'patronum';
 import { getDeliveriesHistoryFx } from './effects';
 
@@ -11,17 +12,19 @@ type SortedDeliveriesHistory = {
     items: Delivery[];
 };
 
-export const $fetchedDeliveriesHistory = createStore<Delivery[]>([]).on(
-    getDeliveriesHistoryFx.doneData,
-    (_, deliveries) => deliveries,
-);
+export const $fetchedDeliveriesHistory = createStore<
+    Nullable<DeliveryPagination>
+>(null).on(getDeliveriesHistoryFx.doneData, (state, payload) => payload);
+
+debug($fetchedDeliveriesHistory);
 
 export const $sortedDeliveriesHistory = $fetchedDeliveriesHistory.map(
-    (deliveries) => {
+    (pagination) => {
+        const data = pagination?.data ?? [];
         const groupedByDate: Record<string, Delivery[]> = {};
 
         // Заполнение groupedByDate
-        for (const delivery of deliveries) {
+        for (const delivery of data) {
             const dateString = delivery.date.split('T')[0];
             groupedByDate[dateString] ||= [];
             groupedByDate[dateString].push(delivery);
@@ -41,4 +44,6 @@ export const $sortedDeliveriesHistory = $fetchedDeliveriesHistory.map(
     },
 );
 
-debug($sortedDeliveriesHistory);
+export const InfiniteScrollModel = InfiniteScroll.factory.createModel({
+    requestContentFx: getDeliveriesHistoryFx,
+});

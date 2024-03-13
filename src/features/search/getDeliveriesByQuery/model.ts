@@ -1,6 +1,5 @@
 import { modelFactory } from 'effector-factorio';
 import { createEvent, createStore, Effect, sample } from 'effector';
-import { debug } from 'patronum';
 import { Delivery } from '@/shared/api';
 
 interface FactoryOptions {
@@ -23,8 +22,6 @@ export const factory = modelFactory((options: FactoryOptions) => {
         filter: (query) => query.length >= options.minQueryLength,
         target: options.searchFx,
     });
-
-    debug($searchResults);
 
     sample({
         clock: options.searchFx.doneData,

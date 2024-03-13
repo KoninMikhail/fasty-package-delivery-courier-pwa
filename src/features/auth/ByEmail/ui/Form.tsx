@@ -3,16 +3,12 @@ import { modelView } from 'effector-factorio';
 
 import { ChangeEvent } from 'react';
 import { Button, Input } from '@nextui-org/react';
-import { sharedConfigLocale } from '@/shared/config';
 import { useTranslation } from 'react-i18next';
 import { sharedUiComponents } from '@/shared/ui';
 import { factory } from '../model/model';
 
 import { translationNS } from '../config';
-import locale_en from '../locales/en.locale.json';
-import locale_ru from '../locales/ru.locale.json';
 
-const { locale } = sharedConfigLocale;
 const { PasswordField } = sharedUiComponents;
 
 /**
@@ -24,12 +20,6 @@ const PASSWORD_LABEL_TEXT_KEY = 'password.label';
 const PASSWORD_PLACEHOLDER_TEXT_KEY = 'password.placeholder';
 const PASSWORD_VALIDATION_RULES_TEXT_KEY = 'password.validation.rules';
 const SIGN_IN_TEXT_KEY = 'signIn';
-
-/**
- * locale.ts
- */
-locale.addResourceBundle('en', translationNS, locale_en);
-locale.addResourceBundle('ru', translationNS, locale_ru);
 
 /**
  * Components

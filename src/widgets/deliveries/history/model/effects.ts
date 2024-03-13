@@ -1,6 +1,7 @@
 import { createEffect } from 'effector';
-import { apiClient } from '@/shared/api';
+import { apiClient, Delivery } from '@/shared/api';
+import { Pagination } from '@/shared/api/types/PaginationTypes';
 
-export const getDeliveriesHistoryFx = createEffect(async () =>
-    apiClient.getDeliveriesHistory(),
+export const getDeliveriesHistoryFx = createEffect<void, Pagination<Delivery>>(
+    async () => apiClient.getDeliveriesHistory(),
 );

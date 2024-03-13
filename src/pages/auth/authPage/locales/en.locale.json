@@ -1,6 +1,5 @@
 {
-  "page.title": "Sign in",
-  "app.description": "Business app for couriers",
+  "page.title": "Sign in | {{appName}} - {{appDescription}}",
   "greetings.welcome": "Welcome, Back!",
   "greetings.description": "Log in to your profile to get started and receive new deliveries",
   "buttons.sign_in": "Sign in",

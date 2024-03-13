@@ -3,7 +3,6 @@ import { useList, useUnit } from 'effector-react';
 import { sharedUiLayouts } from '@/shared/ui';
 import { Button, Skeleton, Spacer, Spinner } from '@nextui-org/react';
 import { GoAlert } from 'react-icons/go';
-import { sharedConfigLocale } from '@/shared/config';
 import { AiOutlineReload } from 'react-icons/ai';
 import { BsBoxSeam } from 'react-icons/bs';
 import { useTranslation } from 'react-i18next';
@@ -11,23 +10,14 @@ import { AnimatePresence, motion } from 'framer-motion';
 import {
     $$empty,
     $$hasError,
-    $loading,
     $$upcomingDeliveriesLimited,
     $isFirstLoad,
+    $loading,
 } from '../../model';
 
 import { translationNS } from '../../config';
-import locale_ru from '../../locales/ru.locale.json';
-import locale_en from '../../locales/en.locale.json';
 
 const { HorizontalScroll } = sharedUiLayouts;
-const { locale } = sharedConfigLocale;
-
-/**
- * locale
- */
-locale.addResourceBundle('en', translationNS, locale_en);
-locale.addResourceBundle('ru', translationNS, locale_ru);
 
 /**
  * Сonstants

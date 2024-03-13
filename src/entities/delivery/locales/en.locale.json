@@ -5,6 +5,7 @@
   "delivery.status.canceled": "Canceled",
   "delivery.data.fallback.address": "Not found",
   "delivery.data.fallback.contents": "Not found",
+  "delivery.data.fallback.city": "Moscow",
   "delivery.type.onCar": "On car",
   "delivery.type.unknown": "Unknown",
   "delivery.type.express": "Express",

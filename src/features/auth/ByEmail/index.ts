@@ -1,3 +1,4 @@
+import './init';
 import { Form } from './ui';
 import { factory } from './model';
 

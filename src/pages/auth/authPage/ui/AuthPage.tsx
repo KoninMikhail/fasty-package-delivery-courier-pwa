@@ -1,5 +1,4 @@
 import {
-    sharedConfigLocale,
     sharedConfigConstants,
     sharedConfigEnvs,
     sharedConfigRoutes,
@@ -28,10 +27,7 @@ import { Guest } from '@/entities/viewer/ui/Guest';
 import { Offline, SlowNetwork } from '@/entities/viewer';
 import { requestAuthModel, requestRecoveryModel } from '../model';
 import { translationNS } from '../config';
-import locale_ru from '../locales/ru.locale.json';
-import locale_en from '../locales/en.locale.json';
 
-const { locale } = sharedConfigLocale;
 const { APP_NAME, GITHUB_PAGE_URL, APP_DESCRIPTION } = sharedConfigConstants;
 const { isDevelopmentEnvironment } = sharedConfigEnvs;
 const { RouteName } = sharedConfigRoutes;
@@ -42,11 +38,9 @@ const { CookiePolicyModal } = widgetCookiePolicyModalUi;
 const { PrivacyPolicyModal } = widgetPrivacyPolicyModalUi;
 const { TermsOfUseModal } = widgetTermsOfUseModalUi;
 
-/**
- * locale.ts
- */
-locale.addResourceBundle('en', translationNS, locale_en);
-locale.addResourceBundle('ru', translationNS, locale_ru);
+const TRANSLATION = {
+    PAGE_TITLE: 'page.title',
+};
 
 /**
  * Layout
@@ -54,7 +48,7 @@ locale.addResourceBundle('ru', translationNS, locale_ru);
 const Root: FunctionComponent<PropsWithChildren> = ({ children }) => (
     <div className="h-dvh w-screen">
         <div className="absolute inset-0 h-full w-full bg-[url('/assets/images/auth_bg.jpg')] bg-cover bg-[left_-10rem_top] md:bg-center">
-            <div className="absolute bottom-0 h-1/2 w-full bg-gradient-to-t from-background from-45% to-transparent" />
+            <div className="bg-gradient-to-t absolute bottom-0 h-1/2 w-full from-background from-45% to-transparent" />
             <div className="grid h-full w-full grid-cols-1 grid-rows-[auto_max-content]">
                 {children}
             </div>
@@ -168,8 +162,12 @@ export const AuthPage: FunctionComponent = () => {
     /**
      * Page
      */
-    const pageTitle = `${t('page.title')} | ${APP_NAME} - ${APP_DESCRIPTION[currentLanguage]}`;
-    useDocumentTitle(pageTitle);
+    useDocumentTitle(
+        t(TRANSLATION.PAGE_TITLE, {
+            appName: APP_NAME,
+            appDescription: APP_DESCRIPTION[currentLanguage],
+        }),
+    );
 
     /**
      * Handlers

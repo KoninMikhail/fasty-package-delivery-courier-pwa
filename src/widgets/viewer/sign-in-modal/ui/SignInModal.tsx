@@ -7,7 +7,6 @@ import {
     ModalHeader,
     Spacer,
 } from '@nextui-org/react';
-import { sharedConfigLocale } from '@/shared/config';
 import { useTranslation } from 'react-i18next';
 import { useUnit } from 'effector-react';
 import { AuthByEmail } from '@/features/auth/ByEmail';
@@ -15,16 +14,6 @@ import { PropsWithChildren } from 'react';
 import { $isSignInModalVisible, authByEmailModel, setHidden } from '../model';
 
 import { translationNS } from '../config';
-import locale_ru from '../locales/ru.locale.json';
-import locale_en from '../locales/en.locale.json';
-
-const { locale } = sharedConfigLocale;
-
-/**
- * locale.ts
- */
-locale.addResourceBundle('en', translationNS, locale_en);
-locale.addResourceBundle('ru', translationNS, locale_ru);
 
 /**
  * Layout

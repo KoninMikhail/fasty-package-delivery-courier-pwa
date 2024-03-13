@@ -10,36 +10,24 @@ import 'leaflet/dist/leaflet.css';
 import { useUnit } from 'effector-react/effector-react.mjs';
 import { modelView } from 'effector-factorio';
 import { useEffect, useLayoutEffect, useState } from 'react';
-import { LatLngExpression, MapOptions } from 'leaflet';
-import { singleLocationFactory } from '../factories/singleLocationFactory';
+import { MapOptions } from 'leaflet';
+import { Spinner } from '@nextui-org/react';
+import { mapFactory } from '../factories/mapFactory';
 
-const DEFAULT_CENTER: LatLngExpression = {
-    lat: 55.753_025_906_384_16,
-    lng: 37.620_334_238_617_83,
-};
 const DEFAULT_ZOOM = 12;
 
-const LocationMarker = () => {
-    const factory = singleLocationFactory.useModel();
+const LocationMarker: FunctionComponent = () => {
+    const factory = mapFactory.useModel();
     const position = useUnit(factory.$location);
     const setPosition = useUnit(factory.locationChanged);
     const map = useMap();
-    const location = useUnit(factory.$location);
 
     useEffect(() => {
         if (position) {
-            map.setView(location);
+            setPosition(position);
+            map.setView(position, map.getZoom(), { animate: true });
         }
-    }, [location, map]);
-
-    useEffect(() => {
-        setTimeout(() => {
-            setPosition({
-                lat: 55.751_864_162_201_57,
-                lng: 37.990_436_167_328_774,
-            });
-        }, 1000);
-    }, []);
+    }, [position, setPosition, map]);
 
     return position === null ? null : (
         <Marker position={position}>
@@ -54,25 +42,34 @@ interface SimpleMapProperties {
     center?: MapOptions['center'];
 }
 
-export const SimpleMap = modelView(
-    singleLocationFactory,
-    ({ className, zoom, center }: SimpleMapProperties) => {
-        const [unmountMap, setunmountMap] = useState<boolean>(false);
+export const MultiLocationMap = modelView(
+    mapFactory,
+    ({ className, zoom }: SimpleMapProperties) => {
+        const model = mapFactory.useModel();
+        const center = useUnit(model.$center);
+
+        const [unmountMap, setUnmountMap] = useState<boolean>(false);
 
         useLayoutEffect(() => {
-            setunmountMap(false);
+            setUnmountMap(false);
             return () => {
-                setunmountMap(true);
+                setUnmountMap(true);
             };
         }, []);
 
         if (unmountMap) {
-            return <div>Map unmounted</div>;
+            return (
+                <div className={className}>
+                    <div className="flex h-full w-full items-center justify-center">
+                        <Spinner color="default" />
+                    </div>
+                </div>
+            );
         }
 
         return (
             <MapContainer
-                center={center || DEFAULT_CENTER}
+                center={center}
                 zoom={zoom || DEFAULT_ZOOM}
                 zoomControl={false}
                 className={className}

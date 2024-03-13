@@ -1,7 +1,7 @@
 import { PropsWithChildren, ReactNode } from 'react';
 
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
-import { Button, Chip, Divider, Spacer } from '@nextui-org/react';
+import { Button, Chip, Divider, Link, Spacer } from '@nextui-org/react';
 import { useUnit } from 'effector-react';
 import { useNavigate } from 'react-router-dom';
 import { LuArrowLeft } from 'react-icons/lu';
@@ -27,18 +27,19 @@ import {
     $$deliveryType,
     $$deliveryWeight,
     $$hasError,
+    $$isDeliveryNotCoordinated,
     $$isViewerDelivery,
     $$notFound,
     mapModel,
 } from '../../model';
 import { NotFound } from './common';
 import { translationNS } from '../../config';
+import { generateYandexMapsLink } from '../../lib';
 
 const { UserCardRow } = lazily(() => import('@/entities/user'));
 const { NavbarMobile } = widgetNavbarMobileUi;
 const { DeliveryStatusControlWithTimeline } = widgetDeliveryStatusUi;
 
-const DELIVERY_ID_LENGTH = 6;
 const TRANSLATION = {
     LABEL_CLIENT: 'page.section.label.client',
     LABEL_CLIENT_TYPE: 'page.section.label.client.type',
@@ -71,6 +72,7 @@ interface ISectionProperties {
     className?: string;
     padding?: 'default' | 'none';
 }
+
 const Section: FunctionComponent<ISectionProperties> = ({
     children,
     padding = 'default',
@@ -89,7 +91,6 @@ const Section: FunctionComponent<ISectionProperties> = ({
 const Heading: FunctionComponent<{ content: string }> = ({ content }) => {
     return <h3 className="font-bold">{content}</h3>;
 };
-
 const Client: FunctionComponent = () => {
     const name = useUnit($$deliveryClientName);
     return <p>{name}</p>;
@@ -172,20 +173,64 @@ const BackButton: FunctionComponent = () => {
 
 const Header: FunctionComponent<{
     backButton: ReactNode;
-    title: string;
     className?: string;
-}> = ({ title, backButton, className }) => (
-    <header
-        className={clsx(
-            'absolute top-4 flex w-full items-center justify-between px-4',
-            className,
-        )}
-    >
-        {backButton}
-        <h1 className="text-xl font-semibold">{title}</h1>
-        <div className="w-8" />
-    </header>
-);
+}> = ({ backButton, className }) => {
+    const fallback = useUnit($$isDeliveryNotCoordinated);
+    const deliveryId = useUnit($$deliveryId);
+    return (
+        <header
+            className={clsx(
+                'absolute top-4 z-[1100] flex w-full items-center justify-between px-4',
+                className,
+            )}
+        >
+            {backButton}
+            <h1
+                className={clsx(
+                    'text-xl font-semibold text-content1-foreground dark:text-content1',
+                )}
+            >
+                {deliveryId}
+            </h1>
+            <div className="w-8" />
+        </header>
+    );
+};
+
+const Map: FunctionComponent = () => {
+    const hasCoordinates = useUnit($$isDeliveryNotCoordinated);
+    const address = useUnit($$deliveryAddress);
+    const mapsQueryLink = generateYandexMapsLink(address);
+
+    return (
+        <div className="relative w-full">
+            {hasCoordinates ? null : (
+                <div className="absolute bottom-0 left-0 right-0 top-0 z-[1050] flex h-full w-full flex-col items-center justify-center gap-6 bg-content1 bg-opacity-85">
+                    <div className="text-center">
+                        <p className="text-xl">Извините</p>
+                        <p className="text-small text-content4">
+                            Для этой доставки карта недоступна
+                        </p>
+                    </div>
+                    <Button
+                        href={mapsQueryLink}
+                        as={Link}
+                        color="primary"
+                        showAnchorIcon
+                        size="sm"
+                        variant="bordered"
+                    >
+                        Открыть Яндекс.Карты
+                    </Button>
+                </div>
+            )}
+            <Route.Map.SingleLocationMap
+                className="h-[50vh] w-full"
+                model={mapModel}
+            />
+        </div>
+    );
+};
 
 export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
@@ -207,10 +252,7 @@ export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
         <>
             <Header className="z-[500]" backButton={<BackButton />} />
             <MainContainer>
-                <Route.Map.SimpleMap
-                    model={mapModel}
-                    className="h-[50vh] w-full"
-                />
+                <Map />
                 <Spacer y={4} />
                 <Section>
                     <div className="flex gap-2">

@@ -4,6 +4,7 @@ import { contactSchema } from '@/shared/api/schemas/ContactSchema';
 import { addressSchema } from '@/shared/api/schemas/AddressSchema';
 import { clientSchema } from '@/shared/api/schemas/ClientSchema';
 import { orderSchema } from '@/shared/api/schemas/OrderSchema';
+import { createPaginationSchema } from './PaginationSchema';
 
 const timeSchema = z
     .string()
@@ -50,16 +51,18 @@ export const deliverySchema = z.object({
     manager: userSchema,
 });
 
+export const deliveryPaginationSchema = createPaginationSchema(deliverySchema);
 export const GetAvailableDeliveriesParametersSchema = z.void().or(
     z.object({
         fromDate: z.string(),
         toDate: z.string(),
     }),
 );
-export const GetAvailableDeliveriesResponseSchema = z.array(deliverySchema);
 
+export const GetAvailableDeliveriesResponseSchema = z.array(deliverySchema);
 export const PatchDeliveryToCourierParametersSchema = z.object({
     deliveryId: deliverySchema.pick({ id: true }).transform((data) => data.id),
     userId: userSchema.pick({ id: true }).transform((data) => data.id),
 });
+
 export const PatchDeliveryToCourierResponseSchema = deliverySchema;

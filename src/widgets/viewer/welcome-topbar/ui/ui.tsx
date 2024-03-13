@@ -8,18 +8,15 @@ import { PropsWithChildren } from 'react';
 import { useUnit } from 'effector-react';
 import { sessionModel } from '@/entities/viewer';
 import { UserAvatar } from '@/entities/user';
-import { sharedConfigLocale, sharedConfigRoutes } from '@/shared/config';
+import { sharedConfigRoutes } from '@/shared/config';
 import { useNavigate } from 'react-router-dom';
 
 import { useTranslation } from 'react-i18next';
 import { User } from '@/shared/api';
 import { logoutModel } from '@/features/auth/logout';
 import { translationNS } from '../config';
-import locale_en from '../locales/en.locale.json';
-import locale_ru from '../locales/ru.locale.json';
 import { WelcomeTopbarGate } from '../model';
 
-const { locale } = sharedConfigLocale;
 const { RouteName } = sharedConfigRoutes;
 
 const { PROFILE_EDIT_PAGE } = RouteName;
@@ -34,12 +31,6 @@ const WISH_TEXT = 'greetings.wish';
 const SIGN_IN_AS = 'signUp.title';
 const LOGOUT_TEXT = 'logout.label';
 const PROFILE_TEXT = 'myProfile.label';
-
-/**
- * locale.ts
- */
-locale.addResourceBundle('en', translationNS, locale_en);
-locale.addResourceBundle('ru', translationNS, locale_ru);
 
 /**
  * Layout

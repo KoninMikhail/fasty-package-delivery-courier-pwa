@@ -8,7 +8,12 @@ import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import { DeliveryHistoryCard } from '@/entities/delivery';
 import { getNumberPluralForm } from '@/widgets/deliveries/history/lib';
-import { $sortedDeliveriesHistory, getDeliveriesHistoryFx } from '../../model';
+import { InfiniteScroll } from '@/features/page/infinite-scroll';
+import {
+    $sortedDeliveriesHistory,
+    getDeliveriesHistoryFx,
+    InfiniteScrollModel,
+} from '../../model';
 import { translationNS } from '../../config';
 
 const HistoryItemLayout: FunctionComponent<PropsWithChildren> = ({
@@ -40,6 +45,7 @@ const HistoryItemLayout: FunctionComponent<PropsWithChildren> = ({
 export const DeliveriesHistoryList: FunctionComponent = () => {
     const history = useUnit($sortedDeliveriesHistory);
     const { i18n, t } = useTranslation(translationNS);
+
     useEffect(() => {
         void getDeliveriesHistoryFx();
     }, []);
@@ -80,57 +86,60 @@ export const DeliveriesHistoryList: FunctionComponent = () => {
     };
 
     return (
-        <div className="w-full px-2">
-            <Accordion
-                motionProps={{
-                    variants: {
-                        ...motionVariants,
-                    },
-                }}
-            >
-                {history.map((item) => {
-                    const currentLocale = timeLocales[i18n.language] || enUS;
-                    const title = format(item.date, 'PPP', {
-                        locale: currentLocale,
-                    });
-                    const i18nConfig = {
-                        context: getNumberPluralForm(item.count),
-                        count: item.count,
-                    };
+        <InfiniteScroll.Wrapper model={InfiniteScrollModel}>
+            <div className="w-full px-2">
+                <Accordion
+                    motionProps={{
+                        variants: {
+                            ...motionVariants,
+                        },
+                    }}
+                >
+                    {history.map((item) => {
+                        const currentLocale =
+                            timeLocales[i18n.language] || enUS;
+                        const title = format(item.date, 'PPP', {
+                            locale: currentLocale,
+                        });
+                        const i18nConfig = {
+                            context: getNumberPluralForm(item.count),
+                            count: item.count,
+                        };
 
-                    const deliveredCount = t(
-                        'history.accordion.item.label.count.success',
-                        i18nConfig,
-                    );
-                    const canceledCount = t(
-                        'history.accordion.item.label.count.cancel',
-                        i18nConfig,
-                    );
-                    const subtitle = item.canceled
-                        ? `${deliveredCount}, ${canceledCount}`
-                        : deliveredCount;
-
-                    const items = item.items.map((delivery) => {
-                        return (
-                            <HistoryItemLayout key={delivery.id}>
-                                <DeliveryHistoryCard delivery={delivery} />
-                            </HistoryItemLayout>
+                        const deliveredCount = t(
+                            'history.accordion.item.label.count.success',
+                            i18nConfig,
                         );
-                    });
-                    return (
-                        <AccordionItem
-                            key={item.date}
-                            aria-label="History item"
-                            subtitle={subtitle}
-                            title={title}
-                        >
-                            <div className="flow-root">
-                                <ul className="-mb-8">{items}</ul>
-                            </div>
-                        </AccordionItem>
-                    );
-                })}
-            </Accordion>
-        </div>
+                        const canceledCount = t(
+                            'history.accordion.item.label.count.cancel',
+                            i18nConfig,
+                        );
+                        const subtitle = item.canceled
+                            ? `${deliveredCount}, ${canceledCount}`
+                            : deliveredCount;
+
+                        const items = item.items.map((delivery) => {
+                            return (
+                                <HistoryItemLayout key={delivery.id}>
+                                    <DeliveryHistoryCard delivery={delivery} />
+                                </HistoryItemLayout>
+                            );
+                        });
+                        return (
+                            <AccordionItem
+                                key={item.date}
+                                aria-label="History item"
+                                subtitle={subtitle}
+                                title={title}
+                            >
+                                <div className="flow-root">
+                                    <ul className="-mb-8">{items}</ul>
+                                </div>
+                            </AccordionItem>
+                        );
+                    })}
+                </Accordion>
+            </div>
+        </InfiniteScroll.Wrapper>
     );
 };

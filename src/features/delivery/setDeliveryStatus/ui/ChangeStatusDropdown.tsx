@@ -9,15 +9,9 @@ import {
 import { useUnit } from 'effector-react';
 import { motion } from 'framer-motion';
 import { PropsWithChildren } from 'react';
-import { sharedConfigLocale } from '@/shared/config';
 import { useTranslation } from 'react-i18next';
 import { factory } from '../model/model';
 import { translationNS } from '../config';
-
-import locale_en from '../locales/en.locale.json';
-import locale_ru from '../locales/ru.locale.json';
-
-const { locale } = sharedConfigLocale;
 
 /**
  * Constants
@@ -29,12 +23,6 @@ const SUBMIT_BUTTON_LABEL = 'label.button.set';
 const CANCEL_BUTTON_LABEL = 'label.button.cancel';
 const SUCCESS_REASON_LABEL = 'label.reason.success';
 const REJECT_REASON_LABEL = 'label.reason.reject';
-
-/**
- * locale
- */
-locale.addResourceBundle('en', translationNS, locale_en);
-locale.addResourceBundle('ru', translationNS, locale_ru);
 
 /**
  * Layout
@@ -79,11 +67,9 @@ const Selector: FunctionComponent = () => {
     const model = factory.useModel();
     const { t } = useTranslation(translationNS);
     const { allowedStatuses, $status, statusChanged } = model;
+
     const status = useUnit($status);
     const onChangeValue = useUnit(statusChanged);
-
-    const selectorLabel = t(SELECTOR_LABEL);
-    const selectorPlaceholder = t(SELECTOR_PLACEHOLDER);
 
     const hydratedStatus = (key: string): string => {
         return t(key);
@@ -92,8 +78,8 @@ const Selector: FunctionComponent = () => {
     return (
         <Select
             fullWidth
-            label={selectorLabel}
-            placeholder={selectorPlaceholder}
+            label={t(SELECTOR_LABEL)}
+            placeholder={t(SELECTOR_PLACEHOLDER)}
             selectedKeys={status}
             onSelectionChange={onChangeValue}
             selectionMode="single"
@@ -113,7 +99,6 @@ const Message: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
     const model = factory.useModel();
     const isRejected = useUnit(model.$isRejectStatus);
-    const label = isRejected ? t(REJECT_REASON_LABEL) : t(SUCCESS_REASON_LABEL);
 
     const onChangeValue = useUnit(model.messageChanged);
 
@@ -122,7 +107,9 @@ const Message: FunctionComponent = () => {
             fullWidth
             variant="bordered"
             isRequired={isRejected}
-            label={label}
+            label={
+                isRejected ? t(REJECT_REASON_LABEL) : t(SUCCESS_REASON_LABEL)
+            }
             onValueChange={onChangeValue}
         />
     );
@@ -131,22 +118,21 @@ const Message: FunctionComponent = () => {
 const SubmitButton: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
     const model = factory.useModel();
-    const pending = useUnit(model.$pending);
-    const label = t(SUBMIT_BUTTON_LABEL);
 
-    const isValidate = useUnit(model.$formValid);
+    const pending = useUnit(model.$pending);
+    const isValid = useUnit(model.$formValid);
 
     const onPress = useUnit(model.submitPressed);
 
     return (
         <Button
             color="primary"
-            isDisabled={!isValidate}
+            isDisabled={!isValid}
             onPress={onPress}
             fullWidth
             isLoading={pending}
         >
-            {label}
+            {t(SUBMIT_BUTTON_LABEL)}
         </Button>
     );
 };
@@ -154,13 +140,12 @@ const SubmitButton: FunctionComponent = () => {
 const CancelButton: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
     const model = factory.useModel();
-    const onPress = useUnit(model.reset);
 
-    const label = t(CANCEL_BUTTON_LABEL);
+    const onPress = useUnit(model.reset);
 
     return (
         <Button variant="light" onPress={onPress} fullWidth>
-            {label}
+            {t(CANCEL_BUTTON_LABEL)}
         </Button>
     );
 };

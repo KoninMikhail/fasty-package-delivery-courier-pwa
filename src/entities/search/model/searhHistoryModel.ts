@@ -1,6 +1,5 @@
 import { createEvent, createStore } from 'effector';
 import { persist } from 'effector-storage/local';
-import { debug } from 'patronum';
 import { SearchQueryHistoryItem } from '../types';
 
 /**
@@ -28,5 +27,3 @@ export const $queryHistory = createStore<SearchQueryHistoryItem[]>([])
     );
 
 persist({ store: $queryHistory, key: 'queryHistory' });
-
-debug($queryHistory);

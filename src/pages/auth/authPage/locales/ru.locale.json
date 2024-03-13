@@ -1,5 +1,5 @@
 {
-  "page.title": "Войти",
+  "page.title": "Войти | {{appName}} - {{appDescription}}",
   "app.description": "Таск менеджер для курьеров",
   "greetings.welcome": "Добро пожаловать",
   "greetings.description": "Войдите в свой профиль для того чтобы начать работу и получать новые доставки",

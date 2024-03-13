@@ -1,7 +1,7 @@
 import { makeApi, makeErrors } from '@zodios/core';
 import { z } from 'zod';
 import { format, parse } from 'date-fns';
-import { deliverySchema } from '../schemas';
+import { deliveryPaginationSchema, deliverySchema } from '../schemas';
 
 export const deliveriesErrors = makeErrors([]);
 
@@ -94,7 +94,7 @@ export const deliveriesApi = makeApi([
         path: '/history',
         alias: 'getDeliveriesHistory',
         description: 'Fetch deliveries history',
-        response: z.array(deliverySchema),
+        response: deliveryPaginationSchema,
     },
     {
         method: 'get',

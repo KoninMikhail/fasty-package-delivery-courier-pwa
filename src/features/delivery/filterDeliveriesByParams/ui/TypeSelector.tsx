@@ -11,27 +11,15 @@ import {
 import { FaCar } from 'react-icons/fa';
 import { GiGymBag } from 'react-icons/gi';
 import { useUnit } from 'effector-react';
-import { sharedConfigLocale } from '@/shared/config';
 import { useTranslation } from 'react-i18next';
 import { DeliveryType, factory } from '../model/model';
 
 import { translationNS } from '../config';
 
-import locale_en from '../locales/en.locale.json';
-import locale_ru from '../locales/ru.locale.json';
-
-const { locale } = sharedConfigLocale;
-
 const LABEL_UNSET_KEY = 'label.type.notSelected';
 const LABEL_ONCAR_KEY = 'label.type.onCar';
 const LABEL_ONFOOT_KEY = 'label.type.onFoot';
 const LABEL_SELECT_TYPE_KEY = 'label.type.selectType';
-
-/**
- * locale.ts
- */
-locale.addResourceBundle('en', translationNS, locale_en);
-locale.addResourceBundle('ru', translationNS, locale_ru);
 
 type OptionsDictionary = {
     [key in DeliveryType]: {

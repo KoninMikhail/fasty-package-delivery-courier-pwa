@@ -9,35 +9,15 @@ import {
 } from '@nextui-org/react';
 import { MdArrowBack } from 'react-icons/md';
 import { useUnit } from 'effector-react';
-import { sharedConfigRoutes, sharedConfigLocale } from '@/shared/config';
-import { sharedLibBrowser } from '@/shared/lib';
+import { sharedConfigRoutes } from '@/shared/config';
 import { PropsWithChildren, useRef } from 'react';
 import { RelatedQueries, searchHistoryModel } from '@/entities/search';
 import { sessionModel } from '@/entities/viewer';
 import { SetQueryField } from '@/entities/search/ui/SetQueryField';
-import { translationNS } from '../config';
 import { $isOpened, clickCloseArrow, clickSearchButton } from '../model';
 
-import locale_en from '../locales/en.locale.json';
-import locale_ru from '../locales/ru.locale.json';
-
-const { locale } = sharedConfigLocale;
-const { useKeyPress } = sharedLibBrowser;
 const { RouteName } = sharedConfigRoutes;
 const { SEARCH_PAGE } = RouteName;
-
-/**
- * Constants
- */
-
-const SEARCH_BUTTON_TEXT = 'action.search';
-const RECENT_QUERIES_TEXT = 'queries.recents';
-
-/**
- * locale.ts
- */
-locale.addResourceBundle('en', translationNS, locale_en);
-locale.addResourceBundle('ru', translationNS, locale_ru);
 
 /**
  * Layout

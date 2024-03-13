@@ -1,20 +1,10 @@
 import type { PropsWithChildren } from 'react';
-import { sharedConfigLocale } from '@/shared/config/locale';
 import { useTranslation } from 'react-i18next';
 import { sharedUiComponents } from '@/shared/ui';
 import { translationNS } from '../config';
 import { navbarItems } from '../data';
-import locale_en from '../locales/en.locale.json';
-import locale_ru from '../locales/ru.locale.json';
 
-const { locale } = sharedConfigLocale;
 const { Menu, MenuItem } = sharedUiComponents;
-
-/**
- * locale.ts
- */
-locale.addResourceBundle('en', translationNS, locale_en);
-locale.addResourceBundle('ru', translationNS, locale_ru);
 
 /**
  * Components
@@ -34,7 +24,6 @@ const NavbarContainer: FunctionComponent<PropsWithChildren> = ({
  */
 export const NavbarMobile: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
-
     return (
         <NavbarContainer>
             <Menu

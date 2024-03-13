@@ -1,5 +1,6 @@
 export const APP_NAME = 'Fasty';
 export const APP_DESCRIPTION = {
+    'en-US': 'Business app for couriers',
     en: 'Business app for couriers',
     ru: 'Таск менеджер для курьеров',
 };

@@ -1,28 +1,14 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { User, Image } from '@nextui-org/react';
+import { Image, User } from '@nextui-org/react';
 import { sharedUiComponents } from '@/shared/ui';
-import { sharedConfigLocale } from '@/shared/config/locale';
 import { sharedConfigRoutes } from '@/shared/config';
-
 import { navbarItems } from '../data';
-
-import locale_en from '../locales/en.locale.json';
-import locale_ru from '../locales/ru.locale.json';
-
 import { translationNS } from '../config';
 
-const { locale } = sharedConfigLocale;
 const { Menu, MenuItem } = sharedUiComponents;
 const { RouteName } = sharedConfigRoutes;
-
 const { ROOT_PAGE } = RouteName;
-
-/**
- * locale.ts
- */
-locale.addResourceBundle('en', translationNS, locale_en);
-locale.addResourceBundle('ru', translationNS, locale_ru);
 
 /**
  * @name Header

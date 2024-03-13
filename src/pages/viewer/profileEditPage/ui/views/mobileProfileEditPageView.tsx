@@ -27,7 +27,6 @@ const { NavbarMobile } = widgetNavbarMobileUi;
 /**
  * Constants
  */
-
 const PERSONAL_INFO_LABEL = 'section.label.personalInfo';
 const CHANGE_PASSWORD_LABEL = 'section.label.changePassword';
 const CHANGE_PASSWORD_DESCRIPTION = 'section.description.changePassword';

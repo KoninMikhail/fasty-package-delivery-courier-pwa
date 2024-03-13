@@ -12,14 +12,9 @@ import {
     Slider,
 } from '@nextui-org/react';
 import { useState } from 'react';
-import { sharedConfigLocale } from '@/shared/config';
 
 import { useTranslation } from 'react-i18next';
 import { MAX_WEIGHT_KG, translationNS } from '../config';
-import locale_en from '../locales/en.locale.json';
-import locale_ru from '../locales/ru.locale.json';
-
-const { locale } = sharedConfigLocale;
 
 const LABEL_CARGO_WEIGHT_POPOVER_TITLE_KEY = 'label.weight.popoverTitle';
 const LABEL_CARGO_WEIGHT_POPOVER_RANGE_LABEL_KEY =
@@ -27,12 +22,6 @@ const LABEL_CARGO_WEIGHT_POPOVER_RANGE_LABEL_KEY =
 const VALUE_WRAPPER_KEY = 'value.weight';
 const CONTENT_TEXT_SELECT_WEIGHT = 'content.weight.text.selectWeight';
 const CONTENT_TEXT_WEIGHT_RANGE = 'content.weight.text.inRange';
-
-/**
- * locale.ts
- */
-locale.addResourceBundle('en', translationNS, locale_en);
-locale.addResourceBundle('ru', translationNS, locale_ru);
 
 export const WeightSelector = modelView(factory, () => {
     const model = factory.useModel();

@@ -11,6 +11,7 @@
   "delivery.type.express.label.false": "Нет",
   "delivery.data.fallback.address": "Не указан",
   "delivery.data.fallback.contents": "Не указано",
+  "delivery.data.fallback.city": "Москва",
   "delivery.card.label.address": "Адрес",
   "delivery.card.label.id": "Номер заказа",
   "delivery.card.label.storage": "Содержимое",
