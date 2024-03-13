@@ -17,6 +17,7 @@ export default {
             'map-light': "url('/assets/images/map-bg-light.jpg')",
             'map-dark': "url('/assets/images/map-bg-dark.jpg')",
             'delivery-not-exist': "url('/icons/delivery-not-exist.png')",
+            ...defaultTheme.backgroundImage,
         },
     },
     darkMode: 'class',
