@@ -2,7 +2,7 @@ import { PropsWithChildren } from 'react';
 
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { sharedUiLayouts } from '@/shared/ui';
-import { Image, Button, Divider, Spacer } from '@nextui-org/react';
+import { Button, Divider, Image, Spacer } from '@nextui-org/react';
 import { SlSocialVkontakte } from 'react-icons/sl';
 import { IoLogoYoutube } from 'react-icons/io';
 import { useTranslation } from 'react-i18next';
@@ -27,6 +27,7 @@ const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
  */
 export const MobileSettingsPageView: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
+
     return (
         <>
             <MainContainer>

@@ -19,7 +19,7 @@ export const usersApi = makeApi([
     {
         method: 'patch',
         path: '/:userId',
-        alias: 'changeUserPassword',
+        alias: 'patchUserById',
         description: 'Update a user by its ID',
         response: z.any(),
         parameters: [
