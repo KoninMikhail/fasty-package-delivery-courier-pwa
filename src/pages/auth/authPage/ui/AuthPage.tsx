@@ -48,7 +48,7 @@ const TRANSLATION = {
 const Root: FunctionComponent<PropsWithChildren> = ({ children }) => (
     <div className="h-dvh w-screen">
         <div className="absolute inset-0 h-full w-full bg-[url('/assets/images/auth_bg.jpg')] bg-cover bg-[left_-10rem_top] md:bg-center">
-            <div className="bg-gradient-to-t absolute bottom-0 h-1/2 w-full from-background from-45% to-transparent" />
+            <div className="absolute bottom-0 h-1/2 w-full bg-gradient-to-t from-background from-45% to-transparent" />
             <div className="grid h-full w-full grid-cols-1 grid-rows-[auto_max-content]">
                 {children}
             </div>
@@ -194,7 +194,7 @@ export const AuthPage: FunctionComponent = () => {
                         <NavbarBrand>
                             <Logo
                                 headline={APP_NAME}
-                                description={t('app.description')}
+                                description={APP_DESCRIPTION[currentLanguage]}
                             />
                         </NavbarBrand>
                         <NavbarTools>
