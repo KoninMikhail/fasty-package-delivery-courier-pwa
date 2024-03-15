@@ -20,9 +20,9 @@ export const DayWrapper: FunctionComponent<{
         {
             'rounded-l-2xl': !singleDay && firstDayOfSelect,
             'rounded-r-2xl': !singleDay && lastDayOfSelect,
-            'after:bg-gray-100 bg-gray-100':
+            'after:bg-content2 bg-content2':
                 !singleDay && isSelectedDay && !lastDayOfSelect,
-            '!w-10 mr-2 bg-gray-100 pr-0': lastDayOfSelect,
+            '!w-10 mr-2 bg-content2 pr-0': lastDayOfSelect,
         },
     );
 

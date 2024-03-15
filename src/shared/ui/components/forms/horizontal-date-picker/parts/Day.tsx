@@ -28,7 +28,7 @@ export const Day: FunctionComponent<DayInfo> = ({
     };
 
     const componentStyles = clsx('p-2 h-16 text-center', {
-        'rounded-2xl bg-gray-200 h-full': isSelected,
+        'rounded-2xl bg-content3 h-full': isSelected,
     });
 
     const weekDayLabelStyles = clsx(
