@@ -9,7 +9,6 @@ import {
     useDisclosure,
 } from '@nextui-org/react';
 import { ChangeEvent, useRef, useState } from 'react';
-import { factory } from '../model';
 import 'react-image-crop/src/ReactCrop.scss';
 import {
     centerCrop,
@@ -19,27 +18,141 @@ import {
     ReactCrop,
 } from 'react-image-crop';
 import { setCanvasPreview } from '@/features/viewer/changeAvatar/lib/utils';
+import { useTranslation } from 'react-i18next';
+import { useUnit } from 'effector-react';
+import { factory } from '../model';
+import { translationNS } from '../config';
 
 const ASPECT_RATIO = 1;
 const MIN_DIMENSION = 150;
+const ALLOWED_FORMATS = [
+    'image/jpeg',
+    'image/png',
+    'image/jpg',
+    'image/gif',
+    'image/bmp',
+    'image/webp',
+    'image/svg+xml',
+    'image/tiff',
+    'image/x-icon',
+    'image/vnd.microsoft.icon',
+    'image/vnd.wap.wbmp',
+    'image/apng',
+    'image/avif',
+    'image/flif',
+    'image/x-portable-pixmap',
+    'image/x-portable-anymap',
+    'image/x-portable-bitmap',
+    'image/x-portable-graymap',
+    'image/x-portable-pixmap',
+    'image/x-xbitmap',
+    'image/x-xpixmap',
+    'image/x-xwindowdump',
+    'image/bmp',
+    'image/x-bmp',
+    'image/x-ms-bmp',
+    'image/x-win-bitmap',
+    'image/x-windows-bmp',
+    'image/x-ms-bmp',
+    'image/x-icon',
+    'image/x-ico',
+    'image/ico',
+    'image/x-win-bitmap',
+    'image/x-win-bmp',
+    'image/vnd.microsoft.icon',
+    'image/x-jg',
+];
+const TRANSLATION = {
+    BUTTON_LABEL: 'uploadButton.text',
+};
 
-export const UploadButton = modelView(factory, () => {
-    const imgReference = useRef(null);
-    const previewCanvasReference = useRef(null);
-    const [imgSource, setImgSource] = useState('');
-    const [crop, setCrop] = useState<PercentCrop>();
-    const [error, setError] = useState('');
+interface UploadInputProperties {
+    onSelectFile: (event: ChangeEvent<HTMLInputElement>) => void;
+}
+
+const UploadInput: FunctionComponent<UploadInputProperties> = ({
+    onSelectFile,
+}) => {
+    const model = factory.useModel();
+    const { t } = useTranslation(translationNS);
+
+    const isPending = useUnit(model.$isPending);
     const fileInputReference = useRef<HTMLInputElement>(null);
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-    const onPressCustomButton = (): void => {
+    const onPressUploadButton = (): void => {
         if (fileInputReference.current) {
             fileInputReference.current.click();
         }
     };
 
+    return (
+        <>
+            <input
+                ref={fileInputReference}
+                type="file"
+                accept={ALLOWED_FORMATS.toString()}
+                className="hidden"
+                onChange={onSelectFile}
+            />
+            <Button
+                onPress={onPressUploadButton}
+                size="sm"
+                isLoading={isPending}
+            >
+                {isPending ? 'loading' : t(TRANSLATION.BUTTON_LABEL)}
+            </Button>
+        </>
+    );
+};
+
+const ModalActions: FunctionComponent<{
+    onConfirmPressed: () => void;
+    onCancelPressed: () => void;
+}> = ({ onConfirmPressed, onCancelPressed }) => {
+    const { t } = useTranslation(translationNS);
+
+    return (
+        <div className="flex w-full gap-2">
+            <Button color="danger" fullWidth onPress={onCancelPressed}>
+                {t('cancel.text')}
+            </Button>
+            <Button fullWidth color="primary" onPress={onConfirmPressed}>
+                {t('confirm.text')}
+            </Button>
+        </div>
+    );
+};
+
+export const Error: FunctionComponent<{ error: string }> = () => {
+    const { t } = useTranslation(translationNS);
+    return <p>{t('error.text')}</p>;
+};
+
+export const UploadButton = modelView(factory, () => {
+    const model = factory.useModel();
+    const imgReference = useRef<HTMLImageElement>(null);
+    const previewCanvasReference = useRef<HTMLCanvasElement>(null);
+
+    const [imgSource, setImgSource] = useState('');
+
+    const [dataUrl, setDataUrl] = useUnit([
+        model.$dataUrl,
+        model.dataUrlChanged,
+    ]);
+
+    const [crop, setCrop] = useState<PercentCrop>();
+    const [error, setError] = useState('');
+
+    const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+    const [progress, confirm, cancel] = useUnit([
+        model.$isPending,
+        model.confirmPressed,
+        model.cancelPressed,
+    ]);
+
     const onSelectFile = (event: ChangeEvent<HTMLInputElement>): void => {
         const file = event.target.files?.[0];
+
         if (!file) return;
 
         const reader = new FileReader();
@@ -50,6 +163,7 @@ export const UploadButton = modelView(factory, () => {
 
             imageElement.addEventListener('load', (imageEvent) => {
                 if (error) setError('');
+
                 const { naturalWidth, naturalHeight } =
                     imageEvent.currentTarget as HTMLImageElement;
                 if (
@@ -83,45 +197,55 @@ export const UploadButton = modelView(factory, () => {
         setCrop(centeredCrop);
     };
 
+    const onPressSubmit = (): void => {
+        if (imgReference.current && previewCanvasReference.current && crop) {
+            setCanvasPreview(
+                imgReference.current, // HTMLImageElement
+                previewCanvasReference.current, // HTMLCanvasElement
+                convertToPixelCrop(
+                    crop,
+                    imgReference.current.width,
+                    imgReference.current.height,
+                ),
+            );
+            onClose();
+            setDataUrl(previewCanvasReference.current.toDataURL());
+            confirm();
+        }
+    };
+
+    const onPressCancel = (): void => {
+        onClose();
+        cancel();
+    };
+
     return (
-        <div>
-            <input
-                ref={fileInputReference}
-                type="file"
-                accept="image/jpeg, image/png, image/jpg, image/gif, image/bmp, image/webp, image/svg+xml, image/tiff, image/x-icon, image/vnd.microsoft.icon, image/vnd.wap.wbmp, image/apng, image/avif, image/flif, image/x-portable-pixmap, image/x-portable-anymap, image/x-portable-bitmap, image/x-portable-graymap, image/x-portable-pixmap, image/x-xbitmap, image/x-xpixmap, image/x-xwindowdump, image/bmp, image/x-bmp, image/x-ms-bmp, image/x-win-bitmap, image/x-windows-bmp, image/x-ms-bmp, image/x-icon, image/x-ico, image/ico, image/x-win-bitmap, image/x-win-bmp, image/vnd.microsoft.icon, image/x-jg"
-                className="hidden"
-                onChange={onSelectFile}
-            />
-            <Button onPress={onPressCustomButton} size="sm">
-                Выбрать файл
-            </Button>
+        <>
+            <UploadInput onSelectFile={onSelectFile} />
             <Modal
                 isOpen={isOpen}
                 onOpenChange={onOpenChange}
                 isDismissable={false}
                 placement="center"
+                size="xl"
                 isKeyboardDismissDisabled
+                backdrop="blur"
             >
                 <ModalContent>
                     {(onClose) => (
                         <>
                             <ModalHeader className="flex flex-col gap-1">
-                                Modal Title
+                                Выберите аватар
                             </ModalHeader>
                             <ModalBody>
-                                {error ? (
-                                    <p className="text-xs text-red-400">
-                                        {error}
-                                    </p>
-                                ) : null}
+                                {error ? <Error error={error} /> : null}
                                 {imgSource ? (
                                     <div className="flex flex-col items-center">
                                         <ReactCrop
                                             crop={crop}
-                                            onChange={(
-                                                pixelCrop,
-                                                percentCrop,
-                                            ) => setCrop(percentCrop)}
+                                            onChange={(_, percentCrop) =>
+                                                setCrop(percentCrop)
+                                            }
                                             circularCrop
                                             keepSelection
                                             aspect={ASPECT_RATIO}
@@ -152,37 +276,15 @@ export const UploadButton = modelView(factory, () => {
                                 ) : null}
                             </ModalBody>
                             <ModalFooter>
-                                <Button
-                                    color="danger"
-                                    variant="light"
-                                    onPress={onClose}
-                                >
-                                    Close
-                                </Button>
-                                <Button
-                                    color="primary"
-                                    onPress={() => {
-                                        setCanvasPreview(
-                                            imgReference.current, // HTMLImageElement
-                                            previewCanvasReference.current, // HTMLCanvasElement
-                                            convertToPixelCrop(
-                                                crop,
-                                                imgReference.current.width,
-                                                imgReference.current.height,
-                                            ),
-                                        );
-                                        const dataUrl =
-                                            previewCanvasReference.current.toDataURL();
-                                        console.log(dataUrl);
-                                    }}
-                                >
-                                    Action
-                                </Button>
+                                <ModalActions
+                                    onConfirmPressed={onPressSubmit}
+                                    onCancelPressed={onPressCancel}
+                                />
                             </ModalFooter>
                         </>
                     )}
                 </ModalContent>
             </Modal>
-        </div>
+        </>
     );
 });

@@ -11,7 +11,7 @@ type ResetPasswordFxParameters = {
 
 const resetPasswordFx = createEffect({
     handler: async ({ id, password }: ResetPasswordFxParameters) => {
-        await apiClient.changeUserPassword(
+        await apiClient.patchUserById(
             { password },
             {
                 params: {
@@ -22,9 +22,20 @@ const resetPasswordFx = createEffect({
     },
 });
 
+const changeAvatarFx = createEffect({
+    handler: async ({ avatar, userId }: { avatar: string; userId: number }) => {
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+        console.log('avatar', avatar);
+        return avatar;
+    },
+});
+
 export const changePasswordModel = ChangePassword.factory.createModel({
-    targetUser: sessionModel.$viewerProfileStore,
+    targetUser: sessionModel.$sessionStore,
     updateUserFx: resetPasswordFx,
 });
 
-export const changeAvatarModel = ChangeAvatar.factory.createModel({});
+export const changeAvatarModel = ChangeAvatar.factory.createModel({
+    user: sessionModel.$sessionStore,
+    changeAvatarFx,
+});

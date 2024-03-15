@@ -67,6 +67,7 @@
 		"@testing-library/user-event": "14.5.2",
 		"@types/compose-function": "^0.0.33",
 		"@types/css-mediaquery": "0.1.4",
+		"@types/data-urls": "^3.0.4",
 		"@types/js-cookie": "^3.0.6",
 		"@types/leaflet": "^1.9.8",
 		"@types/react": "18.2.48",

@@ -9,11 +9,11 @@ import { createPaginationSchema } from './PaginationSchema';
 const timeSchema = z
     .string()
     .regex(
-        /^([01]?\d|2[0-3]):[0-5]\d$/,
-        'Invalid time format. Time must be in hh:mm format',
+        /^([01]?\d|2[0-3]):([0-5]?\d):([0-5]?\d)$/,
+        'Invalid time format. Time must be in hh:mm:ss format',
     );
 
-export const delveryTypeSchema = z.union([
+export const deliveryTypeSchema = z.union([
     z.literal('car'),
     z.literal('foot'),
     z.literal('unknown'),

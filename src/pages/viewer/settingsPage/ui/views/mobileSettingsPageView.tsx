@@ -27,7 +27,6 @@ const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
  */
 export const MobileSettingsPageView: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
-
     return (
         <>
             <MainContainer>

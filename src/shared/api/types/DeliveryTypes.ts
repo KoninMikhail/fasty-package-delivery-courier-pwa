@@ -2,7 +2,7 @@ import { z } from 'zod';
 import {
     deliveryPaginationSchema,
     deliverySchema,
-    delveryTypeSchema,
+    deliveryTypeSchema,
     GetAvailableDeliveriesParametersSchema,
     GetAvailableDeliveriesResponseSchema,
     PatchDeliveryToCourierParametersSchema,
@@ -10,7 +10,7 @@ import {
 } from '../schemas';
 
 export type Delivery = z.infer<typeof deliverySchema>;
-export type DeliveryType = z.infer<typeof delveryTypeSchema>;
+export type DeliveryType = z.infer<typeof deliveryTypeSchema>;
 export type DeliveryPagination = z.infer<typeof deliveryPaginationSchema>;
 
 export type GetAvailableDeliveriesParams = z.infer<

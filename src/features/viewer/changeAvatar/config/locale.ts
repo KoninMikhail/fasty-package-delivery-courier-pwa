@@ -1,2 +1,2 @@
-export const translationNS = 'feature:switch_language';
+export const translationNS = 'feature:change_avatar';
 export const allowedLanguages = ['en', 'ru'];
