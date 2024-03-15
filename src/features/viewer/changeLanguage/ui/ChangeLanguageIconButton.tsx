@@ -1,4 +1,3 @@
-import { sharedConfigLocale } from '@/shared/config';
 import {
     Button,
     Dropdown,
@@ -11,19 +10,7 @@ import { sharedUiIcons } from '@/shared/ui';
 import { useState } from 'react';
 import { translationNS } from '../config';
 
-import locale_en from '../locales/en.locale.json';
-import locale_ru from '../locales/ru.locale.json';
-
-const { locale } = sharedConfigLocale;
 const { UsFlagIcon, RuFlagIcon } = sharedUiIcons;
-
-/**
- * locale.ts
- */
-locale.addResourceBundle('en', translationNS, locale_en);
-locale.addResourceBundle('ru', translationNS, locale_ru);
-
-/** \
 
 /**
  * @name ChangeLanguageButton
@@ -45,9 +32,7 @@ export const ChangeLanguageIconButton = (): JSX.Element => {
     return (
         <Dropdown>
             <DropdownTrigger>
-                <Button size="md" isIconOnly>
-                    {languageFlag}
-                </Button>
+                <Button size="md" isIconOnly startContent={languageFlag} />
             </DropdownTrigger>
             <DropdownMenu
                 aria-label="Change language"
@@ -60,14 +45,14 @@ export const ChangeLanguageIconButton = (): JSX.Element => {
                     startContent={<UsFlagIcon />}
                     onPress={() => onChangeLanguage('en')}
                 >
-                    <span>English</span>
+                    English
                 </DropdownItem>
                 <DropdownItem
                     key="ru"
                     startContent={<RuFlagIcon />}
                     onPress={() => onChangeLanguage('ru')}
                 >
-                    <span>Русский</span>
+                    Русский
                 </DropdownItem>
             </DropdownMenu>
         </Dropdown>
