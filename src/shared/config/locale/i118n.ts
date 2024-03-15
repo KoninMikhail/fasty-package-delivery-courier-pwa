@@ -16,3 +16,4 @@ await i18next
 
 // eslint-disable-next-line no-restricted-exports
 export { default as locale } from 'i18next';
+export { ErrorMessageKeys } from './errorMessageKeys';
