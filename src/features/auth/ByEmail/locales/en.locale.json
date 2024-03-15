@@ -3,7 +3,9 @@
   "email.placeholder": "Enter your email",
   "password.label": "Password",
   "password.placeholder": "Enter your password",
-  "password.validation.rules": "Minimum 8 characters, letters, numbers and special characters.",
-  "error.validation": "Please check your data and try again.",
-  "signIn": "Sign In"
+  "password.validation.rules": "Minimum 6 characters, letters, numbers and special characters.",
+  "signIn": "Sign In",
+  "error.unauthorized": "Please check your data and try again.",
+  "error.server": "Server error. Please try again later.",
+  "error.unknown": "Unknown error. Please try again later."
 }

@@ -5,6 +5,7 @@ import { ChangeEvent } from 'react';
 import { Button, Input } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { sharedUiComponents } from '@/shared/ui';
+import { useKeyPress } from '@/shared/lib/browser';
 import { factory } from '../model/model';
 
 import { translationNS } from '../config';
@@ -113,6 +114,10 @@ const SignInButton: FunctionComponent = () => {
     const onPressButtonHandler = (): void => {
         model.submitPressed();
     };
+
+    useKeyPress(['Enter'], () => {
+        if (allowSignIn) onPressButtonHandler();
+    });
 
     return (
         <Button

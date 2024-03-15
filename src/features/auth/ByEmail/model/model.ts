@@ -3,10 +3,10 @@ import type { Effect } from 'effector';
 import { combine, sample, createStore, createEvent } from 'effector';
 import isEmail from '@/shared/lib/type-guards/isEmail/isEmail';
 import { isPassword } from '@/shared/lib/type-guards/isPassword';
-import { LoginRequest, Session } from '@/shared/auth';
+import { AuthResponse, LoginByEmailCredentials } from '@/shared/api';
 
 interface FactoryOptions {
-    registerFx: Effect<LoginRequest, Session, Error>;
+    registerFx: Effect<LoginByEmailCredentials, AuthResponse, Error>;
 }
 
 export const factory = modelFactory((options: FactoryOptions) => {
@@ -45,7 +45,9 @@ export const factory = modelFactory((options: FactoryOptions) => {
         .on(options.registerFx.fail, () => true)
         .reset(resetFormState, options.registerFx.done);
     const $failMessage = createStore<string>('')
-        .on(options.registerFx.failData, (state, error) => error.message)
+        .on(options.registerFx.failData, (state, error) => {
+            return error.message;
+        })
         .reset(resetFormState)
         .reset(options.registerFx.done, resetFormState);
 
