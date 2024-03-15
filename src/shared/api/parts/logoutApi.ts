@@ -11,7 +11,7 @@ export const logoutApi = makeApi([
             {
                 name: 'body',
                 type: 'Body',
-                schema: z.object({}),
+                schema: z.unknown(),
             },
         ],
         response: z.unknown(),
