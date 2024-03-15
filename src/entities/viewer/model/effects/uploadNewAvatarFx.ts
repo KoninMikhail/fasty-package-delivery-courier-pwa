@@ -1,6 +1,6 @@
 import {createEffect} from "effector";
 
-export const loadAvatarToBackendFx = createEffect<File, void, Error>(async (file) => {
+export const uploadNewAvatarFx = createEffect<File, void, Error>(async (file) => {
     const formData = new FormData();
     formData.append('avatar', file);
     try {

@@ -1,5 +1,5 @@
 import './middleware/eventListener';
 
-export * from './api';
+export * from './model/effects';
 export * from './ui';
 export * as sessionModel from './model/sessionModel';

@@ -2,7 +2,7 @@ import { createEvent, createStore, sample } from 'effector';
 import { User } from '@/shared/api';
 import { empty, not, once, pending } from 'patronum';
 import { createGate } from 'effector-react';
-import { authByEmailFx, getViewerProfileFx, logoutFx } from '../api';
+import { authByEmailFx, getViewerProfileFx, logoutFx } from './effects';
 
 /**
  * Gates
