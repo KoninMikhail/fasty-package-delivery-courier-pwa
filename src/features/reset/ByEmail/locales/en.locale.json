@@ -2,5 +2,7 @@
   "email.label": "Email",
   "email.placeholder": "Enter your email",
   "request.send": "Request password",
-  "request.success": "Check your email and follow instructions"
+  "request.success": "Check your email and follow instructions",
+  "error.server": "Server error. Please try again later.",
+  "error.unknown": "Unknown error. Please try again later."
 }
