@@ -4,15 +4,10 @@ import { ChangeEvent, useEffect } from 'react';
 import { Button, ButtonProps, Input } from '@nextui-org/react';
 import { modelView } from 'effector-factorio';
 import { useTranslation } from 'react-i18next';
-import { sharedConfigLocale } from '@/shared/config';
 import { useKeyPress } from '@/shared/lib/browser';
 import { factory } from '../model';
 
 import { translationNS } from '../config';
-import locale_en from '../locales/en.locale.json';
-import locale_ru from '../locales/ru.locale.json';
-
-const { locale } = sharedConfigLocale;
 
 /**
  * Constants
@@ -22,18 +17,13 @@ const EMAIL_PLACEHOLDER_TEXT_KEY = 'email.placeholder';
 const SEND_REQUEST_TEXT_KEY = 'request.send';
 const SEND_SUCCESS_TEXT_KEY = 'request.success';
 
-/*
- * locale.ts
- */
-locale.addResourceBundle('en', translationNS, locale_en);
-locale.addResourceBundle('ru', translationNS, locale_ru);
-
 /**
  * Components
  */
 const EmailField: FunctionComponent<
     Pick<InputProps, 'label' | 'placeholder'>
 > = ({ label, placeholder }) => {
+    const { t } = useTranslation(translationNS);
     const model = factory.useModel();
     const email = useUnit(model.$login);
     const pending = useUnit(model.$pending);
@@ -57,7 +47,7 @@ const EmailField: FunctionComponent<
         <Input
             isClearable
             isInvalid={failed}
-            errorMessage={failedMessage}
+            errorMessage={t(failedMessage)}
             isDisabled={pending || done}
             label={label}
             placeholder={placeholder}
@@ -84,7 +74,9 @@ const SendResetRequestButton: FunctionComponent<
         model.submitPressed();
     };
 
-    useKeyPress(['Enter'], onPressButtonHandler);
+    useKeyPress(['Enter'], () => {
+        if (allowedSend && !pending && !done) onPressButtonHandler();
+    });
 
     return (
         <Button
