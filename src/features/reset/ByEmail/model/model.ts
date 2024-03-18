@@ -2,9 +2,10 @@ import { createEvent, createStore, Effect, sample } from 'effector';
 import { modelFactory } from 'effector-factorio';
 import { Email } from '@/shared/lib/type-guards/isEmail';
 import isEmail from '@/shared/lib/type-guards/isEmail/isEmail';
+import { ResetPasswordRequest } from '@/shared/api';
 
 interface FactoryOptions {
-    resetFx: Effect<{ email: string }, void, Error>;
+    resetFx: Effect<ResetPasswordRequest, void, Error>;
 }
 
 export const factory = modelFactory((options: FactoryOptions) => {
@@ -12,11 +13,11 @@ export const factory = modelFactory((options: FactoryOptions) => {
     const submitPressed = createEvent();
     const resetFormState = createEvent();
 
-    const $login = createStore<string>('')
+    const $email = createStore<string>('')
         .on(loginChanged, (_, next) => next)
         .reset(resetFormState, options.resetFx.done);
 
-    const $allowedSend = $login.map(
+    const $allowedSend = $email.map(
         (login) => login.length > 0 && isEmail(login),
     );
     const $pending = options.resetFx.pending;
@@ -32,9 +33,9 @@ export const factory = modelFactory((options: FactoryOptions) => {
         .reset(resetFormState);
 
     // Create a form object that can be updated with a single handler
-    const $form = createStore<{ login: Email }>({ login: '' }).on(
-        $login,
-        (state, login) => ({ ...state, login }),
+    const $form = createStore<{ email: Email }>({ email: '' }).on(
+        $email,
+        (state, email) => ({ ...state, email }),
     );
 
     // Only trigger the effect when allowed to send
@@ -45,7 +46,7 @@ export const factory = modelFactory((options: FactoryOptions) => {
     });
 
     return {
-        $login,
+        $login: $email,
         $pending,
         $done,
         $fail,

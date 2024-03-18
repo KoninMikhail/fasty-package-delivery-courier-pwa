@@ -5,7 +5,7 @@ import { ForgotPasswordSchema } from '../schemas';
 export const forgotPasswordApi = makeApi([
     {
         method: 'post',
-        path: '/forgot-password',
+        path: '/',
         alias: 'forgotPassword',
         description: 'Send a password reset email',
         parameters: [

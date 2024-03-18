@@ -5,6 +5,7 @@ import { Button, ButtonProps, Input } from '@nextui-org/react';
 import { modelView } from 'effector-factorio';
 import { useTranslation } from 'react-i18next';
 import { sharedConfigLocale } from '@/shared/config';
+import { useKeyPress } from '@/shared/lib/browser';
 import { factory } from '../model';
 
 import { translationNS } from '../config';
@@ -82,6 +83,8 @@ const SendResetRequestButton: FunctionComponent<
     const onPressButtonHandler = (): void => {
         model.submitPressed();
     };
+
+    useKeyPress(['Enter'], onPressButtonHandler);
 
     return (
         <Button
