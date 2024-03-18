@@ -20,7 +20,7 @@ const { ROOT_PAGE } = RouteName;
 export const Navbar: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
     return (
-        <header className="flex h-full min-w-72 flex-col rounded-r-3xl bg-content1 p-6">
+        <header className="bg-content-1 flex h-full min-w-72 flex-col rounded-r-3xl bg-foreground p-6 shadow-xl">
             <Link to={ROOT_PAGE}>
                 <Logo />
             </Link>
