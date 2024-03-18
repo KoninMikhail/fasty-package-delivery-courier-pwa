@@ -18,7 +18,7 @@ const { ROOT_PAGE } = RouteName;
 export const Header: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
     return (
-        <header className="flex min-w-[768px] gap-8 py-4 lg:mx-auto lg:w-[1200px]">
+        <header className="flex h-full gap-8 rounded-r-3xl bg-black">
             <Link to={ROOT_PAGE}>
                 <Image
                     width={70}
@@ -29,7 +29,7 @@ export const Header: FunctionComponent = () => {
             <div className="flex flex-grow items-center justify-center">
                 <Menu
                     items={navbarItems}
-                    orientation="horizontal"
+                    orientation="vertical"
                     renderItem={(item) => {
                         return (
                             <MenuItem to={item.href} label={t(item.label)} />

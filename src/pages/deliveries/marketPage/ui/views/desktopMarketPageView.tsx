@@ -10,34 +10,38 @@ const { Header } = widgetHeaderUi;
 const { MarketContent } = widgetMarketUi;
 
 const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
-    <main className="h-full w-full flex-col px-2 lg:mx-auto lg:w-[1200px]">
-        {children}
-    </main>
+    <main className="flex w-full flex-col px-2 lg:mx-auto">{children}</main>
 );
 
 export const DesktopMarketPageView: FunctionComponent = () => {
     return (
-        <>
-            <Header />
-            <Spacer y={16} />
-            <MainContainer>
-                <div>
-                    <Heading size="large" weight="bold">
-                        Активные доставки
-                    </Heading>
-                    <Spacer y={8} />
-                </div>
-                <Spacer y={16} />
-                <div>
-                    <Heading size="large" weight="bold">
-                        Взять доставку
-                    </Heading>
-                    <Spacer y={8} />
-                    <MarketContent />
-                </div>
-            </MainContainer>
-            <Spacer y={16} />
-            <Footer />
-        </>
+        <div
+            className="h-scr een
+
+        flex w-screen gap-8"
+        >
+            <div>
+                <Header />
+            </div>
+            <div className="h-full w-full flex-grow">
+                <MainContainer>
+                    <div>
+                        <Heading size="large" weight="bold">
+                            Активные доставки
+                        </Heading>
+                        <Spacer y={8} />
+                    </div>
+                    <Spacer y={16} />
+                    <div>
+                        <Heading size="large" weight="bold">
+                            Взять доставку
+                        </Heading>
+                        <Spacer y={8} />
+                        <MarketContent />
+                    </div>
+                </MainContainer>
+                <Footer />
+            </div>
+        </div>
     );
 };

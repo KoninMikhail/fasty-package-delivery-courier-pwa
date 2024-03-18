@@ -13,8 +13,7 @@ import { IoCall } from 'react-icons/io5';
 import { sharedServicesSubway } from '@/shared/services';
 import { useTranslation } from 'react-i18next';
 import { ReactNode } from 'react';
-import { getDeliveryAddress } from '../../lib/utils/getDeliveryAdress';
-import { getDeliveryMetro } from '../../lib/utils/getDeliveryMetro';
+import { getDeliveryAddress, getDeliveryMetro } from '../../lib';
 import { useEstimatedTime } from '../../lib/hooks/useEstimatedTime';
 import { translationNS } from '../../config';
 

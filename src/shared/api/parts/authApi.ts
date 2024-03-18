@@ -1,5 +1,15 @@
-import { makeApi } from '@zodios/core';
+import { makeApi, makeErrors } from '@zodios/core';
+import { z } from 'zod';
 import { AuthByEmailCredentialsSchema, AuthResponseSchema } from '../schemas';
+
+const errors = makeErrors([
+    {
+        status: 'default',
+        schema: z.object({
+            message: z.string(),
+        }),
+    },
+]);
 
 export const authApi = makeApi([
     {
@@ -15,5 +25,6 @@ export const authApi = makeApi([
                 schema: AuthByEmailCredentialsSchema,
             },
         ],
+        errors,
     },
 ]);

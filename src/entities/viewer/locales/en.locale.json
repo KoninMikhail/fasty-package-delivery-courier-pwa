@@ -1,0 +1,4 @@
+{
+  "effects.auth.error.unauthorized": "Please check your credentials",
+  "effects.auth.error.server": "Sorry, server unavailable"
+}
