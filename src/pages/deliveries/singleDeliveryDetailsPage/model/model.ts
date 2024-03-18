@@ -144,7 +144,7 @@ export const changeDeliveryStatusModel = SetDeliveryStatus.factory.createModel({
     patchDeliveryStatusFx: setDeliveryStatus,
 });
 
-export const mapModel = Route.Map.factory.createModel({
+export const mapModel = Route.Map.singleLocationFactory.createModel({
     center: {
         lat: 55.753_993_999_993_74,
         lng: 37.622_093_000_000_01,

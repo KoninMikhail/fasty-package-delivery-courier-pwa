@@ -1,9 +1,11 @@
 import { MapContainer } from './ui';
-import { mapFactory } from './factories/mapFactory';
+import { singleLocationFactory } from './factories/singleLocationFactory';
+import { multiLocationFactory } from './factories/multiLocationFactory';
 
 export const Route = {
     Map: {
-        factory: mapFactory,
-        SingleLocationMap: MapContainer,
+        multiLocationFactory,
+        singleLocationFactory,
+        Container: MapContainer,
     },
 };

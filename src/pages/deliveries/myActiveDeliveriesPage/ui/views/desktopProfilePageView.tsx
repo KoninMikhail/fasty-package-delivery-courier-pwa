@@ -6,6 +6,8 @@ import { UserCardRow } from '@/entities/user';
 import { sessionModel } from '@/entities/viewer';
 import { useTranslation } from 'react-i18next';
 import { Spacer, Tab, Tabs } from '@nextui-org/react';
+import { Route } from '@/entities/route';
+import { deliveriesMapModel } from '@/pages/deliveries/myActiveDeliveriesPage/model/model';
 import { translationNS } from '../../config';
 
 const { Footer } = widgetFooterUi;
@@ -41,8 +43,6 @@ export const DesktopProfilePageView: FunctionComponent<{
 }> = ({ heading }) => {
     const [selectedTab, setSelectedTab] = useState('list');
 
-    console.log(selectedTab);
-
     return (
         <Layout>
             <Navbar />
@@ -65,9 +65,10 @@ export const DesktopProfilePageView: FunctionComponent<{
                     </div>
                     <Spacer y={6} />
                     <div className="h-full w-full">
-                        <div className="grid auto-cols-max grid-flow-col grid-rows-1 gap-4 md:grid-rows-2 lg:grid-rows-3 xl:grid-rows-4 2xl:grid-rows-4">
-                            fsdfsd
-                        </div>
+                        <Route.Map.Container
+                            model={deliveriesMapModel}
+                            className="block h-96 w-full"
+                        />
                     </div>
                 </div>
             </MainContainer>

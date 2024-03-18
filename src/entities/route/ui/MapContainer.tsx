@@ -12,27 +12,31 @@ import { modelView } from 'effector-factorio';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { MapOptions } from 'leaflet';
 import { Spinner } from '@nextui-org/react';
-import { mapFactory } from '../factories/mapFactory';
+import { singleLocationFactory } from '../factories/singleLocationFactory';
 
 const DEFAULT_ZOOM = 12;
 
 const LocationMarker: FunctionComponent = () => {
-    const factory = mapFactory.useModel();
+    const factory = singleLocationFactory.useModel();
     const markers = useUnit(factory.$locations);
     const setPosition = useUnit(factory.locationChanged);
     const map = useMap();
 
     useEffect(() => {
-        if (markers) {
-            setPosition(markers);
-            map.setView(markers, map.getZoom(), { animate: true });
+        if (markers && markers.length > 0) {
+            setPosition(markers[0]);
+            map.setView(markers[0], map.getZoom(), { animate: true });
         }
     }, [markers, setPosition, map]);
 
     return markers === null ? null : (
-        <Marker position={markers}>
-            <Popup>You are here</Popup>
-        </Marker>
+        <>
+            {markers.map((marker, index) => (
+                <Marker key={index} position={marker}>
+                    <Popup>You are here</Popup>
+                </Marker>
+            ))}
+        </>
     );
 };
 
@@ -43,9 +47,9 @@ interface SimpleMapProperties {
 }
 
 export const MapContainer = modelView(
-    mapFactory,
+    singleLocationFactory,
     ({ className, zoom }: SimpleMapProperties) => {
-        const model = mapFactory.useModel();
+        const model = singleLocationFactory.useModel();
         const center = useUnit(model.$center);
 
         const [unmountMap, setUnmountMap] = useState<boolean>(false);
@@ -56,7 +60,6 @@ export const MapContainer = modelView(
                 setUnmountMap(true);
             };
         }, []);
-
         if (unmountMap) {
             return (
                 <div className={className}>
@@ -76,10 +79,7 @@ export const MapContainer = modelView(
                 scrollWheelZoom={false}
                 attributionControl={false}
             >
-                <TileLayer
-                    attribution=""
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
+                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                 <LocationMarker />
                 <ZoomControl position="bottomright" />
             </LeafletMapContainer>

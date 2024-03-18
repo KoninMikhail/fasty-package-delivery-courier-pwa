@@ -224,10 +224,7 @@ const Map: FunctionComponent = () => {
                     </Button>
                 </div>
             )}
-            <Route.Map.SingleLocationMap
-                className="h-[50vh] w-full"
-                model={mapModel}
-            />
+            <Route.Map.Container className="h-[50vh] w-full" model={mapModel} />
         </div>
     );
 };

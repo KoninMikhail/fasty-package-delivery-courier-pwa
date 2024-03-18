@@ -1,12 +1,6 @@
 import type { PropsWithChildren, ReactNode } from 'react';
 import { widgetNavbarUi } from '@/widgets/layout/navbar-desktop';
-import {
-    MapContainer,
-    Marker,
-    Popup,
-    TileLayer,
-    ZoomControl,
-} from 'react-leaflet';
+
 import { Chip, Divider, Spacer } from '@nextui-org/react';
 import { useUnit } from 'effector-react';
 import {
@@ -24,6 +18,7 @@ import {
     $$deliveryType,
     $$deliveryWeight,
     $$isViewerDelivery,
+    mapModel,
 } from '@/pages/deliveries/singleDeliveryDetailsPage/model';
 import { SubwayStationWithIcon } from '@/shared/services/subway';
 import { ClientContactCardList } from '@/entities/client';
@@ -31,6 +26,7 @@ import { UserCardRow } from '@/entities/user';
 import { Section } from '@/shared/ui/layouts';
 import { useTranslation } from 'react-i18next';
 import { widgetDeliveryStatusUi } from '@/widgets/deliveries/deliveryStatus';
+import { Route } from '@/entities/route';
 import { translationNS } from '../../config';
 
 const { Navbar } = widgetNavbarUi;
@@ -171,34 +167,16 @@ const DeliveryContactPerson: FunctionComponent = () => {
 
 export const DesktopDeliveryDetailsPageView: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
-    const position = {
-        lat: 51.505,
-        lng: -0.09,
-    };
     return (
         <Layout>
             <NavContainer>
                 <Navbar />
             </NavContainer>
             <Map>
-                <MapContainer
-                    center={position}
-                    zoom={13}
-                    className="z-40 h-full w-full"
-                    scrollWheelZoom={false}
-                    zoomControl={false}
-                >
-                    <TileLayer
-                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
-                    <Marker position={position}>
-                        <Popup>
-                            A pretty CSS3 popup. <br /> Easily customizable.
-                        </Popup>
-                    </Marker>
-                    <ZoomControl position="bottomright" />
-                </MapContainer>
+                <Route.Map.Container
+                    model={mapModel}
+                    className="h-full w-full"
+                />
             </Map>
             <DeliveryDetailsContainer>
                 <Section>
