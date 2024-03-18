@@ -110,6 +110,7 @@ const SignInButton: FunctionComponent = () => {
 
     const pending = useUnit(model.$pending);
     const allowSignIn = useUnit(model.$allowSubmit);
+    const hasError = useUnit(model.$fail);
 
     const onPressButtonHandler = (): void => {
         model.submitPressed();
@@ -121,7 +122,7 @@ const SignInButton: FunctionComponent = () => {
 
     return (
         <Button
-            isDisabled={!allowSignIn}
+            isDisabled={!allowSignIn || hasError}
             color="primary"
             isLoading={pending}
             onPress={onPressButtonHandler}

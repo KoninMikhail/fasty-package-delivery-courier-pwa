@@ -43,13 +43,22 @@ export const factory = modelFactory((options: FactoryOptions) => {
 
     const $fail = createStore<boolean>(false)
         .on(options.registerFx.fail, () => true)
-        .reset(resetFormState, options.registerFx.done);
+        .reset(
+            resetFormState,
+            options.registerFx.done,
+            loginChanged,
+            passwordChanged,
+        );
     const $failMessage = createStore<string>('')
         .on(options.registerFx.failData, (state, error) => {
             return error.message;
         })
-        .reset(resetFormState)
-        .reset(options.registerFx.done, resetFormState);
+        .reset(
+            options.registerFx.done,
+            resetFormState,
+            loginChanged,
+            passwordChanged,
+        );
 
     /**
      * effects
