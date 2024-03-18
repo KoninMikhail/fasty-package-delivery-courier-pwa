@@ -31,7 +31,7 @@ const Toolbar: FunctionComponent = () => {
         <div className="flex w-full items-center justify-between py-6 pr-4">
             <div className="w-1/2">
                 <Input
-                    placeholder="Поиск данных о доставке"
+                    placeholder="nextui"
                     labelPlacement="outside"
                     startContent={
                         <FiSearch className="pointer-events-none flex-shrink-0 text-xl text-default-400" />

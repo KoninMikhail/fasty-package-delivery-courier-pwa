@@ -15,7 +15,7 @@ const Layout: FunctionComponent<PropsWithChildren> = ({ children }) => (
 );
 
 const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
-    <main className="h-full w-full flex-col">{children}</main>
+    <main className="h-full w-full flex-col overflow-hidden">{children}</main>
 );
 
 const Toolbar: FunctionComponent<{ header: string }> = ({ header }) => {
@@ -40,7 +40,9 @@ export const DesktopMyDeliveriesHistoryView: FunctionComponent<{
             <Navbar />
             <MainContainer>
                 <Toolbar header={header} />
-                <DeliveriesHistoryList />
+                <div className="relative block h-full overflow-y-auto">
+                    <DeliveriesHistoryList />
+                </div>
             </MainContainer>
         </Layout>
     );
