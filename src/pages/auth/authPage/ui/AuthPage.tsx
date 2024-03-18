@@ -19,14 +19,15 @@ import { widgetResetPasswordModalUi } from '@/widgets/viewer/reset-password-moda
 import { widgetPrivacyPolicyModalUi } from '@/widgets/polices/privacyPolicyModal';
 import { widgetSignInModalUi } from '@/widgets/viewer/sign-in-modal';
 import { widgetTermsOfUseModalUi } from '@/widgets/polices/termsOfUseModal';
-
-import { CompanyLogoIcon } from '@/shared/ui/icons/CompanyLogoIcon';
+import { sharedUiBranding } from '@/shared/ui/';
 
 import { Navigate } from 'react-router-dom';
 import { Guest } from '@/entities/viewer/ui/Guest';
 import { Offline, SlowNetwork } from '@/entities/viewer';
 import { requestAuthModel, requestRecoveryModel } from '../model';
 import { translationNS } from '../config';
+
+const { Logo } = sharedUiBranding;
 
 const { APP_NAME, GITHUB_PAGE_URL, APP_DESCRIPTION } = sharedConfigConstants;
 const { isDevelopmentEnvironment } = sharedConfigEnvs;
@@ -83,22 +84,7 @@ const Greetings: FunctionComponent<{
         </div>
     </div>
 );
-const Logo: FunctionComponent<{
-    headline: string;
-    description: string;
-}> = ({ headline, description }) => {
-    return (
-        <div className="flex place-content-start items-center gap-2">
-            <div>
-                <CompanyLogoIcon className="text-5xl" width="0.7em" />
-            </div>
-            <div>
-                <div className="font-bold drop-shadow-xl">{headline}</div>
-                <div className="text-xs">{description}</div>
-            </div>
-        </div>
-    );
-};
+
 const SignInButton: FunctionComponent<{
     label: string;
     onPress: () => void;
@@ -192,10 +178,7 @@ export const AuthPage: FunctionComponent = () => {
                 <Section>
                     <Navbar>
                         <NavbarBrand>
-                            <Logo
-                                headline={APP_NAME}
-                                description={APP_DESCRIPTION[currentLanguage]}
-                            />
+                            <Logo />
                         </NavbarBrand>
                         <NavbarTools>
                             <ChangeLanguageIconButton />

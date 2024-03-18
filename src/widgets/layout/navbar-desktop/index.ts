@@ -1,3 +1,3 @@
 import './init';
 
-export * as widgetNavbarDesktopUi from './ui/ui';
+export * as widgetNavbarUi from './ui';

@@ -119,7 +119,7 @@ const AvailableDeliveries: FunctionComponent = () => {
                 <Heading>{heading}</Heading>
             </SectionHead>
             <Spacer y={2} />
-            <MarketDateSelector withOutPadding />
+            <MarketDateSelector typePicker="scroll" />
             <Spacer y={2} />
             <MarketFilterScrollable withOutPadding />
             <Spacer y={6} />

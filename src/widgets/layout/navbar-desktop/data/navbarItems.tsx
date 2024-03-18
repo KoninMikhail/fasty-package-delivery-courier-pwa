@@ -1,8 +1,9 @@
 import { LuPackage } from 'react-icons/lu';
-import { sharedConfigRoutes } from '@/shared/config';
 import { TbTruckDelivery } from 'react-icons/tb';
-import { IoMdSettings } from 'react-icons/io';
 import { MdChecklistRtl } from 'react-icons/md';
+import { IoMdSettings } from 'react-icons/io';
+
+import { sharedConfigRoutes } from '@/shared/config';
 
 const { RouteName } = sharedConfigRoutes;
 
@@ -28,6 +29,9 @@ export const navbarItems = [
         label: 'nav.history',
         href: DELIVERIES_HISTORY_PAGE,
     },
+];
+
+export const bottomToolItems = [
     {
         id: 'settings',
         icon: <IoMdSettings />,

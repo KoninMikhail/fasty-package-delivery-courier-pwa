@@ -1,1 +1,1 @@
-export * from './SingleLocationMap';
+export * from './MapContainer';

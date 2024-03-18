@@ -1,5 +1,5 @@
 import {
-    MapContainer,
+    MapContainer as LeafletMapContainer,
     Marker,
     Popup,
     TileLayer,
@@ -42,7 +42,7 @@ interface SimpleMapProperties {
     center?: MapOptions['center'];
 }
 
-export const SingleLocationMap = modelView(
+export const MapContainer = modelView(
     mapFactory,
     ({ className, zoom }: SimpleMapProperties) => {
         const model = mapFactory.useModel();
@@ -68,7 +68,7 @@ export const SingleLocationMap = modelView(
         }
 
         return (
-            <MapContainer
+            <LeafletMapContainer
                 center={center}
                 zoom={zoom || DEFAULT_ZOOM}
                 zoomControl={false}
@@ -82,7 +82,7 @@ export const SingleLocationMap = modelView(
                 />
                 <LocationMarker />
                 <ZoomControl position="bottomright" />
-            </MapContainer>
+            </LeafletMapContainer>
         );
     },
 );

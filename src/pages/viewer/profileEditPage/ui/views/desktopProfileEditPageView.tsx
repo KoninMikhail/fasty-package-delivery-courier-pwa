@@ -1,10 +1,10 @@
 import type { PropsWithChildren } from 'react';
 import { widgetFooterUi } from '@/widgets/layout/footer';
-import { widgetHeaderUi } from '@/widgets/layout/header';
 import { Spacer } from '@nextui-org/react';
+import { widgetNavbarUi } from '@/widgets/layout/navbar-desktop';
 
 const { Footer } = widgetFooterUi;
-const { Header } = widgetHeaderUi;
+const { Header } = widgetNavbarUi;
 const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
     <main className="h-full w-full flex-col px-2 lg:mx-auto lg:w-[1200px]">
         {children}

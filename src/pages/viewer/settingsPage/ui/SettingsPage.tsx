@@ -22,12 +22,13 @@ export const SettingsPage: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
 
     const pageTitle = `${t('page.title')} | ${APP_NAME}`;
+    const heading = t('page.header');
 
     useDocumentTitle(pageTitle);
 
     return isDesktop ? (
         <Authorized>
-            <DesktopSettingsPageView />
+            <DesktopSettingsPageView header={heading} />
         </Authorized>
     ) : (
         <Authorized>

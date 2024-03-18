@@ -1,35 +1,49 @@
-import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
-import { Offline, SlowNetwork } from '@/entities/viewer';
 import { widgetsDeliveriesHistoryUi } from '@/widgets/deliveries/history';
+import type { PropsWithChildren } from 'react';
+import { widgetNavbarUi } from '@/widgets/layout/navbar-desktop';
+import { useUnit } from 'effector-react';
+import { UserCardRow } from '@/entities/user';
+import { sessionModel } from '@/entities/viewer';
 
-const { NavbarMobile } = widgetNavbarMobileUi;
+const { Navbar } = widgetNavbarUi;
 const { DeliveriesHistoryList } = widgetsDeliveriesHistoryUi;
 
-const pagetitle = 'Доставки';
-const PAGE_HEADING = 'История доставок';
-
-const Header: FunctionComponent<{ header: string }> = ({ header }) => (
-    <div className="w-full rounded-b-3xl bg-black p-6 text-center">
-        <h1>{header}</h1>
+const Layout: FunctionComponent<PropsWithChildren> = ({ children }) => (
+    <div className="grid h-screen w-screen grid-cols-[max-content_auto] gap-8">
+        {children}
     </div>
 );
 
-const FloatingInfo: FunctionComponent = () => {
+const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
+    <main className="h-full w-full flex-col overflow-hidden">{children}</main>
+);
+
+const Toolbar: FunctionComponent<{ header: string }> = ({ header }) => {
+    const user = useUnit(sessionModel.$sessionStore);
     return (
-        <div className="fixed top-0 w-full text-center">
-            <Offline>dsfsdfdfs</Offline>
-            <SlowNetwork>слоу нетворк</SlowNetwork>
+        <div className="flex w-full items-center justify-between py-6 pr-4">
+            <div className="w-1/2">
+                <h1 className="text-4xl">{header}</h1>
+            </div>
+            <div>
+                <UserCardRow account={user} avatarPosition="right" />
+            </div>
         </div>
     );
 };
 
-export const DesktopMyDeliveriesHistoryView: FunctionComponent = () => {
+export const DesktopMyDeliveriesHistoryView: FunctionComponent<{
+    header: string;
+}> = ({ header }) => {
     return (
-        <>
-            <FloatingInfo />
-            <Header header={PAGE_HEADING} />
-            <DeliveriesHistoryList />
-            <NavbarMobile />
-        </>
+        <Layout>
+            <Navbar />
+            <MainContainer>
+                <Toolbar header={header} />
+                <div className="relative block h-full overflow-y-auto">
+                    <DeliveriesHistoryList />
+                </div>
+            </MainContainer>
+        </Layout>
     );
 };
