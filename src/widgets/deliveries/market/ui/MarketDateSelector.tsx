@@ -1,20 +1,25 @@
-import { HorizontalScroll } from '@/shared/ui/layouts';
+import {
+    HorizontalScroll,
+    HorizontalSliderWithControls,
+} from '@/shared/ui/layouts';
 import { useState } from 'react';
 import { HorizontalDatePicker } from '@/shared/ui/components';
 import { DatePeriod } from '@/shared/ui/components/forms/horizontal-date-picker/types';
 import { useUnit } from 'effector-react';
 import { deliveriesDatesRangeChanged } from '../model';
 
-/**
- * Constants
- */
+interface MarketDateSelectorProperties {
+    typePicker: 'scroll' | 'slider';
+}
 
 /**
- * @name DeliveriesMarketContent
- * @description widget for display available deliveries
+ * @name MarketDateSelector
+ * @description filter for widget with display available deliveries
  * @constructor
  */
-export const MarketDateSelector: FunctionComponent = () => {
+export const MarketDateSelector: FunctionComponent<
+    MarketDateSelectorProperties
+> = ({ typePicker }) => {
     const [selectedDates, setSelectedDates] =
         useState<Nullable<DatePeriod>>(null);
 
@@ -39,13 +44,24 @@ export const MarketDateSelector: FunctionComponent = () => {
         }
     };
 
+    if (typePicker === 'scroll') {
+        return (
+            <HorizontalScroll>
+                <HorizontalDatePicker
+                    selectedDates={selectedDates}
+                    onChangeDate={onChangeDate}
+                    offsetY="3"
+                />
+            </HorizontalScroll>
+        );
+    }
     return (
-        <HorizontalScroll>
+        <HorizontalSliderWithControls>
             <HorizontalDatePicker
                 selectedDates={selectedDates}
                 onChangeDate={onChangeDate}
                 offsetY="3"
             />
-        </HorizontalScroll>
+        </HorizontalSliderWithControls>
     );
 };

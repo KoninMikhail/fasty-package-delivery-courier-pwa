@@ -1,26 +1,20 @@
-import { DeliveryMarketCard } from '@/entities/delivery/ui';
+import { useList, useUnit } from 'effector-react';
+import {
+    $$empty,
+    $$hasError,
+    $$upcomingDeliveriesLimited,
+    $isFirstLoad,
+    $loading,
+} from '@/widgets/deliveries/upcommingDeliveries/model';
+import { DeliveryCountdownCard } from '@/entities/delivery';
 
 export const UpcomingDeliveriesCarousel: FunctionComponent = () => {
-    return (
-        <div className="flex gap-4">
-            <div className="block min-w-fit">
-                <DeliveryMarketCard />
-            </div>
-            <div className="block min-w-fit">
-                <DeliveryMarketCard />
-            </div>
-            <div className="block min-w-fit">
-                <DeliveryMarketCard />
-            </div>
-            <div className="block min-w-fit">
-                <DeliveryMarketCard />
-            </div>
-            <div className="block min-w-fit">
-                <DeliveryMarketCard />
-            </div>
-            <div className="block min-w-fit">
-                <DeliveryMarketCard />
-            </div>
-        </div>
-    );
+    const [isUpdating, isFirstLoad] = useUnit([$loading, $isFirstLoad]);
+    const isEmpty = useUnit($$empty);
+    const hasError = useUnit($$hasError);
+
+    const items = useList($$upcomingDeliveriesLimited, (delivery) => (
+        <DeliveryCountdownCard delivery={delivery} />
+    ));
+    return <div className="flex gap-4">{items}</div>;
 };

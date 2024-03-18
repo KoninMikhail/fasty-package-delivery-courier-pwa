@@ -36,7 +36,7 @@ export const UserCardRow: FunctionComponent<IUserCardRowProperties> = ({
     const role = account.user_role.name;
 
     return (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 lg:gap-4">
             {avatarPosition === 'left' ? (
                 <>
                     <Avatar src={account.avatar} size={size} name={initials} />

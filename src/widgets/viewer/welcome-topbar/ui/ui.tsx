@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useTranslation } from 'react-i18next';
 import { User } from '@/shared/api';
-import { logoutModel } from '@/features/auth/logout';
+import { Logout } from '@/features/auth/logout';
 import { translationNS } from '../config';
 import { WelcomeTopbarGate } from '../model';
 
@@ -110,7 +110,7 @@ const UserTool: FunctionComponent<{
 export const WelcomeTopbar: FunctionComponent = () => {
     const navigate = useNavigate();
     const profile = useUnit(sessionModel.$sessionStore);
-    const logout = useUnit(logoutModel.logout);
+    const logout = useUnit(Logout.model);
 
     const onPressProfile = (): void => navigate(PROFILE_EDIT_PAGE);
     const onPressLogout = (): void => logout();
