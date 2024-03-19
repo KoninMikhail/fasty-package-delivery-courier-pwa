@@ -1,4 +1,4 @@
-import type { PropsWithChildren } from 'react';
+import React, { PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
 import { sharedUiComponents } from '@/shared/ui';
 import { translationNS } from '../config';
@@ -22,7 +22,7 @@ const NavbarContainer: FunctionComponent<PropsWithChildren> = ({
  * @description Navbar for mobile devices
  * @constructor
  */
-export const NavbarMobile: FunctionComponent = () => {
+export const NavbarMobile: FunctionComponent = React.memo(() => {
     const { t } = useTranslation(translationNS);
     return (
         <NavbarContainer>
@@ -30,18 +30,16 @@ export const NavbarMobile: FunctionComponent = () => {
                 items={navbarItems}
                 orientation="horizontal"
                 stretch
-                renderItem={(item) => {
-                    return (
-                        <MenuItem
-                            key={item.href}
-                            to={item.href}
-                            icon={item.icon}
-                            label={t(item.label)}
-                            vertical
-                        />
-                    );
-                }}
+                renderItem={(item) => (
+                    <MenuItem
+                        key={item.href}
+                        to={item.href}
+                        icon={item.icon}
+                        label={t(item.label)}
+                        vertical
+                    />
+                )}
             />
         </NavbarContainer>
     );
-};
+});

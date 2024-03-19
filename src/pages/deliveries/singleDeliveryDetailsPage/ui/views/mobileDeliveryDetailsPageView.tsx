@@ -12,19 +12,26 @@ import { widgetDeliveryStatusUi } from '@/widgets/deliveries/deliveryStatus';
 import { SubwayStationWithIcon } from '@/shared/services/subway';
 import { useTranslation } from 'react-i18next';
 import { ClientContactCardList } from '@/entities/client';
+import { IoCar, IoPersonSharp } from 'react-icons/io5';
+import { MdOutlineDirectionsRun } from 'react-icons/md';
+import { HiLightningBolt } from 'react-icons/hi';
+import { RiBuildingFill } from 'react-icons/ri';
 import {
     $$deliveryAddress,
     $$deliveryClientName,
     $$deliveryClientType,
+    $$deliveryClientTypeLocaled,
     $$deliveryContact,
     $$deliveryContents,
     $$deliveryCourier,
     $$deliveryId,
     $$deliveryIsExpress,
+    $$deliveryIsExpressTranslated,
     $$deliveryManager,
     $$deliveryMetro,
     $$deliveryPickupDateTime,
     $$deliveryType,
+    $$deliveryTypeTranslated,
     $$deliveryWeight,
     $$hasError,
     $$isDeliveryNotCoordinated,
@@ -97,7 +104,26 @@ const Client: FunctionComponent = () => {
 };
 const ClientType: FunctionComponent = () => {
     const type = useUnit($$deliveryClientType);
-    return <p>{type}</p>;
+    const text = useUnit($$deliveryClientTypeLocaled);
+
+    if (type === 'organization') {
+        return (
+            <div className="flex items-center gap-1">
+                <span className="text-xl">
+                    <RiBuildingFill />
+                </span>
+                {text}
+            </div>
+        );
+    }
+    return (
+        <div className="flex items-center gap-1">
+            <span className="text-xl">
+                <IoPersonSharp />
+            </span>
+            {text}
+        </div>
+    );
 };
 
 const DeliveryId: FunctionComponent = () => {
@@ -112,16 +138,58 @@ const DeliveryPickup: FunctionComponent = () => {
 
 const DeliveryTypeTransport: FunctionComponent = () => {
     const type = useUnit($$deliveryType);
-    return <p>{type}</p>;
+    const text = useUnit($$deliveryTypeTranslated);
+    if (type === 'car') {
+        return (
+            <div className="flex items-center gap-1">
+                <span className="text-xl">
+                    <IoCar />
+                </span>
+                {text}
+            </div>
+        );
+    }
+    return (
+        <div className="flex items-center gap-1">
+            <span className="text-xl">
+                <MdOutlineDirectionsRun />
+            </span>
+            {text}
+        </div>
+    );
 };
 const DeliveryTypeExpress: FunctionComponent = () => {
-    const express = useUnit($$deliveryIsExpress);
-    return <p>{express}</p>;
+    const express = useUnit($$deliveryIsExpressTranslated);
+    const isExpress = useUnit($$deliveryIsExpress);
+    return (
+        <div className="flex items-center gap-1">
+            {isExpress ? (
+                <span className="text-xl text-secondary">
+                    <HiLightningBolt />
+                </span>
+            ) : null}
+            {express}
+        </div>
+    );
 };
 const DeliveryAddress: FunctionComponent = () => {
     const address = useUnit($$deliveryAddress);
-    return <p>{address}</p>;
+    return (
+        <div>
+            <p>{address}</p>
+            <Spacer y={0.5} />
+            <Link
+                href={generateYandexMapsLink(address)}
+                as={Link}
+                color="primary"
+                size="sm"
+            >
+                Перейти на Яндекс.Карты
+            </Link>
+        </div>
+    );
 };
+
 const DeliveryAddressSubway: FunctionComponent = () => {
     const metro = useUnit($$deliveryMetro);
     return <SubwayStationWithIcon value={metro} />;
@@ -201,14 +269,14 @@ const Map: FunctionComponent = () => {
     const hasCoordinates = useUnit($$isDeliveryNotCoordinated);
     const address = useUnit($$deliveryAddress);
     const mapsQueryLink = generateYandexMapsLink(address);
-
+    console.log(hasCoordinates);
     return (
-        <div className="relative w-full">
-            {hasCoordinates ? null : (
+        <div className="relative h-[50vh] w-full">
+            {hasCoordinates ? (
                 <div className="absolute bottom-0 left-0 right-0 top-0 z-[1050] flex h-full w-full flex-col items-center justify-center gap-6 bg-content1 bg-opacity-85">
                     <div className="text-center">
-                        <p className="text-xl">Извините</p>
-                        <p className="text-small text-content4">
+                        <p className="text-2xl">Извините</p>
+                        <p className="text-xs font-light">
                             Для этой доставки карта недоступна
                         </p>
                     </div>
@@ -216,14 +284,14 @@ const Map: FunctionComponent = () => {
                         href={mapsQueryLink}
                         as={Link}
                         color="primary"
+                        className="rounded-md"
                         showAnchorIcon
                         size="sm"
-                        variant="bordered"
                     >
                         Открыть Яндекс.Карты
                     </Button>
                 </div>
-            )}
+            ) : null}
             <Route.Map.Container className="h-[50vh] w-full" model={mapModel} />
         </div>
     );
@@ -247,7 +315,7 @@ export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
 
     return (
         <>
-            <Header className="z-[500]" backButton={<BackButton />} />
+            <Header className="z-[2000]" backButton={<BackButton />} />
             <MainContainer>
                 <Map />
                 <Spacer y={4} />

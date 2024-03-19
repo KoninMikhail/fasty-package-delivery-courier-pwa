@@ -25,9 +25,7 @@ const timeLocales = { en: enUS, ru };
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 const Root: FunctionComponent<PropsWithChildren> = ({ children }) => {
-    return (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">{children}</div>
-    );
+    return <div className="grid grid-cols-1 gap-4">{children}</div>;
 };
 
 const StatusList: FunctionComponent<PropsWithChildren> = ({ children }) => {

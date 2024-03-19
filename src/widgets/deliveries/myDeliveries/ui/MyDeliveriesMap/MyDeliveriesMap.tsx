@@ -1,4 +1,5 @@
 import { Modal, ModalContent, useDisclosure } from '@nextui-org/react';
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -11,38 +12,41 @@ export const MyDeliveriesMap: FunctionComponent = () => {
     return (
         <>
             <div
-                className="bg-map-light dark:bg-map-dark w-full rounded-t-3xl bg-center"
+                className="w-full  rounded-t-3xl bg-map-light bg-center dark:bg-map-dark"
                 onClick={onMapClick}
             >
                 <div className="w-full pb-28 pt-8 text-center">
                     Посмотреть на карте
                 </div>
             </div>
-            <Modal size="full" isOpen={isOpen} onClose={onClose}>
+            <Modal
+                size="full"
+                isOpen={isOpen}
+                onClose={onClose}
+                classNames={{
+                    closeButton: 'z-[5000]',
+                }}
+            >
                 <ModalContent>
                     {(onClose) => (
-                        <>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur
-                                adipiscing elit. Nullam pulvinar risus non risus
-                                hendrerit venenatis. Pellentesque sit amet
-                                hendrerit risus, sed porttitor quam.
-                            </p>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur
-                                adipiscing elit. Nullam pulvinar risus non risus
-                                hendrerit venenatis. Pellentesque sit amet
-                                hendrerit risus, sed porttitor quam.
-                            </p>
-                            <p>
-                                Magna exercitation reprehenderit magna aute
-                                tempor cupidatat consequat elit dolor
-                                adipisicing. Mollit dolor eiusmod sunt ex
-                                incididunt cillum quis. Velit duis sit officia
-                                eiusmod Lorem aliqua enim laboris do dolor
-                                eiusmod.
-                            </p>
-                        </>
+                        <MapContainer
+                            center={[51.505, -0.09]}
+                            zoom={13}
+                            className="h-screen w-full"
+                            scrollWheelZoom={false}
+                            attributionControl={false}
+                        >
+                            <TileLayer
+                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                            />
+                            <Marker position={[51.505, -0.09]}>
+                                <Popup>
+                                    A pretty CSS3 popup. <br /> Easily
+                                    customizable.
+                                </Popup>
+                            </Marker>
+                        </MapContainer>
                     )}
                 </ModalContent>
             </Modal>

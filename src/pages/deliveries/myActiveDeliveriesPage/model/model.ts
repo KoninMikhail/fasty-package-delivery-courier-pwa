@@ -13,10 +13,11 @@ sample({
     target: [initWidgetMyDeliveries],
 });
 
-export const deliveriesMapModel = Route.Map.multiLocationFactory.createModel({
-    center: {
+export const deliveriesMapModel = Route.Map.factory.createModel({
+    defaultCenter: {
         lat: 55.753_993_999_993_74,
         lng: 37.622_093_000_000_01,
     },
-    zoom: 13,
+    defaultZoom: 13,
+    zoomWhenMarkerSelected: 16,
 });

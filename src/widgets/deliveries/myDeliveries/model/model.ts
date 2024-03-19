@@ -1,5 +1,5 @@
 import { createEvent, createStore, sample } from 'effector';
-import { getMyDeliveriesFx } from '@/entities/delivery';
+import { assignUserToDeliveryFx, getMyDeliveriesFx } from '@/entities/delivery';
 import { Delivery, deliverySchema } from '@/shared/api';
 import { persist } from 'effector-storage/local';
 import { FilterDeliveriesByTimeRange } from '@/features/delivery/filterDeliveriesByTimeRange';
@@ -40,11 +40,18 @@ sample({
 /**
  * Data
  */
-export const $fetchedDeliveries = createStore<Delivery[]>([]).on(
-    getMyDeliveriesFx.doneData,
-    (_, deliveries) => deliveries,
-);
-
+export const $fetchedDeliveries = createStore<Delivery[]>([])
+    .on(getMyDeliveriesFx.doneData, (_, deliveries) => deliveries)
+    .on(assignUserToDeliveryFx.doneData, (deliveries, delivery) => {
+        const index = deliveries.findIndex((d) => d.id === delivery.id);
+        console.log(index);
+        if (index === -1) {
+            return [...deliveries, delivery];
+        }
+        const newDeliveries = [...deliveries];
+        newDeliveries[index] = delivery;
+        return newDeliveries;
+    });
 export const filteredDeliveriesByTimeModel =
     FilterDeliveriesByTimeRange.factory.createModel({
         startTime: START_DELIVERY_TIME,

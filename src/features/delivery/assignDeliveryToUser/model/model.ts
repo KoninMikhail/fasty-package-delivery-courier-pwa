@@ -2,6 +2,7 @@ import { modelFactory } from 'effector-factorio';
 import { combine, createEvent, createStore, Effect, sample } from 'effector';
 import { Delivery, User } from '@/shared/api';
 import { AssignUserToDeliveryParameters } from '@/entities/delivery';
+import { debug } from 'patronum';
 
 type FactoryOptions = {
     assignToDeliveryEffect: Effect<
@@ -28,6 +29,8 @@ export const factory = modelFactory((options: FactoryOptions) => {
         .on(assignPressed, (_, { delivery }) => delivery)
         .on(assignRejected, () => null);
     $assignedItems.on(assignCompleted, (state, id) => [...state, id]);
+
+    debug($user, $delivery);
 
     /**
      * State

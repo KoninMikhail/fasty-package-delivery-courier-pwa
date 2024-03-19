@@ -1,13 +1,14 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useState } from 'react';
 
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { sharedUiLayouts } from '@/shared/ui';
-import { Button, Divider, Image, Spacer } from '@nextui-org/react';
+import { Button, Divider, Image, Input, Spacer } from '@nextui-org/react';
 import { SlSocialVkontakte } from 'react-icons/sl';
 import { IoLogoYoutube } from 'react-icons/io';
 import { useTranslation } from 'react-i18next';
 import { ChangeColorModeSwitchButton } from '@/features/viewer/changeColorMode';
 import { ChangeLanguageButton } from '@/features/viewer/changeLanguage';
+import { resetDeliveryById } from '@/entities/delivery/model/effects/resetDeliveryById';
 import { translationNS } from '../../config';
 
 const { Section } = sharedUiLayouts;
@@ -27,6 +28,15 @@ const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
  */
 export const MobileSettingsPageView: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
+    const [id, setId] = useState<string>('0');
+
+    const onResetPress = () => {
+        if (id !== '0') {
+            void resetDeliveryById(id);
+            setId('0');
+        }
+    };
+
     return (
         <>
             <MainContainer>
@@ -65,6 +75,14 @@ export const MobileSettingsPageView: FunctionComponent = () => {
                         <IoLogoYoutube className="text-5xl text-primary" />
                     </div>
                 </div>
+                <Input
+                    type="text"
+                    value={id}
+                    onValueChange={(value) => setId(value)}
+                    variant="bordered"
+                    className="max-w-xs"
+                />
+                <Button onPress={onResetPress}>Сбросить</Button>
                 <Spacer />
                 <Divider />
                 <Spacer />

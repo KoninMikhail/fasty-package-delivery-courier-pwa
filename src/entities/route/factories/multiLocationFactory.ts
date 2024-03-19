@@ -39,4 +39,4 @@ export const multiLocationFactory = modelFactory(
     },
 );
 
-export type MapFactory = Model<typeof singleLocationFactory>;
+export type MapFactory = Model<typeof multiLocationFactory>;

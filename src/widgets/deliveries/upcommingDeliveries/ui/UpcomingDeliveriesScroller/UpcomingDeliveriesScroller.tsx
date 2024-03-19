@@ -109,7 +109,14 @@ export const UpcomingDeliveriesScroller: FunctionComponent = () => {
     const hasError = useUnit($$hasError);
 
     const items = useList($$upcomingDeliveriesLimited, (delivery) => (
-        <DeliveryCountdownCard delivery={delivery} />
+        <div className="flex items-end truncate">
+            <div className="relative w-6">
+                <div className="-translate-x-1.5 -translate-y-1.5 -rotate-90 text-content4">{`Доставка #${delivery.id}`}</div>
+            </div>
+            <div className="flex-grow">
+                <DeliveryCountdownCard delivery={delivery} />
+            </div>
+        </div>
     ));
 
     if (hasError && isEmpty) {

@@ -162,7 +162,9 @@ export const MarketContent: FunctionComponent = () => {
     }
     return (
         <Root>
-            <div className="relative grid grid-cols-1 gap-8">{content}</div>
+            <div className="relative grid grid-cols-1 gap-8 md:grid-cols-2">
+                {content}
+            </div>
         </Root>
     );
 };

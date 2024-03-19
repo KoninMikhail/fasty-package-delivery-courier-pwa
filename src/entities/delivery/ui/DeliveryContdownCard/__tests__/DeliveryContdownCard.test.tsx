@@ -19,8 +19,8 @@ const mockDelivery = {
   "manager_id": 4,
   "order_id": 22,
   "states": "delivering",
-  "time_end": "08:06",
-  "time_start": "12:10",
+  "time_end": "08:06:00",
+  "time_start": "12:10:00",
   "order": {
     "id": 22,
     "client_id": 95,

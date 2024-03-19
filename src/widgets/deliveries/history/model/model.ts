@@ -2,6 +2,7 @@ import { Delivery } from '@/shared/api';
 import { createStore } from 'effector';
 import { compareDesc, formatISO, parseISO, subDays } from 'date-fns';
 import { InfiniteScroll } from '@/features/page/infinite-scroll';
+import { debug } from 'patronum';
 import { getDeliveriesHistoryFx } from './effects';
 
 // Initial date range for the history
@@ -33,6 +34,8 @@ export const $fetchedData = createStore<Set<Delivery>>(new Set(), {
 
     return updatedSet;
 });
+
+debug($fetchedData);
 
 const $dateFrom = createStore<string>(initialDateFrom, { name: 'dateFrom' });
 const $dateTo = createStore<string>(initialDateTo, { name: 'dateTo' });

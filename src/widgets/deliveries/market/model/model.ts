@@ -5,7 +5,8 @@ import {
     FilterDeliveriesByParameters,
     FilterDeliveriesByParametersModel,
 } from '@/features/delivery/filterDeliveriesByParams';
-import { fetchAvailableDeliveriesFx, assignUserToDeliveryFx } from './effects';
+import { assignUserToDeliveryFx } from '@/entities/delivery';
+import { fetchAvailableDeliveriesFx } from './effects';
 
 type DatesRange = {
     dateStart: string;

@@ -43,7 +43,9 @@ export const AssignRequestButton = modelView(
         const onPress = (): void => {
             if (delivery && user) {
                 assignPressed({ delivery, user });
-                assignConfirmed();
+                setTimeout(() => {
+                    assignConfirmed();
+                }, 300);
             }
         };
 

@@ -22,10 +22,12 @@ const Content: FunctionComponent<PropsWithChildren> = ({ children }) => (
  * Components
  */
 const Header: FunctionComponent = () => {
-    const [query, setQuery] = useSearchParams();
+    const [searchParameters, setSearchParameters] = useSearchParams();
     const [value, setValue] = useState<string>('');
 
     const buttonVisible = value && value.length > 0;
+
+    const query = searchParameters.get('q') || '';
 
     return (
         <div className="flex items-center justify-between">
@@ -61,6 +63,8 @@ export const MobileSearchPageView: FunctionComponent = () => {
     const [searchParameters, setSearchParameters] = useSearchParams();
 
     const query = searchParameters.get('q') || '';
+
+    console.log(query);
 
     useGate(SearchPageGateway, {
         query,

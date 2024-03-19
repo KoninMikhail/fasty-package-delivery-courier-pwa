@@ -38,10 +38,10 @@ export const MyDeliveriesList: FunctionComponent = () => {
     }
 
     return (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4">
             {isLoading ? <Loader /> : null}
             {hasError ? <Error /> : null}
-            <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                 <AnimatePresence>{items}</AnimatePresence>
             </div>
         </div>

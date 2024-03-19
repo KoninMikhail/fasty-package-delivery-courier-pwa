@@ -8,11 +8,13 @@ import {
     getDeliveryClient,
     getDeliveryContents,
     getDeliveryCourier,
+    getDeliveryExpressState,
     getDeliveryExpressStateTranslated,
     getDeliveryId,
     getDeliveryManager,
     getDeliveryMetro,
     getDeliveryPickupDateTime,
+    getDeliveryType,
     getDeliveryTypeTranslated,
     getDeliveryWeightPersisted,
     setDeliveryStatus,
@@ -25,9 +27,8 @@ import {
     isDeliveryAssignedToCourier,
     isDeliveryHasCoordinates,
 } from '@/entities/delivery/lib';
-import { getClientType } from '@/entities/client/lib/utils/getClientType';
-import { getClientName } from '@/entities/client';
-import { LatLngExpression } from 'leaflet';
+import { getClientTypeLocale } from '@/entities/client/lib/utils/getClientTypeLocale';
+import { getClientName, getClientType } from '@/entities/client';
 import { initialDelivery } from '../data';
 
 /* eslint-disable unicorn/no-array-method-this-argument */
@@ -63,9 +64,15 @@ export const $$deliveryWeight = $delivery.map((delivery) =>
     getDeliveryWeightPersisted(delivery),
 );
 export const $$deliveryType = $delivery.map((delivery) =>
+    getDeliveryType(delivery),
+);
+export const $$deliveryTypeTranslated = $delivery.map((delivery) =>
     getDeliveryTypeTranslated(delivery),
 );
 export const $$deliveryIsExpress = $delivery.map((delivery) =>
+    getDeliveryExpressState(delivery),
+);
+export const $$deliveryIsExpressTranslated = $delivery.map((delivery) =>
     getDeliveryExpressStateTranslated(delivery),
 );
 export const $$deliveryAddress = $delivery.map((delivery) =>
@@ -97,6 +104,9 @@ export const $$deliveryClientName = $$deliveryClient.map((client) =>
 );
 export const $$deliveryClientType = $$deliveryClient.map((client) =>
     getClientType(client),
+);
+export const $$deliveryClientTypeLocaled = $$deliveryClient.map((client) =>
+    getClientTypeLocale(client),
 );
 export const $$deliveryManager = $delivery.map((delivery) =>
     getDeliveryManager(delivery),
@@ -144,16 +154,17 @@ export const changeDeliveryStatusModel = SetDeliveryStatus.factory.createModel({
     patchDeliveryStatusFx: setDeliveryStatus,
 });
 
-export const mapModel = Route.Map.singleLocationFactory.createModel({
-    center: {
+export const mapModel = Route.Map.factory.createModel({
+    defaultCenter: {
         lat: 55.753_993_999_993_74,
         lng: 37.622_093_000_000_01,
     },
-    zoom: 13,
+    defaultZoom: 13,
+    zoomWhenMarkerSelected: 16,
 });
 
-sample({
-    clock: $delivery,
+/* sample({
+    clock: debounce($delivery, 1000),
     filter: (delivery) => isDeliveryHasCoordinates(delivery),
     fn: (delivery) =>
         ({
@@ -161,7 +172,7 @@ sample({
             lng: delivery.address.longitude,
         }) as unknown as LatLngExpression,
     target: mapModel.locationChanged,
-});
+}); */
 
 sample({
     clock: DeliveryDetailsPageGateway.close,

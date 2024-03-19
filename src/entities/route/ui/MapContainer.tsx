@@ -4,35 +4,44 @@ import {
     Popup,
     TileLayer,
     useMap,
-    ZoomControl,
 } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useUnit } from 'effector-react/effector-react.mjs';
 import { modelView } from 'effector-factorio';
-import { useEffect, useLayoutEffect, useState } from 'react';
-import { MapOptions } from 'leaflet';
+import { ReactNode, useEffect, useLayoutEffect, useState } from 'react';
+import { LeafletMouseEvent, MapOptions } from 'leaflet';
 import { Spinner } from '@nextui-org/react';
-import { singleLocationFactory } from '../factories/singleLocationFactory';
+import { mapFactory } from '../factories/mapFactory';
 
 const DEFAULT_ZOOM = 12;
+const ZERO_INDEX = 0;
 
 const LocationMarker: FunctionComponent = () => {
-    const factory = singleLocationFactory.useModel();
-    const markers = useUnit(factory.$locations);
-    const setPosition = useUnit(factory.locationChanged);
+    const factory = mapFactory.useModel();
+    const markers = useUnit(factory.$markers);
     const map = useMap();
+    const setPosition = useUnit(factory.locationChanged);
+
+    const onMarkerClick = (event: LeafletMouseEvent): void => {
+        setPosition(event.latlng);
+        map.setView(event.latlng, factory.$zoom.getState(), { animate: true });
+    };
 
     useEffect(() => {
-        if (markers && markers.length > 0) {
-            setPosition(markers[0]);
-            map.setView(markers[0], map.getZoom(), { animate: true });
+        if (markers && markers.length > ZERO_INDEX) {
+            setPosition(markers[ZERO_INDEX]);
+            map.setView(markers[ZERO_INDEX], map.getZoom(), { animate: true });
         }
     }, [markers, setPosition, map]);
 
     return markers === null ? null : (
         <>
             {markers.map((marker, index) => (
-                <Marker key={index} position={marker}>
+                <Marker
+                    key={`marker-${index}`}
+                    position={marker}
+                    eventHandlers={{ click: onMarkerClick }}
+                >
                     <Popup>You are here</Popup>
                 </Marker>
             ))}
@@ -44,12 +53,13 @@ interface SimpleMapProperties {
     className?: string;
     zoom?: MapOptions['zoom'];
     center?: MapOptions['center'];
+    children?: ReactNode;
 }
 
 export const MapContainer = modelView(
-    singleLocationFactory,
-    ({ className, zoom }: SimpleMapProperties) => {
-        const model = singleLocationFactory.useModel();
+    mapFactory,
+    ({ className, zoom, children }: SimpleMapProperties) => {
+        const model = mapFactory.useModel();
         const center = useUnit(model.$center);
 
         const [unmountMap, setUnmountMap] = useState<boolean>(false);
@@ -60,6 +70,7 @@ export const MapContainer = modelView(
                 setUnmountMap(true);
             };
         }, []);
+
         if (unmountMap) {
             return (
                 <div className={className}>
@@ -81,7 +92,7 @@ export const MapContainer = modelView(
             >
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                 <LocationMarker />
-                <ZoomControl position="bottomright" />
+                {children}
             </LeafletMapContainer>
         );
     },

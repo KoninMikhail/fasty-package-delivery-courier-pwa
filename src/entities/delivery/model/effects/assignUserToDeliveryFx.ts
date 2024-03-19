@@ -25,7 +25,7 @@ export const assignUserToDeliveryFx = createEffect<
     Error
 >(async ({ userId, deliveryId }) => {
     return apiClient.patchDelivery(
-        { courier_id: userId },
+        { courier_id: userId, states: 'delivering' },
         {
             params: {
                 deliveryId,

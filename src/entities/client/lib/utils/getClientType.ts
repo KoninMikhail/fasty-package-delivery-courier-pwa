@@ -5,18 +5,4 @@ import {translationNS} from "../../config";
 const {locale} = sharedConfigLocale;
 
 
-export const getClientType = (client: Client) => {
-    if (client.client_type === 'organization') {
-        return locale.t('client.type.organization', {
-            ns: translationNS
-        });
-    }
-    if (client.client_type === 'person') {
-        return locale.t('client.type.person', {
-            ns: translationNS
-        });
-    }
-    return locale.t('client.type.unknown', {
-        ns: translationNS
-    });
-}
+export const getClientType = (client: Client) => client.client_type;

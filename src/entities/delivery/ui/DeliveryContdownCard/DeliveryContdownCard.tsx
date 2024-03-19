@@ -13,6 +13,7 @@ import { IoCall } from 'react-icons/io5';
 import { sharedServicesSubway } from '@/shared/services';
 import { useTranslation } from 'react-i18next';
 import { ReactNode } from 'react';
+import { Link as ReactRouterLink } from 'react-router-dom';
 import { getDeliveryAddress, getDeliveryMetro } from '../../lib';
 import { useEstimatedTime } from '../../lib/hooks/useEstimatedTime';
 import { translationNS } from '../../config';
@@ -81,7 +82,10 @@ export const ContactDetails: FunctionComponent<{
         );
 
     return (
-        <div className="flex w-full justify-between gap-2">
+        <Link
+            href={`tel:+${phone.replaceAll(/\D/g, '')}`}
+            className="flex w-full justify-between gap-2 text-lg text-foreground"
+        >
             <div className="flex-grow">
                 <div className="truncate text-sm font-bold">{name}</div>
                 <div className="text-sm">
@@ -89,16 +93,14 @@ export const ContactDetails: FunctionComponent<{
                 </div>
             </div>
             <Button
-                as={Link}
                 role="link"
-                href={`tel:+${phone.replaceAll(/\D/g, '')}`}
                 isIconOnly
                 color="success"
                 className="text-lg text-content1"
             >
                 <IoCall />
             </Button>
-        </div>
+        </Link>
     );
 };
 
@@ -152,28 +154,33 @@ export const DeliveryCountdownCard: FunctionComponent<
     DeliveryCountdownCardProperties
 > = ({ delivery }) => {
     const deadline = new Date(
-        `${delivery?.date || '2024-01-01'}T${delivery?.time_end || '00:00'}:00.999`,
+        `${delivery?.date || '2024-01-01'}T${delivery?.time_end || '00:00:00'}.999`,
     );
     const address = getDeliveryAddress(delivery);
     const contact = delivery?.contact;
     const metro = getDeliveryMetro(delivery);
 
     return (
-        <Card className="min-w-[300px] max-w-[600px]">
-            <CardHeader className="flex gap-3">
-                <HeaderLayout
-                    countdown={<DeliveryTimer date={deadline} />}
-                    station={<SubwayStationWithIcon value={metro} />}
-                />
-            </CardHeader>
-            <Divider />
-            <CardBody>
-                <AddressDisplay address={address} />
-            </CardBody>
-            <Divider />
-            <CardFooter>
-                <ContactDetails name={contact?.name} phone={contact?.phone} />
-            </CardFooter>
-        </Card>
+        <ReactRouterLink to={`/deliveries/${delivery.id}`} className="relative">
+            <Card className="min-w-[300px] max-w-[600px]">
+                <CardHeader className="flex gap-3">
+                    <HeaderLayout
+                        countdown={<DeliveryTimer date={deadline} />}
+                        station={<SubwayStationWithIcon value={metro} />}
+                    />
+                </CardHeader>
+                <Divider />
+                <CardBody>
+                    <AddressDisplay address={address} />
+                </CardBody>
+                <Divider />
+                <CardFooter>
+                    <ContactDetails
+                        name={contact?.name}
+                        phone={contact?.phone}
+                    />
+                </CardFooter>
+            </Card>
+        </ReactRouterLink>
     );
 };
