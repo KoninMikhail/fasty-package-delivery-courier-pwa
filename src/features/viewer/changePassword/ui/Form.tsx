@@ -7,24 +7,23 @@ import { RegisterCharsIcon } from '@/shared/ui/icons/RegisterCharsIcon';
 import clsx from 'clsx';
 import { IoCheckmarkOutline } from 'react-icons/io5';
 import { factory } from '../model';
-import { translationNS } from '../config';
+import {
+    INPUT_CREATE_LABEL,
+    INPUT_REPEAT_LABEL,
+    SUBMIT_BUTTON,
+    translationNS,
+    VALIDATION_ERR_EASY_LABEL,
+    VALIDATION_GUARD_LABEL,
+    VALIDATION_LENGTH_LABEL,
+    VALIDATION_LOWER_CASE_LABEL,
+    VALIDATION_NUMBERS_LABEL,
+    VALIDATION_SPECIAL_CHARS_LABEL,
+    VALIDATION_SUCCESS_LABEL,
+} from '../config';
 
 const { PasswordField } = sharedUiComponents;
 const { AdditionalCharsIcon, GuardIcon, NumbersIcon, SixPlusIcon } =
     sharedUiIcons;
-
-const TRANSLATION = {
-    INPUT_CREATE_LABEL: 'form.input.create.label',
-    INPUT_REPEAT_LABEL: 'form.input.confirm.label',
-    SUBMIT_BUTTON: 'form.button.submit',
-    VALIDATION_GUARD_LABEL: 'validation.label.guard',
-    VALIDATION_LENGTH_LABEL: 'validation.label.length',
-    VALIDATION_LOWER_CASE_LABEL: 'validation.label.lowercase',
-    VALIDATION_NUMBERS_LABEL: 'validation.label.number',
-    VALIDATION_SPECIAL_CHARS_LABEL: 'validation.label.specialChars',
-    VALIDATION_SUCCESS_LABEL: 'validation.label.success',
-    VALIDATION_ERR_EASY_LABEL: 'validation.label.error.easy',
-};
 
 const Password: FunctionComponent = () => {
     const model = factory.useModel();
@@ -36,7 +35,7 @@ const Password: FunctionComponent = () => {
             autoComplete="off"
             value={value}
             variant="bordered"
-            label={t(TRANSLATION.INPUT_CREATE_LABEL)}
+            label={t(INPUT_CREATE_LABEL)}
             onValueChange={onChange}
         />
     );
@@ -54,7 +53,7 @@ const PasswordAgain: FunctionComponent = () => {
             autoComplete="off"
             value={value}
             variant="bordered"
-            label={t(TRANSLATION.INPUT_REPEAT_LABEL)}
+            label={t(INPUT_REPEAT_LABEL)}
             onValueChange={onChange}
         />
     );
@@ -89,10 +88,10 @@ const PasswordChecks: FunctionComponent = () => {
                 <GuardIcon className="h-6 w-6 flex-shrink-0" />
                 <span>
                     {!formValid && !isPasswordValidLength
-                        ? t(TRANSLATION.VALIDATION_GUARD_LABEL)
+                        ? t(VALIDATION_GUARD_LABEL)
                         : formValid && isPasswordHasSpecialChars
-                          ? t(TRANSLATION.VALIDATION_SUCCESS_LABEL)
-                          : t(TRANSLATION.VALIDATION_ERR_EASY_LABEL)}
+                          ? t(VALIDATION_SUCCESS_LABEL)
+                          : t(VALIDATION_ERR_EASY_LABEL)}
                 </span>
             </li>
             <li
@@ -106,7 +105,7 @@ const PasswordChecks: FunctionComponent = () => {
                 ) : (
                     <SixPlusIcon className="h-6 w-6 flex-shrink-0" />
                 )}
-                <span>{t(TRANSLATION.VALIDATION_LENGTH_LABEL)}</span>
+                <span>{t(VALIDATION_LENGTH_LABEL)}</span>
             </li>
             <li
                 className={clsx(
@@ -120,7 +119,7 @@ const PasswordChecks: FunctionComponent = () => {
                     <RegisterCharsIcon className="h-6 w-6 flex-shrink-0" />
                 )}
 
-                <span>{t(TRANSLATION.VALIDATION_LOWER_CASE_LABEL)}</span>
+                <span>{t(VALIDATION_LOWER_CASE_LABEL)}</span>
             </li>
             <li
                 className={clsx(
@@ -134,7 +133,7 @@ const PasswordChecks: FunctionComponent = () => {
                     <NumbersIcon className="h-6 w-6 flex-shrink-0" />
                 )}
 
-                <span>{t(TRANSLATION.VALIDATION_NUMBERS_LABEL)}</span>
+                <span>{t(VALIDATION_NUMBERS_LABEL)}</span>
             </li>
             <li
                 className={clsx(
@@ -148,7 +147,7 @@ const PasswordChecks: FunctionComponent = () => {
                     <AdditionalCharsIcon className="h-6 w-6 flex-shrink-0" />
                 )}
 
-                <span>{t(TRANSLATION.VALIDATION_SPECIAL_CHARS_LABEL)}</span>
+                <span>{t(VALIDATION_SPECIAL_CHARS_LABEL)}</span>
             </li>
         </ul>
     );
@@ -170,7 +169,7 @@ const ResetPasswordButton: FunctionComponent<Omit<ButtonProps, 'onPress'>> = (
             isDisabled={!isFormValid}
             {...properties}
         >
-            {t(TRANSLATION.SUBMIT_BUTTON)}
+            {t(SUBMIT_BUTTON)}
         </Button>
     );
 };
@@ -180,7 +179,7 @@ export const Form = modelView(factory, () => {
         <div className="flex flex-col gap-2">
             <Password />
             <PasswordAgain />
-            <Spacer y="1" />
+            <Spacer y={1} />
             <PasswordChecks />
             <ResetPasswordButton />
         </div>

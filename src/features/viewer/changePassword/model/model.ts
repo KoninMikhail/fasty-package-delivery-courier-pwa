@@ -8,6 +8,7 @@ import { MIN_PASSWORD_LENGTH } from '../config';
 interface FactoryOptions {
     targetUser: Store<User>;
     updateUserFx: Effect<User, void, Error>;
+    validatePasswordFx: Effect<string, boolean, Error>;
 }
 
 export const factory = modelFactory((options: FactoryOptions) => {
