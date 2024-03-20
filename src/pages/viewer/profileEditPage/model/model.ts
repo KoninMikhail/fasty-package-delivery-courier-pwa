@@ -1,26 +1,7 @@
 import { ChangePassword } from '@/features/viewer/changePassword';
 import { createEffect } from 'effector';
-import { sessionModel } from '@/entities/viewer';
-import { apiClient } from '@/shared/api';
+import { changePasswordFx, sessionModel } from '@/entities/viewer';
 import { ChangeAvatar } from '@/features/viewer/changeAvatar';
-
-type ResetPasswordFxParameters = {
-    id: string;
-    password: string;
-};
-
-const resetPasswordFx = createEffect({
-    handler: async ({ id, password }: ResetPasswordFxParameters) => {
-        await apiClient.patchUserById(
-            { password },
-            {
-                params: {
-                    userId: id,
-                },
-            },
-        );
-    },
-});
 
 const changeAvatarFx = createEffect({
     handler: async ({ avatar, userId }: { avatar: string; userId: number }) => {
@@ -31,7 +12,7 @@ const changeAvatarFx = createEffect({
 
 export const changePasswordModel = ChangePassword.factory.createModel({
     targetUser: sessionModel.$sessionStore,
-    updateUserFx: resetPasswordFx,
+    updateUserFx: changePasswordFx,
 });
 
 export const changeAvatarModel = ChangeAvatar.factory.createModel({

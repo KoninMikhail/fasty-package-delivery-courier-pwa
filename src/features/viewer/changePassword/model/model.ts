@@ -1,19 +1,26 @@
 import { User } from '@/shared/api';
-import { combine, createEvent, createStore, Effect, Store } from 'effector';
+import {
+    combine,
+    createEvent,
+    createStore,
+    Effect,
+    sample,
+    Store,
+} from 'effector';
 import { modelFactory } from 'effector-factorio';
+import { ChangePasswordFxParameters } from '@/entities/viewer';
 import { MIN_PASSWORD_LENGTH } from '../config';
 
 /* eslint-disable no-useless-escape */
 
 interface FactoryOptions {
     targetUser: Store<User>;
-    updateUserFx: Effect<User, void, Error>;
+    updateUserFx: Effect<ChangePasswordFxParameters, void, Error>;
     validatePasswordFx: Effect<string, boolean, Error>;
 }
 
 export const factory = modelFactory((options: FactoryOptions) => {
     const { targetUser, updateUserFx } = options;
-    const changePassword = updateUserFx;
 
     const passwordChanged = createEvent<string>();
     const passwordRepeatChanged = createEvent<string>();
@@ -61,8 +68,19 @@ export const factory = modelFactory((options: FactoryOptions) => {
             passwordHasNumbers,
     );
 
+    sample({
+        clock: submitPressed,
+        source: {
+            password: $password,
+            user: targetUser,
+            isValid: $formValidated,
+        },
+        filter: ({ isValid }) => isValid,
+        fn: ({ password, user }) => ({ password, user }),
+        target: updateUserFx,
+    });
+
     return {
-        changePassword,
         targetUser,
         $password,
         $passwordRepeat,
