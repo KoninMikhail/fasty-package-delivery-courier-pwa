@@ -3,7 +3,6 @@ import { PropsWithChildren } from 'react';
 import { widgetMyDeliveriesUi } from '@/widgets/deliveries/myDeliveries';
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { sharedUiComponents } from '@/shared/ui';
-import { Offline, SlowNetwork } from '@/entities/viewer';
 import { Spacer } from '@nextui-org/react';
 
 const { MyDeliveriesList, MyDeliveriesFilters, MyDeliveriesMap } =
@@ -45,8 +44,6 @@ const Header: FunctionComponent = () => {
 export const MobileProfilePageView: FunctionComponent = () => {
     return (
         <>
-            <Offline>dsfsdfdfs</Offline>
-            <SlowNetwork>слоу нетворк</SlowNetwork>
             <Wrapper>
                 <Header />
                 <Spacer y={4} />

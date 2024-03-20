@@ -12,8 +12,8 @@ import {
     widgetSearchQueryPopupUi,
     widgetSearchQueryPopupModel,
 } from '@/widgets/search/searchQueryPopup';
+import { widgetMyDeliveriesUi } from '@/widgets/deliveries/myDeliveries';
 import { widgetUpcomingDeliveriesUi } from '@/widgets/deliveries/upcommingDeliveries';
-import { Offline, SlowNetwork } from '@/entities/viewer';
 import { translationNS } from '../../config';
 
 const {
@@ -25,6 +25,7 @@ const { NavbarMobile } = widgetNavbarMobileUi;
 const { WelcomeTopbar } = widgetTopbarUi;
 const { UpcomingDeliveriesScroller } = widgetUpcomingDeliveriesUi;
 const { SearchQueryInputModal } = widgetSearchQueryPopupUi;
+const { MyDeliveriesRow } = widgetMyDeliveriesUi;
 
 /**
  * Constants
@@ -92,7 +93,9 @@ const Header: FunctionComponent = () => {
     );
 };
 
-const UpcomingDeliveries: FunctionComponent = () => {
+const UpcomingDeliveriesSection: FunctionComponent<PropsWithChildren> = ({
+    children,
+}) => {
     const { t } = useTranslation(translationNS);
     const heading = t(UPCOMING_DELIVERIES_LABEL);
     const myDeliveriesLinkLabel = t(GOTO_MY_DELIVERIES_LINK_LABEL);
@@ -104,13 +107,14 @@ const UpcomingDeliveries: FunctionComponent = () => {
                     {myDeliveriesLinkLabel}
                 </Button>
             </SectionHead>
-
-            <UpcomingDeliveriesScroller />
+            {children}
         </Section>
     );
 };
 
-const AvailableDeliveries: FunctionComponent = () => {
+const MarketDeliveriesSection: FunctionComponent<PropsWithChildren> = ({
+    children,
+}) => {
     const { t } = useTranslation(translationNS);
     const heading = t(MARKET_LABEL);
     return (
@@ -130,15 +134,6 @@ const AvailableDeliveries: FunctionComponent = () => {
     );
 };
 
-export const FloatingInfo: FunctionComponent = () => {
-    return (
-        <div className="fixed top-0 w-full text-center">
-            <Offline>dsfsdfdfs</Offline>
-            <SlowNetwork>слоу нетворк</SlowNetwork>
-        </div>
-    );
-};
-
 /**
  * @name MobileMarketPageView
  * @description Page for deliveries exchange
@@ -147,13 +142,14 @@ export const FloatingInfo: FunctionComponent = () => {
 export const MobileMarketPageView: FunctionComponent = () => {
     return (
         <>
-            <FloatingInfo />
             <Header />
             <Spacer y={6} />
             <Content>
-                <UpcomingDeliveries />
+                <UpcomingDeliveriesSection>
+                    <MyDeliveriesRow />
+                </UpcomingDeliveriesSection>
                 <Spacer y={4} />
-                <AvailableDeliveries />
+                <MarketDeliveriesSection />
             </Content>
 
             <NavbarMobile />

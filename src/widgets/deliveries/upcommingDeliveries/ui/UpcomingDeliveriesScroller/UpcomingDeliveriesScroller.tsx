@@ -35,7 +35,7 @@ const EmptyBanner: FunctionComponent = () => {
     const messageErrorEmpty = t(MESSAGE_ERROR_EMPTY_KEY);
     return (
         <div className="block p-4">
-            <div className="flex h-44 w-full flex-col items-center justify-center rounded-xl border-2 border-dashed p-4">
+            <div className="flex h-44 w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-content3 p-4">
                 <BsBoxSeam className="text-4xl text-content3" />
                 <Spacer y={3} />
                 <div>

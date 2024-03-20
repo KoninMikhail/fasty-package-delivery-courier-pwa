@@ -161,7 +161,10 @@ export const DeliveryCountdownCard: FunctionComponent<
     const metro = getDeliveryMetro(delivery);
 
     return (
-        <ReactRouterLink to={`/deliveries/${delivery.id}`} className="relative">
+        <ReactRouterLink
+            to={`/deliveries/${delivery?.id}`}
+            className="relative"
+        >
             <Card className="min-w-[300px] max-w-[600px]">
                 <CardHeader className="flex gap-3">
                     <HeaderLayout

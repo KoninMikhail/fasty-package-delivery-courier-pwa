@@ -4,9 +4,17 @@ import { once } from 'patronum';
 import { widgetMyDeliveriesModel } from '@/widgets/deliveries/myDeliveries';
 import { Route } from '@/entities/route';
 
-const { initWidgetMyDeliveries } = widgetMyDeliveriesModel;
+const { initWidgetMyDeliveries, setOnline } = widgetMyDeliveriesModel;
 
-export const MyDeliveriesPageGate = createGate();
+export const MyDeliveriesPageGate = createGate<{
+    online: boolean;
+}>();
+
+sample({
+    clock: MyDeliveriesPageGate.open,
+    fn: ({ online }) => online,
+    target: setOnline,
+});
 
 sample({
     clock: once(MyDeliveriesPageGate.open),

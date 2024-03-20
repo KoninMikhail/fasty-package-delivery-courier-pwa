@@ -34,7 +34,7 @@ import {
     $$deliveryTypeTranslated,
     $$deliveryWeight,
     $$hasError,
-    $$isDeliveryNotCoordinated,
+    $$isDeliveryHasCoordinated,
     $$isViewerDelivery,
     $$notFound,
     mapModel,
@@ -243,7 +243,7 @@ const Header: FunctionComponent<{
     backButton: ReactNode;
     className?: string;
 }> = ({ backButton, className }) => {
-    const fallback = useUnit($$isDeliveryNotCoordinated);
+    const fallback = useUnit($$isDeliveryHasCoordinated);
     const deliveryId = useUnit($$deliveryId);
     return (
         <header
@@ -266,13 +266,12 @@ const Header: FunctionComponent<{
 };
 
 const Map: FunctionComponent = () => {
-    const hasCoordinates = useUnit($$isDeliveryNotCoordinated);
+    const hasCoordinates = useUnit($$isDeliveryHasCoordinated);
     const address = useUnit($$deliveryAddress);
     const mapsQueryLink = generateYandexMapsLink(address);
-    console.log(hasCoordinates);
     return (
         <div className="relative h-[50vh] w-full">
-            {hasCoordinates ? (
+            {hasCoordinates ? null : (
                 <div className="absolute bottom-0 left-0 right-0 top-0 z-[1050] flex h-full w-full flex-col items-center justify-center gap-6 bg-content1 bg-opacity-85">
                     <div className="text-center">
                         <p className="text-2xl">Извините</p>
@@ -291,7 +290,7 @@ const Map: FunctionComponent = () => {
                         Открыть Яндекс.Карты
                     </Button>
                 </div>
-            ) : null}
+            )}
             <Route.Map.Container className="h-[50vh] w-full" model={mapModel} />
         </div>
     );

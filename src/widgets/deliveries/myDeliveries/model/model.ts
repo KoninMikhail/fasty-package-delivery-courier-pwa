@@ -4,11 +4,18 @@ import { Delivery, deliverySchema } from '@/shared/api';
 import { persist } from 'effector-storage/local';
 import { FilterDeliveriesByTimeRange } from '@/features/delivery/filterDeliveriesByTimeRange';
 import {
-    END_DELIVERY_TIME,
+    DELIVERY_END_TIME,
     LOCAL_STORAGE_CACHE_KEY,
-    START_DELIVERY_TIME,
-    STEP_MINUTES_IN_TIME_FILTER,
+    DELIVERY_START_TIME,
+    DELIVERY_TIME_STEP,
 } from '../config';
+
+/**
+ * Offline mode
+ */
+export const setOnline = createEvent<boolean>();
+export const $isOnline = createStore<boolean>(true);
+$isOnline.on(setOnline, (_, payload) => payload);
 
 /**
  * Events
@@ -44,7 +51,6 @@ export const $fetchedDeliveries = createStore<Delivery[]>([])
     .on(getMyDeliveriesFx.doneData, (_, deliveries) => deliveries)
     .on(assignUserToDeliveryFx.doneData, (deliveries, delivery) => {
         const index = deliveries.findIndex((d) => d.id === delivery.id);
-        console.log(index);
         if (index === -1) {
             return [...deliveries, delivery];
         }
@@ -54,14 +60,25 @@ export const $fetchedDeliveries = createStore<Delivery[]>([])
     });
 export const filteredDeliveriesByTimeModel =
     FilterDeliveriesByTimeRange.factory.createModel({
-        startTime: START_DELIVERY_TIME,
-        endTime: END_DELIVERY_TIME,
-        stepMins: STEP_MINUTES_IN_TIME_FILTER,
+        startTime: DELIVERY_START_TIME,
+        endTime: DELIVERY_END_TIME,
+        stepMins: DELIVERY_TIME_STEP,
         sourceStore: $fetchedDeliveries,
     });
 
 export const $deliveriesList =
     filteredDeliveriesByTimeModel.$filteredDeliveries;
+
+export const $$deliveriesMarkers = $fetchedDeliveries.map((deliveries) => {
+    return deliveries.map((delivery) => {
+        const lat = delivery.address.latitude;
+        const lng = delivery.address.longitude;
+        if (lat && lng) {
+            return { lat, lng };
+        }
+        return null;
+    });
+});
 
 export const $$empty = $fetchedDeliveries.map(
     (deliveries) => deliveries.length === 0,

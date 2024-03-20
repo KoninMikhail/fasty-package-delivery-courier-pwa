@@ -124,7 +124,7 @@ export const $$isViewerDelivery = combine(
         );
     },
 );
-export const $$isDeliveryNotCoordinated = $delivery.map((delivery) =>
+export const $$isDeliveryHasCoordinated = $delivery.map((delivery) =>
     isDeliveryHasCoordinates(delivery),
 );
 

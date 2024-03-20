@@ -1,3 +1,4 @@
 export * from './locale';
-export * from './widget';
-export * from './keys';
+export * from './deliveries';
+export * from './storage';
+export * from './map';
