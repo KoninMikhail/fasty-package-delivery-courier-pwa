@@ -24,6 +24,5 @@ export const fetchAvailableDeliveriesFx = createEffect<
             },
         });
     }
-    console.log('fetchAvailableDeliveriesFx');
     return apiClient.fetchAvailableAssignDeliveries();
 });

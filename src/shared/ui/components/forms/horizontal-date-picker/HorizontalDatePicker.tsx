@@ -33,7 +33,7 @@ interface HorizontalDatePickerProperties {
 export const HorizontalDatePicker: FunctionComponent<
     HorizontalDatePickerProperties
 > = ({
-    startDate = format(new Date(), 'dd-MM-yyyy'),
+    startDate = format(new Date(), 'yyyy-MM-dd'),
     periodDays = 90,
     selectedDates,
     onChangeDate,
@@ -47,7 +47,7 @@ export const HorizontalDatePicker: FunctionComponent<
     const startDateParsed = startDate;
     const periodDaysParsed = format(
         add(new Date(), { days: periodDays }),
-        'dd-MM-yyyy',
+        'yyyy-MM-dd',
     );
 
     const generateDatesRange = useMemo(
@@ -57,7 +57,7 @@ export const HorizontalDatePicker: FunctionComponent<
 
     const generateSelectedPeriod = useMemo(
         () =>
-            selectedDates?.dateStart && selectedDates?.dateEnd
+            selectedDates?.dateFrom && selectedDates?.toDate
                 ? generateDatesArray(selectedDates)
                 : [],
         [selectedDates],
@@ -67,23 +67,23 @@ export const HorizontalDatePicker: FunctionComponent<
         if (!startPeriodState) {
             setStartPeriodState(date);
             onChangeDate({
-                dateStart: date,
-                dateEnd: date,
+                dateFrom: date,
+                toDate: date,
             });
         }
         if (!endPeriodState && startPeriodState) {
             setEndPeriodState(date);
             onChangeDate({
-                dateStart: startPeriodState,
-                dateEnd: date,
+                dateFrom: startPeriodState,
+                toDate: date,
             });
         }
         if (startPeriodState && endPeriodState) {
             setStartPeriodState(date);
             setEndPeriodState(null);
             onChangeDate({
-                dateStart: date,
-                dateEnd: date,
+                dateFrom: date,
+                toDate: date,
             });
         }
     };
@@ -92,7 +92,7 @@ export const HorizontalDatePicker: FunctionComponent<
         <div className="flex flex-nowrap">
             {generateDatesRange?.map((date, index) => {
                 const days = date.days.map((day) => {
-                    const dateSting = format(day.date, 'dd-MM-yyyy');
+                    const dateSting = format(day.date, 'yyyy-MM-dd');
                     const isLastDayOfMonth = isLastDayOfSpecificMonth(day.date);
 
                     const isSelectDay =

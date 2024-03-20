@@ -1,4 +1,4 @@
 export type DatePeriod = {
-    dateStart: string;
-    dateEnd: string;
+    dateFrom: string;
+    toDate: string;
 };

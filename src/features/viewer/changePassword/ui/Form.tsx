@@ -1,6 +1,6 @@
 import { modelView } from 'effector-factorio';
 import { useUnit } from 'effector-react';
-import { Button, ButtonProps } from '@nextui-org/react';
+import { Button, ButtonProps, Spacer } from '@nextui-org/react';
 import { sharedUiComponents, sharedUiIcons } from '@/shared/ui';
 import { useTranslation } from 'react-i18next';
 import { RegisterCharsIcon } from '@/shared/ui/icons/RegisterCharsIcon';
@@ -177,9 +177,10 @@ const ResetPasswordButton: FunctionComponent<Omit<ButtonProps, 'onPress'>> = (
 
 export const Form = modelView(factory, () => {
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
             <Password />
             <PasswordAgain />
+            <Spacer y="1" />
             <PasswordChecks />
             <ResetPasswordButton />
         </div>

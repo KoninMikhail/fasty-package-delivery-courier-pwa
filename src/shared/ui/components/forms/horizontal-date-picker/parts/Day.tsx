@@ -17,7 +17,7 @@ export const Day: FunctionComponent<DayInfo> = ({
 }) => {
     const { t } = useTranslation(translationNS);
 
-    const formattedDate = format(date, 'dd-MM-yyyy');
+    const formattedDate = format(date, 'yyyy-MM-dd');
     const dayOfWeek = format(date, 'EEEE', { locale: enUS });
     const weekLabel = t(`week.${dayOfWeek.toLowerCase()}.short`);
 

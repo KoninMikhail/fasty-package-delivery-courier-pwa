@@ -17,25 +17,23 @@ import {
 import { ChangeAvatar } from '@/features/viewer/changeAvatar';
 import { useNavigate } from 'react-router-dom';
 import { IoMdArrowRoundBack } from 'react-icons/io';
-import { translationNS } from '../../config';
+import { getFullUserName } from '@/entities/user/lib/utils';
+import {
+    AVATAR_FORMAT_DESCRIPTION,
+    AVATAR_SIZE_DESCRIPTION,
+    CHANGE_PASSWORD_DESCRIPTION,
+    CHANGE_PASSWORD_LABEL,
+    EMAIL_LABEL,
+    FULL_NAME_LABEL,
+    PERSONAL_INFO_LABEL,
+    PHONE_LABEL,
+    translationNS,
+    UNKNOWN_LABEL,
+} from '../../config';
 
-const {
-    RouteName: { DELIVERIES },
-} = sharedConfigRoutes;
+const { RouteName } = sharedConfigRoutes;
+const { DELIVERIES } = RouteName;
 const { NavbarMobile } = widgetNavbarMobileUi;
-
-/**
- * Constants
- */
-const PERSONAL_INFO_LABEL = 'section.label.personalInfo';
-const CHANGE_PASSWORD_LABEL = 'section.label.changePassword';
-const CHANGE_PASSWORD_DESCRIPTION = 'section.description.changePassword';
-const AVATAR_SIZE_DESCRIPTION = 'section.description.avatarSize';
-const AVATAR_FORMAT_DESCRIPTION = 'section.description.avatarFormat';
-const FULL_NAME_LABEL = 'section.label.fullName';
-const EMAIL_LABEL = 'section.label.email';
-const PHONE_LABEL = 'section.label.phone';
-const UNKNOWN_LABEL = 'section.label.unknown';
 
 /**
  * Layout
@@ -83,10 +81,6 @@ const BackButton: FunctionComponent = () => {
 const AvatarTool: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
     const user = useUnit(sessionModel.$sessionStore);
-
-    const sizeDescription = t(AVATAR_SIZE_DESCRIPTION);
-    const formatDescription = t(AVATAR_FORMAT_DESCRIPTION);
-
     return (
         <div className="flex w-full items-center gap-4 lg:gap-6">
             <div>
@@ -98,8 +92,8 @@ const AvatarTool: FunctionComponent = () => {
             <div>
                 <ChangeAvatar.UploadButton model={changeAvatarModel} />
                 <Spacer y={1} />
-                <p className="text-xs">{sizeDescription}</p>
-                <p className="text-xs">{formatDescription}</p>
+                <p className="text-xs">{t(AVATAR_SIZE_DESCRIPTION)}</p>
+                <p className="text-xs">{t(AVATAR_FORMAT_DESCRIPTION)}</p>
             </div>
         </div>
     );
@@ -114,15 +108,8 @@ const PersonalInfo: FunctionComponent<{ user: Nullable<User> }> = ({
     /**
      * Personal info
      */
-    const fullNameLabel = t(FULL_NAME_LABEL);
-    const fullName = user
-        ? `${user.first_name} ${user.last_name}`
-        : t(UNKNOWN_LABEL);
-
-    const emailLabel = t(EMAIL_LABEL);
+    const fullName = user ? getFullUserName(user) : t(UNKNOWN_LABEL);
     const email = user ? user.email : t(UNKNOWN_LABEL);
-
-    const phoneLabel = t(PHONE_LABEL);
     const phone = user?.phone ?? t(UNKNOWN_LABEL);
 
     return (
@@ -137,19 +124,19 @@ const PersonalInfo: FunctionComponent<{ user: Nullable<User> }> = ({
             <div className="flex flex-col gap-2 md:flex-row">
                 <div className="w-full max-w-xs">
                     <label className="mb-0.5 block text-sm font-bold text-gray-700">
-                        {fullNameLabel}
+                        {t(FULL_NAME_LABEL)}
                     </label>
                     <div>{fullName}</div>
                 </div>
                 <div className="w-full max-w-xs">
                     <label className="mb-0.5 block text-sm font-bold text-gray-700">
-                        {emailLabel}
+                        {t(EMAIL_LABEL)}
                     </label>
                     <div>{email}</div>
                 </div>
                 <div className="w-full max-w-xs">
                     <label className="mb-0.5 block text-sm font-bold text-gray-700">
-                        {phoneLabel}
+                        {t(PHONE_LABEL)}
                     </label>
                     <div>{phone}</div>
                 </div>
@@ -160,12 +147,10 @@ const PersonalInfo: FunctionComponent<{ user: Nullable<User> }> = ({
 
 const PasswordTool: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
-    const heading = t(CHANGE_PASSWORD_LABEL);
-    const description = t(CHANGE_PASSWORD_DESCRIPTION);
     return (
         <div>
-            <Heading>{heading}</Heading>
-            <p className="text-md">{description}</p>
+            <Heading>{t(CHANGE_PASSWORD_LABEL)}</Heading>
+            <p className="text-md">{t(CHANGE_PASSWORD_DESCRIPTION)}</p>
             <Spacer y={4} />
             <div className="flex flex-col gap-4">
                 <ChangePassword.Form model={changePasswordModel} />

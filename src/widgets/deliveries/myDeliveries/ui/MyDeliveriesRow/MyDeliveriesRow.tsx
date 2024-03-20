@@ -123,11 +123,12 @@ export const MyDeliveriesRow: FunctionComponent = () => {
         const deliveryId = getDeliveryId(delivery);
 
         return (
-            <div className="flex items-end truncate">
-                <div className="relative w-6">
-                    <div className="-translate-x-1.5 -translate-y-1.5 -rotate-90 text-content4">
-                        {t(DELIVERY_PREFIX, { id: deliveryId })}
-                    </div>
+            <div className="flex items-end py-1 pl-0.5">
+                <div
+                    className="-translate-x-2 -translate-y-1.5 rotate-180 text-content4"
+                    style={{ writingMode: 'vertical-lr' }}
+                >
+                    {t(DELIVERY_PREFIX, { id: deliveryId })}
                 </div>
                 <div className="flex-grow">
                     <DeliveryCountdownCard delivery={delivery} />

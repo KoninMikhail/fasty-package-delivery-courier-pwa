@@ -6,11 +6,12 @@ import {
     FilterDeliveriesByParametersModel,
 } from '@/features/delivery/filterDeliveriesByParams';
 import { assignUserToDeliveryFx } from '@/entities/delivery';
+import { isAfter } from 'date-fns/isAfter';
 import { fetchAvailableDeliveriesFx } from './effects';
 
 type DatesRange = {
-    dateStart: string;
-    dateEnd: string;
+    dateFrom: string;
+    toDate: string;
 };
 
 /**
@@ -30,20 +31,21 @@ export const deliveriesFilterFeatureModel: FilterDeliveriesByParametersModel =
     });
 
 const $deliveriesDatesRange = createStore<DatesRange>({
-    dateStart: '',
-    dateEnd: '',
-}).on(deliveriesDatesRangeChanged, (state, dates) => {
-    if (!dates) return { ...state, dateStart: '', dateEnd: '' };
-    if (dates.dateStart > dates.dateEnd) {
+    dateFrom: '',
+    toDate: '',
+}).on(deliveriesDatesRangeChanged, (state, payload) => {
+    if (!payload) return { ...state, dateFrom: '', toDate: '' };
+
+    if (isAfter(payload.dateFrom, payload.toDate)) {
         return {
             ...state,
-            dateStart: dates.dateEnd,
-            dateEnd: dates.dateStart,
+            dateFrom: payload.toDate,
+            toDate: payload.dateFrom,
         };
     }
     return {
         ...state,
-        ...dates,
+        ...payload,
     };
 });
 
@@ -77,7 +79,7 @@ sample({
 
 sample({
     clock: $deliveriesDatesRange,
-    fn: (dates) => ({ fromDate: dates.dateStart, toDate: dates.dateEnd }),
+    fn: (dates) => ({ fromDate: dates.dateFrom, toDate: dates.toDate }),
     target: fetchAvailableDeliveriesFx,
 });
 

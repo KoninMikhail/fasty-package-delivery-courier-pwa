@@ -25,7 +25,6 @@ const resetPasswordFx = createEffect({
 const changeAvatarFx = createEffect({
     handler: async ({ avatar, userId }: { avatar: string; userId: number }) => {
         await new Promise((resolve) => setTimeout(resolve, 5000));
-        console.log('avatar', avatar);
         return avatar;
     },
 });

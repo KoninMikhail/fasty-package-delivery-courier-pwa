@@ -9,12 +9,14 @@ interface ILogoProperties {
     size?: 'lg' | 'md' | 'sm';
     link?: string;
     onlyIcon?: boolean;
+    inverted?: boolean;
 }
 
 export const Logo: FunctionComponent<ILogoProperties> = ({
     size = 'md',
     link,
     onlyIcon = false,
+    inverted = false,
 }) => {
     const { i18n } = useTranslation();
     const currentLanguage = i18n.language as keyof typeof APP_DESCRIPTION;

@@ -27,16 +27,16 @@ export const MarketDateSelector: FunctionComponent<
 
     const onChangeDate = (work: DatePeriod): void => {
         if (
-            selectedDates?.dateStart === work.dateStart &&
-            selectedDates?.dateEnd === work.dateEnd
+            selectedDates?.dateFrom === work.dateFrom &&
+            selectedDates?.toDate === work.toDate
         ) {
             setSelectedDates(() => null);
             setDatesRange(null);
         }
 
         if (
-            selectedDates?.dateStart !== work.dateStart ||
-            selectedDates?.dateEnd !== work.dateEnd ||
+            selectedDates?.dateFrom !== work.dateFrom ||
+            selectedDates?.toDate !== work.toDate ||
             !selectedDates
         ) {
             setDatesRange(work);
