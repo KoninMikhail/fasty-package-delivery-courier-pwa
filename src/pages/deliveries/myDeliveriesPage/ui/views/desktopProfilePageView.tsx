@@ -7,7 +7,6 @@ import { sessionModel } from '@/entities/viewer';
 import { useTranslation } from 'react-i18next';
 import { Spacer, Tab, Tabs } from '@nextui-org/react';
 import { Route } from '@/entities/route';
-import { deliveriesMapModel } from '@/pages/deliveries/myActiveDeliveriesPage/model/model';
 import { translationNS } from '../../config';
 
 const { Footer } = widgetFooterUi;

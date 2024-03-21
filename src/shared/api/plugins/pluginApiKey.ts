@@ -1,7 +1,7 @@
 import { ZodiosPlugin } from '@zodios/core';
 
 export interface ApiKeyPluginConfig {
-    getApiKey: () => Promise<string>;
+    getApiKey: () => string;
 }
 
 export function pluginApiKey(provider: ApiKeyPluginConfig): ZodiosPlugin {
@@ -11,7 +11,7 @@ export function pluginApiKey(provider: ApiKeyPluginConfig): ZodiosPlugin {
                 ...config,
                 headers: {
                     ...config.headers,
-                    Authorization: `Bearer ${await provider.getApiKey()}`,
+                    Authorization: `Bearer ${provider.getApiKey()}`,
                 },
             };
         },

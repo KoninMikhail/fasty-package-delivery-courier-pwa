@@ -2,7 +2,6 @@ import type { PropsWithChildren } from 'react';
 import { Heading } from '@/shared/ui/components';
 import { widgetMarketUi } from '@/widgets/deliveries/market';
 import { Spacer, Input } from '@nextui-org/react';
-import { widgetUpcomingDeliveriesUi } from '@/widgets/deliveries/upcommingDeliveries';
 import { sessionModel } from '@/entities/viewer';
 
 import { FiSearch } from 'react-icons/fi';
@@ -10,7 +9,6 @@ import { UserCardRow } from '@/entities/user';
 import { useUnit } from 'effector-react';
 import { widgetNavbarUi } from '@/widgets/layout/navbar-desktop';
 
-const { UpcomingDeliveriesCarousel } = widgetUpcomingDeliveriesUi;
 const { Navbar } = widgetNavbarUi;
 const { MarketContent, MarketDateSelector, MarketFilterScrollable } =
     widgetMarketUi;
@@ -64,7 +62,7 @@ export const DesktopMarketPageView: FunctionComponent = () => {
                         Активные доставки
                     </Heading>
                     <Spacer y={8} />
-                    <UpcomingDeliveriesCarousel />
+                    карусель
                 </div>
                 <Spacer y={16} />
                 <div>

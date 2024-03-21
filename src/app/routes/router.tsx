@@ -5,7 +5,7 @@ import { sharedUiLayouts } from '@/shared/ui';
 import { pageAuthUi } from '@/pages/auth/authPage';
 import { pageSettingsUi } from '@/pages/viewer/settingsPage';
 import { pageProfileEditUi } from '@/pages/viewer/profileEditPage';
-import { pageMyDeliveriesUi } from '@/pages/deliveries/myActiveDeliveriesPage';
+import { pageMyDeliveriesUi } from '@/pages/deliveries/myDeliveriesPage';
 import { pageSingleDeliveryDetailsUi } from '@/pages/deliveries/singleDeliveryDetailsPage';
 import { pageMyDeliveriesHistoryUi } from '@/pages/deliveries/myHistoryPage';
 import { pageMarketUi } from '@/pages/deliveries/marketPage';

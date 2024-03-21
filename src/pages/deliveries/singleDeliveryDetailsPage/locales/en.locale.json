@@ -1,6 +1,6 @@
 {
   "page.title": "Delivery #{{id}} | {{appName}}",
-  "page.section.label.id": "Delivery ID",
+  "page.section.label.id": "Delivery ID:",
   "page.section.label.client": "Client",
   "page.section.label.client.type": "Client type",
   "page.section.label.pickup": "Pickup date and time",

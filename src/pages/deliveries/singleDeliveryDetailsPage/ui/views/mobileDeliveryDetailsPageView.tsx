@@ -1,12 +1,19 @@
-import { PropsWithChildren, ReactNode } from 'react';
+import { PropsWithChildren, ReactNode, useLayoutEffect, useState } from 'react';
 
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
-import { Button, Chip, Divider, Link, Spacer } from '@nextui-org/react';
+import {
+    Button,
+    Chip,
+    Divider,
+    Link,
+    Skeleton,
+    Spacer,
+    Spinner,
+} from '@nextui-org/react';
 import { useUnit } from 'effector-react';
 import { useNavigate } from 'react-router-dom';
 import { LuArrowLeft } from 'react-icons/lu';
 import clsx from 'clsx';
-import { Route } from '@/entities/route';
 import { lazily } from 'react-lazily';
 import { widgetDeliveryStatusUi } from '@/widgets/deliveries/deliveryStatus';
 import { SubwayStationWithIcon } from '@/shared/services/subway';
@@ -16,6 +23,13 @@ import { IoCar, IoPersonSharp } from 'react-icons/io5';
 import { MdOutlineDirectionsRun } from 'react-icons/md';
 import { HiLightningBolt } from 'react-icons/hi';
 import { RiBuildingFill } from 'react-icons/ri';
+import {
+    MapContainer,
+    Marker,
+    Popup,
+    TileLayer,
+    ZoomControl,
+} from 'react-leaflet';
 import {
     $$deliveryAddress,
     $$deliveryClientName,
@@ -28,6 +42,7 @@ import {
     $$deliveryIsExpress,
     $$deliveryIsExpressTranslated,
     $$deliveryManager,
+    $$deliveryMapFallback,
     $$deliveryMetro,
     $$deliveryPickupDateTime,
     $$deliveryType,
@@ -37,7 +52,7 @@ import {
     $$isDeliveryHasCoordinated,
     $$isViewerDelivery,
     $$notFound,
-    mapModel,
+    $inProcess,
 } from '../../model';
 import { NotFound } from './common';
 import { translationNS } from '../../config';
@@ -96,111 +111,162 @@ const Section: FunctionComponent<ISectionProperties> = ({
  */
 
 const Heading: FunctionComponent<{ content: string }> = ({ content }) => {
-    return <h3 className="font-bold">{content}</h3>;
+    const isLoading = useUnit($inProcess);
+    return (
+        <Skeleton isLoaded={!isLoading}>
+            <h3 className="font-bold">{content}</h3>
+        </Skeleton>
+    );
 };
 const Client: FunctionComponent = () => {
     const name = useUnit($$deliveryClientName);
-    return <p>{name}</p>;
+    const isLoading = useUnit($inProcess);
+    return (
+        <Skeleton isLoaded={!isLoading}>
+            <p>{name}</p>
+        </Skeleton>
+    );
 };
 const ClientType: FunctionComponent = () => {
     const type = useUnit($$deliveryClientType);
     const text = useUnit($$deliveryClientTypeLocaled);
-
+    const isLoading = useUnit($inProcess);
     if (type === 'organization') {
         return (
-            <div className="flex items-center gap-1">
-                <span className="text-xl">
-                    <RiBuildingFill />
-                </span>
-                {text}
-            </div>
+            <Skeleton isLoaded={!isLoading}>
+                <div className="flex items-center gap-1">
+                    <span className="text-xl">
+                        <RiBuildingFill />
+                    </span>
+                    {text}
+                </div>
+            </Skeleton>
         );
     }
     return (
-        <div className="flex items-center gap-1">
-            <span className="text-xl">
-                <IoPersonSharp />
-            </span>
-            {text}
-        </div>
+        <Skeleton isLoaded={!isLoading}>
+            <div className="flex items-center gap-1">
+                <span className="text-xl">
+                    <IoPersonSharp />
+                </span>
+                {text}
+            </div>
+        </Skeleton>
     );
 };
 
 const DeliveryId: FunctionComponent = () => {
     const id = useUnit($$deliveryId);
-    return <p>{id}</p>;
+    const isLoading = useUnit($inProcess);
+    return (
+        <Skeleton isLoaded={!isLoading} className="w-24">
+            <p>{id}</p>
+        </Skeleton>
+    );
 };
 
 const DeliveryPickup: FunctionComponent = () => {
     const pickup = useUnit($$deliveryPickupDateTime);
-    return <p>{pickup}</p>;
+    const isLoading = useUnit($inProcess);
+    return (
+        <Skeleton isLoaded={!isLoading}>
+            <p>{pickup}</p>
+        </Skeleton>
+    );
 };
 
 const DeliveryTypeTransport: FunctionComponent = () => {
     const type = useUnit($$deliveryType);
     const text = useUnit($$deliveryTypeTranslated);
+    const isLoading = useUnit($inProcess);
+
     if (type === 'car') {
         return (
-            <div className="flex items-center gap-1">
-                <span className="text-xl">
-                    <IoCar />
-                </span>
-                {text}
-            </div>
+            <Skeleton isLoaded={!isLoading}>
+                <div className="flex items-center gap-1">
+                    <span className="text-xl">
+                        <IoCar />
+                    </span>
+                    {text}
+                </div>
+            </Skeleton>
         );
     }
     return (
-        <div className="flex items-center gap-1">
-            <span className="text-xl">
-                <MdOutlineDirectionsRun />
-            </span>
-            {text}
-        </div>
+        <Skeleton isLoaded={!isLoading}>
+            <div className="flex items-center gap-1">
+                <span className="text-xl">
+                    <MdOutlineDirectionsRun />
+                </span>
+                {text}
+            </div>
+        </Skeleton>
     );
 };
 const DeliveryTypeExpress: FunctionComponent = () => {
     const express = useUnit($$deliveryIsExpressTranslated);
     const isExpress = useUnit($$deliveryIsExpress);
+    const isLoading = useUnit($inProcess);
     return (
-        <div className="flex items-center gap-1">
-            {isExpress ? (
-                <span className="text-xl text-secondary">
-                    <HiLightningBolt />
-                </span>
-            ) : null}
-            {express}
-        </div>
+        <Skeleton isLoaded={!isLoading}>
+            <div className="flex items-center gap-1">
+                {isExpress ? (
+                    <span className="text-xl text-secondary">
+                        <HiLightningBolt />
+                    </span>
+                ) : null}
+                {express}
+            </div>
+        </Skeleton>
     );
 };
 const DeliveryAddress: FunctionComponent = () => {
     const address = useUnit($$deliveryAddress);
+    const isLoading = useUnit($inProcess);
     return (
-        <div>
-            <p>{address}</p>
-            <Spacer y={0.5} />
-            <Link
-                href={generateYandexMapsLink(address)}
-                as={Link}
-                color="primary"
-                size="sm"
-            >
-                Перейти на Яндекс.Карты
-            </Link>
-        </div>
+        <Skeleton isLoaded={!isLoading}>
+            <div>
+                <p>{address}</p>
+                <Spacer y={0.5} />
+                <Link
+                    href={generateYandexMapsLink(address)}
+                    as={Link}
+                    color="primary"
+                    size="sm"
+                >
+                    Перейти на Яндекс.Карты
+                </Link>
+            </div>
+        </Skeleton>
     );
 };
 
 const DeliveryAddressSubway: FunctionComponent = () => {
     const metro = useUnit($$deliveryMetro);
-    return <SubwayStationWithIcon value={metro} />;
+    const isLoading = useUnit($inProcess);
+    return (
+        <Skeleton isLoaded={!isLoading}>
+            <SubwayStationWithIcon value={metro} />
+        </Skeleton>
+    );
 };
 const DeliveryContents: FunctionComponent = () => {
     const contents = useUnit($$deliveryContents);
-    return <p>{contents}</p>;
+    const isLoading = useUnit($inProcess);
+    return (
+        <Skeleton isLoaded={!isLoading}>
+            <p>{contents}</p>
+        </Skeleton>
+    );
 };
 const DeliveryWeight: FunctionComponent = () => {
     const weight = useUnit($$deliveryWeight);
-    return <p>{weight}</p>;
+    const isLoading = useUnit($inProcess);
+    return (
+        <Skeleton isLoaded={!isLoading}>
+            <p>{weight}</p>
+        </Skeleton>
+    );
 };
 
 const DeliveryCourier: FunctionComponent = () => {
@@ -266,9 +332,29 @@ const Header: FunctionComponent<{
 };
 
 const Map: FunctionComponent = () => {
-    const hasCoordinates = useUnit($$isDeliveryHasCoordinated);
+    const hasCoordinates = useUnit($$deliveryMapFallback);
     const address = useUnit($$deliveryAddress);
     const mapsQueryLink = generateYandexMapsLink(address);
+
+    const [unmountMap, setUnmountMap] = useState<boolean>(false);
+
+    useLayoutEffect(() => {
+        setUnmountMap(false);
+        return () => {
+            setUnmountMap(true);
+        };
+    }, []);
+
+    if (unmountMap) {
+        return (
+            <div className="relative h-[50vh] w-full">
+                <div className="flex h-full w-full items-center justify-center">
+                    <Spinner color="default" />
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="relative h-[50vh] w-full">
             {hasCoordinates ? null : (
@@ -291,7 +377,25 @@ const Map: FunctionComponent = () => {
                     </Button>
                 </div>
             )}
-            <Route.Map.Container className="h-[50vh] w-full" model={mapModel} />
+            <MapContainer
+                center={[51.505, -0.09]}
+                zoom={13}
+                scrollWheelZoom={false}
+                className="h-[50vh] w-full"
+                zoomControl={false}
+                attributionControl={false}
+            >
+                <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <Marker position={[51.505, -0.09]}>
+                    <Popup>
+                        A pretty CSS3 popup. <br /> Easily customizable.
+                    </Popup>
+                </Marker>
+                <ZoomControl position="bottomright" />
+            </MapContainer>
         </div>
     );
 };

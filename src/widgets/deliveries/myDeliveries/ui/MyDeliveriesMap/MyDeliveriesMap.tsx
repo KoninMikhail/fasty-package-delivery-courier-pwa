@@ -10,7 +10,7 @@ import {
     ZoomControl,
 } from 'react-leaflet';
 import { HorizontalScroll } from '@/shared/ui/layouts';
-import { DeliveryMapCard } from '@/entities/delivery';
+import { DeliveryMapCard, myDeliveriesModel } from '@/entities/delivery';
 import {
     DEFAULT_MAP_CENTER,
     DEFAULT_MAP_ZOOM,
@@ -18,11 +18,7 @@ import {
     translationNS,
     WIDGET_MAP_TITLE_KEY,
 } from '../../config';
-import {
-    $$deliveriesMarkers,
-    $fetchedDeliveries,
-    $isOnline,
-} from '../../model';
+import { $$deliveriesMarkers, $isOnline } from '../../model';
 
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -67,9 +63,10 @@ const Map: FunctionComponent = () => {
 };
 
 const CardsRow: FunctionComponent = () => {
-    const deliveries = useList($fetchedDeliveries, (delivery) => (
-        <DeliveryMapCard />
-    ));
+    const deliveries = useList(
+        myDeliveriesModel.$myDeliveriesStore,
+        (delivery) => <DeliveryMapCard />,
+    );
     return (
         <HorizontalScroll>
             <div className="flex flex-row flex-nowrap gap-2 px-4">

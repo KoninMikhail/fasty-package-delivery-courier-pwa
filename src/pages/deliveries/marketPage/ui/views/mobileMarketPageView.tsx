@@ -13,7 +13,6 @@ import {
     widgetSearchQueryPopupModel,
 } from '@/widgets/search/searchQueryPopup';
 import { widgetMyDeliveriesUi } from '@/widgets/deliveries/myDeliveries';
-import { widgetUpcomingDeliveriesUi } from '@/widgets/deliveries/upcommingDeliveries';
 import { translationNS } from '../../config';
 
 const {
@@ -23,7 +22,6 @@ const { MarketContent, MarketFilterScrollable, MarketDateSelector } =
     widgetMarketUi;
 const { NavbarMobile } = widgetNavbarMobileUi;
 const { WelcomeTopbar } = widgetTopbarUi;
-const { UpcomingDeliveriesScroller } = widgetUpcomingDeliveriesUi;
 const { SearchQueryInputModal } = widgetSearchQueryPopupUi;
 const { MyDeliveriesRow } = widgetMyDeliveriesUi;
 
@@ -97,14 +95,12 @@ const UpcomingDeliveriesSection: FunctionComponent<PropsWithChildren> = ({
     children,
 }) => {
     const { t } = useTranslation(translationNS);
-    const heading = t(UPCOMING_DELIVERIES_LABEL);
-    const myDeliveriesLinkLabel = t(GOTO_MY_DELIVERIES_LINK_LABEL);
     return (
         <Section>
             <SectionHead>
-                <Heading>{heading}</Heading>
+                <Heading>{t(UPCOMING_DELIVERIES_LABEL)}</Heading>
                 <Button as={Link} to={DELIVERIES} size="sm" radius="full">
-                    {myDeliveriesLinkLabel}
+                    {t(GOTO_MY_DELIVERIES_LINK_LABEL)}
                 </Button>
             </SectionHead>
             {children}
@@ -116,11 +112,10 @@ const MarketDeliveriesSection: FunctionComponent<PropsWithChildren> = ({
     children,
 }) => {
     const { t } = useTranslation(translationNS);
-    const heading = t(MARKET_LABEL);
     return (
         <Section>
             <SectionHead>
-                <Heading>{heading}</Heading>
+                <Heading>{t(MARKET_LABEL)}</Heading>
             </SectionHead>
             <Spacer y={2} />
             <MarketDateSelector typePicker="scroll" />

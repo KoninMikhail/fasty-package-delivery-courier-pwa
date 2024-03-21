@@ -14,21 +14,20 @@ import { sharedServicesSubway } from '@/shared/services';
 import { useTranslation } from 'react-i18next';
 import { ReactNode } from 'react';
 import { Link as ReactRouterLink } from 'react-router-dom';
-import { getDeliveryAddress, getDeliveryMetro } from '../../lib';
+import { sharedConfigRoutes } from '@/shared/config';
+import { getDeliveryAddress, getDeliveryId, getDeliveryMetro } from '../../lib';
 import { useEstimatedTime } from '../../lib/hooks/useEstimatedTime';
-import { translationNS } from '../../config';
+import {
+    ADDRESS,
+    CLIENT_NOT_FOUND,
+    EXPIRED,
+    TIME_LEFT,
+    translationNS,
+} from '../../config';
 
 const { SubwayStationWithIcon } = sharedServicesSubway;
-
-/**
- * Constants
- */
-const TRANSLATIONS = {
-    EXPIRED: 'delivery.card.chip.expired',
-    TIME_LEFT: 'delivery.card.chip.timeLeft',
-    ADDRESS: 'delivery.card.label.address',
-    CLIENT_NOT_FOUND: 'delivery.card.client.name.notFound',
-};
+const { RouteName } = sharedConfigRoutes;
+const { DELIVERIES } = RouteName;
 
 /**
  * @name HeaderLayout
@@ -59,7 +58,7 @@ export const AddressDisplay: FunctionComponent<{
     const { t } = useTranslation(translationNS);
     return (
         <div className="flex flex-col">
-            <span className="text-md">{`${t(TRANSLATIONS.ADDRESS)}:`}</span>
+            <span className="text-md">{`${t(ADDRESS)}:`}</span>
             <span className="text-md font-bold">{address}</span>
         </div>
     );
@@ -75,17 +74,10 @@ export const ContactDetails: FunctionComponent<{
     const { t } = useTranslation(translationNS);
 
     if (!name || !phone)
-        return (
-            <div className="text-md font-bold">
-                {t(TRANSLATIONS.CLIENT_NOT_FOUND)}
-            </div>
-        );
+        return <div className="text-md font-bold">{t(CLIENT_NOT_FOUND)}</div>;
 
     return (
-        <Link
-            href={`tel:+${phone.replaceAll(/\D/g, '')}`}
-            className="flex w-full justify-between gap-2 text-lg text-foreground"
-        >
+        <>
             <div className="flex-grow">
                 <div className="truncate text-sm font-bold">{name}</div>
                 <div className="text-sm">
@@ -100,7 +92,7 @@ export const ContactDetails: FunctionComponent<{
             >
                 <IoCall />
             </Button>
-        </Link>
+        </>
     );
 };
 
@@ -126,13 +118,13 @@ export const DeliveryTimer: FunctionComponent<{
     if (isExpired)
         return (
             <Chip color="danger" size="sm">
-                {t(TRANSLATIONS.EXPIRED)}
+                {t(EXPIRED)}
             </Chip>
         );
 
     return (
         <Chip color={isCloseToExpired ? 'warning' : 'default'}>
-            {t(TRANSLATIONS.TIME_LEFT, {
+            {t(TIME_LEFT, {
                 hours: hoursLeft,
                 minutes: minutesLeft,
             })}
@@ -156,16 +148,16 @@ export const DeliveryCountdownCard: FunctionComponent<
     const deadline = new Date(
         `${delivery?.date || '2024-01-01'}T${delivery?.time_end || '00:00:00'}.999`,
     );
+    const id = getDeliveryId(delivery);
     const address = getDeliveryAddress(delivery);
     const contact = delivery?.contact;
     const metro = getDeliveryMetro(delivery);
 
+    const getDetailsPageLink = (): string => `${DELIVERIES}/${id}`;
+
     return (
-        <ReactRouterLink
-            to={`/deliveries/${delivery?.id}`}
-            className="relative"
-        >
-            <Card className="min-w-[300px] max-w-[600px]">
+        <Card className="min-w-[300px] max-w-[600px]">
+            <ReactRouterLink to={getDetailsPageLink()} className="relative">
                 <CardHeader className="flex gap-3">
                     <HeaderLayout
                         countdown={<DeliveryTimer date={deadline} />}
@@ -173,17 +165,23 @@ export const DeliveryCountdownCard: FunctionComponent<
                     />
                 </CardHeader>
                 <Divider />
+
                 <CardBody>
                     <AddressDisplay address={address} />
                 </CardBody>
-                <Divider />
-                <CardFooter>
+            </ReactRouterLink>
+            <Divider />
+            <CardFooter>
+                <Link
+                    href={`tel:+${contact?.phone.replaceAll(/\D/g, '')}`}
+                    className="flex w-full justify-between gap-2 text-lg text-foreground"
+                >
                     <ContactDetails
                         name={contact?.name}
                         phone={contact?.phone}
                     />
-                </CardFooter>
-            </Card>
-        </ReactRouterLink>
+                </Link>
+            </CardFooter>
+        </Card>
     );
 };

@@ -32,7 +32,7 @@ export const apiClient = new Zodios(apis, {
  */
 apiClient.use(
     pluginApiKey({
-        getApiKey: async () => {
+        getApiKey: () => {
             return Cookies.get(COOKIE_NAME) || '';
         },
     }),
@@ -40,7 +40,7 @@ apiClient.use(
 apiClient.use(
     'authByEmail',
     pluginSetApiKey({
-        setApiKey: async (token) => {
+        setApiKey: (token) => {
             Cookies.set(COOKIE_NAME, token, {
                 expires: SESSION_EXPIRATION_DAYS,
             });

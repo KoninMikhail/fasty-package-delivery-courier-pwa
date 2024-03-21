@@ -15,39 +15,30 @@ type DatesRange = {
 };
 
 /**
- * Events
+ * initial data
+ */
+
+/**
+ * Global
  */
 export const initMarket = createEvent(); // full reset of the market
-export const reloadMarketContent = createEvent(); // reload only the content of the market
-export const deliveriesDatesRangeChanged = createEvent<Nullable<DatesRange>>();
+export const datesPicked = createEvent<Nullable<DatesRange>>();
+
+/**
+ * init
+ */
+sample({
+    clock: initMarket,
+    target: fetchAvailableDeliveriesFx,
+});
 
 /**
  * Data
  */
-export const $deliveriesFetched = createStore<Delivery[]>([]);
-export const deliveriesFilterFeatureModel: FilterDeliveriesByParametersModel =
-    FilterDeliveriesByParameters.factory.createModel({
-        sourceStore: $deliveriesFetched,
-    });
-
-const $deliveriesDatesRange = createStore<DatesRange>({
-    dateFrom: '',
-    toDate: '',
-}).on(deliveriesDatesRangeChanged, (state, payload) => {
-    if (!payload) return { ...state, dateFrom: '', toDate: '' };
-
-    if (isAfter(payload.dateFrom, payload.toDate)) {
-        return {
-            ...state,
-            dateFrom: payload.toDate,
-            toDate: payload.dateFrom,
-        };
-    }
-    return {
-        ...state,
-        ...payload,
-    };
-});
+export const $fetchedData = createStore<Delivery[]>([]).on(
+    fetchAvailableDeliveriesFx.doneData,
+    (_, payload) => payload,
+);
 
 /**
  * Actions
@@ -60,22 +51,44 @@ export const assignDeliveryToUserModel =
 /**
  * State
  */
-export const $initialized = createStore(false).on(initMarket, () => true);
+export const $assignDeliveriesCount = createStore<number>(0)
+    .on(assignUserToDeliveryFx.done, (state) => state + 1)
+    .reset(initMarket);
 export const $isDeliveriesLoading = fetchAvailableDeliveriesFx.pending;
-export const $error = createStore<Nullable<Error>>(null);
+export const $error = createStore<Nullable<Error>>(null).on(
+    fetchAvailableDeliveriesFx.failData,
+    (_, error) => error,
+);
 export const $$hasError = $error.map((error) => error !== null);
-export const $$deliveriesEmpty = $deliveriesFetched.map(
+export const $$deliveriesEmpty = $fetchedData.map(
     (deliveries) => deliveries.length === 0,
 );
 
 /**
- * Handlers
+ * Date picker
  */
+const initialDatesRange: DatesRange = {
+    dateFrom: '',
+    toDate: '',
+};
+const $deliveriesDatesRange = createStore<DatesRange>(initialDatesRange).on(
+    datesPicked,
+    (state, payload) => {
+        if (!payload) return { ...state, dateFrom: '', toDate: '' };
 
-sample({
-    clock: [initMarket, reloadMarketContent],
-    target: fetchAvailableDeliveriesFx,
-});
+        if (isAfter(payload.dateFrom, payload.toDate)) {
+            return {
+                ...state,
+                dateFrom: payload.toDate,
+                toDate: payload.dateFrom,
+            };
+        }
+        return {
+            ...state,
+            ...payload,
+        };
+    },
+);
 
 sample({
     clock: $deliveriesDatesRange,
@@ -83,15 +96,14 @@ sample({
     target: fetchAvailableDeliveriesFx,
 });
 
-sample({
-    clock: fetchAvailableDeliveriesFx.doneData,
-    target: $deliveriesFetched,
-});
+/**
+ * Filter
+ */
 
-sample({
-    clock: fetchAvailableDeliveriesFx.failData,
-    target: $error,
-});
+export const deliveriesFilterFeatureModel: FilterDeliveriesByParametersModel =
+    FilterDeliveriesByParameters.factory.createModel({
+        sourceStore: $fetchedData,
+    });
 
 /**
  * Exports

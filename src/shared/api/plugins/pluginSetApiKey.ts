@@ -3,7 +3,7 @@ import { AxiosResponse } from 'axios';
 import { AuthResponse } from '@/shared/api/types/AuthTypes';
 
 interface PluginSetApiKeyConfig {
-    setApiKey: (token: string) => Promise<void>;
+    setApiKey: (token: string) => void;
 }
 
 export function pluginSetApiKey(provider: PluginSetApiKeyConfig): ZodiosPlugin {
@@ -12,7 +12,7 @@ export function pluginSetApiKey(provider: PluginSetApiKeyConfig): ZodiosPlugin {
             const { data } = response;
             const { token } = data;
             if (token) {
-                await provider.setApiKey(token);
+                provider.setApiKey(token);
             }
             return response;
         },

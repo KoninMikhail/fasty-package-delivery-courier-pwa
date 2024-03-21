@@ -16,9 +16,11 @@ export const $delivery = createStore<Nullable<Delivery>>(null)
     .on(getDeliveryByIdFx.doneData, (_, delivery) => delivery)
     .on(setDeliveryStatus.doneData, (_, delivery) => delivery);
 export const $$deliveryStatus = $delivery.map(
-    (delivery) => delivery && delivery?.states, 
+    (delivery) => delivery && delivery?.states,
 );
-export const $$deliveryComment = $delivery.map((delivery) => delivery && delivery?.comment);
+export const $$deliveryComment = $delivery.map(
+    (delivery) => delivery && delivery?.comment,
+);
 export const $$deliveryCreateDate = $delivery.map(
     (delivery) => delivery && delivery?.created_at,
 );

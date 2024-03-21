@@ -46,6 +46,10 @@ export const factory = modelFactory((options: FactoryOptions) => {
         })),
         filter: ({ user, delivery }) => !!user && !!delivery,
         fn: ({ user, delivery }) => {
+            console.log({
+                userId: user!.id,
+                deliveryId: delivery!.id,
+            });
             return {
                 userId: user!.id,
                 deliveryId: delivery!.id,

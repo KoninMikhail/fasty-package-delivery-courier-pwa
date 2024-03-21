@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { HorizontalDatePicker } from '@/shared/ui/components';
 import { DatePeriod } from '@/shared/ui/components/forms/horizontal-date-picker/types';
 import { useUnit } from 'effector-react';
-import { deliveriesDatesRangeChanged } from '../model';
+import { datesPicked } from '../model';
 
 interface MarketDateSelectorProperties {
     typePicker: 'scroll' | 'slider';
@@ -23,7 +23,7 @@ export const MarketDateSelector: FunctionComponent<
     const [selectedDates, setSelectedDates] =
         useState<Nullable<DatePeriod>>(null);
 
-    const setDatesRange = useUnit(deliveriesDatesRangeChanged);
+    const setDatesRange = useUnit(datesPicked);
 
     const onChangeDate = (work: DatePeriod): void => {
         if (

@@ -1,4 +1,8 @@
-import { DeliveryCountdownCard, getDeliveryId } from '@/entities/delivery';
+import {
+    DeliveryCountdownCard,
+    getDeliveryId,
+    myDeliveriesModel,
+} from '@/entities/delivery';
 import { useList, useUnit } from 'effector-react';
 import { sharedUiLayouts } from '@/shared/ui';
 import { Button, Skeleton, Spacer, Spinner } from '@nextui-org/react';
@@ -8,7 +12,7 @@ import { BsBoxSeam } from 'react-icons/bs';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
 import { PropsWithChildren } from 'react';
-import { $$empty, $$hasError, $fetchedDeliveries } from '../../model';
+import { $$empty, $$hasError, $$loading } from '../../model';
 
 import {
     BUTTON_RETRY_TEXT_KEY,
@@ -57,13 +61,13 @@ const LoadPlaceholder: FunctionComponent = () => (
         <HorizontalScroll>
             <div className="flex flex-nowrap justify-start gap-4 px-4">
                 <Skeleton className="rounded-lg">
-                    <DeliveryCountdownCard />
+                    <div className="h-[198px] w-[300px]" />
                 </Skeleton>
                 <Skeleton className="rounded-lg">
-                    <DeliveryCountdownCard />
+                    <div className="h-[198px] w-[300px]" />
                 </Skeleton>
                 <Skeleton className="rounded-lg">
-                    <DeliveryCountdownCard />
+                    <div className="h-[198px] w-[300px]" />
                 </Skeleton>
             </div>
         </HorizontalScroll>
@@ -112,16 +116,16 @@ const Updater: FunctionComponent = () => (
  */
 export const MyDeliveriesRow: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
-    const hasError = useUnit($$hasError);
 
     // Simulated states (example purposes)
-    const isFirstLoad = false;
-    const isUpdating = false;
-    const isEmpty = useUnit($$empty);
+    const [isEmpty, isUpdating, hasError] = useUnit([
+        $$empty,
+        $$loading,
+        $$hasError,
+    ]);
 
-    const items = useList($fetchedDeliveries, (delivery) => {
+    const items = useList(myDeliveriesModel.$myDeliveriesStore, (delivery) => {
         const deliveryId = getDeliveryId(delivery);
-
         return (
             <div className="flex items-end py-1 pl-0.5">
                 <div
@@ -137,15 +141,9 @@ export const MyDeliveriesRow: FunctionComponent = () => {
         );
     });
 
-    if (hasError && isEmpty) {
-        return <ErrorInitPlaceholder />;
-    }
-
-    if (isFirstLoad) {
-        return <LoadPlaceholder />;
-    }
-
     if (isEmpty) {
+        if (hasError) return <ErrorInitPlaceholder />;
+        if (isUpdating) return <LoadPlaceholder />;
         return <EmptyItemsPlaceholder />;
     }
 

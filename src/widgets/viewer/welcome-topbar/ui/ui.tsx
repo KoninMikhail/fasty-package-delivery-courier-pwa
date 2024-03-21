@@ -15,7 +15,6 @@ import { useTranslation } from 'react-i18next';
 import { User } from '@/shared/api';
 import { Logout } from '@/features/auth/logout';
 import { translationNS } from '../config';
-import { WelcomeTopbarGate } from '../model';
 
 const { RouteName } = sharedConfigRoutes;
 
@@ -72,10 +71,7 @@ const UserTool: FunctionComponent<{
 }> = ({ profile, onPressProfile, onPressLogout }) => {
     const { t } = useTranslation(translationNS);
 
-    const signAs = t(SIGN_IN_AS);
     const profileEmail = profile?.email;
-    const logoutText = t(LOGOUT_TEXT);
-    const profileText = t(PROFILE_TEXT);
 
     return (
         <Dropdown placement="bottom-end">
@@ -84,18 +80,18 @@ const UserTool: FunctionComponent<{
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
                 <DropdownItem key="profile" className="h-14 gap-2">
-                    <p className="font-semibold">{signAs}</p>
+                    <p className="font-semibold">{t(SIGN_IN_AS)}</p>
                     <p className="font-semibold">{profileEmail}</p>
                 </DropdownItem>
                 <DropdownItem key="settings" onPress={onPressProfile}>
-                    {profileText}
+                    {t(PROFILE_TEXT)}
                 </DropdownItem>
                 <DropdownItem
                     key="logout"
                     color="danger"
                     onPress={onPressLogout}
                 >
-                    {logoutText}
+                    {t(LOGOUT_TEXT)}
                 </DropdownItem>
             </DropdownMenu>
         </Dropdown>
@@ -117,7 +113,6 @@ export const WelcomeTopbar: FunctionComponent = () => {
 
     return (
         <Root>
-            <WelcomeTopbarGate />
             <div className="mx-auto grid w-full grid-cols-[auto_max-content] items-center gap-2 text-white lg:w-[750px]">
                 <Greetings profile={profile} />
                 <UserTool

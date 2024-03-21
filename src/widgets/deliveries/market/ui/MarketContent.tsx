@@ -8,7 +8,6 @@ import { RiWifiOffLine } from 'react-icons/ri';
 import { AssignDeliveryToUser } from '@/features/delivery/assignDeliveryToUser';
 import { sessionModel } from '@/entities/viewer';
 import { useTranslation } from 'react-i18next';
-import { translationNS } from '@/widgets/deliveries/upcommingDeliveries/config';
 import { GoAlert } from 'react-icons/go';
 import { AiOutlineReload } from 'react-icons/ai';
 import { BsBoxSeam } from 'react-icons/bs';
@@ -70,23 +69,19 @@ const Loading: FunctionComponent = () => {
     );
 };
 const Error: FunctionComponent = () => {
-    const { t } = useTranslation(translationNS);
-    const messageErrorData = 't(MESSAGE_ERROR_DATA_KEY);';
-    const buttonErrorLabelRetry = 't(BUTTON_ERROR_LABEL_RETRY_KEY)';
+    const { t } = useTranslation();
     return (
         <Root>
             <div className="block p-4">
                 <div className="flex h-44 w-full flex-col items-center justify-center gap-1 p-4">
                     <GoAlert className="text-6xl text-content3" />
-                    <div>
-                        <span className="text-content3">
-                            {messageErrorData}
-                        </span>
+                    <div className="text-content3">
+                        {t('MESSAGE_ERROR_DATA_KEY')}
                     </div>
                     <Spacer y={1} />
                     <Button size="sm">
                         <AiOutlineReload />
-                        {buttonErrorLabelRetry}
+                        {t('BUTTON_ERROR_LABEL_RETRY_KEY')}
                     </Button>
                 </div>
             </div>

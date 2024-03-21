@@ -1,5 +1,5 @@
 import { createGate } from 'effector-react';
-import { combine, createStore, sample } from 'effector';
+import { combine, createEvent, createStore, sample } from 'effector';
 import { SetDeliveryStatus } from '@/features/delivery/setDeliveryStatus';
 import {
     assignUserToDeliveryFx,
@@ -29,6 +29,7 @@ import {
 } from '@/entities/delivery/lib';
 import { getClientTypeLocale } from '@/entities/client/lib/utils/getClientTypeLocale';
 import { getClientName, getClientType } from '@/entities/client';
+import { once, pending } from 'patronum';
 import { initialDelivery } from '../data';
 
 /* eslint-disable unicorn/no-array-method-this-argument */
@@ -42,6 +43,9 @@ export const DeliveryDetailsPageGateway = createGate<{
     deliveryId?: string;
 }>();
 
+export const setOffline = createEvent();
+export const $isOffline = createStore(false);
+
 /**
  * Main delivery store, stores a nullable Delivery object.
  * Updates when any of the effects successfully complete and provide new data.
@@ -52,6 +56,8 @@ export const $delivery = createStore<Delivery>(initialDelivery)
     .on(getCachedDeliveryByIdFx.doneData, (_, delivery) => delivery)
     .on(setDeliveryStatus.doneData, (_, delivery) => delivery)
     .reset(DeliveryDetailsPageGateway.close);
+
+export const $inProcess = pending([getDeliveryByIdFx, getCachedDeliveryByIdFx]);
 
 // Derived stores to decompose the delivery object for easier consumption
 export const $$deliveryId = $delivery.map((delivery) =>
@@ -84,7 +90,7 @@ export const $$deliveryMetro = $delivery.map((delivery) =>
 export const $$deliveryMapFallback = $delivery.map((delivery) => {
     const { latitude } = delivery.address;
     const { longitude } = delivery.address;
-    return !(latitude && longitude);
+    return latitude && longitude;
 });
 
 export const $$deliveryPickupDateTime = $delivery.map((delivery) =>
@@ -129,7 +135,10 @@ export const $$isDeliveryHasCoordinated = $delivery.map((delivery) =>
 );
 
 sample({
-    clock: DeliveryDetailsPageGateway.open,
+    clock: once({
+        source: DeliveryDetailsPageGateway.open,
+        reset: DeliveryDetailsPageGateway.close,
+    }),
     filter: (data) => !!data.deliveryId && typeof data.deliveryId === 'string',
     fn: (data) => ({ deliveryId: Number(data.deliveryId) }),
     target: getDeliveryByIdFx,

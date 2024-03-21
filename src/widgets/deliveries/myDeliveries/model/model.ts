@@ -1,11 +1,13 @@
 import { createEvent, createStore, sample } from 'effector';
-import { assignUserToDeliveryFx, getMyDeliveriesFx } from '@/entities/delivery';
-import { Delivery, deliverySchema } from '@/shared/api';
-import { persist } from 'effector-storage/local';
+import {
+    assignUserToDeliveryFx,
+    getMyDeliveriesFx,
+    myDeliveriesModel,
+} from '@/entities/delivery';
 import { FilterDeliveriesByTimeRange } from '@/features/delivery/filterDeliveriesByTimeRange';
+import { throttle } from 'patronum';
 import {
     DELIVERY_END_TIME,
-    LOCAL_STORAGE_CACHE_KEY,
     DELIVERY_START_TIME,
     DELIVERY_TIME_STEP,
 } from '../config';
@@ -13,17 +15,35 @@ import {
 /**
  * Offline mode
  */
-export const setOnline = createEvent<boolean>();
+export const networkIsOnline = createEvent<boolean>();
 export const $isOnline = createStore<boolean>(true);
-$isOnline.on(setOnline, (_, payload) => payload);
+$isOnline.on(networkIsOnline, (_, payload) => payload);
+
+/**
+ * State
+ */
 
 /**
  * Events
  */
 export const initWidgetMyDeliveries = createEvent();
+const $initialized = createStore(false).on(
+    getMyDeliveriesFx.doneData,
+    () => true,
+);
+
+const myDeliveriesExpired = createEvent();
 
 sample({
     clock: initWidgetMyDeliveries,
+    target: myDeliveriesExpired,
+});
+
+sample({
+    clock: throttle({
+        source: myDeliveriesExpired,
+        timeout: 1000,
+    }),
     target: getMyDeliveriesFx,
 });
 
@@ -47,55 +67,37 @@ sample({
 /**
  * Data
  */
-export const $fetchedDeliveries = createStore<Delivery[]>([])
-    .on(getMyDeliveriesFx.doneData, (_, deliveries) => deliveries)
-    .on(assignUserToDeliveryFx.doneData, (deliveries, delivery) => {
-        const index = deliveries.findIndex((d) => d.id === delivery.id);
-        if (index === -1) {
-            return [...deliveries, delivery];
-        }
-        const newDeliveries = [...deliveries];
-        newDeliveries[index] = delivery;
-        return newDeliveries;
-    });
+
+sample({
+    clock: assignUserToDeliveryFx.doneData,
+    fn: (_, delivery) => delivery,
+    target: myDeliveriesModel.addDelivery,
+});
+
 export const filteredDeliveriesByTimeModel =
     FilterDeliveriesByTimeRange.factory.createModel({
         startTime: DELIVERY_START_TIME,
         endTime: DELIVERY_END_TIME,
         stepMins: DELIVERY_TIME_STEP,
-        sourceStore: $fetchedDeliveries,
+        sourceStore: myDeliveriesModel.$myDeliveriesStore,
     });
 
 export const $deliveriesList =
     filteredDeliveriesByTimeModel.$filteredDeliveries;
 
-export const $$deliveriesMarkers = $fetchedDeliveries.map((deliveries) => {
-    return deliveries.map((delivery) => {
-        const lat = delivery.address.latitude;
-        const lng = delivery.address.longitude;
-        if (lat && lng) {
-            return { lat, lng };
-        }
-        return null;
-    });
-});
-
-export const $$empty = $fetchedDeliveries.map(
-    (deliveries) => deliveries.length === 0,
+export const $$deliveriesMarkers = myDeliveriesModel.$myDeliveriesStore.map(
+    (deliveries) => {
+        return deliveries.map((delivery) => {
+            const lat = delivery?.address?.latitude;
+            const lng = delivery?.address?.longitude;
+            if (lat && lng) {
+                return { lat, lng };
+            }
+            return null;
+        });
+    },
 );
 
-/**
- * Cache
- */
-
-persist({
-    store: $fetchedDeliveries,
-    key: LOCAL_STORAGE_CACHE_KEY,
-    contract: (raw): raw is Delivery[] => {
-        const result = deliverySchema.array().safeParse(raw);
-        if (result.success) {
-            return true;
-        }
-        throw result.error;
-    },
-});
+export const $$empty = myDeliveriesModel.$myDeliveriesStore.map(
+    (deliveries) => deliveries.length === 0,
+);

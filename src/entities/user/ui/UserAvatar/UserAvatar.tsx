@@ -11,7 +11,7 @@ interface IUserAvatarProperties extends AvatarProps {
 }
 
 export const UserAvatar = forwardRef<HTMLButtonElement, IUserAvatarProperties>(
-    ({ user, className, ...rest }, ref) => {
+    ({ user, className, isDisabled, ...rest }, ref) => {
         const userFullName = getFullUserName(user);
         const userAvatar = user?.avatar || undefined;
         return (
@@ -27,6 +27,7 @@ export const UserAvatar = forwardRef<HTMLButtonElement, IUserAvatarProperties>(
                 }
                 className={clsx('transition-transform', className)}
                 src={userAvatar}
+                isDisabled={isDisabled}
                 {...rest}
             />
         );
