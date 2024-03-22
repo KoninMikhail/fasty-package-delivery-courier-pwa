@@ -1,10 +1,10 @@
-import {User} from "@/shared/api";
+import { User } from "@/shared/api";
 
 /**
  * @name getFullUserName
- * @description Get full user name from user object
+ * @description Get full username from user object
  * @param user
  */
 export const getFullUserName = (user: User): string => {
-    return `${user.first_name} ${user.last_name}`;
-}
+  return `${user.first_name} ${user.last_name}`;
+};

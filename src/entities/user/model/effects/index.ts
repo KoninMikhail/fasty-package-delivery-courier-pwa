@@ -1,1 +1,1 @@
-export * from './changeUserPasswordFx';
+export * from './assignUserToDeliveryFx';
