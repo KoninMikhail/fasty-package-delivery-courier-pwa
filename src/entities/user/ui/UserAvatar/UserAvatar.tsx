@@ -2,21 +2,21 @@ import { Avatar, AvatarProps } from '@nextui-org/react';
 import { User } from '@/shared/api';
 import { forwardRef } from 'react';
 import clsx from 'clsx';
-import { getFullUserName } from '@/entities/user/lib/utils';
+import { getFullUserName, getUserAvatarUrl } from '../../lib';
 
-/* eslint-disable unicorn/prevent-abbreviations */
+/* eslint-disable react/jsx-props-no-spreading */
 
 interface IUserAvatarProperties extends AvatarProps {
     user: User;
 }
 
 export const UserAvatar = forwardRef<HTMLButtonElement, IUserAvatarProperties>(
-    ({ user, className, isDisabled, ...rest }, ref) => {
+    ({ user, className, isDisabled, ...rest }, reference) => {
         const userFullName = getFullUserName(user);
-        const userAvatar = user?.avatar_src;
+        const userAvatar = getUserAvatarUrl(user);
         return (
             <Avatar
-                ref={ref}
+                ref={reference}
                 name={userFullName}
                 as="button"
                 getInitials={(name) =>
