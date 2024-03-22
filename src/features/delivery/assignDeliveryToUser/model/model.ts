@@ -5,11 +5,7 @@ import { AssignUserToDeliveryParameters } from '@/entities/delivery';
 import { debug } from 'patronum';
 
 type FactoryOptions = {
-    assignToDeliveryEffect: Effect<
-        AssignUserToDeliveryParameters,
-        Delivery,
-        Error
-    >;
+    assignToDeliveryFx: Effect<AssignUserToDeliveryParameters, Delivery, Error>;
 };
 
 export const factory = modelFactory((options: FactoryOptions) => {
@@ -35,8 +31,8 @@ export const factory = modelFactory((options: FactoryOptions) => {
     /**
      * State
      */
-    const $processing = options.assignToDeliveryEffect.pending;
-    const assignToDelivery = options.assignToDeliveryEffect;
+    const $processing = options.assignToDeliveryFx.pending;
+    const assignToDelivery = options.assignToDeliveryFx;
 
     sample({
         clock: assignConfirmed,
@@ -46,20 +42,16 @@ export const factory = modelFactory((options: FactoryOptions) => {
         })),
         filter: ({ user, delivery }) => !!user && !!delivery,
         fn: ({ user, delivery }) => {
-            console.log({
-                userId: user!.id,
-                deliveryId: delivery!.id,
-            });
             return {
                 userId: user!.id,
                 deliveryId: delivery!.id,
             };
         },
-        target: options.assignToDeliveryEffect,
+        target: options.assignToDeliveryFx,
     });
 
     sample({
-        clock: options.assignToDeliveryEffect.done,
+        clock: options.assignToDeliveryFx.doneData,
         fn: (data) => data.params.deliveryId,
         target: assignCompleted,
     });
