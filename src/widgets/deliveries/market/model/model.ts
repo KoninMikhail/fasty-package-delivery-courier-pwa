@@ -45,7 +45,7 @@ export const $fetchedData = createStore<Delivery[]>([]).on(
  */
 export const assignDeliveryToUserModel =
     AssignDeliveryToUser.factory.createModel({
-        assignToDeliveryEffect: assignUserToDeliveryFx,
+        assignToDeliveryFx: assignUserToDeliveryFx,
     });
 
 /**

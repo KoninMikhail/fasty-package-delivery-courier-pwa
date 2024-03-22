@@ -1,12 +1,9 @@
 import { SetDeliveryStatus } from '@/features/delivery/setDeliveryStatus';
 import { createStore, sample } from 'effector';
 import { AssignDeliveryToUser } from '@/features/delivery/assignDeliveryToUser';
-import {
-    assignUserToDeliveryFx,
-    getDeliveryByIdFx,
-    setDeliveryStatus,
-} from '@/entities/delivery';
+import { getDeliveryByIdFx, setDeliveryStatus } from '@/entities/delivery';
 import { Delivery } from '@/shared/api';
+import { assignUserToDeliveryFx } from '@/entities/user';
 
 /**
  * Data
@@ -32,7 +29,7 @@ export const $$deliveryUpdateDate = $delivery.map(
  * Feature models
  */
 export const assignToDeliveryModel = AssignDeliveryToUser.factory.createModel({
-    assignToDeliveryEffect: assignUserToDeliveryFx,
+    assignToDeliveryFx: assignUserToDeliveryFx,
 });
 
 export const setStatusModel = SetDeliveryStatus.factory.createModel({
