@@ -1,6 +1,7 @@
 import { makeApi } from '@zodios/core';
 import { z } from 'zod';
-import { userSchema } from '@/shared/api';
+import { API_BASE_URL } from '../instance';
+import { userSchema } from '../schemas';
 
 export const usersApi = makeApi([
     {
@@ -46,6 +47,14 @@ export const usersApi = makeApi([
                 }),
             },
         ],
-        response: userSchema,
+        response: userSchema.transform((user) => {
+            if (user.avatar_src) {
+                return {
+                    ...user,
+                    avatar_src: `${API_BASE_URL}${user.avatar_src}`,
+                };
+            }
+            return user;
+        }),
     },
 ]);
