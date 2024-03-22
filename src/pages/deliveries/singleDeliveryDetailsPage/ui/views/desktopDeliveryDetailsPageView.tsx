@@ -18,7 +18,6 @@ import {
     $$deliveryType,
     $$deliveryWeight,
     $$isViewerDelivery,
-    mapModel,
 } from '@/pages/deliveries/singleDeliveryDetailsPage/model';
 import { SubwayStationWithIcon } from '@/shared/services/subway';
 import { ClientContactCardList } from '@/entities/client';
@@ -26,30 +25,26 @@ import { UserCardRow } from '@/entities/user';
 import { Section } from '@/shared/ui/layouts';
 import { useTranslation } from 'react-i18next';
 import { widgetDeliveryStatusUi } from '@/widgets/deliveries/deliveryStatus';
-import { Route } from '@/entities/route';
-import { translationNS } from '../../config';
+import {
+    LABEL_ADDRESS,
+    LABEL_CLIENT,
+    LABEL_CLIENT_TYPE,
+    LABEL_CONTACT_PERSON,
+    LABEL_CONTENTS,
+    LABEL_COURIER,
+    LABEL_DELIVERY_STATUS,
+    LABEL_EXPRESS,
+    LABEL_MANAGER,
+    LABEL_METRO,
+    LABEL_MY_DELIVERY,
+    LABEL_PICKUP,
+    LABEL_TYPE,
+    LABEL_WEIGHT,
+    translationNS,
+} from '../../config';
 
 const { Navbar } = widgetNavbarUi;
 const { DeliveryStatusControlWithTimeline } = widgetDeliveryStatusUi;
-
-const TRANSLATION = {
-    LABEL_CLIENT: 'page.section.label.client',
-    LABEL_CLIENT_TYPE: 'page.section.label.client.type',
-    LABEL_PICKUP: 'page.section.label.pickup',
-    LABEL_TYPE: 'page.section.label.type',
-    LABEL_EXPRESS: 'page.section.label.express',
-    LABEL_ADDRESS: 'page.section.label.address',
-    LABEL_METRO: 'page.section.label.metro',
-    LABEL_CONTENTS: 'page.section.label.contents',
-    LABEL_WEIGHT: 'page.section.label.weight',
-    LABEL_CONTACT_PERSON: 'page.section.label.contactPerson',
-    LABEL_MANAGER: 'page.section.label.manager',
-    LABEL_COURIER: 'page.section.label.courier',
-    LABEL_DELIVERY_STATUS: 'page.section.label.deliveryStatus',
-    LABEL_MY_DELIVERY: 'page.section.label.courier.chip.my',
-    LABEL_ID: 'page.section.label.id',
-};
-
 interface ISectionWithTitleProperties {
     title: string;
     featureSlot?: ReactNode | ReactNode[];
@@ -172,65 +167,60 @@ export const DesktopDeliveryDetailsPageView: FunctionComponent = () => {
             <NavContainer>
                 <Navbar />
             </NavContainer>
-            <Map>
-                <Route.Map.Container
-                    model={mapModel}
-                    className="h-full w-full"
-                />
-            </Map>
+            <Map>dfgdfg</Map>
             <DeliveryDetailsContainer>
                 <Section>
-                    <Heading content={t(TRANSLATION.LABEL_CLIENT)} />
+                    <Heading content={t(LABEL_CLIENT)} />
                     <Client />
                 </Section>
                 <Spacer y={4} />
                 <Section>
-                    <Heading content={t(TRANSLATION.LABEL_CLIENT_TYPE)} />
+                    <Heading content={t(LABEL_CLIENT_TYPE)} />
                     <ClientType />
                 </Section>
                 <Spacer y={4} />
                 <Section>
-                    <Heading content={t(TRANSLATION.LABEL_PICKUP)} />
+                    <Heading content={t(LABEL_PICKUP)} />
                     <DeliveryPickup />
                 </Section>
                 <Spacer y={4} />
                 <Section>
                     <div className="flex gap-4">
                         <div className="flex-grow">
-                            <Heading content={t(TRANSLATION.LABEL_TYPE)} />
+                            <Heading content={t(LABEL_TYPE)} />
                             <DeliveryTypeTransport />
                         </div>
                         <div className="flex-grow">
-                            <Heading content={t(TRANSLATION.LABEL_EXPRESS)} />
+                            <Heading content={t(LABEL_EXPRESS)} />
                             <DeliveryTypeExpress />
                         </div>
                     </div>
                 </Section>
                 <Spacer y={4} />
                 <Section>
-                    <Heading content={t(TRANSLATION.LABEL_ADDRESS)} />
+                    <Heading content={t(LABEL_ADDRESS)} />
                     <DeliveryAddress />
                 </Section>
                 <Spacer y={4} />
                 <Section>
-                    <Heading content={t(TRANSLATION.LABEL_METRO)} />
+                    <Heading content={t(LABEL_METRO)} />
                     <DeliveryAddressSubway />
                 </Section>
                 <Spacer y={4} />
                 <Section>
-                    <Heading content={t(TRANSLATION.LABEL_CONTENTS)} />
+                    <Heading content={t(LABEL_CONTENTS)} />
                     <DeliveryContents />
                 </Section>
                 <Spacer y={4} />
                 <Section>
-                    <Heading content={t(TRANSLATION.LABEL_WEIGHT)} />
+                    <Heading content={t(LABEL_WEIGHT)} />
                     <DeliveryWeight />
                 </Section>
                 <Spacer y={4} />
                 <Divider className="px-2" />
                 <Spacer y={4} />
                 <Section>
-                    <Heading content={t(TRANSLATION.LABEL_CONTACT_PERSON)} />
+                    <Heading content={t(LABEL_CONTACT_PERSON)} />
                     <Spacer y={4} />
                     <DeliveryContactPerson />
                 </Section>
@@ -240,11 +230,11 @@ export const DesktopDeliveryDetailsPageView: FunctionComponent = () => {
                 <Section>
                     <div className="flex items-center">
                         <div className="flex-grow">
-                            <Heading content={t(TRANSLATION.LABEL_COURIER)} />
+                            <Heading content={t(LABEL_COURIER)} />
                         </div>
                         <div>
                             <MyDeliveryChip>
-                                {t(TRANSLATION.LABEL_MY_DELIVERY)}
+                                {t(LABEL_MY_DELIVERY)}
                             </MyDeliveryChip>
                         </div>
                     </div>
@@ -255,7 +245,7 @@ export const DesktopDeliveryDetailsPageView: FunctionComponent = () => {
                 <Divider className="px-2" />
                 <Spacer y={4} />
                 <Section>
-                    <Heading content={t(TRANSLATION.LABEL_DELIVERY_STATUS)} />
+                    <Heading content={t(LABEL_DELIVERY_STATUS)} />
                     <Spacer y={4} />
                     <DeliveryStatusControlWithTimeline />
                 </Section>
@@ -263,7 +253,7 @@ export const DesktopDeliveryDetailsPageView: FunctionComponent = () => {
                 <Divider className="px-2" />
                 <Spacer y={4} />
                 <Section>
-                    <Heading content={t(TRANSLATION.LABEL_MANAGER)} />
+                    <Heading content={t(LABEL_MANAGER)} />
                     <Spacer y={2} />
                     <DeliveryManager />
                 </Section>

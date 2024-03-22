@@ -9,7 +9,7 @@ import {
  * Create an axios instance with default configuration
  */
 const { PACKAGE_VERSION, VITE_APP_IDENTIFIER } = import.meta.env;
-const API_BASE_URL = import.meta.env.VITE_COURIERS_API_BASE_URL;
+export const API_BASE_URL = import.meta.env.VITE_COURIERS_API_BASE_URL;
 
 /**
  * Axios instance

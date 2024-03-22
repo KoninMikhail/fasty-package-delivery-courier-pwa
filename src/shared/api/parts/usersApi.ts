@@ -1,5 +1,6 @@
 import { makeApi } from '@zodios/core';
 import { z } from 'zod';
+import { userSchema } from '@/shared/api';
 
 export const usersApi = makeApi([
     {
@@ -31,5 +32,20 @@ export const usersApi = makeApi([
                 }),
             },
         ],
+    },
+    {
+        method: 'put',
+        path: '/avatar',
+        alias: 'uploadViewerAvatar',
+        parameters: [
+            {
+                name: 'upload',
+                type: 'Body',
+                schema: z.object({
+                    upload: z.string(),
+                }),
+            },
+        ],
+        response: userSchema,
     },
 ]);

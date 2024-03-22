@@ -4,7 +4,7 @@ import { User } from '@/shared/api';
 
 interface FactoryOptions {
     user: User;
-    changeAvatarFx: Effect<{ avatar: string; userId: User['id'] }, any>;
+    changeAvatarFx: Effect<string, User>;
 }
 
 export const factory = modelFactory((options: FactoryOptions) => {
@@ -19,10 +19,7 @@ export const factory = modelFactory((options: FactoryOptions) => {
 
     sample({
         clock: confirmPressed,
-        source: combine($dataUrl, options.user.id, (avatar, userId) => ({
-            avatar,
-            userId,
-        })),
+        source: combine($dataUrl, options.user.id, (avatar, userId) => avatar),
         target: options.changeAvatarFx,
     });
 

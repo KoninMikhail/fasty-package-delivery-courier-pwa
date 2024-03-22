@@ -1,14 +1,7 @@
 import { ChangePassword } from '@/features/viewer/changePassword';
-import { createEffect } from 'effector';
 import { changePasswordFx, sessionModel } from '@/entities/viewer';
 import { ChangeAvatar } from '@/features/viewer/changeAvatar';
-
-const changeAvatarFx = createEffect({
-    handler: async ({ avatar, userId }: { avatar: string; userId: number }) => {
-        await new Promise((resolve) => setTimeout(resolve, 5000));
-        return avatar;
-    },
-});
+import { changeViewerAvatarFx } from '@/entities/viewer/model/effects/changeViewerAvatarFx';
 
 export const changePasswordModel = ChangePassword.factory.createModel({
     targetUser: sessionModel.$sessionStore,
@@ -17,5 +10,5 @@ export const changePasswordModel = ChangePassword.factory.createModel({
 
 export const changeAvatarModel = ChangeAvatar.factory.createModel({
     user: sessionModel.$sessionStore,
-    changeAvatarFx,
+    changeAvatarFx: changeViewerAvatarFx,
 });

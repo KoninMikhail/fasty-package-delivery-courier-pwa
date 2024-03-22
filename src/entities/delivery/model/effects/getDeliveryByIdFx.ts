@@ -6,7 +6,7 @@ import { AxiosError } from 'axios';
  * Defines the parameter type for the `getDeliveryByIdFx` effect.
  * @property {Delivery['id']} deliveryId - The unique identifier of a delivery.
  */
-interface GetDeliveryByIdParameters {
+export interface GetDeliveryByIdParameters {
     deliveryId: Delivery['id'];
 }
 

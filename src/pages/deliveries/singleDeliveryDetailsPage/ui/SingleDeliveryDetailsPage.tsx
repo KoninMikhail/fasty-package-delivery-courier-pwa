@@ -9,6 +9,7 @@ import { useDocumentTitle } from 'usehooks-ts';
 import { useGate } from 'effector-react';
 import { useParams } from 'react-router-dom';
 import { DeliveryDetailsPageGateway } from '@/pages/deliveries/singleDeliveryDetailsPage/model';
+import { useNetworkInfo } from '@/shared/config/network';
 import {
     DesktopDeliveryDetailsPageView,
     MobileDeliveryDetailsPageView,
@@ -25,6 +26,7 @@ const { APP_NAME } = sharedConfigConstants;
  */
 export const SingleDeliveryDetailsPage: FunctionComponent = () => {
     const { isDesktop } = useDeviceScreen();
+    const { online } = useNetworkInfo();
     const { deliveryId } = useParams();
     const { t } = useTranslation(translationNS);
 
@@ -34,7 +36,7 @@ export const SingleDeliveryDetailsPage: FunctionComponent = () => {
     });
 
     useDocumentTitle(pageTitle);
-    useGate(DeliveryDetailsPageGateway, { deliveryId });
+    useGate(DeliveryDetailsPageGateway, { deliveryId, online });
 
     return isDesktop ? (
         <Authorized>

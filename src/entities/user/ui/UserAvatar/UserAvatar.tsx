@@ -3,6 +3,7 @@ import { User } from '@/shared/api';
 import { forwardRef } from 'react';
 import clsx from 'clsx';
 import { getFullUserName } from '@/entities/user/lib/utils';
+import { API_BASE_URL } from '@/shared/api/instance';
 
 /* eslint-disable unicorn/prevent-abbreviations */
 
@@ -13,7 +14,7 @@ interface IUserAvatarProperties extends AvatarProps {
 export const UserAvatar = forwardRef<HTMLButtonElement, IUserAvatarProperties>(
     ({ user, className, isDisabled, ...rest }, ref) => {
         const userFullName = getFullUserName(user);
-        const userAvatar = user?.avatar || undefined;
+        const userAvatar = user?.avatar_src;
         return (
             <Avatar
                 ref={ref}
@@ -26,7 +27,7 @@ export const UserAvatar = forwardRef<HTMLButtonElement, IUserAvatarProperties>(
                         .join('')
                 }
                 className={clsx('transition-transform', className)}
-                src={userAvatar}
+                src={`${API_BASE_URL}${userAvatar}`}
                 isDisabled={isDisabled}
                 {...rest}
             />

@@ -1,6 +1,6 @@
 import { Delivery } from '@/shared/api';
 import { createStore } from 'effector';
-import { compareDesc, formatISO, parseISO, subDays } from 'date-fns';
+import { compareDesc, format, formatISO, parseISO, subDays } from 'date-fns';
 import { InfiniteScroll } from '@/features/page/infinite-scroll';
 import { debug } from 'patronum';
 import { getDeliveriesHistoryFx } from './effects';
@@ -11,6 +11,8 @@ const initialDateFrom = formatISO(subDays(today, 10), {
     representation: 'date',
 });
 const initialDateTo = formatISO(today, { representation: 'date' });
+
+debug(getDeliveriesHistoryFx.done);
 
 // Store the fetched deliveries
 export const $fetchedData = createStore<Set<Delivery>>(new Set(), {
@@ -48,9 +50,12 @@ export const $sortedDeliveriesHistory = $fetchedData.map((deliveriesSet) => {
     const groupedByDate: Record<string, Delivery[]> = {};
 
     for (const delivery of deliveries) {
-        const { date } = delivery;
-        if (!groupedByDate[date]) groupedByDate[date] = [];
-        groupedByDate[date].push(delivery);
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        const { updated_at } = delivery;
+        const updatedAt = format(updated_at, 'yyyy-MM-dd');
+
+        if (!groupedByDate[updatedAt]) groupedByDate[updatedAt] = [];
+        groupedByDate[updatedAt].push(delivery);
     }
 
     return Object.entries(groupedByDate)

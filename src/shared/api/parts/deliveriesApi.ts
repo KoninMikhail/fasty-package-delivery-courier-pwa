@@ -1,6 +1,9 @@
 import { makeApi, makeErrors } from '@zodios/core';
 import { z } from 'zod';
+import { format, parse, isValid } from 'date-fns';
 import { deliverySchema } from '../schemas';
+
+const dateFormat = 'yyyy-MM-dd';
 
 export const deliveriesErrors = makeErrors([]);
 
@@ -77,17 +80,53 @@ export const deliveriesApi = makeApi([
         path: '/history',
         alias: 'getDeliveriesHistory',
         description: 'Fetch deliveries history',
-        response: z.any(),
+        response: z.array(deliverySchema),
         parameters: [
             {
                 name: 'from',
                 type: 'Query',
-                schema: z.string().optional(),
+                schema: z
+                    .string()
+                    .refine(
+                        (value) => {
+                            const parsedDate = parse(
+                                value,
+                                dateFormat,
+                                new Date(),
+                            );
+                            return (
+                                isValid(parsedDate) &&
+                                value === format(parsedDate, dateFormat)
+                            );
+                        },
+                        {
+                            message: `Date must be in the format ${dateFormat}`,
+                        },
+                    )
+                    .optional(),
             },
             {
                 name: 'to',
                 type: 'Query',
-                schema: z.string().optional(),
+                schema: z
+                    .string()
+                    .refine(
+                        (value) => {
+                            const parsedDate = parse(
+                                value,
+                                dateFormat,
+                                new Date(),
+                            );
+                            return (
+                                isValid(parsedDate) &&
+                                value === format(parsedDate, dateFormat)
+                            );
+                        },
+                        {
+                            message: `Date must be in the format ${dateFormat}`,
+                        },
+                    )
+                    .optional(),
             },
         ],
     },

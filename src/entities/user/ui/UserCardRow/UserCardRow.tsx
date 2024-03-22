@@ -1,5 +1,6 @@
 import { Avatar } from '@nextui-org/react';
 import { User } from '@/shared/api';
+import { getFullUserName } from '@/entities/user/lib/utils';
 
 interface IUserCardRowProperties {
     account: User;
@@ -31,7 +32,7 @@ export const UserCardRow: FunctionComponent<IUserCardRowProperties> = ({
     size,
     avatarPosition = 'left',
 }: IUserCardRowProperties) => {
-    const name = `${account.first_name} ${account.last_name}`;
+    const name = getFullUserName(account);
     const initials = `${account.first_name[0]}${account.last_name[0]}`;
     const role = account.user_role.name;
 
@@ -39,7 +40,11 @@ export const UserCardRow: FunctionComponent<IUserCardRowProperties> = ({
         <div className="flex items-center gap-2 lg:gap-4">
             {avatarPosition === 'left' ? (
                 <>
-                    <Avatar src={account.avatar} size={size} name={initials} />
+                    <Avatar
+                        src={account.avatar_src}
+                        size={size}
+                        name={initials}
+                    />
                     <UserInfo
                         name={name}
                         role={role}
@@ -55,7 +60,7 @@ export const UserCardRow: FunctionComponent<IUserCardRowProperties> = ({
                     />
                     <Avatar
                         isBordered
-                        src={account.avatar}
+                        src={account.avatar_src}
                         size={size}
                         name={initials}
                     />

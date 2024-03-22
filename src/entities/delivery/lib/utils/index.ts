@@ -14,4 +14,5 @@ export * from './getDeliveryClient';
 export * from './getDeliveryClientName';
 export * from './getDeliveryExpressStateTranslated';
 export * from './getDeliveryTypeTranslated';
+export * from './getDeliveryCordinates';
 export * from './getDeliveryWeightPersisted';

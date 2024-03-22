@@ -1,5 +1,5 @@
 import { createGate } from 'effector-react';
-import { combine, createEvent, createStore, sample } from 'effector';
+import { combine, createStore, sample } from 'effector';
 import { SetDeliveryStatus } from '@/features/delivery/setDeliveryStatus';
 import {
     assignUserToDeliveryFx,
@@ -7,6 +7,7 @@ import {
     getDeliveryByIdFx,
     getDeliveryClient,
     getDeliveryContents,
+    getDeliveryCoordinates,
     getDeliveryCourier,
     getDeliveryExpressState,
     getDeliveryExpressStateTranslated,
@@ -19,32 +20,47 @@ import {
     getDeliveryWeightPersisted,
     setDeliveryStatus,
 } from '@/entities/delivery';
-import { Route } from '@/entities/route';
 import { sessionModel } from '@/entities/viewer';
 import { getCachedDeliveryByIdFx } from '@/entities/delivery/model';
 import { Delivery } from '@/shared/api';
-import {
-    isDeliveryAssignedToCourier,
-    isDeliveryHasCoordinates,
-} from '@/entities/delivery/lib';
+import { isDeliveryAssignedToCourier } from '@/entities/delivery/lib';
 import { getClientTypeLocale } from '@/entities/client/lib/utils/getClientTypeLocale';
 import { getClientName, getClientType } from '@/entities/client';
-import { once, pending } from 'patronum';
+import { handleDeliveryError } from '../lib/utils/handleDeliveryError';
+import { PageState } from '../types';
 import { initialDelivery } from '../data';
+import { DELIVERY_ID_LENGTH } from '../config';
+import 'leaflet/dist/leaflet.css';
 
 /* eslint-disable unicorn/no-array-method-this-argument */
-
-const DELIVERY_ID_LENGTH = 6;
 
 /**
  * Gateway for the delivery details page
  */
 export const DeliveryDetailsPageGateway = createGate<{
     deliveryId?: string;
+    online?: boolean;
 }>();
 
-export const setOffline = createEvent();
-export const $isOffline = createStore(false);
+const $deliveryId = createStore<string>('').on(
+    DeliveryDetailsPageGateway.open,
+    (_, { deliveryId }) => {
+        return deliveryId ?? '';
+    },
+);
+
+const $isOnline = createStore<boolean>(true).on(
+    DeliveryDetailsPageGateway.open,
+    (_, { online }) => online ?? true,
+);
+export const $pageContentState = createStore<Nullable<PageState>>(null)
+    .on(getDeliveryByIdFx.doneData, () => PageState.Done)
+    .on(getDeliveryByIdFx.failData, (_, error) => handleDeliveryError(error))
+    .on(getCachedDeliveryByIdFx.doneData, () => PageState.Done)
+    .on(getCachedDeliveryByIdFx.failData, (_, error) =>
+        handleDeliveryError(error),
+    )
+    .reset(DeliveryDetailsPageGateway.close);
 
 /**
  * Main delivery store, stores a nullable Delivery object.
@@ -56,8 +72,6 @@ export const $delivery = createStore<Delivery>(initialDelivery)
     .on(getCachedDeliveryByIdFx.doneData, (_, delivery) => delivery)
     .on(setDeliveryStatus.doneData, (_, delivery) => delivery)
     .reset(DeliveryDetailsPageGateway.close);
-
-export const $inProcess = pending([getDeliveryByIdFx, getCachedDeliveryByIdFx]);
 
 // Derived stores to decompose the delivery object for easier consumption
 export const $$deliveryId = $delivery.map((delivery) =>
@@ -87,10 +101,15 @@ export const $$deliveryAddress = $delivery.map((delivery) =>
 export const $$deliveryMetro = $delivery.map((delivery) =>
     getDeliveryMetro(delivery),
 );
-export const $$deliveryMapFallback = $delivery.map((delivery) => {
-    const { latitude } = delivery.address;
-    const { longitude } = delivery.address;
-    return latitude && longitude;
+
+export const $$deliveryCoordinates = $delivery.map((delivery) => {
+    const coordinates = getDeliveryCoordinates(delivery);
+    return coordinates?.latitude && coordinates?.longitude
+        ? {
+              lat: Number(coordinates.latitude),
+              lng: Number(coordinates.longitude),
+          }
+        : null;
 });
 
 export const $$deliveryPickupDateTime = $delivery.map((delivery) =>
@@ -130,58 +149,43 @@ export const $$isViewerDelivery = combine(
         );
     },
 );
-export const $$isDeliveryHasCoordinated = $delivery.map((delivery) =>
-    isDeliveryHasCoordinates(delivery),
-);
+/*
 
 sample({
-    clock: once({
-        source: DeliveryDetailsPageGateway.open,
-        reset: DeliveryDetailsPageGateway.close,
-    }),
-    filter: (data) => !!data.deliveryId && typeof data.deliveryId === 'string',
-    fn: (data) => ({ deliveryId: Number(data.deliveryId) }),
+    clock: $deliveryId,
+    source: $isOnline,
+    filter: (isOnline, id) => id && isOnline,
+    fn: (_, id) => {
+        return { deliveryId: Number(id) };
+    },
     target: getDeliveryByIdFx,
 });
+*/
+
+/*
+sample({
+    clock: $deliveryId,
+    source: {
+        isOnline: $isOnline,
+        cache: $myDeliveriesStore,
+    },
+    filter: ({ isOnline }, id) => !!id && !isOnline,
+    fn: ({ cache }, deliveryId) => {
+        return { deliveryId, cache };
+    },
+    target: getCachedDeliveryByIdFx,
+});
+*/
 
 /**
  * State
- */
-
-export const $error = createStore<Nullable<Error>>(null)
-    .on(getDeliveryByIdFx.failData, (_, error) => error)
-    .reset(DeliveryDetailsPageGateway.close);
-export const $$hasError = $error.map((error) => error !== null);
-export const $$notFound = $error.map(
-    (error) => error?.message === 'DELIVERY_NOT_FOUND',
-);
-
+ *
 /**
  * Delivery details store
  */
 export const changeDeliveryStatusModel = SetDeliveryStatus.factory.createModel({
     patchDeliveryStatusFx: setDeliveryStatus,
 });
-
-export const mapModel = Route.Map.factory.createModel({
-    defaultCenter: {
-        lat: 55.753_993_999_993_74,
-        lng: 37.622_093_000_000_01,
-    },
-    defaultZoom: 13,
-    zoomWhenMarkerSelected: 16,
-});
-
-/* sample({
-    clock: debounce($delivery, 1000),
-    filter: (delivery) => isDeliveryHasCoordinates(delivery),
-    fn: (delivery) =>
-        ({
-            lat: delivery.address.latitude,
-            lng: delivery.address.longitude,
-        }) as unknown as LatLngExpression,
-    target: mapModel.locationChanged,
-}); */
 
 sample({
     clock: DeliveryDetailsPageGateway.close,

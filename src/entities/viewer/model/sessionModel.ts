@@ -2,7 +2,10 @@ import { createEvent, createStore, sample } from 'effector';
 import { User } from '@/shared/api';
 import { empty, not, once, pending } from 'patronum';
 import { createGate } from 'effector-react';
+import { DomEvent } from 'leaflet';
 import { authByEmailFx, getViewerProfileFx, logoutFx } from './effects';
+import on = DomEvent.on;
+import { changeViewerAvatarFx } from '@/entities/viewer/model/effects/changeViewerAvatarFx';
 
 /**
  * Gates
@@ -23,7 +26,9 @@ export const failAuthOnApiRequest = createEvent();
 export const $sessionStore = createStore<Nullable<User>>(null);
 $sessionStore
     .on(getViewerProfileFx.done, (_, { result }) => result)
-    .on(getViewerProfileFx.fail, () => null);
+    .on(getViewerProfileFx.fail, () => null)
+    .on(changeViewerAvatarFx.doneData, (_, payload) => payload);
+
 $sessionStore.reset([
     failAuthOnApiRequest,
     logoutFx.done,
