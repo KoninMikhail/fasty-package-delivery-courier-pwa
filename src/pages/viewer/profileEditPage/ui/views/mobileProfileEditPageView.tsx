@@ -1,8 +1,7 @@
-import type { PropsWithChildren, ReactNode } from 'react';
+import type { PropsWithChildren } from 'react';
 
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
-import { sharedConfigRoutes } from '@/shared/config';
-import { Button, Spacer } from '@nextui-org/react';
+import { Button, Divider, Spacer } from '@nextui-org/react';
 import { UserAvatar } from '@/entities/user';
 import { useUnit } from 'effector-react';
 import { sessionModel } from '@/entities/viewer';
@@ -10,14 +9,10 @@ import { useTranslation } from 'react-i18next';
 import { User } from '@/shared/api';
 import { IoPencil } from 'react-icons/io5';
 import { ChangePassword } from '@/features/viewer/changePassword';
-import {
-    changeAvatarModel,
-    changePasswordModel,
-} from '@/pages/viewer/profileEditPage/model/model';
 import { ChangeAvatar } from '@/features/viewer/changeAvatar';
-import { useNavigate } from 'react-router-dom';
-import { IoMdArrowRoundBack } from 'react-icons/io';
 import { getFullUserName } from '@/entities/user/lib/utils';
+import { changeAvatarModel, changePasswordModel } from '../../model';
+import { BackButton, PageTitle } from '../common';
 import {
     AVATAR_FORMAT_DESCRIPTION,
     AVATAR_SIZE_DESCRIPTION,
@@ -31,8 +26,6 @@ import {
     UNKNOWN_LABEL,
 } from '../../config';
 
-const { RouteName } = sharedConfigRoutes;
-const { DELIVERIES } = RouteName;
 const { NavbarMobile } = widgetNavbarMobileUi;
 
 /**
@@ -44,56 +37,39 @@ const Content: FunctionComponent<PropsWithChildren> = ({ children }) => (
     </main>
 );
 
-const Heading: FunctionComponent<PropsWithChildren> = ({ children }) => (
-    <h2 className="text-xl font-bold">{children}</h2>
-);
-
-const Header: FunctionComponent<{ backButton: ReactNode; title: string }> = ({
-    backButton,
-    title,
-}) => (
+const Header: FunctionComponent = () => (
     <header className="flex w-full items-center px-4 pt-4">
-        <div className="flex-shrink">{backButton}</div>
-        <div className="mx-auto">{title}</div>
+        <h1 className="flex-grow truncate text-xl font-bold">
+            <PageTitle />
+        </h1>
+        <div className="flex-shrink">
+            <BackButton />
+        </div>
     </header>
 );
 
 /**
  * Components
  */
-const BackButton: FunctionComponent = () => {
-    const navigate = useNavigate();
-    const onPress = (): void => navigate(-1);
-
-    return (
-        <Button
-            size="sm"
-            href={DELIVERIES}
-            onPress={onPress}
-            variant="bordered"
-            className="flex items-center gap-1"
-        >
-            <IoMdArrowRoundBack />
-        </Button>
-    );
-};
 
 const AvatarTool: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
     const user = useUnit(sessionModel.$sessionStore);
     return (
-        <div className="flex w-full items-center gap-4 lg:gap-6">
+        <div className="flex w-full items-center gap-4 overflow-hidden lg:gap-6">
             <div>
                 <UserAvatar
                     className="h-20 w-20 text-large lg:h-28 lg:w-28"
                     user={user}
                 />
             </div>
-            <div>
+            <div className="block">
                 <ChangeAvatar.UploadButton model={changeAvatarModel} />
-                <Spacer y={1} />
-                <p className="text-xs">{t(AVATAR_SIZE_DESCRIPTION)}</p>
-                <p className="text-xs">{t(AVATAR_FORMAT_DESCRIPTION)}</p>
+                <Spacer y={2.5} />
+                <p className="truncate text-xs">{t(AVATAR_SIZE_DESCRIPTION)}</p>
+                <p className="truncate text-xs">
+                    {t(AVATAR_FORMAT_DESCRIPTION)}
+                </p>
             </div>
         </div>
     );
@@ -115,7 +91,7 @@ const PersonalInfo: FunctionComponent<{ user: Nullable<User> }> = ({
     return (
         <div className="w-full rounded-xl border-2 p-4">
             <div className="flex justify-between gap-2">
-                <Heading>{heading}</Heading>
+                <h2 className="text-xl font-bold">{heading}</h2>
                 <Button size="sm" isDisabled isIconOnly>
                     <IoPencil />
                 </Button>
@@ -123,19 +99,19 @@ const PersonalInfo: FunctionComponent<{ user: Nullable<User> }> = ({
             <Spacer y={4} />
             <div className="flex flex-col gap-2 md:flex-row">
                 <div className="w-full max-w-xs">
-                    <label className="mb-0.5 block text-sm font-bold text-gray-700">
+                    <label className="mb-0.5 block text-xs font-bold text-content3">
                         {t(FULL_NAME_LABEL)}
                     </label>
                     <div>{fullName}</div>
                 </div>
                 <div className="w-full max-w-xs">
-                    <label className="mb-0.5 block text-sm font-bold text-gray-700">
+                    <label className="mb-0.5 block text-xs font-bold text-content3">
                         {t(EMAIL_LABEL)}
                     </label>
                     <div>{email}</div>
                 </div>
                 <div className="w-full max-w-xs">
-                    <label className="mb-0.5 block text-sm font-bold text-gray-700">
+                    <label className="mb-0.5 block text-xs font-bold text-content3">
                         {t(PHONE_LABEL)}
                     </label>
                     <div>{phone}</div>
@@ -149,8 +125,9 @@ const PasswordTool: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
     return (
         <div>
-            <Heading>{t(CHANGE_PASSWORD_LABEL)}</Heading>
-            <p className="text-md">{t(CHANGE_PASSWORD_DESCRIPTION)}</p>
+            <h2 className="text-xl font-bold">{t(CHANGE_PASSWORD_LABEL)}</h2>
+            <Spacer y={2} />
+            <p className="text-sm">{t(CHANGE_PASSWORD_DESCRIPTION)}</p>
             <Spacer y={4} />
             <div className="flex flex-col gap-4">
                 <ChangePassword.Form model={changePasswordModel} />
@@ -168,10 +145,9 @@ export const MobileProfileEditPageView: FunctionComponent = () => {
     const user = useUnit(sessionModel.$sessionStore);
     return (
         <>
-            <Header
-                backButton={<BackButton />}
-                title="Редактирование профиля"
-            />
+            <Header />
+            <Spacer y={4} className="px-4" />
+            <Divider />
             <Spacer y={8} />
             <Content>
                 <AvatarTool />

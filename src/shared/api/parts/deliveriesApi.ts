@@ -134,8 +134,8 @@ export const deliveriesApi = makeApi([
         method: 'get',
         path: '/search',
         alias: 'searchDeliveriesByQuery',
-        description: 'Search for a product',
-        response: z.any(),
+        description: 'Search deliveries by query',
+        response: z.array(deliverySchema),
         parameters: [
             {
                 name: 'query',

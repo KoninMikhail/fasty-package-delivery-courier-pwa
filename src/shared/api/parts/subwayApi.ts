@@ -1,6 +1,6 @@
 import { makeApi } from '@zodios/core';
 import { z } from 'zod';
-import { subwayStationSchema } from '../schemas/SubwaySchema';
+import { subwayStationSchema } from '../schemas';
 
 export const subwayApi = makeApi([
     {

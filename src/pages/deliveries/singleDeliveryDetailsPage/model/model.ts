@@ -2,7 +2,6 @@ import { createGate } from 'effector-react';
 import { combine, createStore, sample } from 'effector';
 import { SetDeliveryStatus } from '@/features/delivery/setDeliveryStatus';
 import {
-    assignUserToDeliveryFx,
     getDeliveryAddress,
     getDeliveryByIdFx,
     getDeliveryClient,
@@ -31,6 +30,7 @@ import { PageState } from '../types';
 import { initialDelivery } from '../data';
 import { DELIVERY_ID_LENGTH } from '../config';
 import 'leaflet/dist/leaflet.css';
+import { assignUserToDeliveryFx } from '@/entities/user';
 
 /* eslint-disable unicorn/no-array-method-this-argument */
 

@@ -1,5 +1,6 @@
 import { mergeApis, Zodios } from '@zodios/core';
 import Cookies from 'js-cookie';
+import { sharedConfigConstants } from '@/shared/config';
 import { SESSION_EXPIRATION_DAYS } from './config';
 import { pluginApiKey, pluginSetApiKey, pluginRemoveApiKey } from './plugins';
 import {
@@ -12,7 +13,7 @@ import {
 } from './parts';
 import { instance } from './instance';
 
-const COOKIE_NAME = import.meta.env.VITE_JWT_TOKEN_COOKIE_KEY;
+const { APP_JWT_COOKIE_KEY } = sharedConfigConstants;
 
 export const apis = mergeApis({
     '/login': authApi,
@@ -33,7 +34,7 @@ export const apiClient = new Zodios(apis, {
 apiClient.use(
     pluginApiKey({
         getApiKey: () => {
-            return Cookies.get(COOKIE_NAME) || '';
+            return Cookies.get(APP_JWT_COOKIE_KEY) || '';
         },
     }),
 );
@@ -41,13 +42,16 @@ apiClient.use(
     'authByEmail',
     pluginSetApiKey({
         setApiKey: (token) => {
-            Cookies.set(COOKIE_NAME, token, {
+            Cookies.set(APP_JWT_COOKIE_KEY, token, {
                 expires: SESSION_EXPIRATION_DAYS,
             });
         },
     }),
 );
-apiClient.use('logoutMe', pluginRemoveApiKey({ cookieName: COOKIE_NAME }));
+apiClient.use(
+    'logoutMe',
+    pluginRemoveApiKey({ cookieName: APP_JWT_COOKIE_KEY }),
+);
 
 export * from './schemas';
 export * from './types';

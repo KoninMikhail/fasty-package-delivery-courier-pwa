@@ -1,5 +1,6 @@
 export const translationNS = 'page:profile-edit';
 
+export const PAGE_HEADING = 'page.heading';
 export const PERSONAL_INFO_LABEL = 'section.label.personalInfo';
 export const CHANGE_PASSWORD_LABEL = 'section.label.changePassword';
 export const CHANGE_PASSWORD_DESCRIPTION = 'section.description.changePassword';
