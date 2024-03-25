@@ -24,7 +24,7 @@ import { sharedUiBranding } from '@/shared/ui/';
 import { Navigate } from 'react-router-dom';
 import { Guest } from '@/entities/viewer/ui/Guest';
 import { Offline, SlowNetwork } from '@/entities/viewer';
-import { requestAuthModel, requestRecoveryModel } from '../model';
+import { requestAuthModel } from '../model';
 import { translationNS } from '../config';
 
 const { Logo } = sharedUiBranding;
@@ -159,16 +159,6 @@ export const AuthPage: FunctionComponent = () => {
      * Handlers
      */
     const onPressSignIn = useUnit(requestAuthModel.pressSignInButton);
-    const onPressCookiePolicy = useUnit(
-        requestAuthModel.pressOpenCookiePolicyLink,
-    );
-    const onPressPrivacyPolicy = useUnit(
-        requestAuthModel.pressOpenPrivacyPolicyLink,
-    );
-    const onPressTermsOfUse = useUnit(requestAuthModel.pressOpenTermsOfUseLink);
-    const onPressResetPassword = useUnit(
-        requestRecoveryModel.pressRecoveryButton,
-    );
 
     return (
         <Guest fallback={<Navigate to={RouteName.ROOT_PAGE} replace />}>

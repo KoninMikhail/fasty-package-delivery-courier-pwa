@@ -1,11 +1,8 @@
 import { createEvent, createStore, sample } from 'effector';
-import {
-    assignUserToDeliveryFx,
-    getMyDeliveriesFx,
-    myDeliveriesModel,
-} from '@/entities/delivery';
+import { getMyDeliveriesFx, myDeliveriesModel } from '@/entities/delivery';
 import { FilterDeliveriesByTimeRange } from '@/features/delivery/filterDeliveriesByTimeRange';
 import { throttle } from 'patronum';
+import { assignUserToDeliveryFx } from '@/entities/user';
 import {
     DELIVERY_END_TIME,
     DELIVERY_START_TIME,
