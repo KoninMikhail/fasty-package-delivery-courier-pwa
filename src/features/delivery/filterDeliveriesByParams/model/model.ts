@@ -1,7 +1,6 @@
 import { Model, modelFactory } from 'effector-factorio';
 import { combine, createEvent, createStore, sample, Store } from 'effector';
 import { Delivery } from '@/shared/api';
-import { debounce } from 'patronum';
 import { MAX_WEIGHT_KG } from '@/features/delivery/filterDeliveriesByParams/config';
 
 export type DeliveryType = 'unset' | 'car' | 'foot';
@@ -40,14 +39,17 @@ export const factory = modelFactory((options: FactoryOptions) => {
 
             if (isRequiredFiltering) {
                 return deliveries.filter((delivery) => {
-                    const meetsExpressCriteria = isExpress === delivery.express;
+                    const meetsExpressCriteria = isExpress
+                        ? delivery.express
+                        : true;
                     const meetsTypeCriteria =
                         type.has('unset') ||
                         (type.has('car') && delivery.car) ||
                         (type.has('foot') && !delivery.car);
-                    const meetsWeightCriteria =
-                        Number(delivery.weight) >= weight[0] &&
-                        Number(delivery.weight) <= weight[1];
+                    const meetsWeightCriteria = delivery.weight
+                        ? Number(delivery.weight) >= weight[0] &&
+                          Number(delivery.weight) <= weight[1]
+                        : true;
 
                     return (
                         meetsExpressCriteria &&
@@ -62,7 +64,7 @@ export const factory = modelFactory((options: FactoryOptions) => {
     );
 
     sample({
-        clock: debounce(weightChanged, 500),
+        clock: weightChanged,
         target: $weight,
     });
 
