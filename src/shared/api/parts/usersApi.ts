@@ -9,21 +9,29 @@ export const usersApi = makeApi([
         path: '/me',
         alias: 'getMe',
         description: 'Get the current user information',
-        response: z.any(),
+        response: userSchema.transform((user) => {
+            if (user.avatar_src) {
+                return {
+                    ...user,
+                    avatar_src: `${API_BASE_URL}${user.avatar_src}`,
+                };
+            }
+            return user;
+        }),
     },
     {
         method: 'get',
         path: '/:userId',
         alias: 'getUserById',
         description: 'Get a user by its ID',
-        response: z.any(),
+        response: userSchema,
     },
     {
         method: 'patch',
         path: '/:userId',
         alias: 'patchUserById',
         description: 'Update a user by its ID',
-        response: z.any(),
+        response: z.void().or(z.undefined()),
         parameters: [
             {
                 name: 'user',

@@ -10,7 +10,7 @@ import { DesktopProfileEditPageView, MobileProfileEditPageView } from './views';
 import { translationNS } from '../config';
 
 const { useDeviceScreen } = sharedConfigDetectDevice;
-const { APP_NAME } = sharedConfigConstants;
+const { APP_NAME, APP_DESCRIPTION } = sharedConfigConstants;
 
 /**
  * @name MarketPage
@@ -19,9 +19,13 @@ const { APP_NAME } = sharedConfigConstants;
  */
 export const ProfileEditPage: FunctionComponent = () => {
     const { isDesktop } = useDeviceScreen();
-    const { t } = useTranslation(translationNS);
+    const { t, i18n } = useTranslation(translationNS);
+    const currentLanguage = i18n.language as keyof typeof APP_DESCRIPTION;
 
-    const pageTitle = `${t('page.title')} | ${APP_NAME}`;
+    const pageTitle = t('page.title', {
+        appName: APP_NAME,
+        appDescription: APP_DESCRIPTION[currentLanguage],
+    });
 
     useDocumentTitle(pageTitle);
 
