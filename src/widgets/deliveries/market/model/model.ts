@@ -5,8 +5,8 @@ import {
     FilterDeliveriesByParameters,
     FilterDeliveriesByParametersModel,
 } from '@/features/delivery/filterDeliveriesByParams';
-import { assignUserToDeliveryFx } from '@/entities/delivery';
 import { isAfter } from 'date-fns/isAfter';
+import { assignUserToDeliveryFx } from '@/entities/user';
 import { fetchAvailableDeliveriesFx } from './effects';
 
 type DatesRange = {

@@ -4,5 +4,6 @@
   "about.title": "О приложении",
   "legal.title": "Правовая информация",
   "language.title": "Язык",
-  "theme.title": "Используемая тема"
+  "theme.title": "Используемая тема",
+  "setting.upcoming.items.count": "Предстоящих доставок на главном экране"
 }

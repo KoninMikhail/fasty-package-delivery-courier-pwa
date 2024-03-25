@@ -10,26 +10,22 @@ import { sessionModel } from '@/entities/viewer';
 import { UserAvatar } from '@/entities/user';
 import { sharedConfigRoutes } from '@/shared/config';
 import { useNavigate } from 'react-router-dom';
-
 import { useTranslation } from 'react-i18next';
 import { User } from '@/shared/api';
 import { Logout } from '@/features/auth/logout';
-import { translationNS } from '../config';
+import {
+    HELLO_TEXT,
+    HELLO_TEXT_WITHOUT_NAME,
+    LOGOUT_TEXT,
+    PROFILE_TEXT,
+    SETTINGS_TEXT,
+    SIGN_IN_AS,
+    translationNS,
+    WISH_TEXT,
+} from '../config';
 
 const { RouteName } = sharedConfigRoutes;
-
-const { PROFILE_EDIT_PAGE } = RouteName;
-
-/**
- * Сonstants
- */
-
-const HELLO_TEXT = 'greetings.name';
-const HELLO_TEXT_WITHOUT_NAME = 'greetings.withoutName';
-const WISH_TEXT = 'greetings.wish';
-const SIGN_IN_AS = 'signUp.title';
-const LOGOUT_TEXT = 'logout.label';
-const PROFILE_TEXT = 'myProfile.label';
+const { PROFILE_EDIT_PAGE, SETTINGS_PAGE } = RouteName;
 
 /**
  * Layout
@@ -67,8 +63,9 @@ const Greetings: FunctionComponent<{
 const UserTool: FunctionComponent<{
     profile: Nullable<User>;
     onPressProfile: () => void;
+    onPressSettings: () => void;
     onPressLogout: () => void;
-}> = ({ profile, onPressProfile, onPressLogout }) => {
+}> = ({ profile, onPressProfile, onPressLogout, onPressSettings }) => {
     const { t } = useTranslation(translationNS);
 
     const profileEmail = profile?.email;
@@ -79,12 +76,15 @@ const UserTool: FunctionComponent<{
                 <UserAvatar user={profile} isBordered />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
-                <DropdownItem key="profile" className="h-14 gap-2">
+                <DropdownItem key="profileInfo" className="h-14 gap-2">
                     <p className="font-semibold">{t(SIGN_IN_AS)}</p>
                     <p className="font-semibold">{profileEmail}</p>
                 </DropdownItem>
-                <DropdownItem key="settings" onPress={onPressProfile}>
+                <DropdownItem key="profileEdit" onPress={onPressProfile}>
                     {t(PROFILE_TEXT)}
+                </DropdownItem>
+                <DropdownItem key="appSettings" onPress={onPressSettings}>
+                    {t(SETTINGS_TEXT)}
                 </DropdownItem>
                 <DropdownItem
                     key="logout"
@@ -109,6 +109,7 @@ export const WelcomeTopbar: FunctionComponent = () => {
     const logout = useUnit(Logout.model);
 
     const onPressProfile = (): void => navigate(PROFILE_EDIT_PAGE);
+    const onPressSettings = (): void => navigate(SETTINGS_PAGE);
     const onPressLogout = (): void => logout();
 
     return (
@@ -118,6 +119,7 @@ export const WelcomeTopbar: FunctionComponent = () => {
                 <UserTool
                     profile={profile}
                     onPressProfile={onPressProfile}
+                    onPressSettings={onPressSettings}
                     onPressLogout={onPressLogout}
                 />
             </div>
