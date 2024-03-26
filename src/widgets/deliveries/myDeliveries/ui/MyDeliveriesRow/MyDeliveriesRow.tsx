@@ -12,6 +12,7 @@ import { BsBoxSeam } from 'react-icons/bs';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
 import { PropsWithChildren } from 'react';
+import { settingsModel } from '@/entities/viewer';
 import { $$empty, $$hasError, $$loading } from '../../model';
 
 import {
@@ -116,6 +117,7 @@ const Updater: FunctionComponent = () => (
  */
 export const MyDeliveriesRow: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
+    const itemsLimit = useUnit(settingsModel.$homeUpcomingDeliveriesCount);
 
     // Simulated states (example purposes)
     const [isEmpty, isUpdating, hasError] = useUnit([
@@ -124,22 +126,28 @@ export const MyDeliveriesRow: FunctionComponent = () => {
         $$hasError,
     ]);
 
-    const items = useList(myDeliveriesModel.$myDeliveriesStore, (delivery) => {
-        const deliveryId = getDeliveryId(delivery);
-        return (
-            <div className="flex items-end py-1 pl-0.5">
-                <div
-                    className="-translate-x-2 -translate-y-1.5 rotate-180 text-content4"
-                    style={{ writingMode: 'vertical-lr' }}
-                >
-                    {t(DELIVERY_PREFIX, { id: deliveryId })}
+    const items = useList(
+        myDeliveriesModel.$myDeliveriesStore,
+        (delivery, index) => {
+            const deliveryId = getDeliveryId(delivery);
+
+            if (index >= itemsLimit) return null;
+
+            return (
+                <div className="flex items-end py-1 pl-0.5">
+                    <div
+                        className="-translate-x-2 -translate-y-1.5 rotate-180 text-content4"
+                        style={{ writingMode: 'vertical-lr' }}
+                    >
+                        {t(DELIVERY_PREFIX, { id: deliveryId })}
+                    </div>
+                    <div className="flex-grow">
+                        <DeliveryCountdownCard delivery={delivery} />
+                    </div>
                 </div>
-                <div className="flex-grow">
-                    <DeliveryCountdownCard delivery={delivery} />
-                </div>
-            </div>
-        );
-    });
+            );
+        },
+    );
 
     if (isEmpty) {
         if (hasError) return <ErrorInitPlaceholder />;

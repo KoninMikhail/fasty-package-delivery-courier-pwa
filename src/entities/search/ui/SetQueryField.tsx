@@ -2,7 +2,6 @@ import { forwardRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { translationNS } from '@/widgets/search/searchQueryPopup/config';
 import { Button, Input } from '@nextui-org/react';
-import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useKeyPress } from '@/shared/lib/browser';
 
@@ -19,8 +18,6 @@ export const SetQueryField = forwardRef<
     const navigate = useNavigate();
     const [query, setQuery] = useState<string>('');
 
-    const isSubmitVisible = query.length > 0;
-
     const onChangeQuery = (value: string): void => {
         setQuery(value);
     };
@@ -32,7 +29,7 @@ export const SetQueryField = forwardRef<
         navigate(`${path}?${queryParameters}`);
     };
 
-    useKeyPress(['Enter'], () => onPressSearch(query));
+    useKeyPress(['Enter'], () => onPressSearch());
 
     return (
         <div className="flex flex-grow gap-2">
@@ -43,27 +40,11 @@ export const SetQueryField = forwardRef<
                 value={query}
                 onValueChange={onChangeQuery}
                 labelPlacement="outside"
-                endContent={
-                    <AnimatePresence>
-                        {isSubmitVisible ? (
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ duration: 0.3 }}
-                                exit={{ opacity: 0 }}
-                            >
-                                <Button
-                                    color="secondary"
-                                    onPress={onPressSearch}
-                                >
-                                    YFQNB
-                                </Button>
-                            </motion.div>
-                        ) : null}
-                    </AnimatePresence>
-                }
                 fullWidth
             />
+            <Button color="primary" onPress={onPressSearch}>
+                Поиск
+            </Button>
         </div>
     );
 });

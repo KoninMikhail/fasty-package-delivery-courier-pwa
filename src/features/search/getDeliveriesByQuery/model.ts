@@ -15,6 +15,7 @@ export const factory = modelFactory((options: FactoryOptions) => {
         queryChanged,
         (_, query) => query,
     );
+    const $pending = options.searchFx.pending;
     const $searchResults = createStore<Delivery[]>([]);
 
     sample({
@@ -31,5 +32,7 @@ export const factory = modelFactory((options: FactoryOptions) => {
     return {
         queryChanged,
         $searchResults,
+        $query,
+        $pending,
     };
 });

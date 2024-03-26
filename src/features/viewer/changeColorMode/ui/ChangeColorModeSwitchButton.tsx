@@ -46,8 +46,6 @@ export const ChangeColorModeSwitchButton: FunctionComponent<
         setTheme(event.target.checked ? 'light' : 'dark');
     };
 
-    if (!isMounted()) return null;
-
     return (
         <Switch
             defaultSelected={theme === 'light'}

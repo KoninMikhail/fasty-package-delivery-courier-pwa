@@ -1,6 +1,6 @@
 import { createEvent, createStore, sample } from 'effector';
 import { User } from '@/shared/api';
-import { empty, not, once, pending } from 'patronum';
+import { once, pending } from 'patronum';
 import { createGate } from 'effector-react';
 import { DomEvent } from 'leaflet';
 import { authByEmailFx, getViewerProfileFx, logoutFx } from './effects';
@@ -43,7 +43,7 @@ export const $isInitialized = createStore<boolean>(false).on(
     initSessionComplete,
     () => true,
 );
-export const $isSessionAuthorized = not(empty($sessionStore));
+export const $isSessionAuthorized = $sessionStore.map(Boolean);
 export const $isSessionPending = pending([getViewerProfileFx]);
 
 /**

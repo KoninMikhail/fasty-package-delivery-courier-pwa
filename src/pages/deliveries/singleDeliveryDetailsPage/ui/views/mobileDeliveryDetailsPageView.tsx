@@ -21,13 +21,13 @@ import { ClientContactCardList } from '@/entities/client';
 import { IoCar, IoPersonSharp } from 'react-icons/io5';
 import { MdOutlineDirectionsRun } from 'react-icons/md';
 import { HiLightningBolt } from 'react-icons/hi';
-import { RiBuildingFill } from 'react-icons/ri';
-import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
+import { RiBuildingFill, RiWifiOffLine } from 'react-icons/ri';
+import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
 import { LatLngLiteral } from 'leaflet';
 import { PageState } from '@/pages/deliveries/singleDeliveryDetailsPage/types';
 import { useNetworkInfo } from '@/shared/config/network';
 
-import { FaPlus, FaMinus } from 'react-icons/fa6';
+import { FaMinus, FaPlus } from 'react-icons/fa6';
 import {
     $$deliveryAddress,
     $$deliveryClientName,
@@ -136,16 +136,12 @@ const ClientType: FunctionComponent = () => {
 
 const DeliveryId: FunctionComponent = () => {
     const id = useUnit($$deliveryId);
-
     return <p>{id}</p>;
 };
-
 const DeliveryPickup: FunctionComponent = () => {
     const pickup = useUnit($$deliveryPickupDateTime);
-
     return <p>{pickup}</p>;
 };
-
 const DeliveryTypeTransport: FunctionComponent = () => {
     const type = useUnit($$deliveryType);
     const text = useUnit($$deliveryTypeTranslated);
@@ -186,7 +182,6 @@ const DeliveryTypeExpress: FunctionComponent = () => {
 };
 const DeliveryAddress: FunctionComponent = () => {
     const address = useUnit($$deliveryAddress);
-
     return (
         <div>
             <p>{address}</p>
@@ -202,7 +197,6 @@ const DeliveryAddress: FunctionComponent = () => {
         </div>
     );
 };
-
 const DeliveryAddressSubway: FunctionComponent = () => {
     const metro = useUnit($$deliveryMetro);
     return <SubwayStationWithIcon value={metro} />;
@@ -215,7 +209,6 @@ const DeliveryWeight: FunctionComponent = () => {
     const weight = useUnit($$deliveryWeight);
     return <p>{weight}</p>;
 };
-
 const DeliveryCourier: FunctionComponent = () => {
     const courier = useUnit($$deliveryCourier);
 
@@ -373,11 +366,7 @@ const OSMMap: FunctionComponent<{
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <Marker position={marker || [51.505, -0.09]}>
-                    <Popup>
-                        A pretty CSS3 popup. <br /> Easily customizable.
-                    </Popup>
-                </Marker>
+                <Marker position={marker || [51.505, -0.09]} />
                 <MapControls marker={marker} />
             </MapContainer>
         </div>
@@ -408,11 +397,37 @@ const YMAPSFallback: FunctionComponent = () => {
     );
 };
 
+const BlockWhenOffline: FunctionComponent<{
+    children: ReactNode;
+    online?: boolean;
+}> = ({ children, online }) => {
+    return online ? (
+        children
+    ) : (
+        <div className="relative block">
+            <div className="absolute bottom-0 left-0 right-0 top-0 z-50 flex h-full w-full flex-col items-center justify-center bg-background opacity-85">
+                <div className="text-center">
+                    <Spacer y={4} />
+                    <RiWifiOffLine className="mx-auto text-5xl text-danger" />
+                    <Spacer y={4} />
+                    <span className="text-content3  text-danger">
+                        Недоступно офлайн
+                    </span>
+                </div>
+            </div>
+            {children}
+        </div>
+    );
+};
+
 export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
     const { online } = useNetworkInfo();
     const [coordinates] = useUnit([$$deliveryCoordinates]);
     const [pageState] = useUnit([$pageContentState]);
+    const isMapReady = coordinates && online;
+
+    console.log(pageState);
 
     if (!pageState)
         return (
@@ -423,7 +438,16 @@ export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
             </>
         );
 
-    if (pageState === PageState.NotFound)
+    if (pageState === PageState.NOT_LOADED)
+        return (
+            <div className="flex h-full w-full items-center justify-center">
+                <MainContainer>
+                    not loaded
+                    <NavbarMobile />
+                </MainContainer>
+            </div>
+        );
+    if (pageState === PageState.NotFound) {
         return (
             <div className="flex h-full w-full items-center justify-center">
                 <MainContainer>
@@ -432,8 +456,8 @@ export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
                 </MainContainer>
             </div>
         );
-
-    if (pageState === PageState.Error)
+    }
+    if (pageState === PageState.Error) {
         return (
             <div className="flex h-full w-full items-center justify-center">
                 <MainContainer>
@@ -442,12 +466,12 @@ export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
                 </MainContainer>
             </div>
         );
-
+    }
     return (
         <>
             <Header className="z-[2000]" backButton={<BackButton />} />
             <MainContainer>
-                {coordinates && online ? (
+                {isMapReady ? (
                     <OSMMap marker={coordinates} />
                 ) : (
                     <YMAPSFallback />
@@ -540,7 +564,9 @@ export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
                 <Section>
                     <Heading content={t(LABEL_DELIVERY_STATUS)} />
                     <Spacer y={4} />
-                    <DeliveryStatusControlWithTimeline />
+                    <BlockWhenOffline online={online}>
+                        <DeliveryStatusControlWithTimeline />
+                    </BlockWhenOffline>
                 </Section>
                 <Spacer y={4} />
                 <Divider className="px-2" />

@@ -48,7 +48,7 @@ export const deliverySchema = z.object({
     address: addressSchema,
     created_at: z.coerce.date(),
     updated_at: z.coerce.date(),
-    manager: userSchema,
+    manager: userSchema.nullable(),
 });
 
 export const deliveryPaginationSchema = createPaginationSchema(deliverySchema);

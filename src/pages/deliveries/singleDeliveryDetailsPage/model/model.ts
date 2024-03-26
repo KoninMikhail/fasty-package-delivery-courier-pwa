@@ -1,5 +1,5 @@
 import { createGate } from 'effector-react';
-import { combine, createStore, sample } from 'effector';
+import { combine, createEvent, createStore, sample } from 'effector';
 import { SetDeliveryStatus } from '@/features/delivery/setDeliveryStatus';
 import {
     getDeliveryAddress,
@@ -23,16 +23,18 @@ import { sessionModel } from '@/entities/viewer';
 import { getCachedDeliveryByIdFx } from '@/entities/delivery/model';
 import { Delivery } from '@/shared/api';
 import { isDeliveryAssignedToCourier } from '@/entities/delivery/lib';
+import { assignUserToDeliveryFx } from '@/entities/user';
 import { getClientTypeLocale } from '@/entities/client/lib/utils/getClientTypeLocale';
 import { getClientName, getClientType } from '@/entities/client';
-import { handleDeliveryError } from '../lib/utils/handleDeliveryError';
+import { condition, once } from 'patronum';
+import { $myDeliveriesStore } from '@/entities/delivery/model/myDeliveriesModel';
+import { handleDeliveryError, handleDeliveryNotLoaded } from '../lib';
 import { PageState } from '../types';
 import { initialDelivery } from '../data';
 import { DELIVERY_ID_LENGTH } from '../config';
-import 'leaflet/dist/leaflet.css';
-import { assignUserToDeliveryFx } from '@/entities/user';
 
 /* eslint-disable unicorn/no-array-method-this-argument */
+/* eslint-disable unicorn/no-thenable */
 
 /**
  * Gateway for the delivery details page
@@ -49,6 +51,25 @@ const $deliveryId = createStore<string>('').on(
     },
 );
 
+/**
+ * Events
+ */
+
+const requestPageContent = createEvent();
+const loadFromRemote = createEvent();
+const loadFromCache = createEvent();
+
+sample({
+    clock: once({
+        source: DeliveryDetailsPageGateway.open,
+        reset: DeliveryDetailsPageGateway.close,
+    }),
+    target: requestPageContent,
+});
+
+/**
+ * Page
+ */
 const $isOnline = createStore<boolean>(true).on(
     DeliveryDetailsPageGateway.open,
     (_, { online }) => online ?? true,
@@ -58,7 +79,7 @@ export const $pageContentState = createStore<Nullable<PageState>>(null)
     .on(getDeliveryByIdFx.failData, (_, error) => handleDeliveryError(error))
     .on(getCachedDeliveryByIdFx.doneData, () => PageState.Done)
     .on(getCachedDeliveryByIdFx.failData, (_, error) =>
-        handleDeliveryError(error),
+        handleDeliveryNotLoaded(error),
     )
     .reset(DeliveryDetailsPageGateway.close);
 
@@ -149,37 +170,36 @@ export const $$isViewerDelivery = combine(
         );
     },
 );
-/*
+
+condition({
+    source: requestPageContent,
+    if: $isOnline,
+    then: loadFromRemote,
+    else: loadFromCache,
+});
 
 sample({
-    clock: $deliveryId,
-    source: $isOnline,
-    filter: (isOnline, id) => id && isOnline,
-    fn: (_, id) => {
-        return { deliveryId: Number(id) };
-    },
+    clock: loadFromRemote,
+    source: $deliveryId,
+    fn: (deliveryId) => ({
+        deliveryId: Number.parseInt(deliveryId.toString(), 10),
+    }),
     target: getDeliveryByIdFx,
 });
-*/
 
-/*
 sample({
-    clock: $deliveryId,
+    clock: loadFromCache,
     source: {
-        isOnline: $isOnline,
+        deliveryId: $deliveryId,
         cache: $myDeliveriesStore,
     },
-    filter: ({ isOnline }, id) => !!id && !isOnline,
-    fn: ({ cache }, deliveryId) => {
-        return { deliveryId, cache };
-    },
+    fn: ({ deliveryId, cache }) => ({
+        deliveryId: Number.parseInt(deliveryId.toString(), 10),
+        cache,
+    }),
     target: getCachedDeliveryByIdFx,
 });
-*/
 
-/**
- * State
- *
 /**
  * Delivery details store
  */

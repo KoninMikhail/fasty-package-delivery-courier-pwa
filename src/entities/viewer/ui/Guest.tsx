@@ -16,5 +16,6 @@ export const Guest: FunctionComponent<IAuthorizedProperties> = ({
     children,
 }) => {
     const isAuthorized = useUnit($isSessionAuthorized);
+    console.log('isAuthorized', isAuthorized);
     return isAuthorized ? fallback : children;
 };

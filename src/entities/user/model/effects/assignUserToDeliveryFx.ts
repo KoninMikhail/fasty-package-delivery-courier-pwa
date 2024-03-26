@@ -3,8 +3,6 @@ import { createEffect } from 'effector';
 
 /**
  * Defines the parameters for assigning a user to a delivery.
- * @property {User['id']} userId - The ID of the user to assign.
- * @property {Delivery['id']} deliveryId - The ID of the delivery.
  */
 export type AssignUserToDeliveryParameters = {
     userId: User['id'];

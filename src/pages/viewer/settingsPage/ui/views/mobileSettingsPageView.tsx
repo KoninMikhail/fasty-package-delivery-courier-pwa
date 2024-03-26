@@ -3,16 +3,7 @@ import { PropsWithChildren, useState } from 'react';
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { sharedUiLayouts } from '@/shared/ui';
 import { sharedConfigConstants } from '@/shared/config';
-import {
-    Button,
-    Chip,
-    Divider,
-    Input,
-    Link,
-    Select,
-    SelectItem,
-    Spacer,
-} from '@nextui-org/react';
+import { Button, Chip, Divider, Input, Link, Spacer } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { ChangeColorModeSwitchButton } from '@/features/viewer/changeColorMode';
 import { ChangeLanguageButton } from '@/features/viewer/changeLanguage';
@@ -26,6 +17,7 @@ import { widgetCookiePolicyModalUi } from '@/widgets/polices/cookiePolicyModal';
 import { widgetPrivacyPolicyModalUi } from '@/widgets/polices/privacyPolicyModal';
 import { widgetTermsOfUseModalUi } from '@/widgets/polices/termsOfUseModal';
 import { useUnit } from 'effector-react';
+import { UpcomingItemsCountDropdown } from '@/features/viewer/setHomeUpcommingCount';
 import {
     pressOpenCookiePolicyLink,
     pressOpenPrivacyPolicyLink,
@@ -47,20 +39,6 @@ const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
         {children}
     </main>
 );
-
-const ItemsCountDropdown: FunctionComponent = () => {
-    const counts = [3, 5, 10, 15, 20];
-
-    return (
-        <Select labelPlacement="outside-left" placeholder="5" className="w-20">
-            {counts.map((animal) => (
-                <SelectItem key={animal} value={animal}>
-                    {animal}
-                </SelectItem>
-            ))}
-        </Select>
-    );
-};
 
 /**
  * @name MobileSettingsPageView
@@ -130,7 +108,7 @@ export const MobileSettingsPageView: FunctionComponent = () => {
                             {t('setting.upcoming.items.count')}
                         </div>
                         <div>
-                            <ItemsCountDropdown />
+                            <UpcomingItemsCountDropdown />
                         </div>
                     </div>
                 </Section>
@@ -176,14 +154,14 @@ export const MobileSettingsPageView: FunctionComponent = () => {
                 <Spacer />
                 <Divider />
                 <Spacer y={4} />
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-4">
                     <div className="mb-2 w-full font-bold">
                         Правовая информация
                     </div>
                     <Button onPress={onPressTermsOfUse}>
                         Условия использования
                     </Button>
-                    <Button onPress={onPressCookiePolicy}>
+                    <Button onPress={onPressPrivacyPolicy}>
                         Политика конфеденциальности
                     </Button>
                     <Button onPress={onPressCookiePolicy}>

@@ -12,7 +12,7 @@ import {
 const { PACKAGE_VERSION } = import.meta.env;
 const { APP_IDENTIFIER } = sharedConfigConstants;
 export const API_BASE_URL = import.meta.env.VITE_COURIERS_API_BASE_URL;
-console.log(API_BASE_URL);
+
 /**
  * Axios instance
  */
