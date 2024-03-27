@@ -6,8 +6,10 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useDocumentTitle } from 'usehooks-ts';
 import { useGate } from 'effector-react';
-import { useNetworkInfo } from '@/shared/config/network';
-import { DesktopProfilePageView, MobileProfilePageView } from './views';
+import {
+    DesktopMyDeliveriesPageView,
+    MobileMyDeliveriesPageView,
+} from './views';
 import { translationNS } from '../config';
 import { MyDeliveriesPageGate } from '../model/model';
 
@@ -21,24 +23,21 @@ const { APP_NAME } = sharedConfigConstants;
  */
 export const MyDeliveriesPage: FunctionComponent = () => {
     const { isDesktop } = useDeviceScreen();
-    const { online } = useNetworkInfo();
     const { t } = useTranslation(translationNS);
 
     const pageTitle = `${t('page.title')} | ${APP_NAME}`;
     const heading = t('page.header');
 
     useDocumentTitle(pageTitle);
-    useGate(MyDeliveriesPageGate, {
-        online,
-    });
+    useGate(MyDeliveriesPageGate);
 
     return isDesktop ? (
         <Authorized>
-            <DesktopProfilePageView heading={heading} />
+            <DesktopMyDeliveriesPageView heading={heading} />
         </Authorized>
     ) : (
         <Authorized>
-            <MobileProfilePageView />
+            <MobileMyDeliveriesPageView />
         </Authorized>
     );
 };

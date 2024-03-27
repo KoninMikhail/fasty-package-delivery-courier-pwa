@@ -6,45 +6,78 @@ import {
 
 import { useTranslation } from 'react-i18next';
 import { useDocumentTitle } from 'usehooks-ts';
-import { useGate } from 'effector-react';
-import { SearchPageGateway } from '@/pages/search/searchPage/model';
+import { useUnit } from 'effector-react';
 import { useSearchParams } from 'react-router-dom';
-import { useKeyPress } from '@/shared/lib/browser';
-import { translationNS } from '../config';
+import { useEffect } from 'react';
+import { useNetworkInfo } from '@/shared/config/network';
+import { widgetSearchQueryPopupModel } from '@/widgets/search/searchQueryPopup';
 import { DesktopSearchPageView, MobileSearchPageView } from './views';
+import { translationNS } from '../config';
+import {
+    $searchQuery,
+    queryChanged,
+    $searchResults,
+    $finalSearchState,
+} from '../model';
 
 const { useDeviceScreen } = sharedConfigDetectDevice;
-const { APP_NAME } = sharedConfigConstants;
+const { APP_NAME, APP_DESCRIPTION } = sharedConfigConstants;
 
 /**
- * @name SearchPage
- * @description Page for deliveries exchange
- * @constructor
+ * Renders the search page, adapting the layout for mobile or desktop screens.
+ * It performs a search based on the query parameters from the URL or user input.
  */
 export const SearchPage: FunctionComponent = () => {
+    const { online: isOnline } = useNetworkInfo();
     const { isDesktop } = useDeviceScreen();
-    const { t } = useTranslation(translationNS);
+    const { t, i18n } = useTranslation(translationNS);
+    const appLanguage = i18n.language as keyof typeof APP_DESCRIPTION;
+
+    // Search
     const [searchParameters] = useSearchParams();
+    const urlQuery = searchParameters.get('q') || '';
+    const [query, setQuery, searchResults] = useUnit([
+        $searchQuery,
+        queryChanged,
+        $searchResults,
+    ]);
 
-    const pageTitle = `${t('page.title')} | ${APP_NAME}`;
-    const query = searchParameters.get('q') || '';
+    const onClickSearchInputMobile = useUnit(
+        widgetSearchQueryPopupModel.modal.clickTriggerElement,
+    );
 
-    useDocumentTitle(pageTitle);
-    useGate(SearchPageGateway, {
-        query,
-    });
+    useEffect(() => {
+        setQuery(urlQuery);
+    }, [urlQuery, setQuery]);
 
-    useKeyPress(['Enter'], () => {
-        alert('Enter pressed');
-    });
+    // Page
+    const pageState = useUnit($finalSearchState);
+    useDocumentTitle(
+        t('page.title', {
+            query,
+            appName: APP_NAME,
+            appDescription: APP_DESCRIPTION[appLanguage],
+        }),
+    );
 
     return isDesktop ? (
         <Authorized>
-            <DesktopSearchPageView />
+            <DesktopSearchPageView
+                query={query}
+                pageState={pageState}
+                results={searchResults}
+                onPressInput={onClickSearchInputMobile}
+            />
         </Authorized>
     ) : (
         <Authorized>
-            <MobileSearchPageView query={query} />
+            <MobileSearchPageView
+                online={isOnline}
+                query={query}
+                pageState={pageState}
+                results={searchResults}
+                onPressInput={onClickSearchInputMobile}
+            />
         </Authorized>
     );
 };

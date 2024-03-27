@@ -214,7 +214,7 @@ export const deliveriesApi = makeApi([
         alias: 'searchDeliveriesByQuery',
         description: 'Search deliveries by query',
         response: z.array(deliverySchema).transform((deliveries) => {
-            deliveries.map((item) => ({
+            return deliveries.map((item) => ({
                 ...item,
                 manager: item.manager
                     ? {
@@ -237,7 +237,7 @@ export const deliveriesApi = makeApi([
         parameters: [
             {
                 name: 'query',
-                description: 'Search by delivery number',
+                description: 'Search by query',
                 type: 'Query',
                 schema: z.string(),
             },

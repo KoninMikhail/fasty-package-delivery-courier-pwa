@@ -41,7 +41,7 @@ const Header: FunctionComponent = () => {
     );
 };
 
-export const MobileProfilePageView: FunctionComponent = () => {
+export const MobileMyDeliveriesPageView: FunctionComponent = () => {
     return (
         <>
             <Wrapper>

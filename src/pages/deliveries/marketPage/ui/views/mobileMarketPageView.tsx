@@ -63,7 +63,7 @@ const SectionBody: FunctionComponent<PropsWithChildren> = ({ children }) => (
 const Header: FunctionComponent = () => {
     const reference = useRef<HTMLInputElement>(null);
     const [openSearchModal] = useUnit([
-        widgetSearchQueryPopupModel.clickTriggerElement,
+        widgetSearchQueryPopupModel.modal.clickTriggerElement,
     ]);
 
     const onClickSearchInput = (): void => {

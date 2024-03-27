@@ -6,7 +6,6 @@ import { UserCardRow } from '@/entities/user';
 import { sessionModel } from '@/entities/viewer';
 import { useTranslation } from 'react-i18next';
 import { Spacer, Tab, Tabs } from '@nextui-org/react';
-import { Route } from '@/entities/route';
 import { translationNS } from '../../config';
 
 const { Footer } = widgetFooterUi;
@@ -37,7 +36,7 @@ const Toolbar: FunctionComponent<{ heading: string }> = ({ heading }) => {
     );
 };
 
-export const DesktopProfilePageView: FunctionComponent<{
+export const DesktopMyDeliveriesPageView: FunctionComponent<{
     heading: string;
 }> = ({ heading }) => {
     const [selectedTab, setSelectedTab] = useState('list');
@@ -63,12 +62,7 @@ export const DesktopProfilePageView: FunctionComponent<{
                         </Tabs>
                     </div>
                     <Spacer y={6} />
-                    <div className="h-full w-full">
-                        <Route.Map.Container
-                            model={deliveriesMapModel}
-                            className="block h-96 w-full"
-                        />
-                    </div>
+                    <div className="h-full w-full">rfhnf</div>
                 </div>
             </MainContainer>
         </Layout>
