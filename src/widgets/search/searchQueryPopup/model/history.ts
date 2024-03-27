@@ -37,9 +37,7 @@ sample({
         user: sessionModel.$sessionStore,
         history: $queryHistory,
     },
-    /**
-     * Function to add or move a query to the beginning of the history.
-     */
+    filter: (_, query) => query.trim().length > 0,
     fn: ({ user, history }, query) => {
         const userId = user?.id || 0;
         const currentHistoryItem = {

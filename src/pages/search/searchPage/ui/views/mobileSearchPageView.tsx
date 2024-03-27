@@ -9,7 +9,6 @@ import React, {
 } from 'react';
 import { IoSearchSharp } from 'react-icons/io5';
 import { IoMdClose } from 'react-icons/io';
-import { DeliverySearchResultCard } from '@/entities/delivery/ui/DeliverySearchResultCard/DeliverySearchResultCard';
 import { RiWifiOffLine } from 'react-icons/ri';
 import { FiSearch } from 'react-icons/fi';
 import { MdOutlineSentimentDissatisfied } from 'react-icons/md';
@@ -19,6 +18,12 @@ import { PageState, SearchPageState } from '@/pages/search/searchPage/types';
 const SearchPopup = React.lazy(() =>
     import('@/widgets/search/searchQueryPopup').then((module) => ({
         default: module.widgetSearchQueryPopupUi.SearchQueryInputModal,
+    })),
+);
+
+const DeliverySearchResultCard = React.lazy(() =>
+    import('@/entities/delivery').then((module) => ({
+        default: module.DeliverySearchResultCard,
     })),
 );
 
@@ -56,11 +61,22 @@ const Header: FunctionComponent<{
                 color="primary"
                 type="text"
                 size="lg"
-                startContent={<IoSearchSharp className="text-xl" />}
-                endContent={!isQueryEmpty && <IoMdClose className="text-xl" />}
+                classNames={{
+                    inputWrapper:
+                        'border-primary data-[hover=true]:border-primary',
+                }}
+                startContent={
+                    <IoSearchSharp className="text-xl" onClick={onClickInput} />
+                }
+                endContent={
+                    !isQueryEmpty && (
+                        <IoMdClose className="text-xl" onClick={onClickInput} />
+                    )
+                }
                 fullWidth
                 onClick={onClickInput}
                 isDisabled={isDisabled}
+                isReadOnly
             />
         </div>
     );
@@ -161,7 +177,7 @@ export const MobileSearchPageView: FunctionComponent<{
                 <NavbarMobile />
             </Content>
             <Suspense>
-                <SearchPopup />
+                <SearchPopup size="full" placement="auto" />
             </Suspense>
         </>
     );
