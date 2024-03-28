@@ -24,6 +24,7 @@ import { translationNS } from '@/widgets/search/searchQueryPopup/config';
 import { FaArrowLeft, FaClockRotateLeft } from 'react-icons/fa6';
 import { IoClose } from 'react-icons/io5';
 import { useKeyPress } from '@/shared/lib/browser';
+import { useUnmount } from 'usehooks-ts';
 import { modal as modalModel, history as searchHistoryModel } from '../model';
 
 const { RouteName } = sharedConfigRoutes;
@@ -41,7 +42,7 @@ const Head: FunctionComponent<PropsWithChildren> = ({ children }) => {
  * Components
  */
 
-const DEFAULT_ITEMS_LIMIT = 10;
+const DEFAULT_ITEMS_LIMIT = 6;
 
 interface RelatedQueriesProperties {
     limit?: number;
@@ -187,18 +188,24 @@ export const SearchQueryInputModal: FunctionComponent<
         const queryParameters = new URLSearchParams({
             q: query,
         }).toString();
-        addToHistory(query);
-        onStartSearchCloseModal();
-        navigate(`${SEARCH_PAGE}?${queryParameters}`);
+
+        if (query) {
+            addToHistory(query);
+            navigate(`${SEARCH_PAGE}?${queryParameters}`);
+            onStartSearchCloseModal();
+        } else {
+            navigate(`${SEARCH_PAGE}`);
+            onStartSearchCloseModal();
+        }
     };
 
     const onPressDeleteHistoryItem = (query: string): void => {
         removeFromHistory(query);
     };
 
-    useEffect(() => {
-        return onStartSearchCloseModal;
-    }, [onStartSearchCloseModal]);
+    useUnmount(() => {
+        onStartSearchCloseModal();
+    });
 
     return (
         <Modal
@@ -213,27 +220,23 @@ export const SearchQueryInputModal: FunctionComponent<
             }}
         >
             <ModalContent>
-                {(onClose) => (
-                    <>
-                        <ModalHeader className="flex flex-col gap-1 p-2 pt-4">
-                            <Head>
-                                <SetQueryField
-                                    ref={reference}
-                                    onPressSearch={onSearch}
-                                    onPressClose={onClickCloseButton}
-                                />
-                            </Head>
-                        </ModalHeader>
-                        <ModalBody className="!px-2">
-                            <Divider />
-                            <h2 className="py-2">История запросов</h2>
-                            <RelatedQueries
-                                onPressItem={onSearch}
-                                onPressDeleteItem={onPressDeleteHistoryItem}
-                            />
-                        </ModalBody>
-                    </>
-                )}
+                <ModalHeader className="flex flex-col gap-1 p-2 pt-4">
+                    <Head>
+                        <SetQueryField
+                            ref={reference}
+                            onPressSearch={onSearch}
+                            onPressClose={onClickCloseButton}
+                        />
+                    </Head>
+                </ModalHeader>
+                <ModalBody className="!px-2">
+                    <Divider />
+                    <h2 className="py-2">История запросов</h2>
+                    <RelatedQueries
+                        onPressItem={onSearch}
+                        onPressDeleteItem={onPressDeleteHistoryItem}
+                    />
+                </ModalBody>
             </ModalContent>
         </Modal>
     );
