@@ -8,6 +8,7 @@ export * from './getDeliveryType';
 export * from './getDeliveryCourier';
 export * from './getDeliveryManager';
 export * from './getDeliveryExpressState';
+export * from './getDeliveryContact';
 export * from './getDeliveryComment';
 export * from './getDeliveryStatus';
 export * from './getDeliveryClient';

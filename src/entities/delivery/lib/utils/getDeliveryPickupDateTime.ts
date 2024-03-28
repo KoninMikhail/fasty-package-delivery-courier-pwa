@@ -10,6 +10,7 @@ export const getDeliveryPickupDateTime = (delivery: Delivery, timeStart: boolean
     const timeStartFormatted = delivery?.time_start.slice(0, -3);
     const timeEndFormatted = delivery.time_end.slice(0, -3);
 
+    if (!timeStart && !timeEnd) return date;
     if (timeStart && !timeEnd) return `${date} ${timeStartFormatted}`
     if (!timeStart && timeEnd) return `${date} ${timeEndFormatted}`
     if (timeStart && timeEnd) return `${date} ${timeStartFormatted} - ${timeEndFormatted}`
