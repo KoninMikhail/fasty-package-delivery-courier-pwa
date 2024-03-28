@@ -18,14 +18,14 @@ const HistoryItemLayout: FunctionComponent<PropsWithChildren> = ({
     children,
 }) => (
     <li>
-        <div className="relative pb-8">
+        <div className="relative pb-12">
             <span
-                className="absolute left-5 top-5 -ml-px h-full w-0.5 bg-gray-200"
+                className="absolute left-5 top-5 -ml-px h-full w-0.5 bg-content1"
                 aria-hidden="true"
             />
             <div className="relative flex items-start space-x-3">
                 <div className="relative px-1">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 ring-8 ring-white">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary">
                         <LuPackage className="h-5 w-5 text-white" />
                     </div>
                 </div>
