@@ -18,6 +18,10 @@ const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
     <main className="h-full w-full flex-col overflow-hidden">{children}</main>
 );
 
+const HistoryLayout: FunctionComponent<PropsWithChildren> = ({ children }) => (
+    <div className="relative block h-full overflow-y-auto">{children}</div>
+);
+
 const Toolbar: FunctionComponent<{ header: string }> = ({ header }) => {
     const user = useUnit(sessionModel.$sessionStore);
     return (
@@ -40,9 +44,9 @@ export const DesktopMyDeliveriesHistoryView: FunctionComponent<{
             <Navbar />
             <MainContainer>
                 <Toolbar header={header} />
-                <div className="relative block h-full overflow-y-auto">
+                <HistoryLayout>
                     <DeliveriesHistoryList />
-                </div>
+                </HistoryLayout>
             </MainContainer>
         </Layout>
     );
