@@ -27,26 +27,22 @@ import {
     getDeliveryId,
 } from '../../lib';
 
-import { translationNS } from '../../config';
+import {
+    BUTTON_MORE,
+    LABEL_ADDRESS,
+    LABEL_ID,
+    LABEL_STORAGE,
+    LABEL_WEIGHT,
+    translationNS,
+    TYPE_EXPRESS,
+    TYPE_ON_CAR,
+    TYPE_ON_FOOT,
+    WEIGHT_VALUE,
+} from '../../config';
 
 const { SubwayStationWithIcon } = sharedServicesSubway;
 const { RouteName } = sharedConfigRoutes;
 const { DELIVERIES } = RouteName;
-
-/**
- * Constants
- */
-const TRANSLATION = {
-    LABEL_ID: 'delivery.card.label.id',
-    TYPE_ON_CAR: 'delivery.type.onCar',
-    TYPE_ON_FOOT: 'delivery.type.onFoot',
-    TYPE_EXPRESS: 'delivery.type.express',
-    LABEL_ADDRESS: 'delivery.card.label.address',
-    LABEL_WEIGHT: 'delivery.card.label.weight',
-    WEIGHT_VALUE: 'delivery.card.weight.kg',
-    LABEL_STORAGE: 'delivery.card.label.storage',
-    BUTTON_MORE: 'delivery.card.button.more',
-};
 
 /**
  * Components
@@ -55,7 +51,7 @@ const DeliveryId: FunctionComponent<{ id: number | string }> = ({ id }) => {
     const { t } = useTranslation(translationNS);
     return (
         <div className="flex flex-col">
-            <span className="text-md">{t(TRANSLATION.LABEL_ID)}</span>
+            <span className="text-md">{t(LABEL_ID)}</span>
             <span className="text-md font-bold">{`# ${id}`}</span>
         </div>
     );
@@ -73,12 +69,12 @@ const DeliveryChips: FunctionComponent<{
         <div className="flex justify-end gap-1">
             {express ? (
                 <Chip color="danger" size="sm" variant="solid">
-                    {t(TRANSLATION.TYPE_EXPRESS)}
+                    {t(TYPE_EXPRESS)}
                 </Chip>
             ) : null}
 
             <Chip color="success" size="sm" variant="dot">
-                {t(isCar ? TRANSLATION.TYPE_ON_CAR : TRANSLATION.TYPE_ON_FOOT)}
+                {t(isCar ? TYPE_ON_CAR : TYPE_ON_FOOT)}
             </Chip>
         </div>
     );
@@ -98,7 +94,7 @@ const DeliveryContents: FunctionComponent<{ contents: string }> = ({
     const { t } = useTranslation(translationNS);
     return (
         <div>
-            <div className="font-bold">{t(TRANSLATION.LABEL_STORAGE)}</div>
+            <div className="font-bold">{t(LABEL_STORAGE)}</div>
             <div className="text-sm">{contents}</div>
         </div>
     );
@@ -108,10 +104,8 @@ const DeliveryWeight: FunctionComponent<{ weight: string }> = ({ weight }) => {
     const { t } = useTranslation(translationNS);
     return (
         <div className="min-w-16 flex-grow-0">
-            <div className="font-bold">{t(TRANSLATION.LABEL_WEIGHT)}</div>
-            <div className="text-sm">
-                {t(TRANSLATION.WEIGHT_VALUE, { weight })}
-            </div>
+            <div className="font-bold">{t(LABEL_WEIGHT)}</div>
+            <div className="text-sm">{t(WEIGHT_VALUE, { weight })}</div>
         </div>
     );
 };
@@ -122,7 +116,7 @@ const DeliveryAddress: FunctionComponent<{ address: string }> = ({
     const { t } = useTranslation(translationNS);
     return (
         <div>
-            <div className="font-bold">{t(TRANSLATION.LABEL_ADDRESS)}</div>
+            <div className="font-bold">{t(LABEL_ADDRESS)}</div>
             <div className="text-sm">{address}</div>
         </div>
     );
@@ -134,7 +128,7 @@ const MoreButton: FunctionComponent<{
     const { t } = useTranslation(translationNS);
     return (
         <Button color="primary" fullWidth onPress={onPress}>
-            {t(TRANSLATION.BUTTON_MORE)}
+            {t(BUTTON_MORE)}
         </Button>
     );
 };
