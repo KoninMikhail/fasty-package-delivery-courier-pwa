@@ -16,9 +16,12 @@
   "delivery.card.label.id": "ID",
   "delivery.card.label.storage": "Includes",
   "delivery.card.label.weight": "Weight",
+  "delivery.card.label.client": "Client",
+  "delivery.card.label.contactPerson": "Contact",
+  "delivery.card.label.comment": "Comment",
   "delivery.card.weight.kg": "{{weight}}kg",
   "delivery.card.chip.expired": "Expired",
   "delivery.card.chip.timeLeft": "{{hours}}h {{minutes}}m",
-  "delivery.card.client.name.notFound": "client not found",
+  "delivery.card.client.name.notFound": "Client not found",
   "delivery.card.button.more": "See more"
 }
