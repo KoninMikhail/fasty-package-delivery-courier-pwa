@@ -8,7 +8,6 @@ import React, {
     useRef,
 } from 'react';
 import { IoSearchSharp } from 'react-icons/io5';
-import { IoMdClose } from 'react-icons/io';
 import { RiWifiOffLine } from 'react-icons/ri';
 import { FiSearch } from 'react-icons/fi';
 import { MdOutlineSentimentDissatisfied } from 'react-icons/md';
@@ -53,7 +52,7 @@ const Header: FunctionComponent<{
     };
 
     return (
-        <div className="flex items-center justify-between p-4">
+        <div className="flex w-full items-center justify-between bg-background p-4">
             <Input
                 ref={inputReference}
                 value={query}
@@ -67,11 +66,6 @@ const Header: FunctionComponent<{
                 }}
                 startContent={
                     <IoSearchSharp className="text-xl" onClick={onClickInput} />
-                }
-                endContent={
-                    !isQueryEmpty && (
-                        <IoMdClose className="text-xl" onClick={onClickInput} />
-                    )
                 }
                 fullWidth
                 onClick={onClickInput}
@@ -129,7 +123,8 @@ export const MobileSearchPageView: FunctionComponent<{
     pageState: SearchPageState;
     results: Delivery[];
     onPressInput: () => void;
-}> = ({ query, pageState, results, onPressInput, online }) => {
+    onPressClear?: () => void;
+}> = ({ query, pageState, results, onPressInput, online, onPressClear }) => {
     if (!online) {
         return (
             <>
@@ -156,13 +151,18 @@ export const MobileSearchPageView: FunctionComponent<{
                 return <LoadingMessage />;
             }
             default: {
-                return results.map((result) => (
-                    <DeliverySearchResultCard
-                        key={result.id}
-                        delivery={result}
-                        query={query}
-                    />
-                ));
+                return (
+                    <>
+                        <div className="font-medium">Найденные результаты</div>
+                        {results.map((result) => (
+                            <DeliverySearchResultCard
+                                key={result.id}
+                                delivery={result}
+                                query={query}
+                            />
+                        ))}
+                    </>
+                );
             }
         }
     };
@@ -172,7 +172,10 @@ export const MobileSearchPageView: FunctionComponent<{
             <Header query={query} onPressInput={onPressInput} />
             <Content>
                 <Spacer y={2} />
-                <div className="flex flex-col gap-4">{renderState()}</div>
+                <div className="flex h-full flex-col gap-4">
+                    {renderState()}
+                    <Spacer y={16} />
+                </div>
                 <Spacer y={4} />
                 <NavbarMobile />
             </Content>
