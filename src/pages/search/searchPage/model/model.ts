@@ -22,21 +22,6 @@ sample({
     target: searchDeliveriesByQueryFx,
 });
 
-/*
-sample({
-    clock: setSearchQuery,
-    source: sessionModel.$sessionStore,
-    fn: (viewer, query) => {
-        const userId = viewer?.id || 0;
-        return {
-            query,
-            id: userId,
-            timestamp: Date.now(),
-        };
-    },
-    target: searchHistoryModel.addQueryToHistory,
-}); */
-
 // Assuming the imports and PageState enum are correctly set as before
 
 // You already have a store reflecting the loading state,
