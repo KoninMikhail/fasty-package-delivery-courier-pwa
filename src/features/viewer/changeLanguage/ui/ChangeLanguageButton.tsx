@@ -38,6 +38,9 @@ export const ChangeLanguageButton = (): JSX.Element => {
                 <Button
                     variant="light"
                     size="md"
+                    className={
+                        'data-[hover=true]:bg-transparent" bg-transparent bg-none px-unit-0 capitalize'
+                    }
                     endContent={<RiArrowDownSFill />}
                 >
                     {t('language_name')}
