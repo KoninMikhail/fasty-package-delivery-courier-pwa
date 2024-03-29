@@ -1,9 +1,16 @@
 {
-  "page.title": "Настройки",
-  "page.header": "Настройки",
+  "page.title": "Настройки | {{appName}} - {{appDescription}}",
+  "page.heading": "Настройки",
   "about.title": "О приложении",
-  "legal.title": "Правовая информация",
   "language.title": "Язык",
   "theme.title": "Используемая тема",
+  "settings.notice": "Внимание! Все настройки сохраняются локально на вашем устройстве. При очистке cookies настройки будут сброшены. Также при смене устройства потребуется повторить настройки.",
+  "section.help.title": "Cправка и поддержка",
+  "section.help.call": "Позвонить",
+  "section.help.email": "Эл. почта",
+  "section.legal.title": "Правовая информация",
+  "section.legal.privacy": "Политика конфиденциальности",
+  "section.legal.terms": "Условия использования",
+  "section.legal.cookies": "Политика Cookies",
   "setting.upcoming.items.count": "Предстоящих доставок на главном экране"
 }

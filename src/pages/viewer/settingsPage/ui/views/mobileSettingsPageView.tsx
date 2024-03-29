@@ -19,6 +19,19 @@ import { widgetTermsOfUseModalUi } from '@/widgets/polices/termsOfUseModal';
 import { useUnit } from 'effector-react';
 import { UpcomingItemsCountDropdown } from '@/features/viewer/setHomeUpcommingCount';
 import {
+    SettingsNotice,
+    BackButton,
+    PageTitle,
+    SectionHelpSupportTitle,
+    SectionLegalTitle,
+    CallButtonText,
+    EmailButtonText,
+    TermsOfUseButtonText,
+    PrivacyPolicyButtonText,
+    CookiesPolicyButtonText,
+} from '../common';
+
+import {
     pressOpenCookiePolicyLink,
     pressOpenPrivacyPolicyLink,
     pressOpenTermsOfUseLink,
@@ -39,6 +52,67 @@ const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
         {children}
     </main>
 );
+
+/**
+ * Components
+ */
+const Header: FunctionComponent = () => (
+    <header className="flex w-full items-center px-4 pt-4">
+        <h1 className="flex-grow truncate text-xl font-bold">
+            <PageTitle />
+        </h1>
+        <div className="flex-shrink">
+            <BackButton />
+        </div>
+    </header>
+);
+
+const ContactLinks: FunctionComponent = () => (
+    <div className="flex w-full gap-4 pb-2">
+        <Button
+            color="primary"
+            as={Link}
+            variant="flat"
+            fullWidth
+            isExternal
+            showAnchorIcon
+            anchorIcon={<MdOutlinePhoneEnabled />}
+        >
+            <CallButtonText />
+        </Button>
+        <Button
+            color="primary"
+            as={Link}
+            variant="flat"
+            fullWidth
+            anchorIcon={<MdOutlineMarkunreadMailbox />}
+            showAnchorIcon
+            isExternal
+        >
+            <EmailButtonText />
+        </Button>
+    </div>
+);
+
+const PolicesLinks: FunctionComponent<{
+    onPressCookiePolicy: () => void;
+    onPressPrivacyPolicy: () => void;
+    onPressTermsOfUse: () => void;
+}> = ({ onPressCookiePolicy, onPressPrivacyPolicy, onPressTermsOfUse }) => {
+    return (
+        <>
+            <Button onPress={onPressTermsOfUse} variant="bordered">
+                <TermsOfUseButtonText />
+            </Button>
+            <Button onPress={onPressPrivacyPolicy} variant="bordered">
+                <PrivacyPolicyButtonText />
+            </Button>
+            <Button onPress={onPressCookiePolicy} variant="bordered">
+                <CookiesPolicyButtonText />
+            </Button>
+        </>
+    );
+};
 
 /**
  * @name MobileSettingsPageView
@@ -66,6 +140,7 @@ export const MobileSettingsPageView: FunctionComponent = () => {
 
     return (
         <>
+            <Header />
             <MainContainer>
                 <div className="flex w-full flex-col justify-center gap-1 py-4">
                     <div className="flex w-full justify-center">
@@ -83,9 +158,6 @@ export const MobileSettingsPageView: FunctionComponent = () => {
                 <Spacer />
                 <Divider />
                 <Spacer />
-                <Section>
-                    <div className="w-full font-bold">Настройки</div>
-                </Section>
                 <Section>
                     <div className="flex items-center gap-2">
                         <div className="flex-grow">{t('language.title')}</div>
@@ -115,59 +187,31 @@ export const MobileSettingsPageView: FunctionComponent = () => {
                 <Spacer />
                 <Section>
                     <p className="text-xs text-danger-400">
-                        Внимание! Все настройки сохраняются локально на вашем
-                        устройстве. При очистке cookies настройки будут
-                        сброшены. Также при смене устройства потребуется
-                        повторить настройки.
+                        <SettingsNotice />
                     </p>
                 </Section>
                 <Spacer />
                 <Divider />
-                <Spacer y={1} />
+                <Spacer y={2} />
                 <Section>
                     <div className="w-full font-bold">
-                        Контактная информация
+                        <SectionHelpSupportTitle />
                     </div>
-                    <div className="flex w-full gap-4 pb-2">
-                        <Button
-                            color="primary"
-                            as={Link}
-                            variant="flat"
-                            fullWidth
-                            showAnchorIcon
-                            anchorIcon={<MdOutlinePhoneEnabled />}
-                        >
-                            Позвонить
-                        </Button>
-                        <Button
-                            color="primary"
-                            as={Link}
-                            variant="flat"
-                            fullWidth
-                            anchorIcon={<MdOutlineMarkunreadMailbox />}
-                            showAnchorIcon
-                        >
-                            Эл. почта
-                        </Button>
+                    <ContactLinks />
+                </Section>
+                <Section>
+                    <div className="flex flex-col gap-2">
+                        <div className="mb-2 w-full font-bold">
+                            <SectionLegalTitle />
+                        </div>
+                        <PolicesLinks
+                            onPressCookiePolicy={onPressCookiePolicy}
+                            onPressPrivacyPolicy={onPressPrivacyPolicy}
+                            onPressTermsOfUse={onPressTermsOfUse}
+                        />
                     </div>
                 </Section>
-                <Spacer />
-                <Divider />
-                <Spacer y={4} />
-                <div className="flex flex-col gap-4">
-                    <div className="mb-2 w-full font-bold">
-                        Правовая информация
-                    </div>
-                    <Button onPress={onPressTermsOfUse}>
-                        Условия использования
-                    </Button>
-                    <Button onPress={onPressPrivacyPolicy}>
-                        Политика конфеденциальности
-                    </Button>
-                    <Button onPress={onPressCookiePolicy}>
-                        Политика Cookie
-                    </Button>
-                </div>
+
                 <div className="px-2 py-4">Обнуление доставки</div>
                 <div className="flex gap-2 px-2">
                     <Input

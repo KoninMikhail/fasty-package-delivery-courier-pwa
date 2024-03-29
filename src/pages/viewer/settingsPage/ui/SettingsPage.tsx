@@ -10,7 +10,7 @@ import { DesktopSettingsPageView, MobileSettingsPageView } from './views';
 import { translationNS } from '../config';
 
 const { useDeviceScreen } = sharedConfigDetectDevice;
-const { APP_NAME } = sharedConfigConstants;
+const { APP_NAME, APP_DESCRIPTION } = sharedConfigConstants;
 
 /**
  * @name SettingsPage
@@ -19,12 +19,17 @@ const { APP_NAME } = sharedConfigConstants;
  */
 export const SettingsPage: FunctionComponent = () => {
     const { isDesktop } = useDeviceScreen();
-    const { t } = useTranslation(translationNS);
+    const { t, i18n } = useTranslation(translationNS);
+    const currentLanguage = i18n.language as keyof typeof APP_DESCRIPTION;
 
-    const pageTitle = `${t('page.title')} | ${APP_NAME}`;
     const heading = t('page.header');
 
-    useDocumentTitle(pageTitle);
+    useDocumentTitle(
+        t('page.title', {
+            appName: APP_NAME,
+            appDescription: APP_DESCRIPTION[currentLanguage],
+        }),
+    );
 
     return isDesktop ? (
         <Authorized>
