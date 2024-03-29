@@ -55,6 +55,8 @@ const Header: FunctionComponent = () => (
 const AvatarTool: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
     const user = useUnit(sessionModel.$sessionStore);
+    const errors = useUnit(changeAvatarModel.$error);
+    const hasErrors = errors.length > 0;
     return (
         <div className="flex w-full items-center gap-4 overflow-hidden lg:gap-6">
             <div>
@@ -64,12 +66,21 @@ const AvatarTool: FunctionComponent = () => {
                 />
             </div>
             <div className="block">
+                <ChangeAvatar.CropModal model={changeAvatarModel} />
                 <ChangeAvatar.UploadButton model={changeAvatarModel} />
                 <Spacer y={2.5} />
-                <p className="truncate text-xs">{t(AVATAR_SIZE_DESCRIPTION)}</p>
-                <p className="truncate text-xs">
-                    {t(AVATAR_FORMAT_DESCRIPTION)}
-                </p>
+                {hasErrors ? (
+                    <p className="text-xs text-danger">{errors}</p>
+                ) : (
+                    <>
+                        <p className="truncate text-xs">
+                            {t(AVATAR_SIZE_DESCRIPTION)}
+                        </p>
+                        <p className="truncate text-xs">
+                            {t(AVATAR_FORMAT_DESCRIPTION)}
+                        </p>
+                    </>
+                )}
             </div>
         </div>
     );
