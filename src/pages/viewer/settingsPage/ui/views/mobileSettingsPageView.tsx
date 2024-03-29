@@ -18,6 +18,7 @@ import { widgetPrivacyPolicyModalUi } from '@/widgets/polices/privacyPolicyModal
 import { widgetTermsOfUseModalUi } from '@/widgets/polices/termsOfUseModal';
 import { useUnit } from 'effector-react';
 import { UpcomingItemsCountDropdown } from '@/features/viewer/setHomeUpcommingCount';
+import { sharedLibApp, sharedLibHelpers } from '@/shared/lib';
 import {
     SettingsNotice,
     BackButton,
@@ -38,12 +39,15 @@ import {
 } from '../../model';
 import { translationNS } from '../../config';
 
+const { AppVersion } = sharedLibApp;
+const { removeNonNumericChars } = sharedLibHelpers;
 const { TermsOfUseModal } = widgetTermsOfUseModalUi;
 const { CookiePolicyModal } = widgetCookiePolicyModalUi;
 const { PrivacyPolicyModal } = widgetPrivacyPolicyModalUi;
 const { Section } = sharedUiLayouts;
 const { NavbarMobile } = widgetNavbarMobileUi;
-const { APP_NAME, APP_DESCRIPTION } = sharedConfigConstants;
+const { APP_NAME, APP_DESCRIPTION, APP_SUPPORT_EMAIL, APP_SUPPORT_PHONE } =
+    sharedConfigConstants;
 /*
  * Layout
  */
@@ -53,9 +57,6 @@ const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
     </main>
 );
 
-/**
- * Components
- */
 const Header: FunctionComponent = () => (
     <header className="flex w-full items-center px-4 pt-4">
         <h1 className="flex-grow truncate text-xl font-bold">
@@ -67,32 +68,38 @@ const Header: FunctionComponent = () => (
     </header>
 );
 
-const ContactLinks: FunctionComponent = () => (
-    <div className="flex w-full gap-4 pb-2">
-        <Button
-            color="primary"
-            as={Link}
-            variant="flat"
-            fullWidth
-            isExternal
-            showAnchorIcon
-            anchorIcon={<MdOutlinePhoneEnabled />}
-        >
-            <CallButtonText />
-        </Button>
-        <Button
-            color="primary"
-            as={Link}
-            variant="flat"
-            fullWidth
-            anchorIcon={<MdOutlineMarkunreadMailbox />}
-            showAnchorIcon
-            isExternal
-        >
-            <EmailButtonText />
-        </Button>
-    </div>
-);
+const ContactLinks: FunctionComponent = () => {
+    const phoneLink = `tel:+${removeNonNumericChars(APP_SUPPORT_PHONE)}`;
+    const emailLink = `mailto:${APP_SUPPORT_EMAIL}`;
+    return (
+        <div className="flex w-full gap-4 pb-2">
+            <Button
+                href={phoneLink}
+                color="primary"
+                as={Link}
+                variant="flat"
+                fullWidth
+                isExternal
+                showAnchorIcon
+                anchorIcon={<MdOutlinePhoneEnabled />}
+            >
+                <CallButtonText />
+            </Button>
+            <Button
+                href={emailLink}
+                color="primary"
+                as={Link}
+                variant="flat"
+                fullWidth
+                anchorIcon={<MdOutlineMarkunreadMailbox />}
+                showAnchorIcon
+                isExternal
+            >
+                <EmailButtonText />
+            </Button>
+        </div>
+    );
+};
 
 const PolicesLinks: FunctionComponent<{
     onPressCookiePolicy: () => void;
@@ -149,7 +156,9 @@ export const MobileSettingsPageView: FunctionComponent = () => {
                     <Spacer />
                     <div className="flex w-full items-center justify-center gap-1 text-center text-lg">
                         <span className=" font-bold">{APP_NAME}</span>
-                        <Chip size="sm">0.0.0</Chip>
+                        <Chip size="sm">
+                            <AppVersion />
+                        </Chip>
                     </div>
                     <div className="w-full text-center text-xs">
                         {APP_DESCRIPTION[currentLanguage]}
