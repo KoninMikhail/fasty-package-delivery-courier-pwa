@@ -1,30 +1,20 @@
 import { useTheme } from 'next-themes';
-import { ChangeEvent, FunctionComponent } from 'react';
-import type { SwitchProps } from '@nextui-org/react';
-import { Switch } from '@nextui-org/react';
-import { sharedUiIcons } from '@/shared/ui';
-import { useIsMounted } from 'usehooks-ts';
-
-const { SunIcon, MoonIcon } = sharedUiIcons;
-
-/**
- * Components
- */
-interface ThumbIconProperties {
-    isSelected: boolean;
-    className: string;
-}
-
-const ThumbIcon: FunctionComponent<ThumbIconProperties> = ({
-    isSelected,
-    className,
-}) => {
-    return isSelected ? (
-        <SunIcon className={className} />
-    ) : (
-        <MoonIcon className={className} />
-    );
-};
+import { FunctionComponent, useMemo, useState } from 'react';
+import {
+    Button,
+    Dropdown,
+    DropdownItem,
+    DropdownMenu,
+    DropdownTrigger,
+    SwitchProps,
+    Selection,
+} from '@nextui-org/react';
+import { RiArrowDownSFill } from 'react-icons/ri';
+import {
+    DarkText,
+    LightText,
+    SystemText,
+} from '@/features/viewer/changeColorMode/ui/common';
 
 interface IChangeColorModeSwitchButtonProperties {
     size?: SwitchProps['size'];
@@ -36,23 +26,57 @@ interface IChangeColorModeSwitchButtonProperties {
  */
 export const ChangeColorModeSwitchButton: FunctionComponent<
     IChangeColorModeSwitchButtonProperties
-> = ({ size = 'lg', color = 'success' }) => {
-    const isMounted = useIsMounted();
+> = ({ size, color }) => {
     const { theme, setTheme } = useTheme();
+    const [selectedKeys, setSelectedKeys] = useState<Selection>(
+        new Set([theme || 'system']),
+    );
 
-    const onClickThemeChange = (event: ChangeEvent<HTMLInputElement>): void => {
-        event.preventDefault();
-        event.stopPropagation();
-        setTheme(event.target.checked ? 'light' : 'dark');
-    };
-
+    const selectedValue = useMemo(() => {
+        const themeKey = [...selectedKeys].join(', ').replaceAll('_', ' ');
+        setTheme(themeKey);
+        if (themeKey === 'system') {
+            return <SystemText />;
+        }
+        if (themeKey === 'light') {
+            return <LightText />;
+        }
+        if (themeKey === 'dark') {
+            return <DarkText />;
+        }
+        return themeKey;
+    }, [selectedKeys, setTheme]);
     return (
-        <Switch
-            defaultSelected={theme === 'light'}
-            size={size}
-            color={color}
-            thumbIcon={ThumbIcon}
-            onChange={onClickThemeChange}
-        />
+        <Dropdown>
+            <DropdownTrigger>
+                <Button
+                    variant="light"
+                    className="bg-transparent bg-none pr-unit-0 capitalize data-[hover=true]:bg-transparent"
+                    color={color}
+                    size={size}
+                    endContent={<RiArrowDownSFill />}
+                >
+                    {selectedValue}
+                </Button>
+            </DropdownTrigger>
+            <DropdownMenu
+                aria-label="Single selection example"
+                variant="flat"
+                disallowEmptySelection
+                selectionMode="single"
+                selectedKeys={selectedKeys}
+                onSelectionChange={setSelectedKeys}
+            >
+                <DropdownItem key="system">
+                    <SystemText />
+                </DropdownItem>
+                <DropdownItem key="light">
+                    <LightText />
+                </DropdownItem>
+                <DropdownItem key="dark">
+                    <DarkText />
+                </DropdownItem>
+            </DropdownMenu>
+        </Dropdown>
     );
 };
