@@ -6,27 +6,12 @@ import {
     ModalProps,
 } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
-import { sharedUiComponents } from '@/shared/ui';
-import { sharedConfigLocale } from '@/shared/config';
 import { useUnit } from 'effector-react';
-import { sharedLibHelpers } from '@/shared/lib';
-import { sharedAssetsDocs } from '@/shared/assets';
-import { translationNS } from '../config';
+import React from 'react';
+import { SuspenseLayout } from '@/shared/ui/layouts';
+import { ErrorPolicyLoad } from './parts/components';
+import { MODAL_TITLE, translationNS } from '../config';
 import { $isPrivacyPolicyModalVisible, setHidden } from '../model';
-
-import locale_en from '../locales/en.locale.json';
-import locale_ru from '../locales/ru.locale.json';
-
-const { locale } = sharedConfigLocale;
-const { ruPrivacyPolicy, enPrivacyPolicy } = sharedAssetsDocs;
-const { getContentForLocale } = sharedLibHelpers;
-const { Markdown } = sharedUiComponents;
-
-/**
- * locale.ts
- */
-locale.addResourceBundle('en', translationNS, locale_en);
-locale.addResourceBundle('ru', translationNS, locale_ru);
 
 /**
  * @name PrivacyPolicyModal
@@ -34,17 +19,23 @@ locale.addResourceBundle('ru', translationNS, locale_ru);
 export const PrivacyPolicyModal: FunctionComponent<
     Pick<ModalProps, 'size'>
 > = ({ size }) => {
+    const { t, i18n } = useTranslation(translationNS);
     const [isOpen, onClose] = useUnit([
         $isPrivacyPolicyModalVisible,
         setHidden,
     ]);
+    const { language } = i18n;
 
-    const { t, i18n } = useTranslation(translationNS);
-
-    const content = getContentForLocale(i18n.language, {
-        en: enPrivacyPolicy,
-        ru: ruPrivacyPolicy,
-    });
+    const PolicyContent = React.lazy(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        () =>
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+            import(`./parts/data/policy/${language}/Policy.tsx`).catch(() => {
+                return {
+                    default: ErrorPolicyLoad,
+                };
+            }),
+    );
 
     return (
         <Modal
@@ -55,10 +46,12 @@ export const PrivacyPolicyModal: FunctionComponent<
         >
             <ModalContent>
                 <ModalHeader className="flex flex-col gap-1">
-                    {t('modal.title')}
+                    {t(MODAL_TITLE)}
                 </ModalHeader>
                 <ModalBody>
-                    {content ? <Markdown content={content} /> : null}
+                    <SuspenseLayout>
+                        <PolicyContent />
+                    </SuspenseLayout>
                 </ModalBody>
             </ModalContent>
         </Modal>

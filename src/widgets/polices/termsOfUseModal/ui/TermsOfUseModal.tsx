@@ -6,27 +6,11 @@ import {
     ModalProps,
 } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
-import { sharedUiComponents } from '@/shared/ui';
-import { sharedConfigLocale } from '@/shared/config';
 import { useUnit } from 'effector-react';
-import { sharedLibHelpers } from '@/shared/lib';
-import { sharedAssetsDocs } from '@/shared/assets';
-import { translationNS } from '../config';
+import React, { Suspense } from 'react';
+import { ErrorPolicyLoad } from './parts/components';
+import { MODAL_TITLE, translationNS } from '../config';
 import { $isTermsOfUseModalVisible, setHidden } from '../model';
-
-import locale_en from '../locales/en.locale.json';
-import locale_ru from '../locales/ru.locale.json';
-
-const { locale } = sharedConfigLocale;
-const { ruTermsOfUse, enTermsOfUse } = sharedAssetsDocs;
-const { getContentForLocale } = sharedLibHelpers;
-const { Markdown } = sharedUiComponents;
-
-/**
- * locale.ts
- */
-locale.addResourceBundle('en', translationNS, locale_en);
-locale.addResourceBundle('ru', translationNS, locale_ru);
 
 /**
  * @name TermsOfUseModal
@@ -35,13 +19,19 @@ export const TermsOfUseModal: FunctionComponent<Pick<ModalProps, 'size'>> = ({
     size,
 }) => {
     const [isOpen, onClose] = useUnit([$isTermsOfUseModalVisible, setHidden]);
-
     const { t, i18n } = useTranslation(translationNS);
+    const { language } = i18n;
 
-    const content = getContentForLocale(i18n.language, {
-        en: enTermsOfUse,
-        ru: ruTermsOfUse,
-    });
+    const PolicyContent = React.lazy(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        () =>
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+            import(`./parts/data/policy/${language}/Policy.tsx`).catch(() => {
+                return {
+                    default: ErrorPolicyLoad,
+                };
+            }),
+    );
 
     return (
         <Modal
@@ -52,10 +42,12 @@ export const TermsOfUseModal: FunctionComponent<Pick<ModalProps, 'size'>> = ({
         >
             <ModalContent>
                 <ModalHeader className="flex flex-col gap-1">
-                    {t('modal.title')}
+                    {t(MODAL_TITLE)}
                 </ModalHeader>
                 <ModalBody>
-                    {content ? <Markdown content={content} /> : null}
+                    <Suspense>
+                        <PolicyContent />
+                    </Suspense>
                 </ModalBody>
             </ModalContent>
         </Modal>
