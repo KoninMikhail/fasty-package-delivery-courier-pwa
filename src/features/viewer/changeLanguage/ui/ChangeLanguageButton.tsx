@@ -8,17 +8,10 @@ import {
 import { useTranslation } from 'react-i18next';
 import { RiArrowDownSFill } from 'react-icons/ri';
 import { sharedUiIcons } from '@/shared/ui';
-import { PropsWithChildren, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { translationNS } from '../config';
 
 const { UsFlagIcon, RuFlagIcon } = sharedUiIcons;
-
-/**
- * Components
- */
-const LanguageLabel: FunctionComponent<PropsWithChildren> = ({ children }) => (
-    <span>{children}</span>
-);
 
 /**
  * @name ChangeLanguageButton
@@ -42,9 +35,12 @@ export const ChangeLanguageButton = (): JSX.Element => {
     return (
         <Dropdown>
             <DropdownTrigger>
-                <Button variant="light" size="md">
+                <Button
+                    variant="light"
+                    size="md"
+                    endContent={<RiArrowDownSFill />}
+                >
                     {t('language_name')}
-                    <RiArrowDownSFill />
                 </Button>
             </DropdownTrigger>
             <DropdownMenu
@@ -59,14 +55,14 @@ export const ChangeLanguageButton = (): JSX.Element => {
                     startContent={<UsFlagIcon />}
                     onPress={() => onChangeLanguage('en')}
                 >
-                    <LanguageLabel>English</LanguageLabel>
+                    English
                 </DropdownItem>
                 <DropdownItem
                     key="ru"
                     startContent={<RuFlagIcon />}
                     onPress={() => onChangeLanguage('ru')}
                 >
-                    <LanguageLabel>Русский</LanguageLabel>
+                    Русский
                 </DropdownItem>
             </DropdownMenu>
         </Dropdown>
