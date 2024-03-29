@@ -9,6 +9,13 @@ import {
 } from 'effector';
 import { modelFactory } from 'effector-factorio';
 import { ChangePasswordFxParameters } from '@/entities/viewer';
+import { pending } from 'patronum';
+import {
+    validatePasswordHasNumbers,
+    validatePasswordHasSpecialChars,
+    validatePasswordHasUpperCaseAndLowerCase,
+    validatePasswordLenght,
+} from '@/features/viewer/changePassword/model/effects';
 import { MIN_PASSWORD_LENGTH } from '../config';
 
 /* eslint-disable no-useless-escape */
@@ -34,6 +41,14 @@ export const factory = modelFactory((options: FactoryOptions) => {
 
     $password.on(passwordChanged, (_, password) => password);
     $passwordRepeat.on(passwordRepeatChanged, (_, password) => password);
+
+    const $errors =
+    const $inProcess = pending([
+        validatePasswordLenght,
+        validatePasswordHasNumbers,
+        validatePasswordHasUpperCaseAndLowerCase,
+        validatePasswordHasSpecialChars,
+    ]);
 
     /**
      * Validations
