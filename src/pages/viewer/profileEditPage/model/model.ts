@@ -9,6 +9,9 @@ export const changePasswordModel = ChangePassword.factory.createModel({
 });
 
 export const changeAvatarModel = ChangeAvatar.factory.createModel({
-    user: sessionModel.$sessionStore,
+    minWidth: 150,
+    minHeight: 150,
+    resizeToMaxWidth: 600,
+    resizeToMaxHeight: 600,
     changeAvatarFx: changeViewerAvatarFx,
 });
