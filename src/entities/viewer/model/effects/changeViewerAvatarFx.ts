@@ -8,7 +8,6 @@ export const changeViewerAvatarFx = createEffect<string, User, Error>(
                 upload,
             });
         } catch (error: unknown) {
-            console.log('error', error);
             throw error;
         }
     },
