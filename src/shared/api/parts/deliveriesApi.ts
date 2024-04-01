@@ -131,7 +131,7 @@ export const deliveriesApi = makeApi([
                     (delivery) => delivery.address.delivery_type === 'courier',
                 ),
             )
-            .transform((deliveries) => {
+            .transform((deliveries) =>
                 deliveries.map((item) => ({
                     ...item,
                     manager: item.manager
@@ -150,8 +150,8 @@ export const deliveriesApi = makeApi([
                                   : null,
                           }
                         : null,
-                }));
-            }),
+                })),
+            ),
     },
     {
         method: 'get',
