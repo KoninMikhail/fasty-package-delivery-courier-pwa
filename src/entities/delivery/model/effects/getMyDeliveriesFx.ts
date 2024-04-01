@@ -1,10 +1,17 @@
 import { createEffect } from 'effector';
 import { apiClient } from '@/shared/api';
-import { debug } from 'patronum';
+import { ZodError } from 'zod';
 
 export const getMyDeliveriesFx = createEffect(async () => {
-    return apiClient.getMyDeliveries();
+    try {
+        return await apiClient.getMyDeliveries();
+    } catch (error: unknown) {
+        if (error instanceof ZodError) {
+            error.issues.map((issue) => console.error(issue));
+            throw new TypeError(`Failed to fetch deliveries: ${error.message}`);
+        }
+        if (error instanceof Error) {
+            throw new TypeError(`Failed to fetch deliveries: ${error.message}`);
+        }
+    }
 });
-
-debug(getMyDeliveriesFx.done);
-debug(getMyDeliveriesFx.fail);
