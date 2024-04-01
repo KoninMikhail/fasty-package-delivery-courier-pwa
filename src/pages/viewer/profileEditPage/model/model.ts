@@ -4,7 +4,7 @@ import { ChangeAvatar } from '@/features/viewer/changeAvatar';
 import { changeViewerAvatarFx } from '@/entities/viewer/model/effects/changeViewerAvatarFx';
 
 export const changePasswordModel = ChangePassword.factory.createModel({
-    targetUser: sessionModel.$sessionStore,
+    targetUser: sessionModel.$viewerProfileData,
     updateUserFx: setViewerAccountPasswordFx,
 });
 

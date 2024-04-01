@@ -120,7 +120,7 @@ const Empty: FunctionComponent = () => {
  */
 export const MarketContent: FunctionComponent = () => {
     const { online } = useNetworkInfo();
-    const viewer = useUnit(sessionModel.$sessionStore);
+    const viewer = useUnit(sessionModel.$viewerProfileData);
 
     const [isPending, hasError, isEmpty] = useUnit([
         $isDeliveriesLoading,

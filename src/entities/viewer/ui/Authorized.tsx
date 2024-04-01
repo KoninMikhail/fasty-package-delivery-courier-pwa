@@ -1,21 +1,15 @@
-import { PropsWithChildren, ReactNode } from 'react';
+import { PropsWithChildren } from 'react';
 import { Navigate } from 'react-router-dom';
 import { sharedConfigRoutes } from '@/shared/config';
-import { useGate, useUnit } from 'effector-react';
-import { sharedLibInit } from '@/shared/lib';
-import {
-    $isSessionAuthorized,
-    $isSessionPending,
-    SessionInitGate,
-} from '../model/sessionModel';
+import { useUnit } from 'effector-react';
+import { Spinner } from '@nextui-org/react';
+import { $isAuthorized, $initSessionComplete } from '../model/session';
 
 const { RouteName } = sharedConfigRoutes;
 const { AUTH_PAGE } = RouteName;
-const { $isAppStarted } = sharedLibInit;
 
 interface IAuthorizedProperties extends PropsWithChildren {
     awaitSessionTimeout?: number;
-    fallback?: Nullable<ReactNode>;
 }
 
 /**
@@ -25,19 +19,19 @@ interface IAuthorizedProperties extends PropsWithChildren {
  */
 export const Authorized: FunctionComponent<IAuthorizedProperties> = ({
     children,
-    fallback = null,
 }) => {
-    const isStarted = useUnit($isAppStarted);
-    const isPending = useUnit($isSessionPending);
-    const isAuthorized = useUnit($isSessionAuthorized);
+    const isSessionReady = useUnit($initSessionComplete);
+    const isAuthorized = useUnit($isAuthorized);
 
-    useGate(SessionInitGate);
-
-    if (!isStarted || isPending) {
-        return fallback;
+    if (!isSessionReady) {
+        return (
+            <div className="flex h-dvh w-full flex-col items-center justify-center bg-background">
+                <Spinner />
+            </div>
+        );
     }
 
-    if (!isAuthorized && isStarted) {
+    if (!isAuthorized) {
         return <Navigate to={AUTH_PAGE} />;
     }
 

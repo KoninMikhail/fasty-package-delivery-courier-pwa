@@ -1,6 +1,6 @@
 import { PropsWithChildren, ReactNode } from 'react';
 import { useUnit } from 'effector-react';
-import { $isSessionAuthorized } from '../model/sessionModel';
+import { $initSessionComplete, $isAuthorized } from '../model/session';
 
 interface IAuthorizedProperties extends PropsWithChildren {
     fallback?: Nullable<ReactNode>;
@@ -15,7 +15,8 @@ export const Guest: FunctionComponent<IAuthorizedProperties> = ({
     fallback = null,
     children,
 }) => {
-    const isAuthorized = useUnit($isSessionAuthorized);
-    console.log('isAuthorized', isAuthorized);
-    return isAuthorized ? fallback : children;
+    const isSessionReady = useUnit($initSessionComplete);
+    const isAuthorized = useUnit($isAuthorized);
+    if (isSessionReady && isAuthorized) return fallback;
+    return children;
 };

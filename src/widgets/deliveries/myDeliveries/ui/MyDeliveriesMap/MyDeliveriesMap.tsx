@@ -11,6 +11,7 @@ import {
 } from 'react-leaflet';
 import { HorizontalScroll } from '@/shared/ui/layouts';
 import { DeliveryMapCard, myDeliveriesModel } from '@/entities/delivery';
+import { sharedConfigNetwork } from '@/shared/config';
 import {
     DEFAULT_MAP_CENTER,
     DEFAULT_MAP_ZOOM,
@@ -18,7 +19,9 @@ import {
     translationNS,
     WIDGET_MAP_TITLE_KEY,
 } from '../../config';
-import { $$deliveriesMarkers, $isOnline } from '../../model';
+import { $$deliveriesMarkers } from '../../model/mapMarkers';
+
+const { $isOnline } = sharedConfigNetwork;
 
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */

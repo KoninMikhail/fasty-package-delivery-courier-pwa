@@ -2,12 +2,12 @@ import type { PropsWithChildren } from 'react';
 import { Heading } from '@/shared/ui/components';
 import { widgetMarketUi } from '@/widgets/deliveries/market';
 import { Spacer, Input } from '@nextui-org/react';
-import { sessionModel } from '@/entities/viewer';
 
 import { FiSearch } from 'react-icons/fi';
 import { UserCardRow } from '@/entities/user';
 import { useUnit } from 'effector-react';
 import { widgetNavbarUi } from '@/widgets/layout/navbar-desktop';
+import { sessionModel } from '@/entities/viewer';
 
 const { Navbar } = widgetNavbarUi;
 const { MarketContent, MarketDateSelector, MarketFilterScrollable } =
@@ -24,7 +24,7 @@ const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
 );
 
 const Toolbar: FunctionComponent = () => {
-    const user = useUnit(sessionModel.$sessionStore);
+    const user = useUnit(sessionModel.$viewerProfileData);
     return (
         <div className="flex w-full items-center justify-between py-6 pr-4">
             <div className="w-1/2">

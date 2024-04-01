@@ -19,5 +19,10 @@ import { apiClient, User } from '@/shared/api';
  * application.
  */
 export const getViewerProfileFx = createEffect<void, User>(async () => {
-    return apiClient.getMe();
+    try {
+        return await apiClient.getMe();
+    } catch (error: unknown) {
+        if (error instanceof Error) throw new Error(error.message);
+        throw error;
+    }
 });

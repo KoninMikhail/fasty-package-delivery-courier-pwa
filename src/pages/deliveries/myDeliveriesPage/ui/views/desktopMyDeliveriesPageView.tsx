@@ -3,9 +3,9 @@ import { widgetFooterUi } from '@/widgets/layout/footer';
 import { widgetNavbarUi } from '@/widgets/layout/navbar-desktop';
 import { useUnit } from 'effector-react';
 import { UserCardRow } from '@/entities/user';
-import { sessionModel } from '@/entities/viewer';
 import { useTranslation } from 'react-i18next';
 import { Spacer, Tab, Tabs } from '@nextui-org/react';
+import { sessionModel } from '@/entities/viewer';
 import { translationNS } from '../../config';
 
 const { Footer } = widgetFooterUi;
@@ -23,7 +23,7 @@ const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
 
 const Toolbar: FunctionComponent<{ heading: string }> = ({ heading }) => {
     const { t } = useTranslation(translationNS);
-    const user = useUnit(sessionModel.$sessionStore);
+    const user = useUnit(sessionModel.$viewerProfileData);
     return (
         <div className="flex w-full items-center justify-between px-6 pr-4">
             <div className="w-1/2">

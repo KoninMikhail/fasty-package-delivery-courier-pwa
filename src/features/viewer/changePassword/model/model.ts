@@ -42,7 +42,6 @@ export const factory = modelFactory((options: FactoryOptions) => {
     $password.on(passwordChanged, (_, password) => password);
     $passwordRepeat.on(passwordRepeatChanged, (_, password) => password);
 
-    const $errors =
     const $inProcess = pending([
         validatePasswordLenght,
         validatePasswordHasNumbers,

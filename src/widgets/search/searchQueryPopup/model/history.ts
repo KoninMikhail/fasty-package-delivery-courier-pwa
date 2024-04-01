@@ -20,7 +20,7 @@ export const removeQueryFromHistory = createEvent<string>();
 export const $queryHistory = createStore<SearchQueryHistoryItem[]>([]);
 export const $$currentUserQueryHistory = combine(
     $queryHistory,
-    sessionModel.$sessionStore,
+    sessionModel.$viewerProfileData,
     (history, user) => {
         if (!user) return [];
         return history.filter((item) => item.id === user.id);
@@ -34,7 +34,7 @@ persist({ store: $queryHistory, key: 'queryHistory' });
 sample({
     clock: addQueryToHistory,
     source: {
-        user: sessionModel.$sessionStore,
+        user: sessionModel.$viewerProfileData,
         history: $queryHistory,
     },
     filter: (_, query) => query.trim().length > 0,

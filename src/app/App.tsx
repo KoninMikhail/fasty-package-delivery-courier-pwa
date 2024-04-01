@@ -7,6 +7,8 @@ import './app.css';
  * @name App
  * @constructor
  */
-const App = (): React.ReactNode => <AppRouter />;
+const App = (): React.ReactNode => {
+    return <AppRouter />;
+};
 
 export default withProviders(App);

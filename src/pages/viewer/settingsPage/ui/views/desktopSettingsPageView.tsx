@@ -40,7 +40,7 @@ const Toolbar: FunctionComponent<{ header: string; user: User }> = ({
 export const DesktopSettingsPageView: FunctionComponent<{ header: string }> = ({
     header,
 }) => {
-    const user = useUnit(sessionModel.$sessionStore);
+    const user = useUnit(sessionModel.$viewerProfileData);
     return (
         <Layout>
             <Navbar />

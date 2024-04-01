@@ -1,8 +1,11 @@
 import { onRequestFail } from '@/shared/api/middleware';
-import { failAuthOnApiRequest } from '../model/sessionModel';
+import { sharedLibErrors } from '@/shared/lib';
+import { requestViewerLogout } from '@/entities/viewer/model/session';
+
+const { ErrorCodes } = sharedLibErrors;
 
 onRequestFail.watch((event) => {
-    if (event.response?.status === 401) {
-        failAuthOnApiRequest();
+    if (event.response?.status === ErrorCodes.UNAUTHORIZED) {
+        requestViewerLogout();
     }
 });

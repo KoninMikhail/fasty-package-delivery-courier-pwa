@@ -54,7 +54,7 @@ const Header: FunctionComponent = () => (
 
 const AvatarTool: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
-    const user = useUnit(sessionModel.$sessionStore);
+    const user = useUnit(sessionModel.$viewerProfileData);
     const errors = useUnit(changeAvatarModel.$error);
     const hasErrors = errors.length > 0;
     return (
@@ -153,7 +153,7 @@ const PasswordTool: FunctionComponent = () => {
  * @constructor
  */
 export const MobileProfileEditPageView: FunctionComponent = () => {
-    const user = useUnit(sessionModel.$sessionStore);
+    const user = useUnit(sessionModel.$viewerProfileData);
     return (
         <>
             <Header />

@@ -24,7 +24,7 @@ import { sharedUiBranding } from '@/shared/ui/';
 import { Navigate } from 'react-router-dom';
 import { Guest } from '@/entities/viewer/ui/Guest';
 import { requestAuthModel, requestRecoveryModel } from '../model';
-import { translationNS } from '../config';
+import { PAGE_TITLE, translationNS } from '../config';
 
 const { Logo } = sharedUiBranding;
 
@@ -37,10 +37,6 @@ const { ResetPasswordModal } = widgetResetPasswordModalUi;
 const { CookiePolicyModal } = widgetCookiePolicyModalUi;
 const { PrivacyPolicyModal } = widgetPrivacyPolicyModalUi;
 const { TermsOfUseModal } = widgetTermsOfUseModalUi;
-
-const TRANSLATION = {
-    PAGE_TITLE: 'page.title',
-};
 
 /**
  * Layout
@@ -138,25 +134,16 @@ const AppVersion: FunctionComponent = () => (
  * @constructor
  */
 export const AuthPage: FunctionComponent = () => {
-    /**
-     * Translation
-     */
     const { t, i18n } = useTranslation(translationNS);
     const currentLanguage = i18n.language as keyof typeof APP_DESCRIPTION;
 
-    /**
-     * Page
-     */
     useDocumentTitle(
-        t(TRANSLATION.PAGE_TITLE, {
+        t(PAGE_TITLE, {
             appName: APP_NAME,
             appDescription: APP_DESCRIPTION[currentLanguage],
         }),
     );
 
-    /**
-     * Handlers
-     */
     const onPressSignIn = useUnit(requestAuthModel.pressSignInButton);
     const onPressCookiePolicy = useUnit(
         requestAuthModel.pressOpenCookiePolicyLink,

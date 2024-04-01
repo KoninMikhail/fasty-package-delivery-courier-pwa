@@ -23,7 +23,7 @@ const HistoryLayout: FunctionComponent<PropsWithChildren> = ({ children }) => (
 );
 
 const Toolbar: FunctionComponent<{ header: string }> = ({ header }) => {
-    const user = useUnit(sessionModel.$sessionStore);
+    const user = useUnit(sessionModel.$viewerProfileData);
     return (
         <div className="flex w-full items-center justify-between py-6 pr-4">
             <div className="w-1/2">

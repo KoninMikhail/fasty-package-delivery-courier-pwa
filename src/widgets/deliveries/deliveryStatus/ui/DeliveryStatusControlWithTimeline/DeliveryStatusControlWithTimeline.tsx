@@ -135,7 +135,7 @@ export const DeliveryStatusControlWithTimeline: FunctionComponent = () => {
     const createDate = useUnit($$deliveryCreateDate);
     const updateDate = useUnit($$deliveryUpdateDate);
     const comment = useUnit($$deliveryComment);
-    const user = useUnit(sessionModel.$sessionStore);
+    const user = useUnit(sessionModel.$viewerProfileData);
 
     if (status === 'created') {
         return (

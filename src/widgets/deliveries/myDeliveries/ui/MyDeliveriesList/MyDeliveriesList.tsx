@@ -8,15 +8,14 @@ import { BsBoxSeam } from 'react-icons/bs';
 import { RiWifiOffLine } from 'react-icons/ri';
 import React, { ReactElement, useMemo } from 'react';
 import clsx from 'clsx';
+import { sharedConfigNetwork } from '@/shared/config';
 import { translationNS } from '../../config';
-import {
-    $$empty,
-    $$hasError,
-    $$loading,
-    $deliveriesList,
-    $isOnline,
-    initWidgetMyDeliveries,
-} from '../../model';
+import { $$empty, $deliveriesList, initWidgetMyDeliveries } from '../../model';
+
+import { $$hasError } from '../../model/errorsHandle';
+import { $inPending } from '../../model/dataPoling';
+
+const { $networkInfo, $isOnline } = sharedConfigNetwork;
 
 const TRANSLATIONS = {
     PENDING_KEY: 'widget.pending',
@@ -85,7 +84,7 @@ const RestartButton: FunctionComponent<RestartButtonProperties> = ({
 
 export const MyDeliveriesList: FunctionComponent = () => {
     const [isLoading, hasError, isEmpty, isOnline] = useUnit([
-        $$loading,
+        $inPending,
         $$hasError,
         $$empty,
         $isOnline,

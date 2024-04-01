@@ -163,7 +163,7 @@ export const $$deliveryCourier = $delivery.map((delivery) =>
 
 export const $$isViewerDelivery = combine(
     $delivery,
-    sessionModel.$sessionStore,
+    sessionModel.$viewerProfileData,
     (delivery, viewer) => {
         return (
             delivery && viewer && isDeliveryAssignedToCourier(delivery, viewer)

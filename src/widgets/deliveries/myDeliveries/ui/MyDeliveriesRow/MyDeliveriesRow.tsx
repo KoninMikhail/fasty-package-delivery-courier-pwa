@@ -13,7 +13,9 @@ import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
 import { PropsWithChildren } from 'react';
 import { settingsModel } from '@/entities/viewer';
-import { $$empty, $$hasError, $$loading } from '../../model';
+import { $$empty } from '../../model';
+import { $inPending } from '../../model/dataPoling';
+import { $$hasError } from '../../model/errorsHandle';
 
 import {
     BUTTON_RETRY_TEXT_KEY,
@@ -62,13 +64,13 @@ const LoadPlaceholder: FunctionComponent = () => (
         <HorizontalScroll>
             <div className="flex flex-nowrap justify-start gap-4 px-4">
                 <Skeleton className="rounded-lg">
-                    <div className="h-[198px] w-[300px]" />
+                    <div className="h-[175px] w-[300px]" />
                 </Skeleton>
                 <Skeleton className="rounded-lg">
-                    <div className="h-[198px] w-[300px]" />
+                    <div className="h-[175px] w-[300px]" />
                 </Skeleton>
                 <Skeleton className="rounded-lg">
-                    <div className="h-[198px] w-[300px]" />
+                    <div className="h-[175px] w-[300px]" />
                 </Skeleton>
             </div>
         </HorizontalScroll>
@@ -122,7 +124,7 @@ export const MyDeliveriesRow: FunctionComponent = () => {
     // Simulated states (example purposes)
     const [isEmpty, isUpdating, hasError] = useUnit([
         $$empty,
-        $$loading,
+        $inPending,
         $$hasError,
     ]);
 

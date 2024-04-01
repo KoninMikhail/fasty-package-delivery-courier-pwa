@@ -4,14 +4,13 @@ import {
     DropdownMenu,
     DropdownTrigger,
 } from '@nextui-org/react';
-import { PropsWithChildren } from 'react';
+import { memo, PropsWithChildren } from 'react';
 import { useUnit } from 'effector-react';
 import { sessionModel } from '@/entities/viewer';
 import { UserAvatar } from '@/entities/user';
 import { sharedConfigRoutes } from '@/shared/config';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { User } from '@/shared/api';
 import { Logout } from '@/features/auth/logout';
 import {
     HELLO_TEXT,
@@ -38,10 +37,9 @@ const Root: FunctionComponent<PropsWithChildren> = ({ children }) => {
  * Components
  */
 
-const Greetings: FunctionComponent<{
-    profile: Nullable<User>;
-}> = ({ profile }) => {
+const Greetings: FunctionComponent = memo(() => {
     const { t } = useTranslation(translationNS);
+    const profile = useUnit(sessionModel.$viewerProfileData);
     const name = profile?.first_name;
     const helloText = name
         ? t(HELLO_TEXT, { name })
@@ -58,17 +56,19 @@ const Greetings: FunctionComponent<{
             </div>
         </div>
     );
-};
+});
 
-const UserTool: FunctionComponent<{
-    profile: Nullable<User>;
-    onPressProfile: () => void;
-    onPressSettings: () => void;
-    onPressLogout: () => void;
-}> = ({ profile, onPressProfile, onPressLogout, onPressSettings }) => {
+const UserTool: FunctionComponent = () => {
+    const logout = useUnit(Logout.model.logout);
+    const navigate = useNavigate();
+    const profile = useUnit(sessionModel.$viewerProfileData);
     const { t } = useTranslation(translationNS);
 
     const profileEmail = profile?.email;
+
+    const onPressProfile = (): void => navigate(PROFILE_EDIT_PAGE);
+    const onPressSettings = (): void => navigate(SETTINGS_PAGE);
+    const onPressLogout = (): void => logout();
 
     return (
         <Dropdown placement="bottom-end">
@@ -98,30 +98,12 @@ const UserTool: FunctionComponent<{
     );
 };
 
-/**
- * View
- * @constructor
- */
-
 export const WelcomeTopbar: FunctionComponent = () => {
-    const navigate = useNavigate();
-    const profile = useUnit(sessionModel.$sessionStore);
-    const logout = useUnit(Logout.model);
-
-    const onPressProfile = (): void => navigate(PROFILE_EDIT_PAGE);
-    const onPressSettings = (): void => navigate(SETTINGS_PAGE);
-    const onPressLogout = (): void => logout();
-
     return (
         <Root>
             <div className="mx-auto grid w-full grid-cols-[auto_max-content] items-center gap-2 text-white lg:w-[750px]">
-                <Greetings profile={profile} />
-                <UserTool
-                    profile={profile}
-                    onPressProfile={onPressProfile}
-                    onPressSettings={onPressSettings}
-                    onPressLogout={onPressLogout}
-                />
+                <Greetings />
+                <UserTool />
             </div>
         </Root>
     );
