@@ -5,37 +5,42 @@ import {
     Modal,
     ModalBody,
     ModalContent,
-    ModalHeader,
+    ModalHeader as NextUiModalHeader,
     ModalProps,
 } from '@nextui-org/react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useList, useUnit } from 'effector-react';
 import { sharedConfigRoutes } from '@/shared/config';
-import {
-    forwardRef,
-    PropsWithChildren,
-    useEffect,
-    useRef,
-    useState,
-} from 'react';
+import { PropsWithChildren, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { translationNS } from '@/widgets/search/searchQueryPopup/config';
 
 import { FaArrowLeft, FaClockRotateLeft } from 'react-icons/fa6';
 import { IoClose } from 'react-icons/io5';
 import { useKeyPress } from '@/shared/lib/browser';
 import { useUnmount } from 'usehooks-ts';
-import { modal as modalModel, history as searchHistoryModel } from '../model';
+import { ACTION_SEARCH, RELATED_QUERIES, translationNS } from '../config';
+import {
+    modal as modalModel,
+    history as searchHistoryModel,
+    base as baseModel,
+} from '../model';
 
 const { RouteName } = sharedConfigRoutes;
 const { SEARCH_PAGE } = RouteName;
 
-/**
- * Layout
- */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 
-const Head: FunctionComponent<PropsWithChildren> = ({ children }) => {
-    return <div className="flex items-center">{children}</div>;
+const ModalHeader: FunctionComponent<PropsWithChildren> = ({ children }) => {
+    return (
+        <NextUiModalHeader
+            className={
+                'pt-4" grid grid-cols-[max-content_auto_max-content] gap-2 p-2'
+            }
+        >
+            {children}
+        </NextUiModalHeader>
+    );
 };
 
 /**
@@ -44,31 +49,44 @@ const Head: FunctionComponent<PropsWithChildren> = ({ children }) => {
 
 const DEFAULT_ITEMS_LIMIT = 6;
 
-interface RelatedQueriesProperties {
+export const RelatedQueries: FunctionComponent<{
     limit?: number;
-    onPressItem?: (query: string) => void;
-    onPressDeleteItem?: (query: string) => void;
-}
+}> = ({ limit = DEFAULT_ITEMS_LIMIT }) => {
+    const { t } = useTranslation(translationNS);
+    const navigate = useNavigate();
+    const addToHistory = useUnit(searchHistoryModel.addQueryToHistory);
+    const onStartSearchCloseModal = useUnit(modalModel.startSearch);
 
-export const RelatedQueries: FunctionComponent<RelatedQueriesProperties> = ({
-    limit = DEFAULT_ITEMS_LIMIT,
-    onPressItem,
-    onPressDeleteItem,
-}) => {
+    const onDeleteRelatedQuery = useUnit(
+        searchHistoryModel.removeQueryFromHistory,
+    );
+
+    const onPressRelatedQuery = (query: string): void => {
+        const queryParameters = new URLSearchParams({
+            q: query,
+        }).toString();
+
+        if (query) {
+            addToHistory(query);
+            navigate(`${SEARCH_PAGE}?${queryParameters}`);
+            onStartSearchCloseModal();
+        } else {
+            navigate(`${SEARCH_PAGE}`);
+            onStartSearchCloseModal();
+        }
+    };
     const items = useList(
         searchHistoryModel.$$currentUserQueryHistory,
         (item, index) => {
             if (index >= limit) return null;
 
             const onPressItemElement = (): void => {
-                if (onPressItem) {
-                    onPressItem(item.query);
-                }
+                onPressRelatedQuery(item.query);
             };
 
             const onPressDeleteItemButton = (): void => {
-                if (onPressDeleteItem) {
-                    onPressDeleteItem(item.query);
+                if (onDeleteRelatedQuery) {
+                    onDeleteRelatedQuery(item.query);
                 }
             };
 
@@ -98,93 +116,38 @@ export const RelatedQueries: FunctionComponent<RelatedQueriesProperties> = ({
             );
         },
     );
-    return <div className="flex flex-col items-center gap-2">{items}</div>;
+    return (
+        <>
+            <h2 className="py-2">{t(RELATED_QUERIES)}</h2>
+            <div className="flex flex-col items-center gap-2">{items}</div>
+        </>
+    );
 };
 
-interface SetQueryFieldProperties {
-    onPressSearch: (query: string) => void;
-    onPressClose?: () => void;
-}
+const CloseButton: FunctionComponent = () => {
+    const onClickCloseButton = useUnit(modalModel.clickCloseArrow);
 
-export const SetQueryField = forwardRef<
-    HTMLInputElement,
-    SetQueryFieldProperties
->(({ onPressSearch, onPressClose }, reference) => {
-    const { t } = useTranslation(translationNS);
-    const [value, setValue] = useState<string>();
-    const [searchParameters] = useSearchParams();
-
-    const onChangeValue = (query: string): void => {
-        setValue(query);
-    };
-
-    const onPressSearchButton = (): void => {
-        if (value) {
-            onPressSearch(value);
-        }
-    };
-
-    useKeyPress(['Enter'], onPressSearchButton);
-    useEffect(() => {
-        const query = searchParameters.get('q') || '';
-        setValue(query);
-    }, [searchParameters]);
+    useKeyPress(['Escape'], onClickCloseButton);
 
     return (
-        <div className="flex flex-grow items-center gap-2">
-            <Button
-                isIconOnly
-                className="text-xl"
-                variant="flat"
-                onPress={onPressClose}
-            >
-                <FaArrowLeft />
-            </Button>
-            <Input
-                ref={reference}
-                type="search"
-                autoFocus
-                value={value}
-                className="pr-0"
-                classNames={{
-                    inputWrapper: 'after:hidden border-none pb-0',
-                    innerWrapper: 'pb-0',
-                    clearButton: 'text-xl',
-                }}
-                onValueChange={onChangeValue}
-                labelPlacement="outside"
-                fullWidth
-            />
-            <Button color="primary" onPress={onPressSearchButton}>
-                Поиск
-            </Button>
-        </div>
+        <Button
+            isIconOnly
+            className="text-xl"
+            variant="flat"
+            onPress={onClickCloseButton}
+        >
+            <FaArrowLeft />
+        </Button>
     );
-});
-
-/**
- * View
- */
-interface SearchQueryInputModalProperties
-    extends Pick<ModalProps, 'size' | 'placement'> {}
-
-export const SearchQueryInputModal: FunctionComponent<
-    SearchQueryInputModalProperties
-> = ({ size = 'lg', placement = 'top' }) => {
-    const reference = useRef<HTMLInputElement>(null);
+};
+const PerformSearchButton: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
     const navigate = useNavigate();
+    const [query] = useUnit([baseModel.$query]);
+    const addToHistory = useUnit(searchHistoryModel.addQueryToHistory);
+    const onStartSearchCloseModal = useUnit(modalModel.startSearch);
 
-    const [isOpen, onClickCloseButton, onStartSearchCloseModal] = useUnit([
-        modalModel.$isOpened,
-        modalModel.clickCloseArrow,
-        modalModel.startSearch,
-    ]);
-    const [addToHistory, removeFromHistory] = useUnit([
-        searchHistoryModel.addQueryToHistory,
-        searchHistoryModel.removeQueryFromHistory,
-    ]);
-
-    const onSearch = (query: string): void => {
+    const onPressSearchButton = (): void => {
         const queryParameters = new URLSearchParams({
             q: query,
         }).toString();
@@ -199,12 +162,61 @@ export const SearchQueryInputModal: FunctionComponent<
         }
     };
 
-    const onPressDeleteHistoryItem = (query: string): void => {
-        removeFromHistory(query);
-    };
+    useKeyPress(['Enter'], onPressSearchButton);
+
+    return (
+        <Button color="primary" onPress={onPressSearchButton}>
+            {t(ACTION_SEARCH)}
+        </Button>
+    );
+};
+
+export const SetQueryField: FunctionComponent = () => {
+    const [value, onChangeQuery] = useUnit([
+        baseModel.$query,
+        baseModel.setQuery,
+    ]);
+    const [searchParameters] = useSearchParams();
+
+    useEffect(() => {
+        const urlQuery = searchParameters.get('q') || '';
+        onChangeQuery(urlQuery);
+    }, [onChangeQuery, searchParameters]);
+
+    return (
+        <Input
+            type="search"
+            autoFocus
+            value={value}
+            className="pr-0"
+            classNames={{
+                inputWrapper: 'after:hidden border-none pb-0',
+                innerWrapper: 'pb-0',
+                clearButton: 'text-xl',
+            }}
+            onValueChange={onChangeQuery}
+            labelPlacement="outside"
+            fullWidth
+        />
+    );
+};
+
+/**
+ * View
+ */
+interface SearchQueryInputModalProperties
+    extends Pick<ModalProps, 'size' | 'placement'> {}
+
+export const SearchQueryInputModal: FunctionComponent<
+    SearchQueryInputModalProperties
+> = ({ size = 'lg', placement = 'top' }) => {
+    const [isOpen, onClose] = useUnit([
+        modalModel.$isOpened,
+        modalModel.closePopup,
+    ]);
 
     useUnmount(() => {
-        onStartSearchCloseModal();
+        onClose();
     });
 
     return (
@@ -213,29 +225,21 @@ export const SearchQueryInputModal: FunctionComponent<
             placement={placement}
             isOpen={isOpen}
             hideCloseButton
-            onClose={onClickCloseButton}
+            onClose={onClose}
             classNames={{
                 backdrop:
                     'bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20',
             }}
         >
             <ModalContent>
-                <ModalHeader className="flex flex-col gap-1 p-2 pt-4">
-                    <Head>
-                        <SetQueryField
-                            ref={reference}
-                            onPressSearch={onSearch}
-                            onPressClose={onClickCloseButton}
-                        />
-                    </Head>
+                <ModalHeader>
+                    <CloseButton />
+                    <SetQueryField />
+                    <PerformSearchButton />
                 </ModalHeader>
                 <ModalBody className="!px-2">
                     <Divider />
-                    <h2 className="py-2">История запросов</h2>
-                    <RelatedQueries
-                        onPressItem={onSearch}
-                        onPressDeleteItem={onPressDeleteHistoryItem}
-                    />
+                    <RelatedQueries />
                 </ModalBody>
             </ModalContent>
         </Modal>

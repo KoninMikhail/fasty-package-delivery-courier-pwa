@@ -1,4 +1,4 @@
-import { PropsWithChildren, useRef } from 'react';
+import { memo, PropsWithChildren, useRef } from 'react';
 
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { widgetMarketUi } from '@/widgets/deliveries/market';
@@ -6,14 +6,19 @@ import { sharedConfigRoutes } from '@/shared/config';
 import { Button, Input, Spacer } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { widgetTopbarUi } from '@/widgets/viewer/welcome-topbar';
-import { Link } from 'react-router-dom';
 import { useUnit } from 'effector-react';
 import {
     widgetSearchQueryPopupUi,
     widgetSearchQueryPopupModel,
 } from '@/widgets/search/searchQueryPopup';
 import { widgetMyDeliveriesUi } from '@/widgets/deliveries/myDeliveries';
-import { translationNS } from '../../config';
+import { useNavigate } from 'react-router-dom';
+import {
+    UPCOMING_DELIVERIES_LABEL,
+    translationNS,
+    GOTO_MY_DELIVERIES_LINK_LABEL,
+    MARKET_LABEL,
+} from '../../config';
 
 const {
     RouteName: { DELIVERIES },
@@ -28,10 +33,6 @@ const { MyDeliveriesRow } = widgetMyDeliveriesUi;
 /**
  * Constants
  */
-
-const UPCOMING_DELIVERIES_LABEL = 'section.label.upcoming';
-const GOTO_MY_DELIVERIES_LINK_LABEL = 'section.link.myDeliveries';
-const MARKET_LABEL = 'section.label.market';
 
 /**
  * Layout
@@ -91,26 +92,34 @@ const Header: FunctionComponent = () => {
     );
 };
 
-const UpcomingDeliveriesSection: FunctionComponent<PropsWithChildren> = ({
-    children,
-}) => {
-    const { t } = useTranslation(translationNS);
-    return (
-        <Section>
-            <SectionHead>
-                <Heading>{t(UPCOMING_DELIVERIES_LABEL)}</Heading>
-                <Button as={Link} to={DELIVERIES} size="sm" radius="full">
-                    {t(GOTO_MY_DELIVERIES_LINK_LABEL)}
-                </Button>
-            </SectionHead>
-            {children}
-        </Section>
-    );
-};
+const UpcomingDeliveriesSection: FunctionComponent<PropsWithChildren> = memo(
+    ({ children }) => {
+        const navigate = useNavigate();
+        const { t } = useTranslation(translationNS);
 
-const MarketDeliveriesSection: FunctionComponent<PropsWithChildren> = ({
-    children,
-}) => {
+        const onPressAllDeliveries = (): void => {
+            navigate(DELIVERIES);
+        };
+
+        return (
+            <Section>
+                <SectionHead>
+                    <Heading>{t(UPCOMING_DELIVERIES_LABEL)}</Heading>
+                    <Button
+                        size="sm"
+                        radius="full"
+                        onPress={onPressAllDeliveries}
+                    >
+                        {t(GOTO_MY_DELIVERIES_LINK_LABEL)}
+                    </Button>
+                </SectionHead>
+                {children}
+            </Section>
+        );
+    },
+);
+
+const MarketDeliveriesSection: FunctionComponent<PropsWithChildren> = () => {
     const { t } = useTranslation(translationNS);
     return (
         <Section>

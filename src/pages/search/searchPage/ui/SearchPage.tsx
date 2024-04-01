@@ -18,6 +18,7 @@ import {
     queryChanged,
     $searchResults,
     $finalSearchState,
+    searchPageEventLoad,
 } from '../model';
 
 const { useDeviceScreen } = sharedConfigDetectDevice;

@@ -1,13 +1,14 @@
 import { sharedConfigLocale } from '@/shared/config';
 import { sample } from 'effector';
 import { once } from 'patronum';
-import { AppInitGate } from '@/shared/lib/init';
 import { initSession } from '@/entities/viewer/model/session';
+import { sharedLibApp } from '@/shared/lib';
 import locale_ru from './locales/ru.locale.json';
 import locale_en from './locales/en.locale.json';
 import { translationNS } from './config';
 
 const { locale } = sharedConfigLocale;
+const { AppGate } = sharedLibApp;
 
 /**
  * locale
@@ -20,6 +21,6 @@ locale.addResourceBundle('ru', translationNS, locale_ru);
  */
 
 sample({
-    clock: once(AppInitGate.open),
+    clock: once(AppGate.open),
     target: initSession,
 });

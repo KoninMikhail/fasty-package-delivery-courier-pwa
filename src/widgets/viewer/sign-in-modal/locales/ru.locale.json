@@ -1,6 +1,6 @@
 {
   "modal.title": "Войти в аккаунт",
-  "modal.acceptance": "Продолжая авторизацию вы принимаете",
+  "modal.acceptance": "Продолжая авторизацию вы принимаете : ",
   "modal.acceptance.terms": "Условия использования",
   "modal.acceptance.privacy": "Политику конфиденциальности",
   "modal.acceptance.cookies": "Политику использования файлов cookie"

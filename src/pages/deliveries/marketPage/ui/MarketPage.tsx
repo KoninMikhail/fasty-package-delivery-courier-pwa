@@ -23,6 +23,7 @@ export const MarketPage: FunctionComponent = () => {
     const { isDesktop } = useDeviceScreen();
     const { t } = useTranslation(translationNS);
 
+
     const pageTitle = t('page.title', { APP_NAME });
 
     useDocumentTitle(pageTitle);

@@ -6,7 +6,7 @@ import {
 
 import { useTranslation } from 'react-i18next';
 import { useDocumentTitle } from 'usehooks-ts';
-import { PropsWithChildren, ReactNode } from 'react';
+import { PropsWithChildren } from 'react';
 import { Button, Chip, Link, Spacer } from '@nextui-org/react';
 import { ImKey } from 'react-icons/im';
 import { useUnit } from 'effector-react';
@@ -24,7 +24,15 @@ import { sharedUiBranding } from '@/shared/ui/';
 import { Navigate } from 'react-router-dom';
 import { Guest } from '@/entities/viewer/ui/Guest';
 import { requestAuthModel, requestRecoveryModel } from '../model';
-import { PAGE_TITLE, translationNS } from '../config';
+import {
+    BUTTON_GITHUB,
+    BUTTON_RESET_PASSWORD,
+    BUTTON_SIGN_IN,
+    GREETINGS_DESCRIPTION,
+    GREETINGS_WELCOME,
+    PAGE_TITLE,
+    translationNS,
+} from '../config';
 
 const { Logo } = sharedUiBranding;
 
@@ -67,52 +75,69 @@ const NavbarTools: FunctionComponent<PropsWithChildren> = ({ children }) => (
 /**
  * Components
  */
-const Greetings: FunctionComponent<{
-    headline: string;
-    description: string;
-}> = ({ headline, description }): ReactNode => (
-    <div className="relative">
-        <h1 className="text-2xl font-bold">{headline}</h1>
-        <Spacer y={2} />
-        <div>
-            <p>{description}</p>
+const Greetings: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
+    return (
+        <div className="relative">
+            <h1 className="text-2xl font-bold">{t(GREETINGS_WELCOME)}</h1>
+            <Spacer y={2} />
+            <div>
+                <p>{t(GREETINGS_DESCRIPTION)}</p>
+            </div>
         </div>
-    </div>
-);
+    );
+};
 
-const SignInButton: FunctionComponent<{
-    label: string;
-    onPress: () => void;
-}> = ({ label, onPress }) => (
-    <Button color="primary" fullWidth size="lg" radius="full" onPress={onPress}>
-        <ImKey /> {label}
-    </Button>
-);
-const ResetPasswordButton: FunctionComponent<{
-    label: string;
-    onPress: () => void;
-}> = ({ label, onPress }) => (
-    <Button fullWidth size="lg" radius="full" onPress={onPress}>
-        {label}
-    </Button>
-);
+const SignInButton: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
+    const onPressSignIn = useUnit(requestAuthModel.pressSignInButton);
+    return (
+        <Button
+            color="primary"
+            fullWidth
+            size="lg"
+            radius="full"
+            onPress={onPressSignIn}
+        >
+            <ImKey /> {t(BUTTON_SIGN_IN)}
+        </Button>
+    );
+};
+const ResetPasswordButton: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
 
-const GitHubButton: FunctionComponent<{
-    label: string;
-    href: string;
-}> = ({ label, href }) => (
-    <Button
-        isExternal
-        as={Link}
-        href={href}
-        variant="light"
-        fullWidth
-        size="lg"
-        radius="full"
-    >
-        <FaGithub /> {label}
-    </Button>
-);
+    const onPressResetPassword = useUnit(
+        requestRecoveryModel.pressRecoveryButton,
+    );
+
+    return (
+        <Button
+            fullWidth
+            size="lg"
+            radius="full"
+            onPress={onPressResetPassword}
+        >
+            {t(BUTTON_RESET_PASSWORD)}
+        </Button>
+    );
+};
+
+const GitHubButton: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
+    return (
+        <Button
+            isExternal
+            as={Link}
+            href={GITHUB_PAGE_URL}
+            variant="light"
+            fullWidth
+            size="lg"
+            radius="full"
+        >
+            <FaGithub /> {t(BUTTON_GITHUB)}
+        </Button>
+    );
+};
 
 const DeveloperModeChip: FunctionComponent = () => (
     <Chip color="warning" size="sm" className="mb-2">
@@ -128,11 +153,6 @@ const AppVersion: FunctionComponent = () => (
     </div>
 );
 
-/**
- * @name AuthPage
- * @description Page for deliveries exchange
- * @constructor
- */
 export const AuthPage: FunctionComponent = () => {
     const { t, i18n } = useTranslation(translationNS);
     const currentLanguage = i18n.language as keyof typeof APP_DESCRIPTION;
@@ -142,18 +162,6 @@ export const AuthPage: FunctionComponent = () => {
             appName: APP_NAME,
             appDescription: APP_DESCRIPTION[currentLanguage],
         }),
-    );
-
-    const onPressSignIn = useUnit(requestAuthModel.pressSignInButton);
-    const onPressCookiePolicy = useUnit(
-        requestAuthModel.pressOpenCookiePolicyLink,
-    );
-    const onPressPrivacyPolicy = useUnit(
-        requestAuthModel.pressOpenPrivacyPolicyLink,
-    );
-    const onPressTermsOfUse = useUnit(requestAuthModel.pressOpenTermsOfUseLink);
-    const onPressResetPassword = useUnit(
-        requestRecoveryModel.pressRecoveryButton,
     );
 
     return (
@@ -171,33 +179,17 @@ export const AuthPage: FunctionComponent = () => {
                 </Section>
                 <Section>
                     {isDevelopmentEnvironment ? <DeveloperModeChip /> : null}
-                    <Greetings
-                        headline={t('greetings.welcome')}
-                        description={t('greetings.description')}
-                    />
+                    <Greetings />
                     <Spacer y={8} />
-                    <SignInButton
-                        label={t('buttons.sign_in')}
-                        onPress={onPressSignIn}
-                    />
+                    <SignInButton />
                     <Spacer y={2} />
-                    <ResetPasswordButton
-                        label={t('buttons.reset_password')}
-                        onPress={onPressResetPassword}
-                    />
+                    <ResetPasswordButton />
                     <Spacer y={2} />
-                    <GitHubButton
-                        label={t('buttons.github')}
-                        href={GITHUB_PAGE_URL}
-                    />
+                    <GitHubButton />
                     <Spacer y={1} />
                 </Section>
             </Root>
-            <SignInModal
-                onClickCookiesPolicyLink={onPressCookiePolicy}
-                onClickPrivacyPolicyLink={onPressPrivacyPolicy}
-                onClickTermsOfUseLink={onPressTermsOfUse}
-            />
+            <SignInModal />
             <ResetPasswordModal />
             <CookiePolicyModal size="5xl" />
             <PrivacyPolicyModal size="5xl" />
