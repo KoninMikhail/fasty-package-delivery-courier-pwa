@@ -1,5 +1,9 @@
 import { createEvent, createStore, sample } from 'effector';
-import { getMyDeliveriesFx, myDeliveriesModel } from '@/entities/delivery';
+import {
+    getMyDeliveriesFx,
+    myDeliveriesModel,
+    setDeliveryStatus,
+} from '@/entities/delivery';
 import { FilterDeliveriesByTimeRange } from '@/features/delivery/filterDeliveriesByTimeRange';
 import { throttle } from 'patronum';
 import { assignUserToDeliveryFx } from '@/entities/user';
@@ -69,6 +73,13 @@ sample({
     clock: assignUserToDeliveryFx.doneData,
     fn: (_, delivery) => delivery,
     target: myDeliveriesModel.addDelivery,
+});
+
+sample({
+    clock: setDeliveryStatus.doneData,
+    filter: ({ states }) => states === 'done' || states === 'canceled',
+    fn: (_, delivery) => delivery,
+    target: myDeliveriesModel.removeDelivery,
 });
 
 export const filteredDeliveriesByTimeModel =
