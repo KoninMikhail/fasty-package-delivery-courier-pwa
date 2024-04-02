@@ -36,16 +36,14 @@ const Toolbar: FunctionComponent<{ heading: string }> = ({ heading }) => {
     );
 };
 
-export const DesktopMyDeliveriesPageView: FunctionComponent<{
-    heading: string;
-}> = ({ heading }) => {
+export const DesktopMyDeliveriesPageView: FunctionComponent = () => {
     const [selectedTab, setSelectedTab] = useState('list');
 
     return (
         <Layout>
             <Navbar />
             <MainContainer>
-                <Toolbar heading={heading} />
+                <Toolbar />
                 <div className="p-6">
                     <div className="flex">
                         <Tabs

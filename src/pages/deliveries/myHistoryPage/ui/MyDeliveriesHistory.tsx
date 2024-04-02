@@ -10,11 +10,11 @@ import {
     DesktopMyDeliveriesHistoryView,
     MobileMyDeliveriesHistoryView,
 } from './views';
-import { translationNS } from '../config';
+import { PAGE_TITLE, translationNS } from '../config';
 import { MyDeliveriesHistoryPageGate } from '../model';
 
 const { useDeviceScreen } = sharedConfigDetectDevice;
-const { APP_NAME } = sharedConfigConstants;
+const { APP_NAME, APP_DESCRIPTION } = sharedConfigConstants;
 
 /**
  * @name MyDeliveriesPage
@@ -23,12 +23,16 @@ const { APP_NAME } = sharedConfigConstants;
  */
 export const MyDeliveriesHistoryPage: FunctionComponent = () => {
     const { isDesktop } = useDeviceScreen();
-    const { t } = useTranslation(translationNS);
-
-    const pageTitle = `${t('page.title')} | ${APP_NAME}`;
+    const { t, i18n } = useTranslation(translationNS);
+    const currentLanguage = i18n.language as keyof typeof APP_DESCRIPTION;
     const heading = t('page.header');
 
-    useDocumentTitle(pageTitle);
+    useDocumentTitle(
+        t(PAGE_TITLE, {
+            appName: APP_NAME,
+            appDescription: APP_DESCRIPTION[currentLanguage],
+        }),
+    );
     useGate(MyDeliveriesHistoryPageGate);
 
     return isDesktop ? (

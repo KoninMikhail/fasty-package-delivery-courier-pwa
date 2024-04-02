@@ -26,7 +26,7 @@ import { isDeliveryAssignedToCourier } from '@/entities/delivery/lib';
 import { assignUserToDeliveryFx } from '@/entities/user';
 import { getClientTypeLocale } from '@/entities/client/lib/utils/getClientTypeLocale';
 import { getClientName, getClientType } from '@/entities/client';
-import { condition, once } from 'patronum';
+import { condition, debug, once } from 'patronum';
 import { $myDeliveriesStore } from '@/entities/delivery/model/myDeliveriesModel';
 import { handleDeliveryError, handleDeliveryNotLoaded } from '../lib';
 import { PageState } from '../types';
@@ -206,6 +206,8 @@ sample({
 export const changeDeliveryStatusModel = SetDeliveryStatus.factory.createModel({
     patchDeliveryStatusFx: setDeliveryStatus,
 });
+
+debug(setDeliveryStatus);
 
 sample({
     clock: DeliveryDetailsPageGateway.close,

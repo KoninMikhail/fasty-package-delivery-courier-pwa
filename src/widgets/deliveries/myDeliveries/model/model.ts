@@ -1,25 +1,51 @@
-import { createEvent, sample } from 'effector';
-import { myDeliveriesModel, setDeliveryStatus } from '@/entities/delivery';
+import { createEvent, createStore, sample } from 'effector';
+import {
+    getMyDeliveriesFx,
+    myDeliveriesModel,
+    setDeliveryStatus,
+} from '@/entities/delivery';
 import { FilterDeliveriesByTimeRange } from '@/features/delivery/filterDeliveriesByTimeRange';
 import { assignUserToDeliveryFx } from '@/entities/user';
 import { createGate } from 'effector-react';
-import { startPolling } from './dataPoling';
 import {
     DELIVERY_END_TIME,
     DELIVERY_START_TIME,
     DELIVERY_TIME_STEP,
 } from '../config';
 
-export const MyDeliveriesGate = createGate();
+/**
+ * Events
+ */
+export const init = createEvent();
+export const fetchData = createEvent();
+
+/**
+ * Gates
+ */
+export const MyDeliveriesGate = createGate<{ online: boolean }>();
+
+/**
+ * State
+ */
+export const $isOnline = createStore<boolean>(true).on(
+    MyDeliveriesGate.open,
+    (_, payload) => {
+        return payload.online;
+    },
+);
+export const $inPending = getMyDeliveriesFx.pending;
+export const $error = createStore<Error[]>([]).on(
+    getMyDeliveriesFx.failData,
+    (state, error) => [...state, error],
+);
+export const $$hasError = $error.map((error) => error.length > 0);
 
 /**
  * Events
  */
-export const initWidgetMyDeliveries = createEvent();
-
 sample({
-    clock: initWidgetMyDeliveries,
-    target: startPolling,
+    clock: [init, fetchData],
+    target: getMyDeliveriesFx,
 });
 
 /**

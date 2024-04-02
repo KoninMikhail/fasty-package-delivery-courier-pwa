@@ -1,5 +1,6 @@
 import { apiClient, Delivery } from '@/shared/api';
 import { createEffect } from 'effector';
+import { ZodError } from 'zod';
 
 /**
  * Defines the parameters for setting the status of a delivery.
@@ -34,7 +35,12 @@ export const setDeliveryStatus = createEffect<
             },
         };
         return await apiClient.patchDelivery(data, parameters);
-    } catch {
-        throw new Error('Error while setting delivery status');
+    } catch (error: unknown) {
+        if (error instanceof ZodError) {
+            error.issues.map((issue) => {
+                console.log(issue.message);
+            });
+        }
+        throw new Error(error.message);
     }
 });

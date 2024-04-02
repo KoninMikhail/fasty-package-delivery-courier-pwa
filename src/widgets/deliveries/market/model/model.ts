@@ -15,20 +15,17 @@ type DatesRange = {
 };
 
 /**
- * initial data
- */
-
-/**
  * Global
  */
-export const initMarket = createEvent(); // full reset of the market
+export const init = createEvent(); // full reset of the market
+export const fetchData = createEvent(); // refetch data
 export const datesPicked = createEvent<Nullable<DatesRange>>();
 
 /**
  * init
  */
 sample({
-    clock: initMarket,
+    clock: [init, fetchData],
     target: fetchAvailableDeliveriesFx,
 });
 
@@ -53,7 +50,7 @@ export const assignDeliveryToUserModel =
  */
 export const $assignDeliveriesCount = createStore<number>(0)
     .on(assignUserToDeliveryFx.done, (state) => state + 1)
-    .reset(initMarket);
+    .reset(init);
 export const $isDeliveriesLoading = fetchAvailableDeliveriesFx.pending;
 export const $error = createStore<Nullable<Error>>(null).on(
     fetchAvailableDeliveriesFx.failData,

@@ -1,12 +1,11 @@
 import { createGate } from 'effector-react';
-import { MyDeliveriesPageGate } from '@/pages/deliveries/myDeliveriesPage/model/model';
 import { sample } from 'effector';
 import { once } from 'patronum';
-import { widgetMyDeliveriesModel } from '@/widgets/deliveries/myDeliveries';
+import { widgetsDeliveriesHistoryModel } from '@/widgets/deliveries/history';
 
 export const MyDeliveriesHistoryPageGate = createGate<void>();
 
 sample({
-    clock: once({ source: MyDeliveriesPageGate.open }),
-    target: [widgetMyDeliveriesModel.initWidgetMyDeliveries],
+    clock: once(MyDeliveriesHistoryPageGate.open),
+    target: widgetsDeliveriesHistoryModel.init,
 });

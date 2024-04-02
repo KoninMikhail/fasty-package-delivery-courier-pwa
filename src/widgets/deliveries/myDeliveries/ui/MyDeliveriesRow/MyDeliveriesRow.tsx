@@ -3,7 +3,7 @@ import {
     getDeliveryId,
     myDeliveriesModel,
 } from '@/entities/delivery';
-import { useList, useUnit } from 'effector-react';
+import { useGate, useList, useUnit } from 'effector-react';
 import { sharedUiLayouts } from '@/shared/ui';
 import { Button, Skeleton, Spacer, Spinner } from '@nextui-org/react';
 import { GoAlert } from 'react-icons/go';
@@ -13,19 +13,19 @@ import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
 import { PropsWithChildren } from 'react';
 import { settingsModel } from '@/entities/viewer';
-import { $$empty } from '../../model';
-import { $inPending } from '../../model/dataPoling';
-import { $$hasError } from '../../model/errorsHandle';
+import { sharedConfigNetwork } from '@/shared/config';
+import { $$empty, MyDeliveriesGate, $inPending, $$hasError } from '../../model';
 
 import {
     BUTTON_RETRY_TEXT_KEY,
     DELIVERY_PREFIX,
-    ERROR_TITLE_KEY,
-    DATA_EMPTY_KEY,
+    ERROR_TEXT_KEY,
+    DATA_EMPTY_TEXT_KEY,
     translationNS,
 } from '../../config';
 
 const { HorizontalScroll } = sharedUiLayouts;
+const { useNetworkInfo } = sharedConfigNetwork;
 
 /**
  * Component for rendering horizontally scrollable content.
@@ -48,7 +48,7 @@ const EmptyItemsPlaceholder: FunctionComponent = () => {
                 <Spacer y={3} />
                 <div>
                     <span className="text-center text-lg text-content3">
-                        {t(DATA_EMPTY_KEY)}
+                        {t(DATA_EMPTY_TEXT_KEY)}
                     </span>
                 </div>
             </div>
@@ -87,7 +87,7 @@ const ErrorInitPlaceholder: FunctionComponent = () => {
             <div className="flex h-44 w-full flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-content3 p-4">
                 <GoAlert className="text-6xl text-content3" />
                 <div>
-                    <span className="text-content3">{t(ERROR_TITLE_KEY)}</span>
+                    <span className="text-content3">{t(ERROR_TEXT_KEY)}</span>
                 </div>
                 <Spacer y={1} />
                 <Button size="sm">
@@ -118,6 +118,7 @@ const Updater: FunctionComponent = () => (
  * Main component for displaying a row of deliveries, handling loading, empty, and error states.
  */
 export const MyDeliveriesRow: FunctionComponent = () => {
+    const { online } = useNetworkInfo();
     const { t } = useTranslation(translationNS);
     const itemsLimit = useUnit(settingsModel.$homeUpcomingDeliveriesCount);
 
@@ -127,6 +128,8 @@ export const MyDeliveriesRow: FunctionComponent = () => {
         $inPending,
         $$hasError,
     ]);
+
+    useGate(MyDeliveriesGate, { online });
 
     const items = useList(
         myDeliveriesModel.$myDeliveriesStore,

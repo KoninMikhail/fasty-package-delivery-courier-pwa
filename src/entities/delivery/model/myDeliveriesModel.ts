@@ -1,12 +1,15 @@
 import { createEvent, createStore } from 'effector';
 import { Delivery, deliverySchema } from '@/shared/api';
 import { persist } from 'effector-storage/local';
+import { Done, Fail } from 'effector-storage';
 import { getMyDeliveriesFx, setDeliveryStatus } from './effects';
 import { LOCAL_STORAGE_CACHE_KEY } from '../config';
 
-export const clearMyDeliveries = createEvent();
 export const addDelivery = createEvent<Delivery>();
 export const removeDelivery = createEvent<Delivery>();
+
+export const persistDeliveriesCompleted = createEvent<Done<Delivery[]>>();
+export const persistDeliveriesFailed = createEvent<Fail<Error>>();
 
 /**
  * Store to manage the state of deliveries.
@@ -34,8 +37,7 @@ export const $myDeliveriesStore = createStore<Delivery[]>([])
     })
     .on(removeDelivery, (state, payload) =>
         state.filter((item) => item.id !== payload.id),
-    )
-    .reset(clearMyDeliveries);
+    );
 
 /**
  * Persisting the state of deliveries to local storage.
@@ -50,4 +52,6 @@ persist({
         }
         throw result.error;
     },
+    done: persistDeliveriesCompleted,
+    fail: persistDeliveriesFailed,
 });

@@ -54,6 +54,7 @@ export const SearchPage: FunctionComponent = () => {
     const pageState = useUnit($finalSearchState);
     useDocumentTitle(
         t('page.title', {
+            context: query ? 'search' : 'default',
             query,
             appName: APP_NAME,
             appDescription: APP_DESCRIPTION[appLanguage],

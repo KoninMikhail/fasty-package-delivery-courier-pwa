@@ -260,8 +260,9 @@ const BackButton: FunctionComponent = () => {
 
 const Header: FunctionComponent<{
     backButton?: ReactNode;
+    deliveryIdVisible?: boolean;
     className?: string;
-}> = ({ backButton, className }) => {
+}> = ({ backButton, className, deliveryIdVisible = true }) => {
     const deliveryId = useUnit($$deliveryId);
     return (
         <header
@@ -276,7 +277,7 @@ const Header: FunctionComponent<{
                     'text-xl font-semibold text-content1-foreground dark:text-content1',
                 )}
             >
-                {deliveryId || '0'}
+                {deliveryIdVisible ? deliveryId || '0' : null}
             </h1>
             <div className="w-8" />
         </header>
@@ -432,7 +433,7 @@ export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
     if (!pageState)
         return (
             <>
-                <Header backButton={<BackButton />} />
+                <Header backButton={<BackButton />} deliveryIdVisible={false} />
                 <Loading />
                 <NavbarMobile />
             </>

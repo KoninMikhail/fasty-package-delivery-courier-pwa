@@ -1,6 +1,5 @@
 {
-  "page.title": "Deliveries Exchange",
+  "page.title": "My deliveries | {{appName}} - {{appDescription}}",
   "page.header": "My deliveries",
-  "active_deliveries": "Active deliveries",
-  "exchange_deliveries": "exchange deliveries"
+  "page.subheader": "Here you can see all your deliveries."
 }

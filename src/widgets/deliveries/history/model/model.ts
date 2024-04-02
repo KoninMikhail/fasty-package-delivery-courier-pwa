@@ -1,18 +1,10 @@
 import { Delivery } from '@/shared/api';
-import { createStore } from 'effector';
+import { createEvent, createStore } from 'effector';
 import { compareDesc, format, formatISO, parseISO, subDays } from 'date-fns';
 import { InfiniteScroll } from '@/features/page/infinite-scroll';
-import { debug } from 'patronum';
 import { getDeliveriesHistoryFx } from './effects';
 
-// Initial date range for the history
-const today = new Date();
-const initialDateFrom = formatISO(subDays(today, 10), {
-    representation: 'date',
-});
-const initialDateTo = formatISO(today, { representation: 'date' });
-
-debug(getDeliveriesHistoryFx.done);
+export const init = createEvent();
 
 // Store the fetched deliveries
 export const $fetchedData = createStore<Set<Delivery>>(new Set(), {
@@ -36,11 +28,6 @@ export const $fetchedData = createStore<Set<Delivery>>(new Set(), {
 
     return updatedSet;
 });
-
-debug($fetchedData);
-
-const $dateFrom = createStore<string>(initialDateFrom, { name: 'dateFrom' });
-const $dateTo = createStore<string>(initialDateTo, { name: 'dateTo' });
 
 /**
  * Store the sorted deliveries history
@@ -71,6 +58,30 @@ export const $sortedDeliveriesHistory = $fetchedData.map((deliveriesSet) => {
         .sort((a, b) => compareDesc(parseISO(a.date), parseISO(b.date)));
 });
 
+/**
+ * Infinite scroll model
+ */
+
+const today = new Date();
+const amountOfDays = 7;
+
 export const InfiniteScrollModel = InfiniteScroll.factory.createModel({
+    initialPagination: {
+        from: formatISO(subDays(today, amountOfDays), {
+            representation: 'date',
+        }),
+        to: formatISO(today, { representation: 'date' }),
+    },
+    paginationOnLoadNewPage: (store) => {
+        return {
+            from: formatISO(subDays(parseISO(store.from), amountOfDays), {
+                representation: 'date',
+            }),
+            to: formatISO(subDays(parseISO(store.to), amountOfDays), {
+                representation: 'date',
+            }),
+        };
+    },
+    stopOn: (payload) => payload.length === 0,
     requestContentFx: getDeliveriesHistoryFx,
 });

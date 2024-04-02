@@ -90,7 +90,9 @@ const StatusDelivered: FunctionComponent<{
                 Доставлен
             </h3>
             <div className="mb-2 block text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
-                <div>{`Пометки: ${comment}`}</div>
+                {comment
+                    ? `Комментарий: ${comment}`
+                    : `Комментарий: отсутствует`}
             </div>
         </li>
     );

@@ -23,7 +23,7 @@ export const deliverySchema = z.object({
     id: z.number(),
     car: z.boolean(),
     client_id: z.number(),
-    comment: z.string(),
+    comment: z.string().nullable(),
     contact_id: z.number(),
     contents: z.string(),
     deleted: z.boolean(),
