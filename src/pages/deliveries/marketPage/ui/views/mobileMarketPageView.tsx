@@ -18,15 +18,9 @@ import {
     translationNS,
     GOTO_MY_DELIVERIES_LINK_LABEL,
     MARKET_LABEL,
-    GOTO_MY_DELIVERIES_LINK_LABEL,
-    MARKET_LABEL,
-    translationNS,
-    UPCOMING_DELIVERIES_LABEL,
 } from '../../config';
 
-const {
-    RouteName: { DELIVERIES },
-} = sharedConfigRoutes;
+const { RouteName } = sharedConfigRoutes;
 const { MarketContent, MarketFilterScrollable, MarketDateSelector } =
     widgetMarketUi;
 const { NavbarMobile } = widgetNavbarMobileUi;
@@ -34,6 +28,7 @@ const { WelcomeTopbar } = widgetTopbarUi;
 const { SearchQueryInputModal } = widgetSearchQueryPopupUi;
 const { MyDeliveriesRow } = widgetMyDeliveriesUi;
 
+const { DELIVERIES } = RouteName;
 
 /**
  * Layout
