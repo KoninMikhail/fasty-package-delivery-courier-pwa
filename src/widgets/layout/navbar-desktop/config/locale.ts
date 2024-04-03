@@ -1,1 +1,1 @@
-export const translationNS = 'widget:navbar';
+export const translationNS = 'widget:navbar-desktop';

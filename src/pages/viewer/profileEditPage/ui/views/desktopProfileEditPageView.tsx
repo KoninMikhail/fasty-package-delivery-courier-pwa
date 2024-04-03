@@ -1,10 +1,10 @@
 import type { PropsWithChildren } from 'react';
 import { widgetFooterUi } from '@/widgets/layout/footer';
 import { Spacer } from '@nextui-org/react';
-import { widgetNavbarUi } from '@/widgets/layout/navbar-desktop';
+import { widgetNavbarDesktopUi } from '@/widgets/layout/navbar-desktop';
 
 const { Footer } = widgetFooterUi;
-const { Header } = widgetNavbarUi;
+const { Navbar } = widgetNavbarDesktopUi;
 const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
     <main className="h-full w-full flex-col px-2 lg:mx-auto lg:w-[1200px]">
         {children}
@@ -14,7 +14,7 @@ const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
 export const DesktopProfileEditPageView: FunctionComponent = () => {
     return (
         <>
-            <Header />
+            <Navbar />
             <Spacer y={16} />
             <MainContainer>asdasd</MainContainer>
             <Spacer y={16} />

@@ -67,19 +67,7 @@
     "@typescript-eslint/prefer-enum-initializers": "off",
     "@typescript-eslint/prefer-readonly-parameter-types": "off",
     "@typescript-eslint/prefer-regexp-exec": "off",
-    "@typescript-eslint/no-magic-numbers": [
-      "error",
-      {
-        "ignoreEnums": true,
-        "ignore": [
-          1,
-          2
-        ],
-        "enforceConst": true,
-        "detectObjects": true,
-        "ignoreArrayIndexes": true
-      }
-    ],
+    "@typescript-eslint/no-magic-numbers": "off",
     "@typescript-eslint/explicit-function-return-type": [
       "error",
       {

@@ -9,14 +9,14 @@ import { pageMyDeliveriesUi } from '@/pages/deliveries/myDeliveriesPage';
 import { pageSingleDeliveryDetailsUi } from '@/pages/deliveries/singleDeliveryDetailsPage';
 import { pageMyDeliveriesHistoryUi } from '@/pages/deliveries/myHistoryPage';
 import { pageMarketUi } from '@/pages/deliveries/marketPage';
-import { pageNorFoundUi } from '@/pages/errors/notFoundPage';
+import { pageNotFoundUi } from '@/pages/errors/notFoundPage';
 import { pageSearchUi } from '@/pages/search/searchPage/';
 
 const { RouteName } = sharedConfigRoutes;
 const { SuspenseLayout } = sharedUiLayouts;
 
 const { MarketPage } = pageMarketUi;
-const { NotFoundPage } = pageNorFoundUi;
+const { NotFoundPage } = pageNotFoundUi;
 const { MyDeliveriesPage } = pageMyDeliveriesUi;
 const { SettingsPage } = pageSettingsUi;
 const { ProfileEditPage } = pageProfileEditUi;

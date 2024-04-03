@@ -18,6 +18,10 @@ import {
     translationNS,
     GOTO_MY_DELIVERIES_LINK_LABEL,
     MARKET_LABEL,
+    GOTO_MY_DELIVERIES_LINK_LABEL,
+    MARKET_LABEL,
+    translationNS,
+    UPCOMING_DELIVERIES_LABEL,
 } from '../../config';
 
 const {
@@ -30,9 +34,6 @@ const { WelcomeTopbar } = widgetTopbarUi;
 const { SearchQueryInputModal } = widgetSearchQueryPopupUi;
 const { MyDeliveriesRow } = widgetMyDeliveriesUi;
 
-/**
- * Constants
- */
 
 /**
  * Layout
@@ -81,6 +82,7 @@ const Header: FunctionComponent = () => {
                 autoFocus={false}
                 placeholder="поиск по заказам"
                 labelPlacement="outside"
+                className="mx-auto lg:w-[750px]"
                 onClick={onClickSearchInput}
                 startContent={
                     <div className="pointer-events-none flex items-center">
@@ -119,7 +121,7 @@ const UpcomingDeliveriesSection: FunctionComponent<PropsWithChildren> = memo(
     },
 );
 
-const MarketDeliveriesSection: FunctionComponent<PropsWithChildren> = () => {
+const MarketDeliveriesSection: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
     return (
         <Section>

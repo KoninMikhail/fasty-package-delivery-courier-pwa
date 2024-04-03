@@ -48,7 +48,7 @@ export const factory = modelFactory((options: FactoryOptions) => {
     });
 
     sample({
-        clock: options.assignToDeliveryFx.doneData,
+        clock: options.assignToDeliveryFx.done,
         fn: (data) => data.params.deliveryId,
         target: assignCompleted,
     });

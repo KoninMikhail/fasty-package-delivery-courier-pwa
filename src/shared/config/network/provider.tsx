@@ -1,12 +1,12 @@
 import {
     createContext,
+    useState,
     useEffect,
     FunctionComponent,
     PropsWithChildren,
 } from 'react';
-import { useUnit } from 'effector-react';
 import { NetworkState } from './types';
-import { $networkInfo, fetchNetworkState } from './model';
+import { getNetworkState } from './utils';
 
 export const NetworkContext = createContext<NetworkState | undefined>(
     undefined,
@@ -15,21 +15,17 @@ export const NetworkContext = createContext<NetworkState | undefined>(
 export const NetworkInfoProvider: FunctionComponent<PropsWithChildren> = ({
     children,
 }) => {
-    const networkInfo = useUnit($networkInfo);
+    const [networkInfo, setNetworkInfo] =
+        useState<NetworkState>(getNetworkState());
+
+    const updateNetworkInfo = (): void => setNetworkInfo(getNetworkState());
 
     useEffect(() => {
-        const handleNetworkChange = (): void => {
-            void fetchNetworkState();
-        };
-
-        window.addEventListener('online', handleNetworkChange);
-        window.addEventListener('offline', handleNetworkChange);
-
-        void fetchNetworkState();
-
+        window.addEventListener('online', updateNetworkInfo);
+        window.addEventListener('offline', updateNetworkInfo);
         return () => {
-            window.removeEventListener('online', handleNetworkChange);
-            window.removeEventListener('offline', handleNetworkChange);
+            window.removeEventListener('online', updateNetworkInfo);
+            window.removeEventListener('offline', updateNetworkInfo);
         };
     }, []);
 

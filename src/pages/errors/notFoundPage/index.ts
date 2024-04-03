@@ -1,1 +1,3 @@
-export * as pageNorFoundUi from './ui';
+import './init';
+
+export * as pageNotFoundUi from './ui';

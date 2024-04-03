@@ -1,5 +1,5 @@
 {
-  "page.title": "Биржа заказов | {{APP_NAME}}",
+  "page.title": "Биржа заказов | {{appName}} - {{appDescription}}",
   "section.label.upcoming": "Ближайшие доставки",
   "section.label.market": "Могу взять",
   "section.link.myDeliveries": "Все"

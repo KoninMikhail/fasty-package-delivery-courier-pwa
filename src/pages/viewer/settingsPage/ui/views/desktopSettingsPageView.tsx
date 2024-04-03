@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from 'react';
-import { widgetNavbarUi } from '@/widgets/layout/navbar-desktop';
+import { widgetNavbarDesktopUi } from '@/widgets/layout/navbar-desktop';
 import { useUnit } from 'effector-react';
 import { UserCardRow } from '@/entities/user';
 import { sessionModel } from '@/entities/viewer';
@@ -9,7 +9,7 @@ import { SlSocialVkontakte } from 'react-icons/sl';
 import { IoLogoYoutube } from 'react-icons/io';
 import { Section } from '@/shared/ui/layouts';
 
-const { Navbar } = widgetNavbarUi;
+const { Navbar } = widgetNavbarDesktopUi;
 
 const Layout: FunctionComponent<PropsWithChildren> = ({ children }) => (
     <div className="grid h-screen w-screen grid-cols-[max-content_auto] gap-8">
@@ -31,7 +31,7 @@ const Toolbar: FunctionComponent<{ header: string; user: User }> = ({
                 <h1 className="text-4xl capitalize">{header}</h1>
             </div>
             <div>
-                <UserCardRow account={user} avatarPosition="right" />
+                <UserCardRow user={user} avatarPosition="right" />
             </div>
         </div>
     );

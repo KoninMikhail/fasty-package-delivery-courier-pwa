@@ -1,4 +1,11 @@
-import { PropsWithChildren, ReactNode, useLayoutEffect, useState } from 'react';
+import {
+    PropsWithChildren,
+    ReactNode,
+    useLayoutEffect,
+    useMemo,
+    useState,
+} from 'react';
+import L, { LatLngLiteral } from 'leaflet';
 
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import {
@@ -23,7 +30,7 @@ import { MdOutlineDirectionsRun } from 'react-icons/md';
 import { HiLightningBolt } from 'react-icons/hi';
 import { RiBuildingFill, RiWifiOffLine } from 'react-icons/ri';
 import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
-import { LatLngLiteral } from 'leaflet';
+
 import { PageState } from '@/pages/deliveries/singleDeliveryDetailsPage/types';
 import { useNetworkInfo } from '@/shared/config/network';
 
@@ -217,7 +224,7 @@ const DeliveryCourier: FunctionComponent = () => {
             <div className="h-12 py-2">У доставки нет назначенного курьера</div>
         );
 
-    return <UserCardRow account={courier} />;
+    return <UserCardRow user={courier} />;
 };
 
 const MyDeliveryChip: FunctionComponent<PropsWithChildren> = ({ children }) => {
@@ -237,7 +244,7 @@ const DeliveryManager: FunctionComponent = () => {
                 У доставки нет назначенного менеджера
             </div>
         );
-    return <UserCardRow account={manager} />;
+    return <UserCardRow user={manager} />;
 };
 const DeliveryContactPerson: FunctionComponent = () => {
     const contact = useUnit($$deliveryContact);
@@ -260,8 +267,9 @@ const BackButton: FunctionComponent = () => {
 
 const Header: FunctionComponent<{
     backButton?: ReactNode;
+    deliveryIdVisible?: boolean;
     className?: string;
-}> = ({ backButton, className }) => {
+}> = ({ backButton, className, deliveryIdVisible = true }) => {
     const deliveryId = useUnit($$deliveryId);
     return (
         <header
@@ -276,7 +284,7 @@ const Header: FunctionComponent<{
                     'text-xl font-semibold text-content1-foreground dark:text-content1',
                 )}
             >
-                {deliveryId || '0'}
+                {deliveryIdVisible ? deliveryId || '0' : null}
             </h1>
             <div className="w-8" />
         </header>
@@ -335,6 +343,17 @@ const OSMMap: FunctionComponent<{
 }> = ({ marker }) => {
     const [unmountMap, setUnmountMap] = useState<boolean>(false);
 
+    const markerIcon = useMemo(
+        () =>
+            new L.Icon({
+                iconUrl: '/icons/map/marker-icon-2x.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [0, -41],
+            }),
+        [],
+    );
+
     useLayoutEffect(() => {
         setUnmountMap(false);
         return () => {
@@ -366,7 +385,11 @@ const OSMMap: FunctionComponent<{
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <Marker position={marker || [51.505, -0.09]} />
+
+                <Marker
+                    position={marker || [51.505, -0.09]}
+                    icon={markerIcon}
+                />
                 <MapControls marker={marker} />
             </MapContainer>
         </div>
@@ -432,7 +455,7 @@ export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
     if (!pageState)
         return (
             <>
-                <Header backButton={<BackButton />} />
+                <Header backButton={<BackButton />} deliveryIdVisible={false} />
                 <Loading />
                 <NavbarMobile />
             </>

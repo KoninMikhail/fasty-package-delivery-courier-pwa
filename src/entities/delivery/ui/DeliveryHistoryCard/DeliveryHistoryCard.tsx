@@ -21,6 +21,7 @@ import {
     STATUS_DELIVERING,
     translationNS,
     BUTTON_MORE,
+    NO_COMMENT_TEXT,
 } from '../../config';
 
 const { RouteName } = sharedConfigRoutes;
@@ -59,7 +60,7 @@ const Comment: FunctionComponent<{ comment: string }> = ({ comment }) => {
     return (
         <div className="flex flex-col">
             <span className="text-md  font-bold">{t(LABEL_COMMENT)}</span>
-            <span className="text-sm">{comment}</span>
+            <span className="text-sm">{comment || t(NO_COMMENT_TEXT)}</span>
         </div>
     );
 };

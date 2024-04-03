@@ -12,6 +12,8 @@ import {
 export const initSession = createEvent();
 export const requestViewerLogout = createEvent();
 
+const $online = createStore(false);
+
 export const $initSessionComplete = createStore(false)
     .on(getViewerProfileFx.done, () => true)
     .on(getViewerProfileFx.fail, () => true);
@@ -26,7 +28,6 @@ export const $viewerProfileData = createStore<Nullable<User>>(null)
         logoutFx.done,
         logoutFx.fail,
         authByEmailFx.fail,
-        requestViewerLogout,
         getViewerProfileFx.fail,
     ]);
 
@@ -42,6 +43,13 @@ sample({
     source: $initSessionComplete,
     filter: (ready) => !ready,
     target: [getViewerProfileFx],
+});
+
+sample({
+    clock: requestViewerLogout,
+    source: $online,
+    filter: (online) => online === true,
+    target: logoutFx,
 });
 
 sample({

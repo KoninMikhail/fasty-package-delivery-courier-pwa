@@ -4,6 +4,8 @@ import { widgetMyDeliveriesUi } from '@/widgets/deliveries/myDeliveries';
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { sharedUiComponents } from '@/shared/ui';
 import { Spacer } from '@nextui-org/react';
+import { useTranslation } from 'react-i18next';
+import { PAGE_HEADER, PAGE_SUBHEADER, translationNS } from '../../config';
 
 const { MyDeliveriesList, MyDeliveriesFilters, MyDeliveriesMap } =
     widgetMyDeliveriesUi;
@@ -27,14 +29,15 @@ const ListSection: FunctionComponent<PropsWithChildren> = ({ children }) => (
 );
 
 const Header: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
     return (
         <header className="max-w-full gap-4 px-4 pt-4">
             <div>
                 <Heading size="large" weight="bold">
-                    Ваши доставки
+                    {t(PAGE_HEADER)}
                 </Heading>
                 <Text as="span" size="small">
-                    Получайте информацию и удобно управляейте
+                    {t(PAGE_SUBHEADER)}
                 </Text>
             </div>
         </header>

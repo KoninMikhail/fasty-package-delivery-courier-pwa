@@ -1,3 +1,4 @@
 {
-  "page.title": "Поиск #{{query}} | {{appName}}-{{appDescription}}"
+  "page.title_default": "Поиск | {{appName}}-{{appDescription}}",
+  "page.title_search": "{{query}} | {{appName}}-{{appDescription}}"
 }

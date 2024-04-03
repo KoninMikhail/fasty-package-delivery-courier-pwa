@@ -4,11 +4,17 @@ import { MdChecklistRtl } from 'react-icons/md';
 import { IoMdSettings } from 'react-icons/io';
 
 import { sharedConfigRoutes } from '@/shared/config';
+import { IoSearchSharp } from 'react-icons/io5';
 
 const { RouteName } = sharedConfigRoutes;
 
-const { ROOT_PAGE, DELIVERIES, SETTINGS_PAGE, DELIVERIES_HISTORY_PAGE } =
-    RouteName;
+const {
+    ROOT_PAGE,
+    SEARCH_PAGE,
+    DELIVERIES,
+    SETTINGS_PAGE,
+    DELIVERIES_HISTORY_PAGE,
+} = RouteName;
 
 export const navbarItems = [
     {
@@ -29,9 +35,21 @@ export const navbarItems = [
         label: 'nav.history',
         href: DELIVERIES_HISTORY_PAGE,
     },
+    {
+        id: 'search',
+        icon: <IoSearchSharp />,
+        label: 'nav.search',
+        href: SEARCH_PAGE,
+    },
 ];
 
 export const bottomToolItems = [
+    {
+        id: 'settings',
+        icon: <IoMdSettings />,
+        label: 'nav.settings',
+        href: SETTINGS_PAGE,
+    },
     {
         id: 'settings',
         icon: <IoMdSettings />,

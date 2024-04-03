@@ -1,7 +1,7 @@
 import { Modal, ModalContent, Spacer, useDisclosure } from '@nextui-org/react';
 import { RiWifiOffFill } from 'react-icons/ri';
 import { useTranslation } from 'react-i18next';
-import { useList, useUnit } from 'effector-react';
+import { useGate, useList, useUnit } from 'effector-react';
 import {
     MapContainer,
     Marker,
@@ -12,19 +12,20 @@ import {
 import { HorizontalScroll } from '@/shared/ui/layouts';
 import { DeliveryMapCard, myDeliveriesModel } from '@/entities/delivery';
 import { sharedConfigNetwork } from '@/shared/config';
+import { MyDeliveriesGate } from '../../model/model';
 import {
     DEFAULT_MAP_CENTER,
     DEFAULT_MAP_ZOOM,
-    ERROR_NO_INTERNET_KEY,
+    ERROR_NO_INTERNET_TEXT_KEY,
     translationNS,
     WIDGET_MAP_TITLE_KEY,
 } from '../../config';
 import { $$deliveriesMarkers } from '../../model/mapMarkers';
 
-const { $isOnline } = sharedConfigNetwork;
-
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
+
+const { useNetworkInfo } = sharedConfigNetwork;
 
 const OfflinePlaceholder: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
@@ -35,7 +36,7 @@ const OfflinePlaceholder: FunctionComponent = () => {
                 <Spacer y={3} />
                 <div>
                     <span className="text-center text-lg text-content3">
-                        {t(ERROR_NO_INTERNET_KEY)}
+                        {t(ERROR_NO_INTERNET_TEXT_KEY)}
                     </span>
                 </div>
             </div>
@@ -68,8 +69,9 @@ const Map: FunctionComponent = () => {
 const CardsRow: FunctionComponent = () => {
     const deliveries = useList(
         myDeliveriesModel.$myDeliveriesStore,
-        (delivery) => <DeliveryMapCard />,
+        (delivery) => <DeliveryMapCard delivery={delivery} />,
     );
+
     return (
         <HorizontalScroll>
             <div className="flex flex-row flex-nowrap gap-2 px-4">
@@ -80,13 +82,15 @@ const CardsRow: FunctionComponent = () => {
 };
 
 export const MyDeliveriesMap: FunctionComponent = () => {
+    const { online } = useNetworkInfo();
     const { t } = useTranslation(translationNS);
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const isOnline = useUnit($isOnline);
 
     const onMapClick = (): void => {
         onOpen();
     };
+
+    useGate(MyDeliveriesGate, { online });
 
     return (
         <>
@@ -107,19 +111,16 @@ export const MyDeliveriesMap: FunctionComponent = () => {
                 }}
             >
                 <ModalContent>
-                    {(onClose) => {
-                        if (!isOnline) {
-                            return <OfflinePlaceholder />;
-                        }
-                        return (
-                            <div className="relative h-full w-full">
-                                <div className="absolute bottom-0 z-[6000] h-40 w-full py-4 text-red-600">
-                                    <CardsRow />
-                                </div>
-                                <Map />
+                    {online ? (
+                        <div className="relative h-full w-full">
+                            <div className="absolute bottom-0 z-[6000] h-40 w-full py-4 text-red-600">
+                                <CardsRow />
                             </div>
-                        );
-                    }}
+                            <Map />
+                        </div>
+                    ) : (
+                        <OfflinePlaceholder />
+                    )}
                 </ModalContent>
             </Modal>
         </>

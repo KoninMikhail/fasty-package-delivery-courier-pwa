@@ -1,10 +1,7 @@
 import { createEvent, createStore } from 'effector';
-import { Delivery, deliverySchema } from '@/shared/api';
-import { persist } from 'effector-storage/local';
+import { Delivery } from '@/shared/api';
 import { getMyDeliveriesFx, setDeliveryStatus } from './effects';
-import { LOCAL_STORAGE_CACHE_KEY } from '../config';
 
-export const clearMyDeliveries = createEvent();
 export const addDelivery = createEvent<Delivery>();
 export const removeDelivery = createEvent<Delivery>();
 
@@ -34,20 +31,4 @@ export const $myDeliveriesStore = createStore<Delivery[]>([])
     })
     .on(removeDelivery, (state, payload) =>
         state.filter((item) => item.id !== payload.id),
-    )
-    .reset(clearMyDeliveries);
-
-/**
- * Persisting the state of deliveries to local storage.
- */
-persist({
-    store: $myDeliveriesStore,
-    key: LOCAL_STORAGE_CACHE_KEY,
-    contract: (raw): raw is Delivery[] => {
-        const result = deliverySchema.array().safeParse(raw);
-        if (result.success) {
-            return true;
-        }
-        throw result.error;
-    },
-});
+    );

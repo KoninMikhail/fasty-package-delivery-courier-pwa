@@ -3,6 +3,7 @@ import { useUnit } from 'effector-react';
 import { modelView } from 'effector-factorio';
 import { Spinner } from '@nextui-org/react';
 import { PropsWithChildren } from 'react';
+import { useUnmount } from 'usehooks-ts';
 import { factory } from './model';
 
 interface WrapperProperties extends PropsWithChildren {
@@ -14,12 +15,23 @@ export const Wrapper = modelView(
     ({ children, ...rest }: WrapperProperties) => {
         const model = factory.useModel();
         const isLoading = useUnit(model.$loading);
-        const isContentScrolled = useUnit(model.setContentScrolled);
+        const [start, stop] = useUnit([
+            model.startContentRequests,
+            model.stopContentRequests,
+        ]);
 
         const { ref: loaderReference } = useInView({
-            onChange: (inView) => inView && isContentScrolled(),
+            onChange: (inView) => {
+                if (inView) {
+                    start();
+                } else {
+                    stop();
+                }
+            },
             threshold: 0,
         });
+
+        useUnmount(() => stop());
 
         return (
             <div className="relative">

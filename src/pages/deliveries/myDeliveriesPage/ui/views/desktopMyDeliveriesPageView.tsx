@@ -1,6 +1,6 @@
 import { PropsWithChildren, useState } from 'react';
 import { widgetFooterUi } from '@/widgets/layout/footer';
-import { widgetNavbarUi } from '@/widgets/layout/navbar-desktop';
+import { widgetNavbarDesktopUi } from '@/widgets/layout/navbar-desktop';
 import { useUnit } from 'effector-react';
 import { UserCardRow } from '@/entities/user';
 import { useTranslation } from 'react-i18next';
@@ -9,7 +9,7 @@ import { sessionModel } from '@/entities/viewer';
 import { translationNS } from '../../config';
 
 const { Footer } = widgetFooterUi;
-const { Navbar } = widgetNavbarUi;
+const { Navbar } = widgetNavbarDesktopUi;
 
 const Layout: FunctionComponent<PropsWithChildren> = ({ children }) => (
     <div className="relative grid h-screen w-screen grid-cols-[max-content_auto]">
@@ -30,22 +30,20 @@ const Toolbar: FunctionComponent<{ heading: string }> = ({ heading }) => {
                 <h1 className="text-4xl">{heading}</h1>
             </div>
             <div>
-                <UserCardRow account={user} avatarPosition="right" />
+                <UserCardRow user={user} avatarPosition="right" />
             </div>
         </div>
     );
 };
 
-export const DesktopMyDeliveriesPageView: FunctionComponent<{
-    heading: string;
-}> = ({ heading }) => {
+export const DesktopMyDeliveriesPageView: FunctionComponent = () => {
     const [selectedTab, setSelectedTab] = useState('list');
 
     return (
         <Layout>
             <Navbar />
             <MainContainer>
-                <Toolbar heading={heading} />
+                <Toolbar />
                 <div className="p-6">
                     <div className="flex">
                         <Tabs

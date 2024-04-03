@@ -10,11 +10,11 @@ import {
     DesktopMyDeliveriesPageView,
     MobileMyDeliveriesPageView,
 } from './views';
-import { translationNS } from '../config';
+import { translationNS, PAGE_TITLE } from '../config';
 import { MyDeliveriesPageGate } from '../model/model';
 
 const { useDeviceScreen } = sharedConfigDetectDevice;
-const { APP_NAME } = sharedConfigConstants;
+const { APP_NAME, APP_DESCRIPTION } = sharedConfigConstants;
 
 /**
  * @name MyDeliveriesPage
@@ -23,17 +23,20 @@ const { APP_NAME } = sharedConfigConstants;
  */
 export const MyDeliveriesPage: FunctionComponent = () => {
     const { isDesktop } = useDeviceScreen();
-    const { t } = useTranslation(translationNS);
+    const { t, i18n } = useTranslation(translationNS);
+    const appLanguage = i18n.language as keyof typeof APP_DESCRIPTION;
 
-    const pageTitle = `${t('page.title')} | ${APP_NAME}`;
-    const heading = t('page.header');
-
-    useDocumentTitle(pageTitle);
+    useDocumentTitle(
+        t(PAGE_TITLE, {
+            appName: APP_NAME,
+            appDescription: APP_DESCRIPTION[appLanguage],
+        }),
+    );
     useGate(MyDeliveriesPageGate);
 
     return isDesktop ? (
         <Authorized>
-            <DesktopMyDeliveriesPageView heading={heading} />
+            <DesktopMyDeliveriesPageView />
         </Authorized>
     ) : (
         <Authorized>

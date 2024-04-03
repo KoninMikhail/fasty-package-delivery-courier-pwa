@@ -74,6 +74,7 @@ const $isOnline = createStore<boolean>(true).on(
     DeliveryDetailsPageGateway.open,
     (_, { online }) => online ?? true,
 );
+
 export const $pageContentState = createStore<Nullable<PageState>>(null)
     .on(getDeliveryByIdFx.doneData, () => PageState.Done)
     .on(getDeliveryByIdFx.failData, (_, error) => handleDeliveryError(error))
