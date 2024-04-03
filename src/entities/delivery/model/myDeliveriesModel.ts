@@ -52,6 +52,7 @@ persist({
         }
         throw result.error;
     },
+    keyPrefix: 'dsd',
     done: persistDeliveriesCompleted,
     fail: persistDeliveriesFailed,
 });
