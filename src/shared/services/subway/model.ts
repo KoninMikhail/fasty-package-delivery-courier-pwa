@@ -3,7 +3,7 @@ import { persist } from 'effector-storage/local';
 import Cookies from 'js-cookie';
 import { condition, once } from 'patronum';
 import { Done, Fail } from 'effector-storage';
-import { AppInitGate } from '../../lib/init';
+import { AppGate } from '../../lib/app';
 import {
     apiClient,
     GetSubwayStationsListResponse,
@@ -133,6 +133,6 @@ sample({
 });
 
 sample({
-    clock: once({ source: AppInitGate.open }),
+    clock: once({ source: AppGate.open }),
     target: initSubwayModel,
 });

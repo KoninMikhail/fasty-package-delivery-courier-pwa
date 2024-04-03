@@ -1,8 +1,10 @@
-import { createGate } from 'effector-react';
+import { createEvent, sample } from 'effector';
+import { once } from 'patronum';
+import { widgetMyDeliveriesModel } from '@/widgets/deliveries/myDeliveries';
+import { sharedLibApp } from '@/shared/lib';;
 import { createEvent, createStore, sample } from 'effector';
 import { interval, once, throttle } from 'patronum';
 import { widgetMarketModel } from '@/widgets/deliveries/market';
-import { widgetMyDeliveriesModel } from '@/widgets/deliveries/myDeliveries';
 import { getMyDeliveriesFx } from '@/entities/delivery';
 import { POLLING_TIMEOUT } from '../config';
 
@@ -47,6 +49,7 @@ const $lastUpdateContentTimestamp = createStore<number>(0).on(
     getMyDeliveriesFx.done,
     () => Date.now(),
 );
+
 
 sample({
     clock: updateContent,

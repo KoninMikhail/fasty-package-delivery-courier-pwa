@@ -11,9 +11,23 @@ import { useTranslation } from 'react-i18next';
 import { useUnit } from 'effector-react';
 import { AuthByEmail } from '@/features/auth/ByEmail';
 import { PropsWithChildren } from 'react';
-import { $isSignInModalVisible, authByEmailModel, setHidden } from '../model';
+import {
+    $isSignInModalVisible,
+    authByEmailModel,
+    pressedOpenCookiePolicyLink,
+    pressedOpenPrivacyPolicyLink,
+    pressedOpenTermsOfUseLink,
+    setHidden,
+} from '../model';
 
-import { translationNS } from '../config';
+import {
+    MODAL_ACCEPTANCE,
+    MODAL_COOKIES_POLICY,
+    MODAL_PRIVACY_POLICY,
+    MODAL_TERMS_OF_USE,
+    MODAL_TITLE,
+    translationNS,
+} from '../config';
 
 /**
  * Layout
@@ -27,22 +41,21 @@ const PolicesLinks: FunctionComponent<PropsWithChildren> = ({ children }) => (
 /**
  * View
  */
-interface IAuthUserByEmailModalProperties {
-    onClickPrivacyPolicyLink?: () => void;
-    onClickTermsOfUseLink?: () => void;
-    onClickCookiesPolicyLink?: () => void;
-}
 
-export const SignInModal: FunctionComponent<
-    IAuthUserByEmailModalProperties
-> = ({
-    onClickPrivacyPolicyLink,
-    onClickCookiesPolicyLink,
-    onClickTermsOfUseLink,
-}) => {
+export const SignInModal: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
+
     const [isOpened, setClosed] = useUnit([$isSignInModalVisible, setHidden]);
 
-    const { t } = useTranslation(translationNS);
+    const [
+        onClickPrivacyPolicyLink,
+        onClickTermsOfUseLink,
+        onClickCookiesPolicyLink,
+    ] = useUnit([
+        pressedOpenPrivacyPolicyLink,
+        pressedOpenTermsOfUseLink,
+        pressedOpenCookiePolicyLink,
+    ]);
 
     const onCloseHandler = (): void => {
         setClosed();
@@ -52,22 +65,21 @@ export const SignInModal: FunctionComponent<
         <Modal isOpen={isOpened} onClose={onCloseHandler} placement="auto">
             <ModalContent>
                 <ModalHeader className="flex flex-col gap-1">
-                    {t('modal.title')}
+                    {t(MODAL_TITLE)}
                 </ModalHeader>
                 <ModalBody>
                     <AuthByEmail.Form model={authByEmailModel} />
                 </ModalBody>
                 <ModalFooter>
                     <PolicesLinks>
-                        {t('modal.acceptance')}
-                        {' : '}
+                        {t(MODAL_ACCEPTANCE)}
                         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                         <Link
                             size="sm"
                             href="#"
                             onPress={onClickPrivacyPolicyLink}
                         >
-                            {t('modal.acceptance.privacy')}
+                            {t(MODAL_PRIVACY_POLICY)}
                         </Link>
                         {', '}
                         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
@@ -76,7 +88,7 @@ export const SignInModal: FunctionComponent<
                             href="#"
                             onPress={onClickTermsOfUseLink}
                         >
-                            {t('modal.acceptance.terms')}
+                            {t(MODAL_TERMS_OF_USE)}
                         </Link>
                         {', '}
 
@@ -86,7 +98,7 @@ export const SignInModal: FunctionComponent<
                             href="#"
                             onPress={onClickCookiesPolicyLink}
                         >
-                            {t('modal.acceptance.cookies')}
+                            {t(MODAL_COOKIES_POLICY)}
                         </Link>
                     </PolicesLinks>
                     <Spacer y={2} />

@@ -22,7 +22,6 @@ const { APP_NAME, APP_DESCRIPTION } = sharedConfigConstants;
 export const MarketPage: FunctionComponent = () => {
     const { isDesktop } = useDeviceScreen();
     const { t, i18n } = useTranslation(translationNS);
-
     const currentLanguage = i18n.language as keyof typeof APP_DESCRIPTION;
 
     useDocumentTitle(
