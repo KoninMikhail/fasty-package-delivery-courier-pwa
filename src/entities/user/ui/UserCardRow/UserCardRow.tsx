@@ -1,9 +1,14 @@
 import { Avatar } from '@nextui-org/react';
 import { User } from '@/shared/api';
-import { getFullUserName } from '@/entities/user/lib/utils';
+import {
+    getFullUserName,
+    getUserInitials,
+    getUserRoleName,
+    getUserAvatarSource,
+} from '../../lib';
 
 interface IUserCardRowProperties {
-    account: User;
+    user: Nullable<User>;
     size?: 'lg' | 'md' | 'sm';
     avatarPosition?: 'left' | 'right';
 }
@@ -28,23 +33,20 @@ const UserInfo: FunctionComponent<IUserInfoProperties> = ({
 );
 
 export const UserCardRow: FunctionComponent<IUserCardRowProperties> = ({
-    account,
+    user,
     size,
     avatarPosition = 'left',
 }: IUserCardRowProperties) => {
-    const name = getFullUserName(account);
-    const initials = `${account.first_name[0]}${account.last_name[0]}`;
-    const role = account.user_role.name;
+    const name = getFullUserName(user);
+    const initials = getUserInitials(user);
+    const role = getUserRoleName(user);
+    const avatarSource = getUserAvatarSource(user);
 
     return (
         <div className="flex items-center gap-2 lg:gap-4">
             {avatarPosition === 'left' ? (
                 <>
-                    <Avatar
-                        src={account.avatar_src}
-                        size={size}
-                        name={initials}
-                    />
+                    <Avatar src={avatarSource} size={size} name={initials} />
                     <UserInfo
                         name={name}
                         role={role}
@@ -60,7 +62,7 @@ export const UserCardRow: FunctionComponent<IUserCardRowProperties> = ({
                     />
                     <Avatar
                         isBordered
-                        src={account.avatar_src}
+                        src={avatarSource}
                         size={size}
                         name={initials}
                     />

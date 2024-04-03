@@ -20,3 +20,4 @@ export const STATUS_CREATED = 'delivery.status.created';
 export const STATUS_DELIVERING = 'delivery.status.delivering';
 export const STATUS_DONE = 'delivery.status.done';
 export const STATUS_CANCELLED = 'delivery.status.canceled';
+export const NO_COMMENT_TEXT = 'delivery.card.noComment';

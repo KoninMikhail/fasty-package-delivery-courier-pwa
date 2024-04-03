@@ -1,3 +1,4 @@
 export * from "./getUserInitials";
 export * from "./getFullUserName";
-export * from "./getUserAvatarUrl";
+export * from "./getUserRoleName";
+export * from './getUserAvatarSource'

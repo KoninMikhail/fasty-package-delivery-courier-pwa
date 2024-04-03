@@ -1,15 +1,18 @@
 import type { PropsWithChildren } from 'react';
-import { Heading } from '@/shared/ui/components';
 import { widgetMarketUi } from '@/widgets/deliveries/market';
-import { Spacer, Input } from '@nextui-org/react';
+import { Spacer } from '@nextui-org/react';
 
 import { FiSearch } from 'react-icons/fi';
 import { UserCardRow } from '@/entities/user';
 import { useUnit } from 'effector-react';
-import { widgetNavbarUi } from '@/widgets/layout/navbar-desktop';
+import { widgetNavbarDesktopUi } from '@/widgets/layout/navbar-desktop';
 import { sessionModel } from '@/entities/viewer';
+import {
+    MarketHeadingText,
+    UpcomingDeliveriesHeadingText,
+} from '@/pages/deliveries/marketPage/ui/common/data';
 
-const { Navbar } = widgetNavbarUi;
+const { Navbar } = widgetNavbarDesktopUi;
 const { MarketContent, MarketDateSelector, MarketFilterScrollable } =
     widgetMarketUi;
 
@@ -25,26 +28,50 @@ const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
 
 const Toolbar: FunctionComponent = () => {
     const user = useUnit(sessionModel.$viewerProfileData);
+
+    const searchStartContent = (
+        <FiSearch className="pointer-events-none flex-shrink-0 text-xl text-default-400" />
+    );
+    const searchEndContent = (
+        <div className="pointer-events-none flex items-center">
+            <span className="text-small text-default-400">@gmail.com</span>
+        </div>
+    );
+
     return (
         <div className="flex w-full items-center justify-between py-6 pr-4">
-            <div className="w-1/2">
-                <Input
-                    placeholder="nextui"
-                    labelPlacement="outside"
-                    startContent={
-                        <FiSearch className="pointer-events-none flex-shrink-0 text-xl text-default-400" />
-                    }
-                    endContent={
-                        <div className="pointer-events-none flex items-center">
-                            <span className="text-small text-default-400">
-                                @gmail.com
-                            </span>
-                        </div>
-                    }
-                />
-            </div>
+            <div className="w-1/2">popover</div>
             <div>
-                <UserCardRow account={user} avatarPosition="right" />
+                <UserCardRow user={user} avatarPosition="right" />
+            </div>
+        </div>
+    );
+};
+
+const UpcomingDeliveries: FunctionComponent = () => {
+    return (
+        <div className="pr-4">
+            <h2 className="text-2xl font-bold capitalize">
+                <UpcomingDeliveriesHeadingText />
+            </h2>
+            <Spacer y={8} />
+            <div>карточка пользователя</div>
+        </div>
+    );
+};
+
+const MarketDeliveries: FunctionComponent = () => {
+    return (
+        <div className="pr-4">
+            <h2 className="text-2xl font-bold capitalize">
+                <MarketHeadingText />
+            </h2>
+            <Spacer y={8} />
+            <div>
+                <MarketDateSelector typePicker="scroll" />
+                <MarketFilterScrollable />
+                <Spacer y={2} />
+                <MarketContent />
             </div>
         </div>
     );
@@ -57,22 +84,9 @@ export const DesktopMarketPageView: FunctionComponent = () => {
             <MainContainer>
                 <Toolbar />
                 <Spacer y={4} />
-                <div>
-                    <Heading size="large" weight="bold">
-                        Активные доставки
-                    </Heading>
-                    <Spacer y={8} />
-                    карусель
-                </div>
+                <UpcomingDeliveries />
                 <Spacer y={16} />
-                <div>
-                    <Heading size="large" weight="bold">
-                        Взять доставку
-                    </Heading>
-                </div>
-                <MarketDateSelector typePicker="scroll" />
-                <MarketFilterScrollable />
-                <MarketContent />
+                <MarketDeliveries />
             </MainContainer>
         </Layout>
     );

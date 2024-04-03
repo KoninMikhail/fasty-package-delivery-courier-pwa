@@ -23,8 +23,13 @@ export const NotFound: FunctionComponent = () => {
             <h3 className="text-center text-2xl font-bold">
                 Доставка не найдена
             </h3>
-            <Button color="primary" variant="flat" onPress={onPressButton}>
-                <GoArrowLeft />В мои доставки
+            <Button
+                color="primary"
+                variant="flat"
+                onPress={onPressButton}
+                startContent={<GoArrowLeft />}
+            >
+                В мои доставки
             </Button>
         </div>
     );

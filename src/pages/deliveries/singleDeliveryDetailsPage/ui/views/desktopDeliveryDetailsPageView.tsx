@@ -1,5 +1,5 @@
 import type { PropsWithChildren, ReactNode } from 'react';
-import { widgetNavbarUi } from '@/widgets/layout/navbar-desktop';
+import { widgetNavbarDesktopUi } from '@/widgets/layout/navbar-desktop';
 
 import { Chip, Divider, Spacer } from '@nextui-org/react';
 import { useUnit } from 'effector-react';
@@ -43,7 +43,7 @@ import {
     translationNS,
 } from '../../config';
 
-const { Navbar } = widgetNavbarUi;
+const { Navbar } = widgetNavbarDesktopUi;
 const { DeliveryStatusControlWithTimeline } = widgetDeliveryStatusUi;
 interface ISectionWithTitleProperties {
     title: string;
@@ -140,7 +140,7 @@ const DeliveryWeight: FunctionComponent = () => {
 
 const DeliveryCourier: FunctionComponent = () => {
     const courier = useUnit($$deliveryCourier);
-    return courier ? <UserCardRow account={courier} /> : null;
+    return courier ? <UserCardRow user={courier} /> : null;
 };
 
 const MyDeliveryChip: FunctionComponent<PropsWithChildren> = ({ children }) => {
@@ -153,7 +153,7 @@ const MyDeliveryChip: FunctionComponent<PropsWithChildren> = ({ children }) => {
 };
 const DeliveryManager: FunctionComponent = () => {
     const manager = useUnit($$deliveryManager);
-    return <UserCardRow account={manager} />;
+    return <UserCardRow user={manager} />;
 };
 const DeliveryContactPerson: FunctionComponent = () => {
     const contact = useUnit($$deliveryContact);

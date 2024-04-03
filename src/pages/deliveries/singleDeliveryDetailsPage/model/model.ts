@@ -26,7 +26,7 @@ import { isDeliveryAssignedToCourier } from '@/entities/delivery/lib';
 import { assignUserToDeliveryFx } from '@/entities/user';
 import { getClientTypeLocale } from '@/entities/client/lib/utils/getClientTypeLocale';
 import { getClientName, getClientType } from '@/entities/client';
-import { condition, debug, once } from 'patronum';
+import { condition, once } from 'patronum';
 import { $myDeliveriesStore } from '@/entities/delivery/model/myDeliveriesModel';
 import { handleDeliveryError, handleDeliveryNotLoaded } from '../lib';
 import { PageState } from '../types';
@@ -74,6 +74,7 @@ const $isOnline = createStore<boolean>(true).on(
     DeliveryDetailsPageGateway.open,
     (_, { online }) => online ?? true,
 );
+
 export const $pageContentState = createStore<Nullable<PageState>>(null)
     .on(getDeliveryByIdFx.doneData, () => PageState.Done)
     .on(getDeliveryByIdFx.failData, (_, error) => handleDeliveryError(error))
@@ -206,8 +207,6 @@ sample({
 export const changeDeliveryStatusModel = SetDeliveryStatus.factory.createModel({
     patchDeliveryStatusFx: setDeliveryStatus,
 });
-
-debug(setDeliveryStatus);
 
 sample({
     clock: DeliveryDetailsPageGateway.close,

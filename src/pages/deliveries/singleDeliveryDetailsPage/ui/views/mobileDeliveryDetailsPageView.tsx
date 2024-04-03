@@ -224,7 +224,7 @@ const DeliveryCourier: FunctionComponent = () => {
             <div className="h-12 py-2">У доставки нет назначенного курьера</div>
         );
 
-    return <UserCardRow account={courier} />;
+    return <UserCardRow user={courier} />;
 };
 
 const MyDeliveryChip: FunctionComponent<PropsWithChildren> = ({ children }) => {
@@ -244,7 +244,7 @@ const DeliveryManager: FunctionComponent = () => {
                 У доставки нет назначенного менеджера
             </div>
         );
-    return <UserCardRow account={manager} />;
+    return <UserCardRow user={manager} />;
 };
 const DeliveryContactPerson: FunctionComponent = () => {
     const contact = useUnit($$deliveryContact);

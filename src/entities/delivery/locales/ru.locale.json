@@ -19,6 +19,7 @@
   "delivery.card.label.client": "Клиент",
   "delivery.card.label.contactPerson": "Контактное лицо",
   "delivery.card.label.comment": "Комментарий",
+  "delivery.card.noComment": "Без комментария",
   "delivery.card.weight.kg": "{{weight}}кг",
   "delivery.card.button.more": "Подробнее",
   "delivery.card.chip.expired": "Просрочено",

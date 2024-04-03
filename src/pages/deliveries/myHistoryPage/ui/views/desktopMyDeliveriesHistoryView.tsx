@@ -1,11 +1,11 @@
 import { widgetsDeliveriesHistoryUi } from '@/widgets/deliveries/history';
 import type { PropsWithChildren } from 'react';
-import { widgetNavbarUi } from '@/widgets/layout/navbar-desktop';
+import { widgetNavbarDesktopUi } from '@/widgets/layout/navbar-desktop';
 import { useUnit } from 'effector-react';
 import { UserCardRow } from '@/entities/user';
 import { sessionModel } from '@/entities/viewer';
 
-const { Navbar } = widgetNavbarUi;
+const { Navbar } = widgetNavbarDesktopUi;
 const { DeliveriesHistoryList } = widgetsDeliveriesHistoryUi;
 
 const Layout: FunctionComponent<PropsWithChildren> = ({ children }) => (
@@ -30,7 +30,7 @@ const Toolbar: FunctionComponent<{ header: string }> = ({ header }) => {
                 <h1 className="text-4xl">{header}</h1>
             </div>
             <div>
-                <UserCardRow account={user} avatarPosition="right" />
+                <UserCardRow user={user} avatarPosition="right" />
             </div>
         </div>
     );

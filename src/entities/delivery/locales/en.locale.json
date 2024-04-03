@@ -19,6 +19,7 @@
   "delivery.card.label.client": "Client",
   "delivery.card.label.contactPerson": "Contact",
   "delivery.card.label.comment": "Comment",
+  "delivery.card.noComment": "Not comment",
   "delivery.card.weight.kg": "{{weight}}kg",
   "delivery.card.chip.expired": "Expired",
   "delivery.card.chip.timeLeft": "{{hours}}h {{minutes}}m",
