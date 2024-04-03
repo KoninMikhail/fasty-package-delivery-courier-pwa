@@ -1,4 +1,11 @@
-import { PropsWithChildren, ReactNode, useLayoutEffect, useState } from 'react';
+import {
+    PropsWithChildren,
+    ReactNode,
+    useLayoutEffect,
+    useMemo,
+    useState,
+} from 'react';
+import L, { LatLngLiteral } from 'leaflet';
 
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import {
@@ -23,7 +30,7 @@ import { MdOutlineDirectionsRun } from 'react-icons/md';
 import { HiLightningBolt } from 'react-icons/hi';
 import { RiBuildingFill, RiWifiOffLine } from 'react-icons/ri';
 import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
-import { LatLngLiteral } from 'leaflet';
+
 import { PageState } from '@/pages/deliveries/singleDeliveryDetailsPage/types';
 import { useNetworkInfo } from '@/shared/config/network';
 
@@ -336,6 +343,17 @@ const OSMMap: FunctionComponent<{
 }> = ({ marker }) => {
     const [unmountMap, setUnmountMap] = useState<boolean>(false);
 
+    const markerIcon = useMemo(
+        () =>
+            new L.Icon({
+                iconUrl: '/icons/map/marker-icon-2x.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [0, -41],
+            }),
+        [],
+    );
+
     useLayoutEffect(() => {
         setUnmountMap(false);
         return () => {
@@ -367,7 +385,11 @@ const OSMMap: FunctionComponent<{
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <Marker position={marker || [51.505, -0.09]} />
+
+                <Marker
+                    position={marker || [51.505, -0.09]}
+                    icon={markerIcon}
+                />
                 <MapControls marker={marker} />
             </MapContainer>
         </div>
