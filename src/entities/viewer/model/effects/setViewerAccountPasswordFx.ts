@@ -1,6 +1,5 @@
 import { createEffect } from 'effector';
 import { apiClient, User } from '@/shared/api';
-import { debug } from 'patronum';
 
 export type ChangePasswordFxParameters = {
     user: User;
@@ -19,5 +18,3 @@ export const setViewerAccountPasswordFx = createEffect({
         );
     },
 });
-
-debug(setViewerAccountPasswordFx.done);

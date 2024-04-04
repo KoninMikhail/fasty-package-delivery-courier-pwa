@@ -1,4 +1,5 @@
 import { sharedConfigLocale } from '@/shared/config';
+import './middleware/persist';
 import { translationNS } from './config';
 import locale_en from './locales/en.locale.json';
 import locale_ru from './locales/ru.locale.json';

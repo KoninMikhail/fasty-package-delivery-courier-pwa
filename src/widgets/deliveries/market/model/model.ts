@@ -7,8 +7,10 @@ import {
 } from '@/features/delivery/filterDeliveriesByParams';
 import { isAfter } from 'date-fns/isAfter';
 import { assignUserToDeliveryFx } from '@/entities/user';
-import { debug } from 'patronum';
+import { sharedLibHelpers } from '@/shared/lib';
 import { fetchAvailableDeliveriesFx } from './effects';
+
+const { isEmpty } = sharedLibHelpers;
 
 type DatesRange = {
     dateFrom: string;
@@ -18,10 +20,7 @@ type DatesRange = {
 /**
  * Global
  */
-export const init = createEvent({
-    name: 'marketinit',
-}); // full reset of the market
-debug(init);
+export const init = createEvent(); // full reset of the market
 export const fetchData = createEvent(); // refetch data
 export const datesPicked = createEvent<Nullable<DatesRange>>();
 
@@ -60,9 +59,9 @@ export const $error = createStore<Nullable<Error>>(null).on(
     fetchAvailableDeliveriesFx.failData,
     (_, error) => error,
 );
-export const $$hasError = $error.map((error) => error !== null);
-export const $$deliveriesEmpty = $fetchedData.map(
-    (deliveries) => deliveries.length === 0,
+export const $$hasError = $error.map((error) => !isEmpty(error));
+export const $$deliveriesEmpty = $fetchedData.map((deliveries) =>
+    isEmpty(deliveries),
 );
 
 /**

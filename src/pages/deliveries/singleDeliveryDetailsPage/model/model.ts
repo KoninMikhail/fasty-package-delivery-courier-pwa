@@ -20,14 +20,14 @@ import {
     setDeliveryStatus,
 } from '@/entities/delivery';
 import { sessionModel } from '@/entities/viewer';
-import { getCachedDeliveryByIdFx } from '@/entities/delivery/model';
+import { getCachedDeliveryByIdFx } from '@/entities/delivery/effects';
 import { Delivery } from '@/shared/api';
 import { isDeliveryAssignedToCourier } from '@/entities/delivery/lib';
 import { assignUserToDeliveryFx } from '@/entities/user';
 import { getClientTypeLocale } from '@/entities/client/lib/utils/getClientTypeLocale';
 import { getClientName, getClientType } from '@/entities/client';
 import { condition, once } from 'patronum';
-import { $myDeliveriesStore } from '@/entities/delivery/model/myDeliveriesModel';
+import { $myDeliveriesStore } from './parts/deliveriesCache';
 import { handleDeliveryError, handleDeliveryNotLoaded } from '../lib';
 import { PageState } from '../types';
 import { initialDelivery } from '../data';
@@ -45,9 +45,7 @@ export const DeliveryDetailsPageGateway = createGate<{
 
 const $deliveryId = createStore<string>('').on(
     DeliveryDetailsPageGateway.open,
-    (_, { deliveryId }) => {
-        return deliveryId ?? '';
-    },
+    (_, { deliveryId }) => deliveryId ?? '',
 );
 
 /**
@@ -169,7 +167,7 @@ export const $$isViewerDelivery = combine(
 
 condition({
     source: requestPageContent,
-    if: sessionModel.$isOnline,
+    if: sessionModel.$$isOnline,
     then: loadFromRemote,
     else: loadFromCache,
 });

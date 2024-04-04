@@ -1,5 +1,5 @@
 import './init';
 
 export * from './ui';
-export * from './model';
+export * from './effects';
 export * from './lib/utils';

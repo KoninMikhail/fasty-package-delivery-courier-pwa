@@ -3,3 +3,4 @@ export * from './padCharacters';
 export * from './clearPaddedCharacters';
 export * from './getTimesRange';
 export * from './removeNonNumetricChars';
+export * from './isEmpty'

@@ -1,8 +1,4 @@
-import {
-    DeliveryCountdownCard,
-    getDeliveryId,
-    myDeliveriesModel,
-} from '@/entities/delivery';
+import { DeliveryCountdownCard, getDeliveryId } from '@/entities/delivery';
 import { useList, useUnit } from 'effector-react';
 import { sharedUiLayouts } from '@/shared/ui';
 import { Button, Skeleton, Spacer, Spinner } from '@nextui-org/react';
@@ -14,6 +10,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { PropsWithChildren } from 'react';
 import { settingsModel } from '@/entities/viewer';
 import { $$empty, $inPending, $$hasError } from '../../model';
+import { $deliveriesStore } from '../../model/deliveriesStore';
 
 import {
     BUTTON_RETRY_TEXT_KEY,
@@ -126,28 +123,25 @@ export const MyDeliveriesRow: FunctionComponent = () => {
         $$hasError,
     ]);
 
-    const items = useList(
-        myDeliveriesModel.$myDeliveriesStore,
-        (delivery, index) => {
-            const deliveryId = getDeliveryId(delivery);
+    const items = useList($deliveriesStore, (delivery, index) => {
+        const deliveryId = getDeliveryId(delivery);
 
-            if (index >= itemsLimit) return null;
+        if (index >= itemsLimit) return null;
 
-            return (
-                <div className="flex items-end py-1 pl-0.5">
-                    <div
-                        className="-translate-x-2 -translate-y-1.5 rotate-180 text-content4"
-                        style={{ writingMode: 'vertical-lr' }}
-                    >
-                        {t(DELIVERY_PREFIX, { id: deliveryId })}
-                    </div>
-                    <div className="flex-grow">
-                        <DeliveryCountdownCard delivery={delivery} />
-                    </div>
+        return (
+            <div className="flex items-end py-1 pl-0.5">
+                <div
+                    className="-translate-x-2 -translate-y-1.5 rotate-180 text-content4"
+                    style={{ writingMode: 'vertical-lr' }}
+                >
+                    {t(DELIVERY_PREFIX, { id: deliveryId })}
                 </div>
-            );
-        },
-    );
+                <div className="flex-grow">
+                    <DeliveryCountdownCard delivery={delivery} />
+                </div>
+            </div>
+        );
+    });
 
     if (isEmpty) {
         if (hasError) return <ErrorInitPlaceholder />;

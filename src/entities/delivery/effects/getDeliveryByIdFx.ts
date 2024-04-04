@@ -1,6 +1,7 @@
 import { createEffect } from 'effector';
 import { apiClient, Delivery } from '@/shared/api';
-import { AxiosError } from 'axios';
+import { isAxiosError } from 'axios';
+import { ZodError } from 'zod';
 
 /**
  * Defines the parameter type for the `getDeliveryByIdFx` effect.
@@ -20,9 +21,23 @@ export const getDeliveryByIdFx = createEffect(
                 params: { deliveryId },
             });
         } catch (error: unknown) {
-            if (error instanceof AxiosError && error.response.status === 404) {
-                throw new Error('DELIVERY_NOT_FOUND');
+            const zodError = error instanceof ZodError;
+
+            if (zodError) {
+                // eslint-disable-next-line no-console
+                error.issues.map((issue) => console.error(issue));
+                throw new TypeError(
+                    `Failed to fetch delivery: ${error.message}`,
+                );
             }
+
+            if (isAxiosError(error)) {
+                if (error.response?.status === 404) {
+                    throw new Error('DELIVERY_NOT_FOUND');
+                }
+                throw new Error(error.message);
+            }
+
             throw error;
         }
     },

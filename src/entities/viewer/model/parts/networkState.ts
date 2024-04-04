@@ -1,5 +1,4 @@
 import { createEvent, createStore } from 'effector';
-import { debug } from 'patronum';
 
 export type NetworkState = {
     online: boolean;
@@ -17,5 +16,3 @@ export const $networkState = createStore<Nullable<NetworkState>>(null).on(
     (_, payload) => payload,
 );
 export const $$isOnline = $networkState.map((state) => state?.online ?? false);
-
-debug($networkState);

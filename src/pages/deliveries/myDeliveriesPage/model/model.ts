@@ -1,18 +1,33 @@
 import { createGate } from 'effector-react';
 import { createEvent, createStore, sample } from 'effector';
-import { interval, once } from 'patronum';
+import { and, debug, interval, once } from 'patronum';
+import { sessionModel } from '@/entities/viewer';
 import { widgetMyDeliveriesModel } from '@/widgets/deliveries/myDeliveries';
 import { getMyDeliveriesFx } from '@/entities/delivery';
 import { POLLING_TIMEOUT } from '../config';
 
 export const MyDeliveriesPageGate = createGate<void>();
 
+const canStartPollingData = createEvent();
+
 /**
  * Initial data fetching
  */
+
+const $pageLoaded = createStore<boolean>(false).on(
+    MyDeliveriesPageGate.open,
+    () => true,
+);
+
+const $$readyForInit = and(
+    sessionModel.$isAuthorized,
+    sessionModel.$$isOnline,
+    $pageLoaded,
+);
+
 sample({
-    clock: once({ source: MyDeliveriesPageGate.open }),
-    target: widgetMyDeliveriesModel.init,
+    clock: $$readyForInit,
+    target: [widgetMyDeliveriesModel.init, canStartPollingData],
 });
 
 /**
@@ -54,3 +69,4 @@ sample({
         Date.now() - lastUpdateTimestamp > POLLING_TIMEOUT * 60 * 1000,
     target: widgetMyDeliveriesModel.fetchData,
 });
+debug(getMyDeliveriesFx.done);

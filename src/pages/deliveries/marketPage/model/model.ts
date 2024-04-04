@@ -1,27 +1,45 @@
 import { createEvent, createStore, sample } from 'effector';
 import { widgetMyDeliveriesModel } from '@/widgets/deliveries/myDeliveries';
-import { interval, once } from 'patronum';
+import { and, interval, once } from 'patronum';
 import { widgetMarketModel } from '@/widgets/deliveries/market';
 import { getMyDeliveriesFx } from '@/entities/delivery';
 import { createGate } from 'effector-react';
+import { sessionModel } from '@/entities/viewer';
 import { POLLING_TIMEOUT } from '../config';
 
 export const MarketPageGate = createGate<void>();
+
+const $pageLoaded = createStore<boolean>(false).on(
+    MarketPageGate.open,
+    () => true,
+);
+
+const $$readyForInit = and(
+    sessionModel.$isAuthorized,
+    sessionModel.$$isOnline,
+    $pageLoaded,
+);
+const canStartPollingData = createEvent();
 
 /**
  * Initial data fetching
  */
 sample({
-    clock: once({ source: MarketPageGate.open }),
-    target: [widgetMarketModel.init, widgetMyDeliveriesModel.init],
+    clock: $$readyForInit,
+    target: [
+        widgetMarketModel.init,
+        widgetMyDeliveriesModel.init,
+        canStartPollingData,
+    ],
 });
 
 /**
  * Data polling
  */
+
 const { tick: makePageExpired } = interval({
     timeout: POLLING_TIMEOUT * 60 * 1000,
-    start: once({ source: MarketPageGate.open }),
+    start: canStartPollingData,
 });
 
 const updateContent = createEvent();

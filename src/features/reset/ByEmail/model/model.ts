@@ -3,6 +3,9 @@ import { modelFactory } from 'effector-factorio';
 import { Email } from '@/shared/lib/type-guards/isEmail';
 import isEmail from '@/shared/lib/type-guards/isEmail/isEmail';
 import { ResetPasswordRequest } from '@/shared/api';
+import { sharedLibHelpers } from '@/shared/lib';
+
+const { isEmpty } = sharedLibHelpers;
 
 interface FactoryOptions {
     resetFx: Effect<ResetPasswordRequest, void, Error>;
@@ -18,7 +21,7 @@ export const factory = modelFactory((options: FactoryOptions) => {
         .reset(resetFormState, options.resetFx.done);
 
     const $allowedSend = $email.map(
-        (login) => login.length > 0 && isEmail(login),
+        (login) => !isEmpty(login) && isEmail(login),
     );
     const $pending = options.resetFx.pending;
     const $done = createStore<boolean>(false)

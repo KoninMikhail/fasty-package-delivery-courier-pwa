@@ -1,6 +1,6 @@
 import { createEvent, createStore } from 'effector';
 import { Delivery } from '@/shared/api';
-import { getMyDeliveriesFx, setDeliveryStatus } from './effects';
+import { getMyDeliveriesFx, setDeliveryStatus } from '@/entities/delivery';
 
 export const addDelivery = createEvent<Delivery>();
 export const removeDelivery = createEvent<Delivery>();

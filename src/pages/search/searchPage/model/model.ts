@@ -1,8 +1,10 @@
 import { combine, createEvent, createStore, restore, sample } from 'effector';
 import { Delivery } from '@/shared/api';
-import { debug } from 'patronum';
+import { sharedLibHelpers } from '@/shared/lib';
 import { searchDeliveriesByQueryFx } from './effects';
 import { PageState, SearchPageState } from '../types';
+
+const { isEmpty } = sharedLibHelpers;
 
 /**
  * Events
@@ -18,7 +20,7 @@ export const $searchQuery = createStore<string>('', {
 
 sample({
     clock: $searchQuery,
-    filter: (query) => query.length > 0,
+    filter: (query) => !isEmpty(query),
     target: searchDeliveriesByQueryFx,
 });
 
@@ -42,7 +44,7 @@ const $searchState = combine(
     $fetchResults,
     (searchQuery, isLoading, fetchResults): SearchPageState => {
         if (isLoading) return PageState.Loading;
-        if (searchQuery.length === 0) return PageState.EmptyQuery;
+        if (isEmpty(searchQuery)) return PageState.EmptyQuery;
         if (fetchResults === null) return PageState.EmptyQuery; // or another appropriate default state
         if (fetchResults.length === 0) return PageState.NotFound;
         return PageState.Search;
@@ -70,5 +72,3 @@ export const $searchResults = createStore<Delivery[]>([]).on(
     searchDeliveriesByQueryFx.doneData,
     (_, payload) => payload,
 );
-
-debug($searchResults);

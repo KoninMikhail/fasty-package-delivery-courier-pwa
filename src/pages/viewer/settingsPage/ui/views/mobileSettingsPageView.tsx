@@ -7,7 +7,7 @@ import { Button, Chip, Divider, Input, Link, Spacer } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { ChangeColorModeSwitchButton } from '@/features/viewer/changeColorMode';
 import { ChangeLanguageButton } from '@/features/viewer/changeLanguage';
-import { resetDeliveryById } from '@/entities/delivery/model/effects/resetDeliveryById';
+import { resetDeliveryById } from '@/entities/delivery/effects/resetDeliveryById';
 import {
     MdOutlineMarkunreadMailbox,
     MdOutlinePhoneEnabled,

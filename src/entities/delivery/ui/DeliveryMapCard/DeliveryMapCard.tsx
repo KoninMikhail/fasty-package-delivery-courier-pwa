@@ -1,6 +1,6 @@
 import { Button, Card, CardBody, Divider } from '@nextui-org/react';
 import { Delivery } from '@/shared/api';
-import { getDeliveryId } from '@/entities/delivery';
+import { getDeliveryId } from '../../lib/utils';
 
 interface DeliveryMapCardProperties {
     delivery: Delivery;
@@ -13,9 +13,9 @@ export const DeliveryMapCard: FunctionComponent<DeliveryMapCardProperties> = ({
 }) => {
     const id = getDeliveryId(delivery);
 
-    const onPressCard = () => {
+    const onPressCard = (): void => {
         if (onPress) {
-            onPress(id);
+            onPress(Number.parseInt(id, 10));
         }
     };
 

@@ -13,14 +13,9 @@ const Header: FunctionComponent<{ header: string }> = ({ header }) => (
     </div>
 );
 
-const FloatingInfo: FunctionComponent = () => {
-    return <div className="fixed top-0 w-full text-center">слоу нетворк</div>;
-};
-
 export const MobileMyDeliveriesHistoryView: FunctionComponent = () => {
     return (
         <>
-            <FloatingInfo />
             <Header header={PAGE_HEADING} />
             <DeliveriesHistoryList />
             <NavbarMobile />

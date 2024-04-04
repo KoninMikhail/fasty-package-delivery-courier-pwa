@@ -1,6 +1,5 @@
 import resolveConfig from 'tailwindcss/resolveConfig';
 import { createEvent, createStore } from 'effector';
-import { debug } from 'patronum';
 import {
     assignScreenSizeToDeviceType,
     calculateCurrentScreenSize,
@@ -102,5 +101,3 @@ export const $$deviceType = $$deviceScreen.map(
 export const $$isMobile = $$deviceType.map((state) => state === 'mobile');
 export const $$isTablet = $$deviceType.map((state) => state === 'tablet');
 export const $$isDesktop = $$deviceType.map((state) => state === 'desktop');
-
-debug($deviceInfo);

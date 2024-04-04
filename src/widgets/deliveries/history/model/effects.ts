@@ -12,7 +12,6 @@ export const getDeliveriesHistoryFx = createEffect<
     Delivery[]
 >(async (dates) => {
     try {
-        console.log('Fetching deliveries history');
         return await apiClient.getDeliveriesHistory({
             queries: { from: dates.from, to: dates.to },
         });
