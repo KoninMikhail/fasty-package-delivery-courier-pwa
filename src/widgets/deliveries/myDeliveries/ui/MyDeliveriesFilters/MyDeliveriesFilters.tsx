@@ -6,7 +6,7 @@ export const MyDeliveriesFilters: FunctionComponent = () => {
         <div>
             <FilterDeliveriesByTimeRange.HorizontalTimePicker
                 model={filteredDeliveriesByTimeModel}
-                containerProps={{ className: 'px-4' }}
+                containerProps={{ className: 'px-4 gap-2' }}
             />
         </div>
     );

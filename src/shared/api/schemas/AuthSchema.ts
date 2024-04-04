@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { userSchema } from './UserSchema';
 
 /**
  * Sign in
@@ -17,5 +18,6 @@ export const ForgotPasswordSchema = AuthByEmailCredentialsSchema.pick({
  * Session
  */
 export const AuthResponseSchema = z.object({
+    user: userSchema,
     token: z.string(),
 });

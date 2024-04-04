@@ -7,6 +7,7 @@ import {
 } from '@/features/delivery/filterDeliveriesByParams';
 import { isAfter } from 'date-fns/isAfter';
 import { assignUserToDeliveryFx } from '@/entities/user';
+import { debug } from 'patronum';
 import { fetchAvailableDeliveriesFx } from './effects';
 
 type DatesRange = {
@@ -17,7 +18,10 @@ type DatesRange = {
 /**
  * Global
  */
-export const init = createEvent(); // full reset of the market
+export const init = createEvent({
+    name: 'marketinit',
+}); // full reset of the market
+debug(init);
 export const fetchData = createEvent(); // refetch data
 export const datesPicked = createEvent<Nullable<DatesRange>>();
 

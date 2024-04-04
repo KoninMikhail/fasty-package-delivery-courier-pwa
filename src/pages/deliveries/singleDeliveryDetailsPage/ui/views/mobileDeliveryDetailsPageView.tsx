@@ -30,9 +30,9 @@ import { MdOutlineDirectionsRun } from 'react-icons/md';
 import { HiLightningBolt } from 'react-icons/hi';
 import { RiBuildingFill, RiWifiOffLine } from 'react-icons/ri';
 import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
+import { sessionModel } from '@/entities/viewer';
 
 import { PageState } from '@/pages/deliveries/singleDeliveryDetailsPage/types';
-import { useNetworkInfo } from '@/shared/config/network';
 
 import { FaMinus, FaPlus } from 'react-icons/fa6';
 import {
@@ -422,9 +422,10 @@ const YMAPSFallback: FunctionComponent = () => {
 
 const BlockWhenOffline: FunctionComponent<{
     children: ReactNode;
-    online?: boolean;
-}> = ({ children, online }) => {
-    return online ? (
+}> = ({ children }) => {
+    const isOnline = useUnit(sessionModel.$$isOnline);
+
+    return isOnline ? (
         children
     ) : (
         <div className="relative block">
@@ -445,10 +446,10 @@ const BlockWhenOffline: FunctionComponent<{
 
 export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
-    const { online } = useNetworkInfo();
+    const isOnline = useUnit(sessionModel.$$isOnline);
     const [coordinates] = useUnit([$$deliveryCoordinates]);
     const [pageState] = useUnit([$pageContentState]);
-    const isMapReady = coordinates && online;
+    const isMapReady = coordinates && isOnline;
 
     console.log(pageState);
 
@@ -587,7 +588,7 @@ export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
                 <Section>
                     <Heading content={t(LABEL_DELIVERY_STATUS)} />
                     <Spacer y={4} />
-                    <BlockWhenOffline online={online}>
+                    <BlockWhenOffline>
                         <DeliveryStatusControlWithTimeline />
                     </BlockWhenOffline>
                 </Section>

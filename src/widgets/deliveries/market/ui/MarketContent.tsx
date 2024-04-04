@@ -1,7 +1,6 @@
 import { PropsWithChildren } from 'react';
 import { DeliveryMarketCard } from '@/entities/delivery';
 import { useList, useUnit } from 'effector-react';
-import { useNetworkInfo } from '@/shared/config/network';
 import { Button, Skeleton, Spacer } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { RiWifiOffLine } from 'react-icons/ri';
@@ -119,7 +118,7 @@ const Empty: FunctionComponent = () => {
  * @constructor
  */
 export const MarketContent: FunctionComponent = () => {
-    const { online } = useNetworkInfo();
+    const online = useUnit(sessionModel.$$isOnline);
     const viewer = useUnit(sessionModel.$viewerProfileData);
 
     const [isPending, hasError, isEmpty] = useUnit([

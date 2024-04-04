@@ -1,22 +1,17 @@
-import { Authorized } from '@/entities/viewer';
-import {
-    sharedConfigDetectDevice,
-    sharedConfigConstants,
-} from '@/shared/config';
-
+import { Authorized, sessionModel } from '@/entities/viewer';
+import { sharedConfigConstants } from '@/shared/config';
 import { useTranslation } from 'react-i18next';
 import { useDocumentTitle } from 'usehooks-ts';
-import { useGate } from 'effector-react';
+import { useGate, useUnit } from 'effector-react';
 import { useParams } from 'react-router-dom';
 import { DeliveryDetailsPageGateway } from '@/pages/deliveries/singleDeliveryDetailsPage/model';
-import { useNetworkInfo } from '@/shared/config/network';
+
 import {
     DesktopDeliveryDetailsPageView,
     MobileDeliveryDetailsPageView,
 } from './views';
 import { translationNS } from '../config';
 
-const { useDeviceScreen } = sharedConfigDetectDevice;
 const { APP_NAME } = sharedConfigConstants;
 
 /**
@@ -25,18 +20,18 @@ const { APP_NAME } = sharedConfigConstants;
  * @constructor
  */
 export const SingleDeliveryDetailsPage: FunctionComponent = () => {
-    const { isDesktop } = useDeviceScreen();
-    const { online } = useNetworkInfo();
+    const isDesktop = useUnit(sessionModel.$$isDesktop);
     const { deliveryId } = useParams();
     const { t } = useTranslation(translationNS);
 
     const pageTitle = t('page.title', {
         id: deliveryId,
         appName: APP_NAME,
+        appDescription: t('page.description'),
     });
 
     useDocumentTitle(pageTitle);
-    useGate(DeliveryDetailsPageGateway, { deliveryId, online });
+    useGate(DeliveryDetailsPageGateway, { deliveryId });
 
     return isDesktop ? (
         <Authorized>

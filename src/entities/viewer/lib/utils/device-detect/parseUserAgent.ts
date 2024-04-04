@@ -1,5 +1,5 @@
 import UAParser from 'ua-parser-js';
-import { UserAgentInfo } from '../types';
+import { UserAgentInfo } from '../../../model/parts/deviceInfo';
 
 /** Parses the user agent string to extract detailed information.
  * @param {string} userAgentString - The raw user agent string from the browser or client.

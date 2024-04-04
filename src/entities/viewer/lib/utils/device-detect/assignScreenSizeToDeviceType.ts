@@ -1,4 +1,4 @@
-import { DeviceType, ScreenCode } from '../types';
+import { DeviceType, ScreenCode } from '../../../model/parts/deviceInfo';
 
 /**
  * Default screen codes for mobile devices.

@@ -1,15 +1,12 @@
-import {
-    sharedConfigConstants,
-    sharedConfigDetectDevice,
-} from '@/shared/config';
-import { Authorized } from '@/entities/viewer';
+import { sharedConfigConstants } from '@/shared/config';
+import { Authorized, sessionModel } from '@/entities/viewer';
 import { useTranslation } from 'react-i18next';
 import { useDocumentTitle } from 'usehooks-ts';
+import { useUnit } from 'effector-react';
 import { DesktopSettingsPageView, MobileSettingsPageView } from './views';
 
 import { translationNS } from '../config';
 
-const { useDeviceScreen } = sharedConfigDetectDevice;
 const { APP_NAME, APP_DESCRIPTION } = sharedConfigConstants;
 
 /**
@@ -18,8 +15,8 @@ const { APP_NAME, APP_DESCRIPTION } = sharedConfigConstants;
  * @constructor
  */
 export const SettingsPage: FunctionComponent = () => {
-    const { isDesktop } = useDeviceScreen();
     const { t, i18n } = useTranslation(translationNS);
+    const isDesktop = useUnit(sessionModel.$$isDesktop);
     const currentLanguage = i18n.language as keyof typeof APP_DESCRIPTION;
 
     const heading = t('page.header');

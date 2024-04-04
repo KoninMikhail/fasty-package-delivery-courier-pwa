@@ -1,7 +1,7 @@
 import { Modal, ModalContent, Spacer, useDisclosure } from '@nextui-org/react';
 import { RiWifiOffFill } from 'react-icons/ri';
 import { useTranslation } from 'react-i18next';
-import { useGate, useList, useUnit } from 'effector-react';
+import { useList, useUnit } from 'effector-react';
 import {
     MapContainer,
     Marker,
@@ -11,8 +11,7 @@ import {
 } from 'react-leaflet';
 import { HorizontalScroll } from '@/shared/ui/layouts';
 import { DeliveryMapCard, myDeliveriesModel } from '@/entities/delivery';
-import { sharedConfigNetwork } from '@/shared/config';
-import { MyDeliveriesGate } from '../../model/model';
+import { sessionModel } from '@/entities/viewer';
 import {
     DEFAULT_MAP_CENTER,
     DEFAULT_MAP_ZOOM,
@@ -24,8 +23,6 @@ import { $$deliveriesMarkers } from '../../model/mapMarkers';
 
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-
-const { useNetworkInfo } = sharedConfigNetwork;
 
 const OfflinePlaceholder: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
@@ -82,15 +79,9 @@ const CardsRow: FunctionComponent = () => {
 };
 
 export const MyDeliveriesMap: FunctionComponent = () => {
-    const { online } = useNetworkInfo();
+    const online = useUnit(sessionModel.$$isOnline);
     const { t } = useTranslation(translationNS);
-    const { isOpen, onOpen, onClose } = useDisclosure();
-
-    const onMapClick = (): void => {
-        onOpen();
-    };
-
-    useGate(MyDeliveriesGate, { online });
+    const { isOpen, onOpen: onMapClick, onClose } = useDisclosure();
 
     return (
         <>

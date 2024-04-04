@@ -3,7 +3,7 @@ import {
     getDeliveryId,
     myDeliveriesModel,
 } from '@/entities/delivery';
-import { useGate, useList, useUnit } from 'effector-react';
+import { useList, useUnit } from 'effector-react';
 import { sharedUiLayouts } from '@/shared/ui';
 import { Button, Skeleton, Spacer, Spinner } from '@nextui-org/react';
 import { GoAlert } from 'react-icons/go';
@@ -13,8 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
 import { PropsWithChildren } from 'react';
 import { settingsModel } from '@/entities/viewer';
-import { sharedConfigNetwork } from '@/shared/config';
-import { $$empty, MyDeliveriesGate, $inPending, $$hasError } from '../../model';
+import { $$empty, $inPending, $$hasError } from '../../model';
 
 import {
     BUTTON_RETRY_TEXT_KEY,
@@ -25,7 +24,6 @@ import {
 } from '../../config';
 
 const { HorizontalScroll } = sharedUiLayouts;
-const { useNetworkInfo } = sharedConfigNetwork;
 
 /**
  * Component for rendering horizontally scrollable content.
@@ -118,7 +116,6 @@ const Updater: FunctionComponent = () => (
  * Main component for displaying a row of deliveries, handling loading, empty, and error states.
  */
 export const MyDeliveriesRow: FunctionComponent = () => {
-    const { online } = useNetworkInfo();
     const { t } = useTranslation(translationNS);
     const itemsLimit = useUnit(settingsModel.$homeUpcomingDeliveriesCount);
 
@@ -128,8 +125,6 @@ export const MyDeliveriesRow: FunctionComponent = () => {
         $inPending,
         $$hasError,
     ]);
-
-    useGate(MyDeliveriesGate, { online });
 
     const items = useList(
         myDeliveriesModel.$myDeliveriesStore,

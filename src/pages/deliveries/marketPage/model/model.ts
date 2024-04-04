@@ -1,6 +1,6 @@
 import { createEvent, createStore, sample } from 'effector';
 import { widgetMyDeliveriesModel } from '@/widgets/deliveries/myDeliveries';
-import { interval, once, throttle } from 'patronum';
+import { interval, once } from 'patronum';
 import { widgetMarketModel } from '@/widgets/deliveries/market';
 import { getMyDeliveriesFx } from '@/entities/delivery';
 import { createGate } from 'effector-react';
@@ -12,7 +12,7 @@ export const MarketPageGate = createGate<void>();
  * Initial data fetching
  */
 sample({
-    clock: throttle(MarketPageGate.open, 1000),
+    clock: once({ source: MarketPageGate.open }),
     target: [widgetMarketModel.init, widgetMyDeliveriesModel.init],
 });
 

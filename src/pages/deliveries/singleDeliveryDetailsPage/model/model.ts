@@ -41,7 +41,6 @@ import { DELIVERY_ID_LENGTH } from '../config';
  */
 export const DeliveryDetailsPageGateway = createGate<{
     deliveryId?: string;
-    online?: boolean;
 }>();
 
 const $deliveryId = createStore<string>('').on(
@@ -70,10 +69,6 @@ sample({
 /**
  * Page
  */
-const $isOnline = createStore<boolean>(true).on(
-    DeliveryDetailsPageGateway.open,
-    (_, { online }) => online ?? true,
-);
 
 export const $pageContentState = createStore<Nullable<PageState>>(null)
     .on(getDeliveryByIdFx.doneData, () => PageState.Done)
@@ -174,7 +169,7 @@ export const $$isViewerDelivery = combine(
 
 condition({
     source: requestPageContent,
-    if: $isOnline,
+    if: sessionModel.$isOnline,
     then: loadFromRemote,
     else: loadFromCache,
 });

@@ -1,4 +1,5 @@
 import './middleware/eventListener';
+import './middleware/persistData';
 import './init';
 
 export * from './model/effects';

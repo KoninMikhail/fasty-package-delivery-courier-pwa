@@ -1,11 +1,9 @@
-import { Authorized } from '@/entities/viewer';
-import {
-    sharedConfigDetectDevice,
-    sharedConfigConstants,
-} from '@/shared/config';
+import { Authorized, sessionModel } from '@/entities/viewer';
+import { sharedConfigConstants } from '@/shared/config';
 import { useTranslation } from 'react-i18next';
 import { useDocumentTitle } from 'usehooks-ts';
-import { useGate } from 'effector-react';
+import { useGate, useUnit } from 'effector-react';
+
 import {
     DesktopMyDeliveriesPageView,
     MobileMyDeliveriesPageView,
@@ -13,7 +11,6 @@ import {
 import { translationNS, PAGE_TITLE } from '../config';
 import { MyDeliveriesPageGate } from '../model/model';
 
-const { useDeviceScreen } = sharedConfigDetectDevice;
 const { APP_NAME, APP_DESCRIPTION } = sharedConfigConstants;
 
 /**
@@ -22,8 +19,8 @@ const { APP_NAME, APP_DESCRIPTION } = sharedConfigConstants;
  * @constructor
  */
 export const MyDeliveriesPage: FunctionComponent = () => {
-    const { isDesktop } = useDeviceScreen();
     const { t, i18n } = useTranslation(translationNS);
+    const isDesktop = useUnit(sessionModel.$$isDesktop);
     const appLanguage = i18n.language as keyof typeof APP_DESCRIPTION;
 
     useDocumentTitle(

@@ -1,6 +1,7 @@
 import { createEvent, createStore, sample } from 'effector';
-import { and } from 'patronum';
+import { and, condition, empty, not, once } from 'patronum';
 import { User } from '@/shared/api';
+import { AppGate } from '@/shared/lib/app';
 import {
     authByEmailFx,
     changeViewerAvatarFx,
@@ -8,13 +9,24 @@ import {
     logoutFx,
     setViewerAccountPasswordFx,
 } from './effects';
+import { $$isOnline } from './parts/networkState';
 
 export const initSession = createEvent();
+export const validateSession = createEvent();
+export const forceInitComplete = createEvent();
 export const requestViewerLogout = createEvent();
 
-const $online = createStore(false);
+sample({
+    clock: once(AppGate.open),
+    target: initSession,
+});
 
+/**
+ * Session initialization status
+ */
 export const $initSessionComplete = createStore(false)
+    .on(forceInitComplete, () => true)
+    .on(authByEmailFx.done, () => true)
     .on(getViewerProfileFx.done, () => true)
     .on(getViewerProfileFx.fail, () => true);
 
@@ -22,6 +34,7 @@ export const $initSessionComplete = createStore(false)
  * Viewer profile data
  */
 export const $viewerProfileData = createStore<Nullable<User>>(null)
+    .on(authByEmailFx.doneData, (_, payload) => payload.user)
     .on(getViewerProfileFx.doneData, (_, payload) => payload)
     .on(changeViewerAvatarFx.doneData, (_, payload) => payload)
     .reset([
@@ -38,26 +51,53 @@ export const $$hasProfileData = $viewerProfileData.map((data) => !!data);
  */
 export const $isAuthorized = and($initSessionComplete, $$hasProfileData);
 
-sample({
-    clock: initSession,
-    source: $initSessionComplete,
-    filter: (ready) => !ready,
-    target: [getViewerProfileFx],
+/**
+ * Handle session initialization
+ */
+
+condition({
+    source: initSession,
+    if:
+        $$isOnline.map((isOnline) => isOnline) &&
+        not(empty($viewerProfileData)),
+    then: validateSession,
+    else: forceInitComplete,
 });
 
+sample({
+    clock: validateSession,
+    target: getViewerProfileFx,
+});
+
+/**
+ * Handle logout
+ */
 sample({
     clock: requestViewerLogout,
-    source: $online,
-    filter: (online) => online === true,
+    source: {
+        isOnline: $$isOnline,
+        isAuthorized: $isAuthorized,
+    },
+    filter: ({ isOnline, isAuthorized }) => isOnline && isAuthorized,
     target: logoutFx,
-});
-
-sample({
-    clock: authByEmailFx.doneData,
-    target: getViewerProfileFx,
 });
 
 sample({
     clock: setViewerAccountPasswordFx.doneData,
     target: logoutFx,
 });
+
+export { $$isOnline } from './parts/networkState';
+export {
+    $$isMobile,
+    $$isTablet,
+    $$isDesktop,
+    $$deviceScreen,
+} from './parts/deviceInfo';
+export {
+    getViewerProfileFx,
+    authByEmailFx,
+    changeViewerAvatarFx,
+    logoutFx,
+    setViewerAccountPasswordFx,
+} from './effects';

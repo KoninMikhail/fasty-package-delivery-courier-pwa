@@ -1,5 +1,5 @@
 import { DeliveryMarketCard } from '@/entities/delivery';
-import { useGate, useList, useUnit } from 'effector-react';
+import { useList, useUnit } from 'effector-react';
 import { Button, Link, Spinner } from '@nextui-org/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -8,7 +8,6 @@ import { BsBoxSeam } from 'react-icons/bs';
 import { RiWifiOffLine } from 'react-icons/ri';
 import React, { PropsWithChildren, ReactElement, useMemo } from 'react';
 import clsx from 'clsx';
-import { useNetworkInfo } from '@/shared/config/network';
 import {
     BUTTON_RETRY_TEXT_KEY,
     DATA_EMPTY_TEXT_KEY,
@@ -21,7 +20,6 @@ import {
     $$empty,
     $deliveriesList,
     init,
-    MyDeliveriesGate,
     $inPending,
     $$hasError,
 } from '../../model';
@@ -94,18 +92,12 @@ const RestartButton: FunctionComponent<RestartButtonProperties> = ({
 };
 
 export const MyDeliveriesList: FunctionComponent = () => {
-    const { online } = useNetworkInfo();
-
     const [isLoading, hasError, isEmpty, reInit] = useUnit([
         $inPending,
         $$hasError,
         $$empty,
         init,
     ]);
-
-    useGate(MyDeliveriesGate, {
-        online,
-    });
 
     const items = useList($deliveriesList, (delivery) => (
         <motion.div key={delivery.date} whileTap={{ scale: 0.98 }}>

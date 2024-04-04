@@ -1,5 +1,4 @@
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
-import { Offline, SlowNetwork } from '@/entities/viewer';
 import { widgetsDeliveriesHistoryUi } from '@/widgets/deliveries/history';
 
 const { NavbarMobile } = widgetNavbarMobileUi;
@@ -15,12 +14,7 @@ const Header: FunctionComponent<{ header: string }> = ({ header }) => (
 );
 
 const FloatingInfo: FunctionComponent = () => {
-    return (
-        <div className="fixed top-0 w-full text-center">
-            <Offline>dsfsdfdfs</Offline>
-            <SlowNetwork>слоу нетворк</SlowNetwork>
-        </div>
-    );
+    return <div className="fixed top-0 w-full text-center">слоу нетворк</div>;
 };
 
 export const MobileMyDeliveriesHistoryView: FunctionComponent = () => {

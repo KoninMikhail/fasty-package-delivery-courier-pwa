@@ -1,15 +1,11 @@
-import { Authorized } from '@/entities/viewer';
-import {
-    sharedConfigDetectDevice,
-    sharedConfigConstants,
-} from '@/shared/config';
+import { Authorized, sessionModel } from '@/entities/viewer';
+import { sharedConfigConstants } from '@/shared/config';
 
 import { useTranslation } from 'react-i18next';
 import { useDocumentTitle } from 'usehooks-ts';
 import { useUnit } from 'effector-react';
 import { useSearchParams } from 'react-router-dom';
 import { useEffect } from 'react';
-import { useNetworkInfo } from '@/shared/config/network';
 import { widgetSearchQueryPopupModel } from '@/widgets/search/searchQueryPopup';
 import { DesktopSearchPageView, MobileSearchPageView } from './views';
 import { translationNS } from '../config';
@@ -20,7 +16,6 @@ import {
     $finalSearchState,
 } from '../model';
 
-const { useDeviceScreen } = sharedConfigDetectDevice;
 const { APP_NAME, APP_DESCRIPTION } = sharedConfigConstants;
 
 /**
@@ -28,8 +23,10 @@ const { APP_NAME, APP_DESCRIPTION } = sharedConfigConstants;
  * It performs a search based on the query parameters from the URL or user input.
  */
 export const SearchPage: FunctionComponent = () => {
-    const { online: isOnline } = useNetworkInfo();
-    const { isDesktop } = useDeviceScreen();
+    const [isOnline, isDesktop] = useUnit([
+        sessionModel.$$isOnline,
+        sessionModel.$$isDesktop,
+    ]);
     const { t, i18n } = useTranslation(translationNS);
     const appLanguage = i18n.language as keyof typeof APP_DESCRIPTION;
 
