@@ -1,5 +1,5 @@
 import { createEvent, createStore, sample } from 'effector';
-import { once } from 'patronum';
+import { and, condition, once } from 'patronum';
 import { User } from '@/shared/api';
 import { AppGate } from '@/shared/lib/app';
 import {
@@ -22,30 +22,38 @@ sample({
 });
 
 /**
+ * Session initialization status
+ */
+export const $initSessionComplete = createStore(false)
+    .on(forceInitComplete, () => true)
+    .on(getViewerProfileFx.done, () => true)
+    .on(getViewerProfileFx.fail, () => true);
+
+/**
  * Viewer profile data
  */
 export const $viewerProfileData = createStore<Nullable<User>>(null)
     .on(authByEmailFx.doneData, (_, payload) => payload.user)
     .on(getViewerProfileFx.doneData, (_, payload) => payload)
     .on(changeViewerAvatarFx.doneData, (_, payload) => payload)
-    .reset([logoutFx.done, logoutFx.fail, getViewerProfileFx.fail]);
+    .reset([logoutFx.done, logoutFx.fail]);
 
 export const $$hasProfileData = $viewerProfileData.map((data) => !!data);
 
 /**
  * Authorization status
  */
-export const $isAuthorized = $$hasProfileData;
+export const $isAuthorized = and($initSessionComplete, $$hasProfileData);
 
 /**
  * Handle session initialization
  */
 
-sample({
-    clock: initSession,
-    source: $$isOnline.map((isOnline) => isOnline),
-    filter: (isOnline) => isOnline,
-    target: getViewerProfileFx,
+condition({
+    source: initSession,
+    if: $$isOnline.map((isOnline) => isOnline),
+    then: getViewerProfileFx,
+    else: forceInitComplete,
 });
 
 /**
