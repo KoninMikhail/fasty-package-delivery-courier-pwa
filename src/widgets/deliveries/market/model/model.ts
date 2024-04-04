@@ -6,6 +6,7 @@ import {
     FilterDeliveriesByParametersModel,
 } from '@/features/delivery/filterDeliveriesByParams';
 import { isAfter } from 'date-fns/isAfter';
+import { sessionModel } from '@/entities/viewer';
 import { assignUserToDeliveryFx } from '@/entities/user';
 import { sharedLibHelpers } from '@/shared/lib';
 import { fetchAvailableDeliveriesFx } from './effects';
@@ -29,6 +30,9 @@ export const datesPicked = createEvent<Nullable<DatesRange>>();
  */
 sample({
     clock: [init, fetchData],
+    source: sessionModel.$$isOnline,
+    filter: (isOnline) => isOnline,
+    fn: () => {},
     target: fetchAvailableDeliveriesFx,
 });
 
@@ -55,10 +59,9 @@ export const $assignDeliveriesCount = createStore<number>(0)
     .on(assignUserToDeliveryFx.done, (state) => state + 1)
     .reset(init);
 export const $isDeliveriesLoading = fetchAvailableDeliveriesFx.pending;
-export const $error = createStore<Nullable<Error>>(null).on(
-    fetchAvailableDeliveriesFx.failData,
-    (_, error) => error,
-);
+export const $error = createStore<Nullable<Error>>(null)
+    .on(fetchAvailableDeliveriesFx.failData, (_, error) => error)
+    .reset([fetchData]);
 export const $$hasError = $error.map((error) => !isEmpty(error));
 export const $$deliveriesEmpty = $fetchedData.map((deliveries) =>
     isEmpty(deliveries),
