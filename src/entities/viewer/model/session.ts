@@ -1,5 +1,5 @@
 import { createEvent, createStore, sample } from 'effector';
-import { and, condition, empty, not, once } from 'patronum';
+import { once } from 'patronum';
 import { User } from '@/shared/api';
 import { AppGate } from '@/shared/lib/app';
 import {
@@ -22,15 +22,6 @@ sample({
 });
 
 /**
- * Session initialization status
- */
-export const $initSessionComplete = createStore(false)
-    .on(forceInitComplete, () => true)
-    .on(authByEmailFx.done, () => true)
-    .on(getViewerProfileFx.done, () => true)
-    .on(getViewerProfileFx.fail, () => true);
-
-/**
  * Viewer profile data
  */
 export const $viewerProfileData = createStore<Nullable<User>>(null)
@@ -44,23 +35,16 @@ export const $$hasProfileData = $viewerProfileData.map((data) => !!data);
 /**
  * Authorization status
  */
-export const $isAuthorized = and($initSessionComplete, $$hasProfileData);
+export const $isAuthorized = $$hasProfileData;
 
 /**
  * Handle session initialization
  */
 
-condition({
-    source: initSession,
-    if:
-        $$isOnline.map((isOnline) => isOnline) &&
-        not(empty($viewerProfileData)),
-    then: validateSession,
-    else: forceInitComplete,
-});
-
 sample({
-    clock: validateSession,
+    clock: initSession,
+    source: $$isOnline.map((isOnline) => isOnline),
+    filter: (isOnline) => isOnline,
     target: getViewerProfileFx,
 });
 
