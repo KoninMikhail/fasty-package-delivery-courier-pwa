@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { LuAlertTriangle } from 'react-icons/lu';
 import { BsBoxSeam } from 'react-icons/bs';
+import { sessionModel } from '@/entities/viewer';
 import { RiWifiOffLine } from 'react-icons/ri';
 import React, { PropsWithChildren, ReactElement, useMemo } from 'react';
 import clsx from 'clsx';
@@ -92,7 +93,8 @@ const RestartButton: FunctionComponent<RestartButtonProperties> = ({
 };
 
 export const MyDeliveriesList: FunctionComponent = () => {
-    const [isLoading, hasError, isEmpty, reInit] = useUnit([
+    const [online, isLoading, hasError, isEmpty, reInit] = useUnit([
+        sessionModel.$$isOnline,
         $inPending,
         $$hasError,
         $$empty,
