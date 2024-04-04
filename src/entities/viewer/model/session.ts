@@ -37,12 +37,7 @@ export const $viewerProfileData = createStore<Nullable<User>>(null)
     .on(authByEmailFx.doneData, (_, payload) => payload.user)
     .on(getViewerProfileFx.doneData, (_, payload) => payload)
     .on(changeViewerAvatarFx.doneData, (_, payload) => payload)
-    .reset([
-        logoutFx.done,
-        logoutFx.fail,
-        authByEmailFx.fail,
-        getViewerProfileFx.fail,
-    ]);
+    .reset([logoutFx.done, logoutFx.fail, getViewerProfileFx.fail]);
 
 export const $$hasProfileData = $viewerProfileData.map((data) => !!data);
 
