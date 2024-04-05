@@ -18,6 +18,12 @@ export const LABEL_CONTACT_PERSON = 'delivery.card.label.contactPerson';
 export const LABEL_COMMENT = 'delivery.card.label.comment';
 export const STATUS_CREATED = 'delivery.status.created';
 export const STATUS_DELIVERING = 'delivery.status.delivering';
+export const STATUS_DELIVERING_DESCRIPTION =
+    'delivery.status.delivering.description';
 export const STATUS_DONE = 'delivery.status.done';
+export const STATUS_NO_COMMENT = 'delivery.status.noComment';
+export const STATUS_DONE_COMMENT = 'delivery.status.done.comment';
 export const STATUS_CANCELLED = 'delivery.status.canceled';
+export const STATUS_CANCELLED_COMMENT = 'delivery.status.canceled.comment';
 export const NO_COMMENT_TEXT = 'delivery.card.noComment';
+export const LABEL_DATE = 'delivery.card.label.date';

@@ -27,6 +27,7 @@ import { assignUserToDeliveryFx } from '@/entities/user';
 import { getClientTypeLocale } from '@/entities/client/lib/utils/getClientTypeLocale';
 import { getClientName, getClientType } from '@/entities/client';
 import { condition, once } from 'patronum';
+import { isEmpty } from '@/shared/lib/helpers';
 import { $myDeliveriesStore } from './parts/deliveriesCache';
 import { handleDeliveryError, handleDeliveryNotLoaded } from '../lib';
 import { PageState } from '../types';
@@ -61,6 +62,8 @@ sample({
         source: DeliveryDetailsPageGateway.open,
         reset: DeliveryDetailsPageGateway.close,
     }),
+    source: $deliveryId,
+    filter: (deliveryId) => !isEmpty(deliveryId),
     target: requestPageContent,
 });
 

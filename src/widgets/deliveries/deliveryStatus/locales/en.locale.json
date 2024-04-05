@@ -1,5 +1,6 @@
 {
   "message.error.empty": "No deliveries yet",
   "message.error.data": "An error occurred while loading the deliveries",
-  "button.error.label.retry": "Retry"
+  "button.error.label.retry": "Retry",
+  "message.lastUpdate": "Last update: {{date}}"
 }

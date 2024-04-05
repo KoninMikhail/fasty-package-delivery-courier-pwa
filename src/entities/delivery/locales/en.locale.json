@@ -1,8 +1,12 @@
 {
   "delivery.status.created": "Created",
   "delivery.status.delivering": "Delivering",
+  "delivery.status.delivering.description": "The courier is on the way",
   "delivery.status.done": "Delivered",
+  "delivery.status.done.comment": "Mark: {{comment}}",
   "delivery.status.canceled": "Canceled",
+  "delivery.status.canceled.comment": "Reason: {{comment}}",
+  "delivery.status.noComment": "No comment",
   "delivery.data.fallback.address": "Not found",
   "delivery.data.fallback.contents": "Not found",
   "delivery.data.fallback.city": "Moscow",
@@ -24,5 +28,6 @@
   "delivery.card.chip.expired": "Expired",
   "delivery.card.chip.timeLeft": "{{hours}}h {{minutes}}m",
   "delivery.card.client.name.notFound": "Client not found",
+  "delivery.card.label.date": "Date",
   "delivery.card.button.more": "See more"
 }

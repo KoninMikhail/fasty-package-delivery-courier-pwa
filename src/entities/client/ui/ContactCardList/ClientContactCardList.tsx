@@ -59,7 +59,7 @@ const Email: FunctionComponent<{ value: string }> = ({ value }) => {
         <div className="flex gap-2">
             <div className="flex-grow">{t(TRANSLATION.LABEL_EMAIL)}</div>
             <div>
-                <Link isExternal href={link}>
+                <Link isExternal href={link} className="break-all text-right">
                     {value}
                 </Link>
             </div>

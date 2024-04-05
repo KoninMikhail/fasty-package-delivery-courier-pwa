@@ -101,11 +101,10 @@ const ContactLinks: FunctionComponent = () => {
     );
 };
 
-const PolicesLinks: FunctionComponent<{
-    onPressCookiePolicy: () => void;
-    onPressPrivacyPolicy: () => void;
-    onPressTermsOfUse: () => void;
-}> = ({ onPressCookiePolicy, onPressPrivacyPolicy, onPressTermsOfUse }) => {
+const PolicesLinks: FunctionComponent = () => {
+    const onPressCookiePolicy = useUnit(pressOpenCookiePolicyLink);
+    const onPressPrivacyPolicy = useUnit(pressOpenPrivacyPolicyLink);
+    const onPressTermsOfUse = useUnit(pressOpenTermsOfUseLink);
     return (
         <>
             <Button onPress={onPressTermsOfUse} variant="bordered">
@@ -134,16 +133,12 @@ export const MobileSettingsPageView: FunctionComponent = () => {
      */
     const currentLanguage = i18n.language as keyof typeof APP_DESCRIPTION;
 
-    const onResetPress = () => {
+    const onResetPress = (): void => {
         if (id !== '0') {
             void resetDeliveryById(id);
             setId('0');
         }
     };
-
-    const onPressCookiePolicy = useUnit(pressOpenCookiePolicyLink);
-    const onPressPrivacyPolicy = useUnit(pressOpenPrivacyPolicyLink);
-    const onPressTermsOfUse = useUnit(pressOpenTermsOfUseLink);
 
     return (
         <>
@@ -213,11 +208,7 @@ export const MobileSettingsPageView: FunctionComponent = () => {
                         <div className="mb-2 w-full font-bold">
                             <SectionLegalTitle />
                         </div>
-                        <PolicesLinks
-                            onPressCookiePolicy={onPressCookiePolicy}
-                            onPressPrivacyPolicy={onPressPrivacyPolicy}
-                            onPressTermsOfUse={onPressTermsOfUse}
-                        />
+                        <PolicesLinks />
                     </div>
                 </Section>
 

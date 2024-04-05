@@ -434,7 +434,7 @@ const BlockWhenOffline: FunctionComponent<{
                     <Spacer y={4} />
                     <RiWifiOffLine className="mx-auto text-5xl text-danger" />
                     <Spacer y={4} />
-                    <span className="text-content3  text-danger">
+                    <span className="text-content3 text-danger">
                         Недоступно офлайн
                     </span>
                 </div>
@@ -450,8 +450,6 @@ export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
     const [coordinates] = useUnit([$$deliveryCoordinates]);
     const [pageState] = useUnit([$pageContentState]);
     const isMapReady = coordinates && isOnline;
-
-    console.log(pageState);
 
     if (!pageState)
         return (

@@ -1,4 +1,7 @@
 {
   "page.title_default": "Поиск | {{appName}}-{{appDescription}}",
-  "page.title_search": "{{query}} | {{appName}}-{{appDescription}}"
+  "page.title_search": "{{query}} | {{appName}}-{{appDescription}}",
+  "page.section.heading.results": "Результаты поиска",
+  "page.section.notfound.message": "Ничего не найдено",
+  "page.section.noquery.message": "Не задан поисковый запрос"
 }

@@ -5,18 +5,24 @@ import React, {
     PropsWithChildren,
     ReactElement,
     Suspense,
-    useMemo,
     useRef,
 } from 'react';
 import { IoSearchSharp } from 'react-icons/io5';
 import { RiWifiOffLine } from 'react-icons/ri';
 import { FiSearch } from 'react-icons/fi';
 import { MdOutlineSentimentDissatisfied } from 'react-icons/md';
-import { Delivery } from '@/shared/api';
-import { PageState, SearchPageState } from '@/pages/search/searchPage/types';
-import { useUnit } from 'effector-react';
-import { sessionModel } from '@/entities/viewer';
+import { PageState } from '@/pages/search/searchPage/types';
+import { useList, useUnit } from 'effector-react';
+import { Offline, Online } from '@/entities/viewer';
 import { widgetSearchQueryPopupModel } from '@/widgets/search/searchQueryPopup';
+import { SearchResultsText } from '@/pages/search/searchPage/ui/common/locale/SearchResultsText';
+import {
+    $finalSearchState,
+    $searchQuery,
+    $searchResults,
+} from '@/pages/search/searchPage/model';
+import { SearchNotFoundText } from '@/pages/search/searchPage/ui/common/locale/SearchNotFoundText';
+import { SearchEmptyQueryText } from '../common/locale/SearchEmptyQueryText';
 
 const SearchPopup = React.lazy(() =>
     import('@/widgets/search/searchQueryPopup').then((module) => ({
@@ -43,16 +49,17 @@ const Content: FunctionComponent<PropsWithChildren> = ({ children }) => (
  * Components
  */
 const Header: FunctionComponent<{
-    query: string;
     isDisabled?: boolean;
-    onPressInput: () => void;
-}> = ({ query, onPressInput, isDisabled }) => {
+}> = ({ isDisabled }) => {
     const inputReference = useRef<HTMLInputElement>(null);
-    const isQueryEmpty = query === '';
+    const query = useUnit($searchQuery);
+    const makeSearchPopupOpened = useUnit(
+        widgetSearchQueryPopupModel.modal.clickTriggerElement,
+    );
 
     const onClickInput = (): void => {
         inputReference?.current?.blur();
-        onPressInput();
+        makeSearchPopupOpened();
     };
 
     return (
@@ -80,7 +87,7 @@ const Header: FunctionComponent<{
     );
 };
 
-const Offline: FunctionComponent = () => {
+const OfflineMessage: FunctionComponent = () => {
     return (
         <div className="block p-4 py-16">
             <div className="flex h-56 w-full flex-col items-center justify-center gap-4 pb-24">
@@ -104,51 +111,44 @@ const EmptyQuery: FunctionComponent = () => {
     return (
         <div className="mx-auto flex h-[60vh] w-3/4 flex-col items-center justify-center gap-4 text-center text-content3">
             <FiSearch className="text-6xl" />
-            <p>Не задан поисковый запрос</p>
+            <SearchEmptyQueryText />
         </div>
     );
 };
 
 const NotFound: FunctionComponent = () => {
-    const icon = useMemo(
-        () => <MdOutlineSentimentDissatisfied className="text-6xl" />,
-        [],
-    );
     return (
         <div className="mx-auto flex h-[60vh] w-3/4 flex-col items-center justify-center gap-4 text-center text-content3">
-            {icon}
-            <p>Извините, ничего не найдено</p>
+            <MdOutlineSentimentDissatisfied className="text-6xl" />
+            <SearchNotFoundText />
         </div>
+    );
+};
+
+const SearchResults: FunctionComponent = () => {
+    const query = useUnit($searchQuery);
+    const results = useList($searchResults, (result) => (
+        <DeliverySearchResultCard
+            key={result.id}
+            delivery={result}
+            query={query}
+        />
+    ));
+    return (
+        <>
+            <div className="font-medium">
+                <SearchResultsText />
+            </div>
+            {results}
+        </>
     );
 };
 
 /**
  * View
  */
-export const MobileSearchPageView: FunctionComponent<{
-    query: string;
-    pageState: SearchPageState;
-    results: Delivery[];
-    onPressClear?: () => void;
-}> = ({ query, pageState, results, onPressClear }) => {
-    const isOnline = useUnit(sessionModel.$$isOnline);
-    const onClickInput = useUnit(
-        widgetSearchQueryPopupModel.modal.clickTriggerElement,
-    );
-
-    if (!isOnline) {
-        return (
-            <>
-                <Header query={query} isDisabled />
-                <Content>
-                    <Spacer y={2} />
-                    <Offline />
-                    <Spacer y={4} />
-                    <NavbarMobile />
-                </Content>
-            </>
-        );
-    }
+export const MobileSearchPageView: FunctionComponent = () => {
+    const pageState = useUnit($finalSearchState);
 
     const renderState = (): ReactElement | ReactElement[] => {
         switch (pageState) {
@@ -162,37 +162,37 @@ export const MobileSearchPageView: FunctionComponent<{
                 return <LoadingMessage />;
             }
             default: {
-                return (
-                    <>
-                        <div className="font-medium">Найденные результаты</div>
-                        {results.map((result) => (
-                            <DeliverySearchResultCard
-                                key={result.id}
-                                delivery={result}
-                                query={query}
-                            />
-                        ))}
-                    </>
-                );
+                return <SearchResults />;
             }
         }
     };
 
     return (
         <>
-            <Header query={query} onPressInput={onClickInput} />
-            <Content>
-                <Spacer y={2} />
-                <div className="flex h-full flex-col gap-4">
-                    {renderState()}
-                    <Spacer y={16} />
-                </div>
-                <Spacer y={4} />
-                <NavbarMobile />
-            </Content>
-            <Suspense>
-                <SearchPopup size="full" placement="auto" />
-            </Suspense>
+            <Offline>
+                <Header isDisabled />
+                <Content>
+                    <Spacer y={2} />
+                    <OfflineMessage />
+                    <Spacer y={4} />
+                    <NavbarMobile />
+                </Content>
+            </Offline>
+            <Online>
+                <Header />
+                <Content>
+                    <Spacer y={2} />
+                    <div className="flex h-full flex-col gap-4">
+                        {renderState()}
+                        <Spacer y={16} />
+                    </div>
+                    <Spacer y={4} />
+                    <NavbarMobile />
+                </Content>
+                <Suspense>
+                    <SearchPopup size="full" placement="auto" />
+                </Suspense>
+            </Online>
         </>
     );
 };

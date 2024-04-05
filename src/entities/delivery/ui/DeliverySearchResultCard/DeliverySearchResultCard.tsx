@@ -34,6 +34,7 @@ import {
     STATUS_DELIVERING,
     STATUS_CANCELLED,
     STATUS_CREATED,
+    LABEL_DATE,
 } from '../../config';
 
 const { RouteName } = sharedConfigRoutes;
@@ -212,6 +213,7 @@ interface DeliverySearchResultCardProperties {
 
 export const DeliverySearchResultCard: FunctionComponent<DeliverySearchResultCardProperties> =
     React.memo(({ delivery, query }) => {
+        const { t } = useTranslation(translationNS);
         const navigate = useNavigate();
         const queryWords = query.split(' ');
 
@@ -255,7 +257,9 @@ export const DeliverySearchResultCard: FunctionComponent<DeliverySearchResultCar
                 </CardBody>
                 <CardFooter className="gap-4">
                     <div>
-                        <h4 className="font-bold text-default-900">Доставка</h4>
+                        <h4 className="font-bold text-default-900">
+                            {t(LABEL_DATE)}
+                        </h4>
                         <div className="flex flex-grow items-center gap-1 text-default">
                             <FaRegCalendarAlt />
                             <p className="text-small font-semibold text-default-400">

@@ -9,6 +9,17 @@ import { useUnit } from 'effector-react';
 import { sessionModel } from '@/entities/viewer';
 import { useTranslation } from 'react-i18next';
 import { enUS, ru } from 'date-fns/locale';
+import {
+    STATUS_CREATED,
+    STATUS_DELIVERING,
+    translationNS as DeliveriesTranslationNS,
+    STATUS_DONE,
+    STATUS_CANCELLED,
+    STATUS_DELIVERING_DESCRIPTION,
+    STATUS_CANCELLED_COMMENT,
+    STATUS_NO_COMMENT,
+    STATUS_DONE_COMMENT,
+} from '@/entities/delivery';
 import { format } from 'date-fns';
 import {
     $$deliveryComment,
@@ -19,6 +30,7 @@ import {
     assignToDeliveryModel,
     setStatusModel,
 } from '../../model';
+import { LAST_UPDATE_TEXT_KEY, translationNS } from '../../config';
 
 const timeLocales = { en: enUS, ru };
 
@@ -41,7 +53,7 @@ const StatusList: FunctionComponent<PropsWithChildren> = ({ children }) => {
 const StatusCreated: FunctionComponent<{
     createDate?: Date;
 }> = ({ createDate }) => {
-    const { i18n } = useTranslation();
+    const { i18n, t } = useTranslation([DeliveriesTranslationNS]);
     // @ts-expect-error i18n
     const currentLocale = timeLocales[i18n.language] || enUS;
 
@@ -55,7 +67,7 @@ const StatusCreated: FunctionComponent<{
                 <MdOutlineAdd />
             </span>
             <h3 className="mb-1 flex items-center text-lg font-semibold text-gray-900 dark:text-content1-foreground">
-                Создан
+                {t(STATUS_CREATED)}
             </h3>
             <time className="mb-2 block text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
                 {createDateFormatted}
@@ -64,16 +76,17 @@ const StatusCreated: FunctionComponent<{
     );
 };
 const StatusInDelivery: FunctionComponent = () => {
+    const { t } = useTranslation([DeliveriesTranslationNS]);
     return (
         <li className="ms-8">
             <span className="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 ring-8 ring-white dark:bg-blue-900 dark:ring-gray-900">
                 <TbTruckDelivery />
             </span>
             <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-content1-foreground">
-                В доставке
+                {t(STATUS_DELIVERING)}
             </h3>
             <time className="mb-2 block text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
-                Заказ находится у курьера
+                {t(STATUS_DELIVERING_DESCRIPTION)}
             </time>
         </li>
     );
@@ -81,18 +94,21 @@ const StatusInDelivery: FunctionComponent = () => {
 const StatusDelivered: FunctionComponent<{
     comment?: string;
 }> = ({ comment }) => {
+    const { t } = useTranslation([DeliveriesTranslationNS]);
     return (
         <li className="ms-8">
             <span className="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 ring-8 ring-white dark:bg-blue-900 dark:ring-gray-900">
                 <LuUserCheck />
             </span>
             <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-content1-foreground">
-                Доставлен
+                {t(STATUS_DONE)}
             </h3>
             <div className="mb-2 block text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
                 {comment
-                    ? `Комментарий: ${comment}`
-                    : `Комментарий: отсутствует`}
+                    ? t(STATUS_DONE_COMMENT, {
+                          comment,
+                      })
+                    : t(STATUS_NO_COMMENT)}
             </div>
         </li>
     );
@@ -100,16 +116,23 @@ const StatusDelivered: FunctionComponent<{
 const StatusCanceled: FunctionComponent<{
     comment?: string;
 }> = ({ comment }) => {
+    const { t } = useTranslation([DeliveriesTranslationNS]);
     return (
         <li className="ms-8">
             <span className="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 ring-8 ring-white dark:bg-blue-900 dark:ring-gray-900">
                 <MdClose />
             </span>
             <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-content1-foreground">
-                Отмена
+                {t(STATUS_CANCELLED)}
             </h3>
             <div className="mb-2 block text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
-                <div>{`Причина: ${comment}`}</div>
+                <div>
+                    {comment
+                        ? t(STATUS_CANCELLED_COMMENT, {
+                              comment,
+                          })
+                        : t(STATUS_NO_COMMENT)}
+                </div>
             </div>
         </li>
     );
@@ -118,7 +141,7 @@ const StatusCanceled: FunctionComponent<{
 const LastEdited: FunctionComponent<{
     updateDate?: Date;
 }> = ({ updateDate }) => {
-    const { i18n } = useTranslation();
+    const { i18n, t } = useTranslation(translationNS);
     // @ts-expect-error i18n
     const currentLocale = timeLocales[i18n.language] || enUS;
     const updateDateFormatted = updateDate
@@ -126,7 +149,11 @@ const LastEdited: FunctionComponent<{
         : 'неизвестно';
     return (
         <div className="mb-2 block text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
-            <div>{`Последнее изменение: ${updateDateFormatted}`}</div>
+            <div>
+                {t(LAST_UPDATE_TEXT_KEY, {
+                    date: updateDateFormatted,
+                })}
+            </div>
         </div>
     );
 };
