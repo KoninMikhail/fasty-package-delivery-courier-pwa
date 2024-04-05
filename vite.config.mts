@@ -10,10 +10,6 @@ import svgr from "vite-plugin-svgr";
 import {vitePluginVersionMark} from "vite-plugin-version-mark";
 import version from "vite-plugin-package-version";
 
-import {sharedConfigRoutes} from './src/shared/config';
-const {RouteName} = sharedConfigRoutes;
-const {ROOT_PAGE, SEARCH_PAGE, DELIVERIES_HISTORY_PAGE, DELIVERIES} = RouteName;
-
 export default defineConfig(({mode}) => ({
     build: {
         target: 'esnext',
@@ -79,7 +75,7 @@ export default defineConfig(({mode}) => ({
                                         "sizes": "192x192",
                                         "type": "image/png"
                                     }],
-                                    "url": ROOT_PAGE
+                                    "url": "/"
                                 },
                                 {
                                     "name": "My deliveries",
@@ -88,7 +84,7 @@ export default defineConfig(({mode}) => ({
                                         "sizes": "192x192",
                                         "type": "image/png"
                                     }],
-                                    "url": DELIVERIES
+                                    "url": "/deliveries"
                                 },
                                 {
                                     "name": "History",
@@ -97,7 +93,7 @@ export default defineConfig(({mode}) => ({
                                         "sizes": "192x192",
                                         "type": "image/png"
                                     }],
-                                    "url": DELIVERIES_HISTORY_PAGE
+                                    "url": "/history"
                                 },{
                                     "name": "Search",
                                     "icons": [{
@@ -105,7 +101,7 @@ export default defineConfig(({mode}) => ({
                                         "sizes": "192x192",
                                         "type": "image/png"
                                     }],
-                                    "url": SEARCH_PAGE
+                                    "url": "/search"
                                 }],
                         icons: [
                             {
