@@ -59,9 +59,6 @@ export default defineConfig(({mode}) => ({
                         "fonts/*.woff2",
                         "assets/**/*",
                     ],
-                    devOptions: {
-                        enabled: mode === 'development',
-                    },
                     manifest: {
                         name: "Fasty - Delivery Exchange For Couriers",
                         short_name: "Fasty",
