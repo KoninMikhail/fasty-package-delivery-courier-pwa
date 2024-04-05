@@ -10,6 +10,10 @@ import svgr from "vite-plugin-svgr";
 import {vitePluginVersionMark} from "vite-plugin-version-mark";
 import version from "vite-plugin-package-version";
 
+import {sharedConfigRoutes} from './src/shared/config';
+const {RouteName} = sharedConfigRoutes;
+const {ROOT_PAGE, SEARCH_PAGE, DELIVERIES_HISTORY_PAGE, DELIVERIES} = RouteName;
+
 export default defineConfig(({mode}) => ({
     build: {
         target: 'esnext',
@@ -60,30 +64,73 @@ export default defineConfig(({mode}) => ({
                         "assets/**/*",
                     ],
                     devOptions: {
-                        enabled: true
+                        enabled: mode === 'development',
                     },
                     manifest: {
                         name: "Fasty - Delivery Exchange For Couriers",
                         short_name: "Fasty",
-                        theme_color: "#11181c",
-                        background_color: "#11181c",
+                        theme_color: "#000000",
+                        background_color: "#000000",
                         shortcuts: [
                                 {
                                     "name": "Market",
-                                    "url": "/new-event"
+                                    "icons": [{
+                                        "src": "/icons/actions/market-192x192.png",
+                                        "sizes": "192x192",
+                                        "type": "image/png"
+                                    }],
+                                    "url": ROOT_PAGE
                                 },
                                 {
                                     "name": "My deliveries",
-                                    "url": "/deliveries"
+                                    "icons": [{
+                                        "src": "/icons/actions/deliveries-192x192.png",
+                                        "sizes": "192x192",
+                                        "type": "image/png"
+                                    }],
+                                    "url": DELIVERIES
                                 },
                                 {
                                     "name": "History",
-                                    "url": "/history"
+                                    "icons": [{
+                                        "src": "/icons/actions/history-192x192.png",
+                                        "sizes": "192x192",
+                                        "type": "image/png"
+                                    }],
+                                    "url": DELIVERIES_HISTORY_PAGE
                                 },{
                                     "name": "Search",
-                                    "url": "/search"
+                                    "icons": [{
+                                        "src": "/icons/actions/search-192x192.png",
+                                        "sizes": "192x192",
+                                        "type": "image/png"
+                                    }],
+                                    "url": SEARCH_PAGE
                                 }],
                         icons: [
+                            {
+                                src: "/android-chrome-48x48.png",
+                                sizes: "48x48",
+                                type: "image/png",
+                                purpose: "any maskable",
+                            },
+                            {
+                                src: "/android-chrome-72x72.png",
+                                sizes: "72x72",
+                                type: "image/png",
+                                purpose: "any maskable",
+                            },
+                            {
+                                src: "/android-chrome-96x96.png",
+                                sizes: "96x96",
+                                type: "image/png",
+                                purpose: "any maskable",
+                            },{
+                                src: "/android-chrome-144x144.png",
+                                sizes: "144x144",
+                                type: "image/png",
+                                purpose: "any maskable",
+                            },
                             {
                                 src: "/android-chrome-192x192.png",
                                 sizes: "192x192",
