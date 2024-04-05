@@ -59,6 +59,9 @@ export default defineConfig(({mode}) => ({
                         "fonts/*.woff2",
                         "assets/**/*",
                     ],
+                    devOptions: {
+                        enabled: true
+                    },
                     manifest: {
                         name: "Fasty - Delivery Exchange For Couriers",
                         short_name: "Fasty",
@@ -95,19 +98,18 @@ export default defineConfig(({mode}) => ({
                         ],
                     },
                     workbox: {
-                        runtimeCaching: [
-                            {
-                                urlPattern: /^https:\/\/crm-api\.a1stage\.ru\/files\/.*/i,
+                        runtimeCaching: [{
+                                urlPattern: /.*\/files\/.*/i,
                                 handler: 'CacheFirst',
                                 options: {
-                                    cacheName: 'avatar-cache',
+                                    cacheName: 'files-cache',
                                     expiration: {
-                                        maxEntries: 10,
-                                        maxAgeSeconds: 60 * 60 * 24 // <== 1 day
+                                        maxEntries: 15,
+                                        maxAgeSeconds: 60 * 60 * 24 * 365 // <== 365 days
                                     },
                                     cacheableResponse: {
                                         statuses: [0, 200]
-                                    }
+                                    },
                                 }
                             }]
                     }
