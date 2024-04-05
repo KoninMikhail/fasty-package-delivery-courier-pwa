@@ -64,6 +64,22 @@ export default defineConfig(({mode}) => ({
                         short_name: "Fasty",
                         theme_color: "#11181c",
                         background_color: "#11181c",
+                        shortcuts: [
+                                {
+                                    "name": "Market",
+                                    "url": "/new-event"
+                                },
+                                {
+                                    "name": "My deliveries",
+                                    "url": "/deliveries"
+                                },
+                                {
+                                    "name": "History",
+                                    "url": "/history"
+                                },{
+                                    "name": "Search",
+                                    "url": "/search"
+                                }],
                         icons: [
                             {
                                 src: "/android-chrome-192x192.png",
