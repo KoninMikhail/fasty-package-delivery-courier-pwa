@@ -171,7 +171,7 @@ export default defineConfig(({ mode }) => ({
                 cacheName: "deliveries-history-cache",
                 expiration: {
                   maxEntries: 200,
-                  maxAgeSeconds: 60 * 60 * 24 * 365 // <== 365 days
+                  maxAgeSeconds: 60 * 60 * 24 * 30 // <== 30 days
                 },
                 cacheableResponse: {
                   statuses: [0, 200]
@@ -181,7 +181,7 @@ export default defineConfig(({ mode }) => ({
               urlPattern: /.*\/deliveries\/./i,
               handler: "StaleWhileRevalidate",
               options: {
-                cacheName: "subway-icons-cache",
+                cacheName: "market-upcoming-deliveries-cache",
                 expiration: {
                   maxEntries: 500,
                   maxAgeSeconds: 120 // <== 2 minutes
@@ -194,7 +194,7 @@ export default defineConfig(({ mode }) => ({
               urlPattern: /.*\/deliveries\?from=([^&]+)&to=([^&]+)\/./i,
               handler: "StaleWhileRevalidate",
               options: {
-                cacheName: "subway-icons-cache",
+                cacheName: "deliveries-query-cache",
                 expiration: {
                   maxEntries: 500,
                   maxAgeSeconds: 120 // <== 2 minutes
