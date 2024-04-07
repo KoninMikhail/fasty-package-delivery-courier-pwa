@@ -2,6 +2,7 @@ import { Delivery } from '@/shared/api';
 import { createEvent, createStore } from 'effector';
 import { compareDesc, format, formatISO, parseISO, subDays } from 'date-fns';
 import { InfiniteScroll } from '@/features/page/infinite-scroll';
+import { isEmpty } from '@/shared/lib/helpers';
 import { getDeliveriesHistoryFx } from './effects';
 
 export const init = createEvent();
@@ -82,6 +83,6 @@ export const InfiniteScrollModel = InfiniteScroll.factory.createModel({
             }),
         };
     },
-    stopOn: (payload) => payload.length === 0,
+    stopOn: (payload) => isEmpty(payload),
     requestContentFx: getDeliveriesHistoryFx,
 });
