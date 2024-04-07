@@ -151,7 +151,33 @@ export default defineConfig(({mode}) => ({
                                         statuses: [0, 200]
                                     },
                                 }
-                            }]
+                            }, {
+                            urlPattern: /.*\/icons\/subway\/.*.svg/i,
+                            handler: 'CacheFirst',
+                            options: {
+                                cacheName: 'subway-icons-cache',
+                                expiration: {
+                                    maxEntries: 500,
+                                    maxAgeSeconds: 60 * 60 * 24 * 365 // <== 365 days
+                                },
+                                cacheableResponse: {
+                                    statuses: [0, 200]
+                                },
+                            }
+                        }, {
+                            urlPattern: /.*\/deliveries\/history\/.*/i,
+                            handler: 'StaleWhileRevalidate',
+                            options: {
+                                cacheName: 'deliveries-history-cache',
+                                expiration: {
+                                    maxEntries: 200,
+                                    maxAgeSeconds: 60 * 60 * 24 * 365 // <== 365 days
+                                },
+                                cacheableResponse: {
+                                    statuses: [0, 200]
+                                },
+                            }
+                        }]
                     }
                 }),
                 vitePluginVersionMark({

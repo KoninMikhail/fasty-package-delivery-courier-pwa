@@ -18,18 +18,18 @@ const sourceList = {
     '15': '/icons/subway/Moskwa_Metro_Line_15.svg',
     '16': '/icons/subway/Moskwa_Metro_Line_16.svg',
     '17': '/icons/subway/Moskwa_Metro_Line_17.svg',
-    '18' : '/icons/subway/Moskwa_Metro_Line_18.svg',
-    'D1': '/icons/subway/Moskwa_Metro_Line_D1.svg',
-    'D2': '/icons/subway/Moskwa_Metro_Line_D2.svg',
-    'D3': '/icons/subway/Moskwa_Metro_Line_D3.svg',
-    'D4': '/icons/subway/Moskwa_Metro_Line_D4.svg',
-    'D5': '/icons/subway/Moskwa_Metro_Line_D5.svg',
-    'unknown': '/icons/subway/Moskwa_Metro_Unknown.svg',
-}
+    '18': '/icons/subway/Moskwa_Metro_Line_18.svg',
+    D1: '/icons/subway/Moskwa_Metro_Line_D1.svg',
+    D2: '/icons/subway/Moskwa_Metro_Line_D2.svg',
+    D3: '/icons/subway/Moskwa_Metro_Line_D3.svg',
+    D4: '/icons/subway/Moskwa_Metro_Line_D4.svg',
+    D5: '/icons/subway/Moskwa_Metro_Line_D5.svg',
+    unknown: '/icons/subway/Moskwa_Metro_Unknown.svg',
+};
 
 export const getSubwayStationIconSourceByName = (lineId?: SubwayLineID) => {
     if (!lineId || !sourceList[lineId]) {
         return sourceList.unknown;
     }
     return sourceList[lineId];
-}
+};
