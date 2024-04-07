@@ -51,7 +51,7 @@ const StatusList: FunctionComponent<PropsWithChildren> = ({ children }) => {
 };
 
 const StatusCreated: FunctionComponent<{
-    createDate?: Date;
+    createDate: Nullable<Date>;
 }> = ({ createDate }) => {
     const { i18n, t } = useTranslation([DeliveriesTranslationNS]);
     // @ts-expect-error i18n
@@ -92,7 +92,7 @@ const StatusInDelivery: FunctionComponent = () => {
     );
 };
 const StatusDelivered: FunctionComponent<{
-    comment?: string;
+    comment: Nullable<string>;
 }> = ({ comment }) => {
     const { t } = useTranslation([DeliveriesTranslationNS]);
     return (
@@ -114,7 +114,7 @@ const StatusDelivered: FunctionComponent<{
     );
 };
 const StatusCanceled: FunctionComponent<{
-    comment?: string;
+    comment: Nullable<string>;
 }> = ({ comment }) => {
     const { t } = useTranslation([DeliveriesTranslationNS]);
     return (
@@ -139,7 +139,7 @@ const StatusCanceled: FunctionComponent<{
 };
 
 const LastEdited: FunctionComponent<{
-    updateDate?: Date;
+    updateDate?: Nullable<Date>;
 }> = ({ updateDate }) => {
     const { i18n, t } = useTranslation(translationNS);
     // @ts-expect-error i18n
