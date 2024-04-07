@@ -28,7 +28,7 @@ export const Wrapper = modelView(
                     stop();
                 }
             },
-            threshold: 0,
+            threshold: 1,
         });
 
         useUnmount(() => stop());
@@ -37,8 +37,8 @@ export const Wrapper = modelView(
             <div className="relative">
                 {children}
                 <div ref={loaderReference} className="relative w-full">
-                    <div className="flex w-full justify-center">
-                        {isLoading ? <Spinner size="lg" /> : null}
+                    <div className="flex min-h-12 w-full justify-center">
+                        {isLoading ? <Spinner size="sm" /> : null}
                     </div>
                 </div>
             </div>
