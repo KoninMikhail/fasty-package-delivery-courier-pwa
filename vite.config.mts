@@ -59,6 +59,9 @@ export default defineConfig(({ mode }) => ({
             "fonts/*.woff2",
             "assets/**/*"
           ],
+          devOptions: {
+            enabled: mode === "development"
+          },
           manifest: {
             name: "Fasty - Delivery Exchange For Couriers",
             short_name: "Fasty",
@@ -140,11 +143,11 @@ export default defineConfig(({ mode }) => ({
           workbox: {
             runtimeCaching: [{
               urlPattern: /.*\/files\/.*/i,
-              handler: "StaleWhileRevalidate",
+              handler: "CacheFirst",
               options: {
                 cacheName: "files-cache",
                 expiration: {
-                  maxEntries: 15,
+                  maxEntries: 5,
                   maxAgeSeconds: 60 * 60 * 24 * 365 // <== 365 days
                 },
                 cacheableResponse: {
@@ -157,7 +160,7 @@ export default defineConfig(({ mode }) => ({
               options: {
                 cacheName: "subway-icons-cache",
                 expiration: {
-                  maxEntries: 500,
+                  maxEntries: 50,
                   maxAgeSeconds: 60 * 60 * 24 * 365 // <== 365 days
                 },
                 cacheableResponse: {
@@ -165,7 +168,7 @@ export default defineConfig(({ mode }) => ({
                 }
               }
             }, {
-              urlPattern: /.*\/deliveries\/history\/.*/i,
+              urlPattern: /^(.*\/deliveries\/history)(\?(?=.*from=)(?=.*to=).*)?$/i,
               handler: "StaleWhileRevalidate",
               options: {
                 cacheName: "deliveries-history-cache",
@@ -178,25 +181,12 @@ export default defineConfig(({ mode }) => ({
                 }
               }
             }, {
-              urlPattern: /.*\/deliveries\/./i,
-              handler: "StaleWhileRevalidate",
+              urlPattern: /^(.*\/deliveries)(\?(?=.*from=)(?=.*to=).*)?$/i,
+              handler: "CacheFirst",
               options: {
-                cacheName: "market-upcoming-deliveries-cache",
+                cacheName: "market-deliveries-cache",
                 expiration: {
-                  maxEntries: 500,
-                  maxAgeSeconds: 120 // <== 2 minutes
-                },
-                cacheableResponse: {
-                  statuses: [0, 200]
-                }
-              }
-            }, {
-              urlPattern: /.*\/deliveries\?from=([^&]+)&to=([^&]+)\/./i,
-              handler: "StaleWhileRevalidate",
-              options: {
-                cacheName: "deliveries-query-cache",
-                expiration: {
-                  maxEntries: 500,
+                  maxEntries: 200,
                   maxAgeSeconds: 120 // <== 2 minutes
                 },
                 cacheableResponse: {
