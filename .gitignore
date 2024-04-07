@@ -1,5 +1,7 @@
 .DS_Store
 dist-ssr
+/dev-dist/*
+
 
 ### Private ###
 *.local
@@ -296,5 +298,3 @@ fabric.properties
 # Azure Toolkit for IntelliJ plugin
 # https://plugins.jetbrains.com/plugin/8053-azure-toolkit-for-intellij
 .idea/**/azureSettings.xml
-/dev-dist/sw.js
-/dev-dist/workbox-bcfba713.js
