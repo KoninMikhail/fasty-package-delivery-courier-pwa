@@ -4,6 +4,7 @@ import { sharedUiComponents, sharedUiBranding } from '@/shared/ui';
 import { sharedConfigRoutes } from '@/shared/config';
 
 import { Logout } from '@/features/auth/logout';
+import { Spacer } from '@nextui-org/react';
 import { bottomToolItems, navbarItems } from '../data';
 import { translationNS } from '../config';
 
@@ -24,7 +25,7 @@ export const Navbar: FunctionComponent = () => {
             <Link to={ROOT_PAGE}>
                 <Logo />
             </Link>
-            <div className="flex flex-grow items-center justify-start">
+            <div className="flex flex-grow items-center">
                 <Menu
                     items={navbarItems}
                     orientation="vertical"
@@ -57,6 +58,7 @@ export const Navbar: FunctionComponent = () => {
                         }}
                     />
                 </div>
+                <Spacer y={4} />
                 <Logout.Button fullWidth />
             </div>
         </header>

@@ -3,5 +3,7 @@
   "nav.deliveries": "Deliveries",
   "nav.history": "History",
   "nav.settings": "Settings",
-  "nav.search": "Search"
+  "nav.search": "Search",
+  "nav.logout": "Logout",
+  "nav.profileEdit": "Profile Edit"
 }

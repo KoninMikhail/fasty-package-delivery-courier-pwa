@@ -1,5 +1,5 @@
 import { LuPackage } from 'react-icons/lu';
-import { TbTruckDelivery } from 'react-icons/tb';
+import { TbTruckDelivery, TbUserEdit } from 'react-icons/tb';
 import { MdChecklistRtl } from 'react-icons/md';
 import { IoMdSettings } from 'react-icons/io';
 
@@ -14,6 +14,7 @@ const {
     DELIVERIES,
     SETTINGS_PAGE,
     DELIVERIES_HISTORY_PAGE,
+    PROFILE_EDIT_PAGE,
 } = RouteName;
 
 export const navbarItems = [
@@ -45,10 +46,10 @@ export const navbarItems = [
 
 export const bottomToolItems = [
     {
-        id: 'settings',
-        icon: <IoMdSettings />,
-        label: 'nav.settings',
-        href: SETTINGS_PAGE,
+        id: 'profile-edit',
+        icon: <TbUserEdit />,
+        label: 'nav.profileEdit',
+        href: PROFILE_EDIT_PAGE,
     },
     {
         id: 'settings',

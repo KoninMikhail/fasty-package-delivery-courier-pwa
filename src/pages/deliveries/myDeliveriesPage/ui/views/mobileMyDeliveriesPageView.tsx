@@ -52,11 +52,9 @@ export const MobileMyDeliveriesPageView: FunctionComponent = () => {
                 <Spacer y={4} />
                 <MyDeliveriesFilters />
                 <Spacer y={6} />
-
                 <MapSection>
                     <MyDeliveriesMap />
                 </MapSection>
-
                 <ListSection>
                     <MyDeliveriesList />
                 </ListSection>

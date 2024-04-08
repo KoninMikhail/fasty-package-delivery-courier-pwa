@@ -1,8 +1,14 @@
-import { Spacer } from '@nextui-org/react';
+import { Modal, ModalContent, Spacer, useDisclosure } from '@nextui-org/react';
 import { RiWifiOffFill } from 'react-icons/ri';
 import { useTranslation } from 'react-i18next';
 import { useList, useUnit } from 'effector-react';
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
+import {
+    MapContainer,
+    Marker,
+    Popup,
+    TileLayer,
+    ZoomControl,
+} from 'react-leaflet';
 import { HorizontalScroll } from '@/shared/ui/layouts';
 import { DeliveryMapCard } from '@/entities/delivery';
 import { sessionModel } from '@/entities/viewer';
@@ -11,6 +17,7 @@ import {
     DEFAULT_MAP_ZOOM,
     ERROR_NO_INTERNET_TEXT_KEY,
     translationNS,
+    WIDGET_MAP_TITLE_KEY,
 } from '../../config';
 import { $$deliveriesMarkers } from '../../model/deliveriesMapMarkers';
 import { $deliveriesStore } from '../../model/deliveriesStore';
@@ -52,6 +59,7 @@ const Map: FunctionComponent = () => {
                     <Popup>маркер</Popup>
                 </Marker>
             ))}
+            <ZoomControl position="topleft" />
         </MapContainer>
     );
 };
@@ -70,16 +78,42 @@ const CardsRow: FunctionComponent = () => {
     );
 };
 
-export const MyDeliveriesMap: FunctionComponent = () => {
+export const MyDeliveriesMapPopup: FunctionComponent = () => {
     const online = useUnit(sessionModel.$$isOnline);
-    return online ? (
-        <div className="relative h-full w-full">
-            <div className="absolute bottom-0 z-[6000] h-40 w-full py-4 text-red-600">
-                <CardsRow />
+    const { t } = useTranslation(translationNS);
+    const { isOpen, onOpen: onMapClick, onClose } = useDisclosure();
+
+    return (
+        <>
+            <div
+                className="w-full rounded-t-3xl bg-map-light bg-center dark:bg-map-dark"
+                onClick={onMapClick}
+            >
+                <div className="w-full pb-28 pt-8 text-center">
+                    {t(WIDGET_MAP_TITLE_KEY)}
+                </div>
             </div>
-            <Map />
-        </div>
-    ) : (
-        <OfflinePlaceholder />
+            <Modal
+                size="full"
+                isOpen={isOpen}
+                onClose={onClose}
+                classNames={{
+                    closeButton: 'z-[5000]',
+                }}
+            >
+                <ModalContent>
+                    {online ? (
+                        <div className="relative h-full w-full">
+                            <div className="absolute bottom-0 z-[6000] h-40 w-full py-4 text-red-600">
+                                <CardsRow />
+                            </div>
+                            <Map />
+                        </div>
+                    ) : (
+                        <OfflinePlaceholder />
+                    )}
+                </ModalContent>
+            </Modal>
+        </>
     );
 };

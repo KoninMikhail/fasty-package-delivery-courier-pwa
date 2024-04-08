@@ -51,7 +51,7 @@ const ID: FunctionComponent<{ id: string; query: string[] }> = ({
             <Spacer y={0.5} />
             <span className="text-md font-bold">
                 <Highlighter
-                    highlightClassName="bg-yellow-200 px-0.5 text-default"
+                    highlightClassName="bg-yellow-200 px-0.5 text-default-400"
                     searchWords={query}
                     autoEscape
                     textToHighlight={`# ${id}`}
@@ -69,7 +69,7 @@ const Client: FunctionComponent<{ client: string; query: string[] }> = ({
         <div className="text-right">
             <p className="truncate">
                 <Highlighter
-                    highlightClassName="bg-yellow-200 px-0.5 text-default"
+                    highlightClassName="bg-yellow-200 px-0.5 text-default-400"
                     searchWords={query}
                     autoEscape
                     textToHighlight={client}
@@ -92,7 +92,7 @@ const Address: FunctionComponent<{ address: string; query: string[] }> = ({
             <p>
                 <Highlighter
                     autoEscape
-                    highlightClassName="bg-yellow-200 px-0.5 text-default"
+                    highlightClassName="bg-yellow-200 px-0.5 text-default-400"
                     searchWords={query}
                     textToHighlight={address}
                 />
@@ -114,7 +114,7 @@ const ContactPerson: FunctionComponent<{
                 <LuUser />
                 <Highlighter
                     autoEscape
-                    highlightClassName="bg-yellow-200 px-0.5 text-default"
+                    highlightClassName="bg-yellow-200 px-0.5 text-default-400"
                     searchWords={query}
                     textToHighlight={name}
                 />
@@ -123,7 +123,7 @@ const ContactPerson: FunctionComponent<{
                 <LuPhone />
                 <Highlighter
                     autoEscape
-                    highlightClassName="bg-yellow-200 px-0.5 text-default"
+                    highlightClassName="bg-yellow-200 px-0.5 text-default-400"
                     searchWords={query}
                     textToHighlight={phone}
                 />
@@ -132,7 +132,7 @@ const ContactPerson: FunctionComponent<{
                 <LuMail />
                 <Highlighter
                     autoEscape
-                    highlightClassName="bg-yellow-200 px-0.5 text-default"
+                    highlightClassName="bg-yellow-200 px-0.5 text-default-400"
                     searchWords={query}
                     textToHighlight={email || ''}
                 />
@@ -186,7 +186,7 @@ const Content: FunctionComponent<{ content: string; query: string[] }> = ({
             <p>
                 <Highlighter
                     autoEscape
-                    highlightClassName="bg-yellow-200 px-0.5 text-default"
+                    highlightClassName="bg-yellow-200 px-0.5 text-default-400-400"
                     searchWords={query}
                     textToHighlight={content}
                 />

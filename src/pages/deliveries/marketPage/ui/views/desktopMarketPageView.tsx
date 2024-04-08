@@ -2,15 +2,19 @@ import type { PropsWithChildren } from 'react';
 import { widgetMarketUi } from '@/widgets/deliveries/market';
 import { Spacer } from '@nextui-org/react';
 
-import { FiSearch } from 'react-icons/fi';
 import { UserCardRow } from '@/entities/user';
 import { useUnit } from 'effector-react';
 import { widgetNavbarDesktopUi } from '@/widgets/layout/navbar-desktop';
 import { sessionModel } from '@/entities/viewer';
+import { widgetSearchQueryPopupUi } from '@/widgets/search/searchQueryPopup';
+import { widgetMyDeliveriesUi } from '@/widgets/deliveries/myDeliveries';
 import {
     MarketHeadingText,
     UpcomingDeliveriesHeadingText,
-} from '@/pages/deliveries/marketPage/ui/common/data';
+} from '../common/data';
+
+const { SearchQueryInputWithPopover } = widgetSearchQueryPopupUi;
+const { UpcomingDeliveriesHorizontalSlider } = widgetMyDeliveriesUi;
 
 const { Navbar } = widgetNavbarDesktopUi;
 const { MarketContent, MarketDateSelector, MarketFilterScrollable } =
@@ -28,19 +32,11 @@ const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
 
 const Toolbar: FunctionComponent = () => {
     const user = useUnit(sessionModel.$viewerProfileData);
-
-    const searchStartContent = (
-        <FiSearch className="pointer-events-none flex-shrink-0 text-xl text-default-400" />
-    );
-    const searchEndContent = (
-        <div className="pointer-events-none flex items-center">
-            <span className="text-small text-default-400">@gmail.com</span>
-        </div>
-    );
-
     return (
         <div className="flex w-full items-center justify-between py-6 pr-4">
-            <div className="w-1/2">popover</div>
+            <div className="w-1/2">
+                <SearchQueryInputWithPopover />
+            </div>
             <div>
                 <UserCardRow user={user} avatarPosition="right" />
             </div>
@@ -55,7 +51,7 @@ const UpcomingDeliveries: FunctionComponent = () => {
                 <UpcomingDeliveriesHeadingText />
             </h2>
             <Spacer y={8} />
-            <div>карточка пользователя</div>
+            <UpcomingDeliveriesHorizontalSlider />
         </div>
     );
 };

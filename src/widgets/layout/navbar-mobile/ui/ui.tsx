@@ -36,6 +36,9 @@ export const NavbarMobile: FunctionComponent = React.memo(() => {
                         to={item.href}
                         icon={item.icon}
                         label={t(item.label)}
+                        classNames={{
+                            item: 'px-4',
+                        }}
                         vertical
                     />
                 )}

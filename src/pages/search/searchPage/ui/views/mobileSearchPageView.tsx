@@ -107,7 +107,7 @@ const LoadingMessage: FunctionComponent = () => {
     );
 };
 
-const EmptyQuery: FunctionComponent = () => {
+export const EmptyQuery: FunctionComponent = () => {
     return (
         <div className="mx-auto flex h-[60vh] w-3/4 flex-col items-center justify-center gap-4 text-center text-content3">
             <FiSearch className="text-6xl" />
@@ -125,7 +125,7 @@ const NotFound: FunctionComponent = () => {
     );
 };
 
-const SearchResults: FunctionComponent = () => {
+export const SearchResults: FunctionComponent = () => {
     const query = useUnit($searchQuery);
     const results = useList($searchResults, (result) => (
         <DeliverySearchResultCard
