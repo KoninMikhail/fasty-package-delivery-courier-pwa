@@ -19,6 +19,12 @@ export default {
             'delivery-not-exist': "url('/icons/delivery-not-exist.png')",
             ...defaultTheme.backgroundImage,
         },
+        screens: {
+            '3xl': '1900px',
+            '4xl': '2400px',
+            '5xl': '3600px',
+            ...defaultTheme.screens,
+        },
     },
     darkMode: 'class',
     experimental: { optimizeUniversalDefaults: true },

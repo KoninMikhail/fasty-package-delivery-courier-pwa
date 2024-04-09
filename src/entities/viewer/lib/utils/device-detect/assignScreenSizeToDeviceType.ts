@@ -17,7 +17,7 @@ const TABLET_SCREEN_CODES: ScreenCode[] = ['sm', 'md', 'lg'];
  * Defined screen codes for desktop devices.
  * @type {ScreenCode[]}
  */
-const DESKTOP_SCREEN_CODES: ScreenCode[] = ['xl', '2xl'];
+const DESKTOP_SCREEN_CODES: ScreenCode[] = ['xl', '2xl', "3xl", "4xl", "5xl"];
 
 // Add all the screen codes to a set to check for duplicates.
 const allScreenCodes = new Set<ScreenCode>([

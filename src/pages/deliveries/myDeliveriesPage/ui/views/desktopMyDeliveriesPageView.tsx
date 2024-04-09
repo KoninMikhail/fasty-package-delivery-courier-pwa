@@ -65,9 +65,9 @@ const Toolbar: FunctionComponent<{
 };
 
 export const DesktopMyDeliveriesPageView: FunctionComponent = () => {
-    const [selectedTab, setSelectedTab] = useState('list');
+    const [selectedTab, setSelectedTab] = useState<string>('list');
 
-    const onSelectedTab = (key: Key) => {
+    const onSelectedTab = (key: string): void => {
         setSelectedTab(key);
     };
 
