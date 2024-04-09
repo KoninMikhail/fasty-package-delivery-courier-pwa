@@ -21,7 +21,7 @@ export const MenuItem: FunctionComponent<MenuItemProperties> = ({
     classNames,
 }) => {
     const resolved = useResolvedPath(to);
-    const match = useMatch({ path: resolved.pathname, end: true });
+    const match = useMatch({ path: `${resolved.pathname}/*` });
 
     // Определение классов для элемента
     const outputClasslist = clsx(
