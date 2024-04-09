@@ -162,7 +162,7 @@ export const DesktopDeliveryDetailsPageView: FunctionComponent = () => {
             <Map>
                 <OSMMap
                     classNames={{
-                        controlsPanel: 'right-16',
+                        controlsPanel: 'right-[60px] bottom-6',
                         container: 'h-screen w-full',
                     }}
                 />

@@ -63,18 +63,25 @@ const CardsRow: FunctionComponent = () => {
 
     return (
         <HorizontalScroll>
-            <div className="flex flex-row flex-nowrap gap-2 px-4">
+            <div className="flex h-[200px] flex-row flex-nowrap gap-2 px-4 pl-16">
                 {deliveries}
             </div>
         </HorizontalScroll>
     );
 };
 
-export const MyDeliveriesMap: FunctionComponent = () => {
+interface MyDeliveriesMapProperties {
+    classNames?: {
+        cardsRow?: string;
+    };
+}
+export const MyDeliveriesMap: FunctionComponent<MyDeliveriesMapProperties> = ({
+    classNames,
+}) => {
     const online = useUnit(sessionModel.$$isOnline);
     return online ? (
         <div className="relative h-full w-full">
-            <div className="absolute bottom-0 z-[6000] h-40 w-full py-4 text-red-600">
+            <div className="absolute bottom-0 z-[6000]  w-full py-4 text-red-600">
                 <CardsRow />
             </div>
             <Map />

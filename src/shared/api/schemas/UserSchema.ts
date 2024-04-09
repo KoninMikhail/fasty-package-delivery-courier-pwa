@@ -18,6 +18,7 @@ export const userSchema = z.object({
     updated_at: z.string().datetime().nullable(),
     user_role: userRoleSchema,
     avatar_src: z.string().nullable(),
+    phone: z.string().optional(),
 });
 
 export type User = z.infer<typeof userSchema>;

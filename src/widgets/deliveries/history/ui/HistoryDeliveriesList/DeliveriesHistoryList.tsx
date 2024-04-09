@@ -20,7 +20,7 @@ const HistoryItemLayout: FunctionComponent<PropsWithChildren> = ({
     <li>
         <div className="relative pb-12">
             <span
-                className="absolute left-5 top-5 -ml-px h-full w-0.5 bg-content1"
+                className="absolute left-5 top-5 -ml-px h-full w-0.5 bg-default-100"
                 aria-hidden="true"
             />
             <div className="relative flex items-start space-x-3">

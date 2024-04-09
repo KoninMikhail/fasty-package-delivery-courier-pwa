@@ -1,4 +1,4 @@
-import { Button, Card, CardBody, Divider } from '@nextui-org/react';
+import { Card, CardBody, Divider } from '@nextui-org/react';
 import { Delivery } from '@/shared/api';
 import { getDeliveryId } from '../../lib/utils';
 
@@ -20,17 +20,15 @@ export const DeliveryMapCard: FunctionComponent<DeliveryMapCardProperties> = ({
     };
 
     return (
-        <Button onPress={onPressCard}>
-            <Card className="w-[200px]">
-                <Divider />
-                <CardBody>
-                    <p>
-                        Make beautiful websites regardless of your design
-                        experience.
-                    </p>
-                </CardBody>
-                <Divider />
-            </Card>
-        </Button>
+        <Card className="h-[182px] w-[300px]">
+            <Divider />
+            <CardBody>
+                <p>
+                    Make beautiful websites regardless of your design
+                    experience.
+                </p>
+            </CardBody>
+            <Divider />
+        </Card>
     );
 };

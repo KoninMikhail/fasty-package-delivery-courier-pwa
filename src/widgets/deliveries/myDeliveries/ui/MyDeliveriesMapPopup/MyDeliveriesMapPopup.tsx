@@ -71,7 +71,7 @@ const CardsRow: FunctionComponent = () => {
 
     return (
         <HorizontalScroll>
-            <div className="flex flex-row flex-nowrap gap-2 px-4">
+            <div className="flex flex-row flex-nowrap gap-4 px-4">
                 {deliveries}
             </div>
         </HorizontalScroll>
@@ -104,7 +104,7 @@ export const MyDeliveriesMapPopup: FunctionComponent = () => {
                 <ModalContent>
                     {online ? (
                         <div className="relative h-full w-full">
-                            <div className="absolute bottom-0 z-[6000] h-40 w-full py-4 text-red-600">
+                            <div className="absolute -bottom-[30px] z-[6000] h-40 w-full py-4 text-red-600">
                                 <CardsRow />
                             </div>
                             <Map />

@@ -2,7 +2,6 @@ import { PropsWithChildren, useState } from 'react';
 import { widgetNavbarDesktopUi } from '@/widgets/layout/navbar-desktop';
 import { useUnit } from 'effector-react';
 import { UserCardRow } from '@/entities/user';
-import { useTranslation } from 'react-i18next';
 import { Spacer, Tab, Tabs, Key } from '@nextui-org/react';
 import { sessionModel } from '@/entities/viewer';
 import { widgetMyDeliveriesUi } from '@/widgets/deliveries/myDeliveries';
@@ -10,30 +9,31 @@ import {
     MyDeliveriesFilters,
     MyDeliveriesList,
 } from '@/widgets/deliveries/myDeliveries/ui';
-import { translationNS } from '../../config';
 
 const { MyDeliveriesMap } = widgetMyDeliveriesUi;
 const { Navbar } = widgetNavbarDesktopUi;
 
 const Layout: FunctionComponent<PropsWithChildren> = ({ children }) => (
-    <div className="relative grid h-screen w-screen grid-cols-[max-content_auto] overflow-hidden">
+    <div className="relative grid h-screen w-screen overflow-hidden">
+        {children}
+    </div>
+);
+
+const Sidebar: FunctionComponent<PropsWithChildren> = ({ children }) => (
+    <div className="fixed z-[7000] h-full w-48 border-r border-gray-200 bg-white">
         {children}
     </div>
 );
 
 const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
-    <main className="relative h-full w-full flex-col overflow-hidden overflow-y-scroll">
+    <main className="relative h-full w-full flex-col overflow-hidden overflow-y-scroll pl-64">
         {children}
     </main>
 );
 
-const MapSection: FunctionComponent<PropsWithChildren> = ({ children }) => (
-    <div className="z-[6000]">{children}</div>
-);
-
 const ListSection: FunctionComponent<PropsWithChildren> = ({ children }) => (
-    <div className="h-inherit w-full overflow-hidden px-8">
-        <div className="relative block w-full pt-16 ">{children}</div>
+    <div className="h-inherit w-full overflow-hidden px-8 pl-16">
+        <div className="relative block w-full">{children}</div>
     </div>
 );
 
@@ -41,10 +41,9 @@ const Toolbar: FunctionComponent<{
     heading: string;
     onSelectTab: (key: Key) => void;
 }> = ({ heading, onSelectTab }) => {
-    const { t } = useTranslation(translationNS);
     const user = useUnit(sessionModel.$viewerProfileData);
     return (
-        <div className="sticky left-0 right-0 top-6 z-[7000] flex items-center justify-between px-8">
+        <div className="fixed left-64 right-0 top-0 z-[7000] flex items-center justify-between bg-gradient-to-b from-background to-transparent px-8 py-6 pl-16">
             <h1 className="text-4xl">{heading}</h1>
             <div>
                 <Tabs
@@ -74,13 +73,16 @@ export const DesktopMyDeliveriesPageView: FunctionComponent = () => {
 
     return (
         <Layout>
-            <Navbar />
+            <Sidebar>
+                <Navbar />
+            </Sidebar>
             <MainContainer>
                 <Toolbar heading="Мои доставки" onSelectTab={onSelectedTab} />
                 {selectedTab === 'map' ? (
                     <MyDeliveriesMap />
                 ) : (
                     <ListSection>
+                        <Spacer y={24} />
                         <MyDeliveriesFilters />
                         <Spacer y={6} />
                         <MyDeliveriesList />

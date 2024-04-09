@@ -7,7 +7,7 @@ import { Spacer } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { PAGE_HEADER, PAGE_SUBHEADER, translationNS } from '../../config';
 
-const { MyDeliveriesList, MyDeliveriesFilters, MyDeliveriesMap } =
+const { MyDeliveriesList, MyDeliveriesFilters, MyDeliveriesMapPopup } =
     widgetMyDeliveriesUi;
 const { NavbarMobile } = widgetNavbarMobileUi;
 const { Heading, Text, NativeScroll } = sharedUiComponents;
@@ -53,7 +53,7 @@ export const MobileMyDeliveriesPageView: FunctionComponent = () => {
                 <MyDeliveriesFilters />
                 <Spacer y={6} />
                 <MapSection>
-                    <MyDeliveriesMap />
+                    <MyDeliveriesMapPopup />
                 </MapSection>
                 <ListSection>
                     <MyDeliveriesList />

@@ -98,7 +98,12 @@ const ButtonMore: FunctionComponent<{ onPress: () => void }> = ({
 }) => {
     const { t } = useTranslation(translationNS);
     return (
-        <Button onClick={onPress} variant="bordered" fullWidth>
+        <Button
+            onClick={onPress}
+            variant="bordered"
+            fullWidth
+            className="max-w-96"
+        >
             {t(BUTTON_MORE)}
         </Button>
     );

@@ -7,6 +7,7 @@ await i18next
     .use(initReactI18next)
     .init({
         fallbackLng: 'en',
+        supportedLngs: ['en', 'ru'],
         debug: import.meta.env.DEV, // выключите в продакшене
         defaultNS: 'common',
         interpolation: {
