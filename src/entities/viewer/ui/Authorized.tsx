@@ -8,16 +8,12 @@ import { $isAuthorized, $initSessionComplete } from '../model/session';
 const { RouteName } = sharedConfigRoutes;
 const { AUTH_PAGE } = RouteName;
 
-interface IAuthorizedProperties extends PropsWithChildren {
-    awaitSessionTimeout?: number;
-}
-
 /**
  * @name Authorized
  * @description Component for checking user authorization
  * @constructor
  */
-export const Authorized: FunctionComponent<IAuthorizedProperties> = ({
+export const Authorized: FunctionComponent<PropsWithChildren> = ({
     children,
 }) => {
     const isSessionReady = useUnit($initSessionComplete);
