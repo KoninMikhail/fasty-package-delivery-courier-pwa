@@ -1,11 +1,11 @@
-import { InputProps } from '@nextui-org/input/dist/input';
+import { InputProps } from '@nextui-org/react';
 import { PerformSearchButton, SetQueryField } from './common/components';
 
 interface SearchQueryInputWithPopoverProperties {
     size?: InputProps['size'];
 }
 
-export const SearchQueryInputWithPopover: FunctionComponent<
+export const SearchQueryInput: FunctionComponent<
     SearchQueryInputWithPopoverProperties
 > = ({ size }) => {
     return (

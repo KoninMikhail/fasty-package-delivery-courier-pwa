@@ -27,7 +27,7 @@ temp/
 **/*.spec.tsx   # Ignore test files
 **/*.spec.ts
 **/*.test.ts
-**/*.test.tsx
+**/*.testPage.tsx
 
 # Other common directories to ignore
 /.vscode/

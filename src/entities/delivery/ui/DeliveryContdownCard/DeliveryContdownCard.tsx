@@ -12,7 +12,7 @@ import { Delivery } from '@/shared/api';
 import { IoCall } from 'react-icons/io5';
 import { sharedServicesSubway } from '@/shared/services';
 import { useTranslation } from 'react-i18next';
-import { ReactNode } from 'react';
+import { forwardRef, ReactNode } from 'react';
 import { Link as ReactRouterLink } from 'react-router-dom';
 import { sharedConfigRoutes } from '@/shared/config';
 import { getDeliveryAddress, getDeliveryId, getDeliveryMetro } from '../../lib';
@@ -142,9 +142,10 @@ interface DeliveryCountdownCardProperties {
     delivery: Delivery;
 }
 
-export const DeliveryCountdownCard: FunctionComponent<
+export const DeliveryCountdownCard = forwardRef<
+    HTMLDivElement,
     DeliveryCountdownCardProperties
-> = ({ delivery }) => {
+>(({ delivery }, reference) => {
     const deadline = new Date(
         `${delivery?.date || '2024-01-01'}T${delivery?.time_end || '00:00:00'}.999`,
     );
@@ -156,7 +157,7 @@ export const DeliveryCountdownCard: FunctionComponent<
     const getDetailsPageLink = (): string => `${DELIVERIES}/${id}`;
 
     return (
-        <Card className="min-w-[300px] max-w-[600px]">
+        <Card ref={reference} className="min-w-[300px] max-w-[600px]">
             <ReactRouterLink to={getDetailsPageLink()} className="relative">
                 <CardHeader className="flex gap-3">
                     <HeaderLayout
@@ -184,4 +185,4 @@ export const DeliveryCountdownCard: FunctionComponent<
             </CardFooter>
         </Card>
     );
-};
+});

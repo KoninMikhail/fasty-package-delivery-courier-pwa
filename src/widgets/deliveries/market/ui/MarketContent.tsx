@@ -156,7 +156,7 @@ export const MarketContent: FunctionComponent = () => {
     }
     return (
         <Root>
-            <div className="relative grid grid-cols-1 gap-8 md:grid-cols-2">
+            <div className="relative grid grid-cols-1 gap-4 lg:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 4xl:grid-cols-5 5xl:grid-cols-6">
                 {content}
             </div>
         </Root>

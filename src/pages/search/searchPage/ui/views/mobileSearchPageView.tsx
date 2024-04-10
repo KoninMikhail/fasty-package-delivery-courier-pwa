@@ -30,9 +30,9 @@ const SearchPopup = React.lazy(() =>
     })),
 );
 
-const DeliverySearchResultCard = React.lazy(() =>
+const DeliverySearchResultCardWide = React.lazy(() =>
     import('@/entities/delivery').then((module) => ({
-        default: module.DeliverySearchResultCard,
+        default: module.DeliverySearchResultCardWide,
     })),
 );
 
@@ -128,7 +128,7 @@ const NotFound: FunctionComponent = () => {
 export const SearchResults: FunctionComponent = () => {
     const query = useUnit($searchQuery);
     const results = useList($searchResults, (result) => (
-        <DeliverySearchResultCard
+        <DeliverySearchResultCardWide
             key={result.id}
             delivery={result}
             query={query}
@@ -139,7 +139,8 @@ export const SearchResults: FunctionComponent = () => {
             <div className="font-medium">
                 <SearchResultsText />
             </div>
-            {results}
+            <Spacer y={4} />
+            <div className="flex flex-col gap-4">{results}</div>
         </>
     );
 };

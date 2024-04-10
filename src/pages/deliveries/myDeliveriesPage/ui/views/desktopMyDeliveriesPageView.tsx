@@ -2,7 +2,7 @@ import { PropsWithChildren, useState } from 'react';
 import { widgetNavbarDesktopUi } from '@/widgets/layout/navbar-desktop';
 import { useUnit } from 'effector-react';
 import { UserCardRow } from '@/entities/user';
-import { Spacer, Tab, Tabs, Key } from '@nextui-org/react';
+import { Spacer, Tab, Tabs } from '@nextui-org/react';
 import { sessionModel } from '@/entities/viewer';
 import { widgetMyDeliveriesUi } from '@/widgets/deliveries/myDeliveries';
 import {
@@ -20,13 +20,13 @@ const Layout: FunctionComponent<PropsWithChildren> = ({ children }) => (
 );
 
 const Sidebar: FunctionComponent<PropsWithChildren> = ({ children }) => (
-    <div className="fixed z-[7000] h-full w-48 border-r border-gray-200 bg-white">
+    <div className="fixed z-[5100] h-full w-48 border-r border-gray-200 bg-white">
         {children}
     </div>
 );
 
 const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
-    <main className="relative h-full w-full flex-col overflow-hidden overflow-y-scroll pl-64">
+    <main className="relative h-full w-full overflow-hidden overflow-y-scroll pl-64">
         {children}
     </main>
 );
@@ -43,7 +43,7 @@ const Toolbar: FunctionComponent<{
 }> = ({ heading, onSelectTab }) => {
     const user = useUnit(sessionModel.$viewerProfileData);
     return (
-        <div className="fixed left-64 right-0 top-0 z-[7000] flex items-center justify-between bg-gradient-to-b from-background to-transparent px-8 py-6 pl-16">
+        <div className="fixed left-64 right-0 top-0 z-[5000] flex items-center justify-between bg-gradient-to-b from-background to-transparent px-8 py-6 pl-16">
             <h1 className="text-4xl">{heading}</h1>
             <div>
                 <Tabs

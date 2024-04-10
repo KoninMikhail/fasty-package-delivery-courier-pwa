@@ -1,52 +1,83 @@
-import type { PropsWithChildren } from 'react';
+import { useRef, type PropsWithChildren } from 'react';
 import { widgetMarketUi } from '@/widgets/deliveries/market';
-import { Spacer } from '@nextui-org/react';
+import { Input, Spacer } from '@nextui-org/react';
 
 import { UserCardRow } from '@/entities/user';
 import { useUnit } from 'effector-react';
 import { widgetNavbarDesktopUi } from '@/widgets/layout/navbar-desktop';
 import { sessionModel } from '@/entities/viewer';
-import { widgetSearchQueryPopupUi } from '@/widgets/search/searchQueryPopup';
+import {
+    widgetSearchQueryPopupModel,
+    widgetSearchQueryPopupUi,
+} from '@/widgets/search/searchQueryPopup';
 import { widgetMyDeliveriesUi } from '@/widgets/deliveries/myDeliveries';
+import { IoSearchSharp } from 'react-icons/io5';
 import {
     MarketHeadingText,
     UpcomingDeliveriesHeadingText,
 } from '../common/data';
 
-const { SearchQueryInputWithPopover } = widgetSearchQueryPopupUi;
+const { SearchQueryInputModal } = widgetSearchQueryPopupUi;
 const { UpcomingDeliveriesHorizontalSlider } = widgetMyDeliveriesUi;
 
 const { Navbar } = widgetNavbarDesktopUi;
 const { MarketContent, MarketDateSelector, MarketFilterScrollable } =
     widgetMarketUi;
 
-const Layout: FunctionComponent<PropsWithChildren> = ({ children }) => (
-    <div className="grid h-screen w-screen grid-cols-[max-content_auto] gap-8">
+const Root: FunctionComponent<PropsWithChildren> = ({ children }) => (
+    <div className="relative grid h-screen w-screen overflow-hidden">
         {children}
     </div>
 );
 
+const Sidebar: FunctionComponent<PropsWithChildren> = ({ children }) => {
+    return (
+        <div className="fixed z-[7000] h-full w-48 border-r border-gray-200 bg-white">
+            {children}
+        </div>
+    );
+};
+
 const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
-    <main className="flex-col overflow-hidden px-2">{children}</main>
+    <main className="relative h-full flex-col overflow-hidden overflow-y-scroll pl-72 pt-20">
+        {children}
+    </main>
 );
 
 const Toolbar: FunctionComponent = () => {
+    const reference = useRef<HTMLInputElement>(null);
     const user = useUnit(sessionModel.$viewerProfileData);
+    const [openSearchModal] = useUnit([
+        widgetSearchQueryPopupModel.modal.clickTriggerElement,
+    ]);
+    const onClickSearchInput = (): void => {
+        reference?.current?.blur();
+        openSearchModal();
+    };
     return (
-        <div className="flex w-full items-center justify-between py-6 pr-4">
-            <div className="w-1/2">
-                <SearchQueryInputWithPopover />
+        <>
+            <div className="fixed left-64 right-0 top-0 z-[20] flex items-center justify-between bg-gradient-to-b from-background to-transparent px-8 py-6 pl-16">
+                <div className="w-1/2">
+                    <Input
+                        ref={reference}
+                        size="lg"
+                        placeholder="Search"
+                        onClick={onClickSearchInput}
+                        startContent={<IoSearchSharp className="text-xl" />}
+                    />
+                </div>
+                <div>
+                    <UserCardRow user={user} avatarPosition="right" />
+                </div>
             </div>
-            <div>
-                <UserCardRow user={user} avatarPosition="right" />
-            </div>
-        </div>
+            <SearchQueryInputModal size="2xl" backdrop="blur" />
+        </>
     );
 };
 
 const UpcomingDeliveries: FunctionComponent = () => {
     return (
-        <div className="pr-4">
+        <div className="px-8">
             <h2 className="text-2xl font-bold capitalize">
                 <UpcomingDeliveriesHeadingText />
             </h2>
@@ -58,7 +89,7 @@ const UpcomingDeliveries: FunctionComponent = () => {
 
 const MarketDeliveries: FunctionComponent = () => {
     return (
-        <div className="pr-4">
+        <div className="px-8">
             <h2 className="text-2xl font-bold capitalize">
                 <MarketHeadingText />
             </h2>
@@ -66,7 +97,7 @@ const MarketDeliveries: FunctionComponent = () => {
             <div>
                 <MarketDateSelector typePicker="scroll" />
                 <MarketFilterScrollable />
-                <Spacer y={2} />
+                <Spacer y={4} />
                 <MarketContent />
             </div>
         </div>
@@ -75,15 +106,17 @@ const MarketDeliveries: FunctionComponent = () => {
 
 export const DesktopMarketPageView: FunctionComponent = () => {
     return (
-        <Layout>
-            <Navbar />
+        <Root>
+            <Sidebar>
+                <Navbar />
+            </Sidebar>
             <MainContainer>
                 <Toolbar />
-                <Spacer y={4} />
+                <Spacer y={8} />
                 <UpcomingDeliveries />
-                <Spacer y={16} />
+                <Spacer y={8} />
                 <MarketDeliveries />
             </MainContainer>
-        </Layout>
+        </Root>
     );
 };

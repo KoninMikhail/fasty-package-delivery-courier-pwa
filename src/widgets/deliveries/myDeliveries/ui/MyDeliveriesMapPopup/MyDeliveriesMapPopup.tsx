@@ -71,7 +71,7 @@ const CardsRow: FunctionComponent = () => {
 
     return (
         <HorizontalScroll>
-            <div className="flex flex-row flex-nowrap gap-4 px-4">
+            <div className="flex flex-row flex-nowrap gap-4  px-4">
                 {deliveries}
             </div>
         </HorizontalScroll>

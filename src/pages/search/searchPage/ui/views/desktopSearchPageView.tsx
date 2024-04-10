@@ -1,17 +1,15 @@
 import { widgetNavbarDesktopUi } from '@/widgets/layout/navbar-desktop';
-import type { PropsWithChildren } from 'react';
+import { PropsWithChildren, useRef } from 'react';
 import { useUnit } from 'effector-react';
 import { $searchQuery } from '@/pages/search/searchPage/model';
 import { isEmpty } from '@/shared/lib/helpers';
-import { useTranslation } from 'react-i18next';
 import { UserCardRow } from '@/entities/user';
 import { sessionModel } from '@/entities/viewer';
-import { setQuery } from '@/widgets/search/searchQueryPopup/model/base';
-import { widgetSearchQueryPopupUi } from '@/widgets/search/searchQueryPopup';
-import { translationNS } from '../../config';
+import { widgetSearchQueryPopupModel } from '@/widgets/search/searchQueryPopup';
+import { SearchQueryInputModal } from '@/widgets/search/searchQueryPopup/ui';
+import { Input } from '@nextui-org/react';
+import { IoSearchSharp } from 'react-icons/io5';
 import { EmptyQuery, SearchResults } from './mobileSearchPageView';
-
-const { SearchQueryInputWithPopover } = widgetSearchQueryPopupUi;
 
 const { Navbar } = widgetNavbarDesktopUi;
 
@@ -26,20 +24,37 @@ const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
 );
 
 const Toolbar: FunctionComponent = () => {
-    const { t } = useTranslation(translationNS);
+    const reference = useRef<HTMLInputElement>(null);
     const user = useUnit(sessionModel.$viewerProfileData);
+    const [openSearchModal, query] = useUnit([
+        widgetSearchQueryPopupModel.modal.clickTriggerElement,
+        widgetSearchQueryPopupModel.base.$query,
+    ]);
 
-    const onChangeQuery = useUnit(setQuery);
-
+    const onClickSearchInput = (): void => {
+        reference?.current?.blur();
+        openSearchModal();
+    };
     return (
-        <div className="flex h-20 items-center justify-between">
-            <div className="flex flex-grow gap-2">
-                <SearchQueryInputWithPopover />
+        <>
+            <div className="flex h-20 items-center justify-between">
+                <div className="flex flex-grow gap-2">
+                    <Input
+                        ref={reference}
+                        size="lg"
+                        value={query}
+                        className="w-2/3"
+                        type="search"
+                        onClick={onClickSearchInput}
+                        startContent={<IoSearchSharp className="text-xl" />}
+                    />
+                </div>
+                <div>
+                    <UserCardRow user={user} avatarPosition="right" />
+                </div>
             </div>
-            <div>
-                <UserCardRow user={user} avatarPosition="right" />
-            </div>
-        </div>
+            <SearchQueryInputModal backdrop="blur" size="2xl" />
+        </>
     );
 };
 

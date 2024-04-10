@@ -60,11 +60,11 @@ const CloseButton: FunctionComponent = () => {
  * View
  */
 interface SearchQueryInputModalProperties
-    extends Pick<ModalProps, 'size' | 'placement'> {}
+    extends Pick<ModalProps, 'size' | 'placement' | 'backdrop'> {}
 
 export const SearchQueryInputModal: FunctionComponent<
     SearchQueryInputModalProperties
-> = ({ size = 'lg', placement = 'top' }) => {
+> = ({ size = 'lg', placement = 'top', backdrop = 'opaque' }) => {
     const [isOpen, onClose] = useUnit([
         modalModel.$isOpened,
         modalModel.closePopup,
@@ -81,10 +81,7 @@ export const SearchQueryInputModal: FunctionComponent<
             isOpen={isOpen}
             hideCloseButton
             onClose={onClose}
-            classNames={{
-                backdrop:
-                    'bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20',
-            }}
+            backdrop={backdrop}
         >
             <ModalContent>
                 <ModalHeader>

@@ -1,2 +1,2 @@
 export * from './SearchQueryInputModal';
-export * from './SearchQueryInputWithPopover';
+export * from './SearchQueryInput';

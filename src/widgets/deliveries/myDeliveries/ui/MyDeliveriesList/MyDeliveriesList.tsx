@@ -26,8 +26,18 @@ import {
 } from '../../model';
 
 const Root: FunctionComponent<PropsWithChildren> = ({ children }) => {
+    return <div className="grid grid-cols-1 gap-4">{children}</div>;
+};
+
+const Headline: FunctionComponent<PropsWithChildren> = ({ children }) => {
     return (
-        <div className="3xl:grid-cols-4 4xl:grid-cols-5 5xl:grid-cols-6 grid grid-cols-1 gap-4 lg:grid-cols-2 2xl:grid-cols-3">
+        <div className="flex items-center justify-center gap-4">{children}</div>
+    );
+};
+
+const Content: FunctionComponent<PropsWithChildren> = ({ children }) => {
+    return (
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 4xl:grid-cols-5 5xl:grid-cols-6">
             {children}
         </div>
     );
@@ -163,8 +173,10 @@ export const MyDeliveriesList: FunctionComponent = () => {
 
     return (
         <Root>
-            {state}
-            <AnimatePresence>{items}</AnimatePresence>
+            <Headline>{state}</Headline>
+            <Content>
+                <AnimatePresence>{items}</AnimatePresence>
+            </Content>
         </Root>
     );
 };
