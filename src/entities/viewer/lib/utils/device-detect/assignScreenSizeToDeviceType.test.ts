@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { assignScreenSizeToDeviceType } from "./assignScreenSizeToDeviceType";
-import { ScreenCode } from "@/shared/config/detect-device/types";
+import { ScreenCode } from "../../../types/device";
 
 describe("assignScreenSizeToDeviceType", () => {
   it("returns `tablet` for tablet screen codes", () => {

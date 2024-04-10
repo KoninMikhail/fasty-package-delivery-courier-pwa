@@ -1,48 +1,8 @@
-import resolveConfig from 'tailwindcss/resolveConfig';
 import { createEvent, createStore } from 'effector';
-import {
-    assignScreenSizeToDeviceType,
-    calculateCurrentScreenSize,
-    parseUserAgent,
-} from '../../lib/utils';
-import tailwindConfig from '../../../../../tailwind.config';
-
-const { screens } = resolveConfig(tailwindConfig).theme;
-
-export interface DeviceInfo {
-    userAgent: UserAgentInfo;
-    screen: ScreenInfo;
-}
-
-export interface UserAgentInfo {
-    browser: {
-        name?: string;
-        version?: string;
-    };
-    cpu: {
-        architecture?: string;
-    };
-    device: {
-        model?: string;
-        type?: string;
-        vendor?: string;
-    };
-    os: {
-        name?: string;
-        version?: string;
-    };
-}
-
-export interface ScreenInfo {
-    width: number;
-    height: number;
-    currentScreenSize: Nullable<ScreenCode>;
-    assignedToDeviceType: Nullable<DeviceType>;
-}
-
-export type ScreenCode = keyof typeof screens;
-
-export type DeviceType = 'mobile' | 'tablet' | 'desktop';
+import { calculateCurrentScreenSize } from '../../lib/utils/device-detect/calculateCurrentScreenSize';
+import { assignScreenSizeToDeviceType } from '../../lib/utils/device-detect/assignScreenSizeToDeviceType';
+import { parseUserAgent } from '../../lib/utils/device-detect/parseUserAgent';
+import { DeviceInfo } from '../../types/device';
 
 /**
  * Events

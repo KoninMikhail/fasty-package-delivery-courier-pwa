@@ -11,6 +11,10 @@ vi.mock("tailwindcss/resolveConfig", () => ({
         md: "768px",
         lg: "1024px",
         xl: "1280px",
+        "2xl": "1600px",
+        "3xl": "1900px",
+        "4xl": "2400px",
+        "5xl": "3600px",
       },
     },
   }),
@@ -36,8 +40,24 @@ describe("calculateCurrentScreenSize", () => {
     expect(calculateCurrentScreenSize(1279)).toBe("lg");
   });
 
-  it('returns "xl" for screen widths within the "xl" breakpoint range', () => {
+  it('returns "xl" for screen widths within the "2xl" breakpoint range', () => {
     expect(calculateCurrentScreenSize(1280)).toBe("xl");
-    expect(calculateCurrentScreenSize(1920)).toBe("2xl");
+    expect(calculateCurrentScreenSize(1700)).toBe("2xl");
+  });
+  it('returns "2xl" for screen widths within the "3xl" breakpoint range', () => {
+    expect(calculateCurrentScreenSize(1700)).toBe("2xl");
+    expect(calculateCurrentScreenSize(1920)).toBe("3xl");
+  });
+  it('returns "3xl" for screen widths within the "2xl" breakpoint range', () => {
+    expect(calculateCurrentScreenSize(1280)).toBe("xl");
+    expect(calculateCurrentScreenSize(1920)).toBe("3xl");
+  });
+  it('returns "4xl" for screen widths within the "3xl" breakpoint range', () => {
+    expect(calculateCurrentScreenSize(1920)).toBe("3xl");
+    expect(calculateCurrentScreenSize(2450)).toBe("4xl");
+  });
+  it('returns "5xl" for screen widths within the "4xl" breakpoint range', () => {
+    expect(calculateCurrentScreenSize(2450)).toBe("4xl");
+    expect(calculateCurrentScreenSize(3750)).toBe("5xl");
   });
 });

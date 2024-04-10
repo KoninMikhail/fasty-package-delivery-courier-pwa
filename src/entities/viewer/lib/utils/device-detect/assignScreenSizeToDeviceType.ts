@@ -1,39 +1,25 @@
-import { DeviceType, ScreenCode } from '../../../model/parts/deviceInfo';
-
-/**
- * Default screen codes for mobile devices.
- * This is set to an empty array with type assertion for workarounds where mobile codes aren't needed.
- * @type {ScreenCode[]}
- */
-const MOBILE_SCREEN_CODES: ScreenCode[] = ['' as ScreenCode]; // it for work if you doesn't need mobile codes
-
-/**
- * Defined screen codes for tablet devices.
- * @type {ScreenCode[]}
- */
-const TABLET_SCREEN_CODES: ScreenCode[] = ['sm', 'md', 'lg'];
-
-/**
- * Defined screen codes for desktop devices.
- * @type {ScreenCode[]}
- */
-const DESKTOP_SCREEN_CODES: ScreenCode[] = ['xl', '2xl', "3xl", "4xl", "5xl"];
+import { DeviceType, ScreenCode } from "../../../types/device";
+import {
+  DESKTOP_SCREEN_CODES,
+  MOBILE_SCREEN_CODES,
+  TABLET_SCREEN_CODES,
+} from "../../../config";
 
 // Add all the screen codes to a set to check for duplicates.
 const allScreenCodes = new Set<ScreenCode>([
-    ...MOBILE_SCREEN_CODES,
-    ...TABLET_SCREEN_CODES,
-    ...DESKTOP_SCREEN_CODES,
+  ...MOBILE_SCREEN_CODES,
+  ...TABLET_SCREEN_CODES,
+  ...DESKTOP_SCREEN_CODES,
 ]);
 
 // Check if the screen codes are unique across device types.
 if (
-    allScreenCodes.size !==
-    MOBILE_SCREEN_CODES.length +
-        TABLET_SCREEN_CODES.length +
-        DESKTOP_SCREEN_CODES.length
+  allScreenCodes.size !==
+  MOBILE_SCREEN_CODES.length +
+    TABLET_SCREEN_CODES.length +
+    DESKTOP_SCREEN_CODES.length
 ) {
-    throw new Error('Screen codes for tablet and desktop have an intersection');
+  throw new Error("Screen codes for tablet and desktop have an intersection");
 }
 
 // Creating validated sets for each device type.
@@ -48,10 +34,10 @@ const desktopScreenCodesValidated = new Set<ScreenCode>(DESKTOP_SCREEN_CODES);
  * @returns {DeviceType} - The type of device that corresponds to the screen code.
  */
 export const assignScreenSizeToDeviceType = (
-    screen: ScreenCode | null,
+  screen: ScreenCode | null,
 ): DeviceType => {
-    if (screen && tabletScreenCodesValidated.has(screen)) return 'tablet';
-    if (screen && desktopScreenCodesValidated.has(screen)) return 'desktop';
-    if (screen && mobileScreenCodesValidated.has(screen)) return 'mobile';
-    return 'mobile';
+  if (screen && tabletScreenCodesValidated.has(screen)) return "tablet";
+  if (screen && desktopScreenCodesValidated.has(screen)) return "desktop";
+  if (screen && mobileScreenCodesValidated.has(screen)) return "mobile";
+  return "mobile";
 };

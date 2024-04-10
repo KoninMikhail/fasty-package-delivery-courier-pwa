@@ -1,6 +1,6 @@
-import resolveConfig from 'tailwindcss/resolveConfig';
-import { ScreenCode } from '../../../model/parts/deviceInfo'
-import tailwindConfig from '../../../../../../tailwind.config';
+import resolveConfig from "tailwindcss/resolveConfig";
+import { ScreenCode } from "../../../types/device";
+import tailwindConfig from "../../../../../../tailwind.config";
 
 const fullConfig = resolveConfig(tailwindConfig);
 
@@ -14,26 +14,26 @@ const fullConfig = resolveConfig(tailwindConfig);
  * that matches the given screen width. If no matching category is found, returns null.
  */
 export const calculateCurrentScreenSize = (
-    screenWidth: number,
+  screenWidth: number,
 ): ScreenCode | null => {
-    // Expected screen configuration from TailwindCSS theme.
-    const { screens } = fullConfig.theme;
+  // Expected screen configuration from TailwindCSS theme.
+  const { screens } = fullConfig.theme;
 
-    // SimpleMapContainer screen sizes from configuration to an array of {name, size}.
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const screenSizes = Object.entries(screens).map(([key, value]) => ({
-        name: key,
-        size: Number.parseInt(value as string, 10),
-    }));
+  // SimpleMapContainer screen sizes from configuration to an array of {name, size}.
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  const screenSizes = Object.entries(screens).map(([key, value]) => ({
+    name: key,
+    size: Number.parseInt(value as string, 10),
+  }));
 
-    // Sort the screens by size in descending order.
-    screenSizes.sort((a, b) => b.size - a.size);
+  // Sort the screens by size in descending order.
+  screenSizes.sort((a, b) => b.size - a.size);
 
-    // Find the screen size that matches the window width.
-    const matchingScreenSize = screenSizes.find(
-        (screen) => screenWidth >= screen.size,
-    );
+  // Find the screen size that matches the window width.
+  const matchingScreenSize = screenSizes.find(
+    (screen) => screenWidth >= screen.size,
+  );
 
-    // Set the current screen to the name of the matching size or null.
-    return matchingScreenSize ? (matchingScreenSize.name as ScreenCode) : null;
+  // Set the current screen to the name of the matching size or null.
+  return matchingScreenSize ? (matchingScreenSize.name as ScreenCode) : null;
 };

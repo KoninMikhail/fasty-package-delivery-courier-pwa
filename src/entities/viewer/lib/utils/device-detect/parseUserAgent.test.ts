@@ -48,6 +48,4 @@ describe("parseUserAgent", () => {
       },
     });
   });
-
-  // TODO: Добавить тестов
 });
