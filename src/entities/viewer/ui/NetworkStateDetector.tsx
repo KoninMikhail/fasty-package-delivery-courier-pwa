@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect } from 'react';
 import { useUnit } from 'effector-react';
-import { getNetworkState } from '../lib/utils';
+import { getNetworkState } from '../lib/utils/network/getNetworkState';
 import { setNetworkState } from '../model/parts/networkState';
 
 export const NetworkStateDetector: FunctionComponent = () => {
