@@ -1,114 +1,72 @@
-import { useList, useUnit } from 'effector-react';
-import { $deliveriesStore } from '@/widgets/deliveries/myDeliveries/model/deliveriesStore';
 import { DeliveryCountdownCard } from '@/entities/delivery';
-import {
-    MdOutlineKeyboardArrowLeft,
-    MdOutlineKeyboardArrowRight,
-} from 'react-icons/md';
-import { useRef, useState, FunctionComponent, MouseEventHandler } from 'react';
-import { motion, PanInfo, useMotionValue, useSpring } from 'framer-motion';
-import { settingsModel } from '@/entities/viewer';
 
-const DRAG_THRESHOLD = 150;
-const FALLBACK_WIDTH = 508;
+import { FunctionComponent, useRef, useState } from 'react';
+import { motion, useMotionValue, useSpring, useInView } from 'framer-motion';
+import { Button } from '@nextui-org/react';
+import { MdArrowLeft, MdArrowRight } from 'react-icons/md';
+import { useList } from 'effector-react';
+import { $$upcomingDeliveries } from '../../model/deliveriesStore';
 
 export const UpcomingDeliveriesHorizontalSlider: FunctionComponent = () => {
-    const allowedCount = useUnit(settingsModel.$homeUpcomingDeliveriesCount);
-    const containerReference = useRef<HTMLDivElement>(null);
-    const itemsReference = useRef<(HTMLDivElement | null)[]>([]);
+    const [activeItemIndex, setActiveItemIndex] = useState<number>(0);
+    const itemWidth = 230;
+    const rootReference = useRef<HTMLDivElement>(null);
+    const stopTriggerReference = useRef<HTMLDivElement>(null);
+    const stopTriggerOnScreen = useInView(stopTriggerReference);
 
-    const [activeSlide, setActiveSlide] = useState(0);
-    const offsetX = useMotionValue(0);
-    const animatedX = useSpring(offsetX, {
-        damping: 20,
-        stiffness: 150,
+    const scrollX = useMotionValue(0);
+    const animatedScrollX = useSpring(scrollX, {
+        stiffness: 300,
+        damping: 30,
     });
 
-    const [isDragging, setIsDragging] = useState(false);
-
-    const updateSlide = (direction: 'prev' | 'next') => {
-        const currentOffsetX = offsetX.get();
-        const itemWidth =
-            itemsReference.current[activeSlide]?.offsetWidth || FALLBACK_WIDTH;
-        if (direction === 'next') {
-            if (activeSlide - 1 < allowedCount) {
-                offsetX.set(currentOffsetX - itemWidth);
-                setActiveSlide(activeSlide + 1);
-            }
-        } else if (activeSlide > 0) {
-            offsetX.set(currentOffsetX + itemWidth);
-            setActiveSlide(activeSlide - 1);
+    const onPressBack = (): void => {
+        if (activeItemIndex === 0) {
+            return;
         }
+        scrollX.set(scrollX.get() + itemWidth);
+        setActiveItemIndex(activeItemIndex - 1);
+    };
+    const onPressNext = (): void => {
+        scrollX.set(scrollX.get() - itemWidth);
+        setActiveItemIndex(activeItemIndex + 1);
     };
 
-    const handlePan = (_: MouseEvent, panInfo: PanInfo) => {
-        const { offset } = panInfo;
-        if (Math.abs(offset.x) > DRAG_THRESHOLD) {
-            updateSlide(offset.x > 0 ? 'prev' : 'next');
-        }
-    };
-
-    const deliveries = useList($deliveriesStore, (delivery, index) => {
-        if (allowedCount >= index - 1) return null;
-
-        const onDivClick: MouseEventHandler<HTMLDivElement> = (event): void => {
-            if (isDragging) event.stopPropagation();
-        };
-
-        return (
-            <motion.div
-                layout
-                ref={(element) => {
-                    itemsReference.current[index] = element;
-                }}
-                className="relative grid shrink-0 select-none gap-4 transition-opacity duration-300"
-                onClick={onDivClick}
-            >
-                <DeliveryCountdownCard delivery={delivery} />
-            </motion.div>
-        );
+    const deliveries = useList($$upcomingDeliveries, (delivery) => {
+        return <DeliveryCountdownCard delivery={delivery} />;
     });
 
     return (
-        <div className="group container overflow-hidden">
-            <div className="relative overflow-hidden">
-                <motion.div
-                    ref={containerReference}
-                    className="flex cursor-none items-start gap-4"
-                    style={{ x: animatedX }}
-                    drag="x"
-                    onDragStart={() => setIsDragging(true)}
-                    onDragEnd={() => setIsDragging(false)}
-                    onPan={handlePan}
+        <div className="relative w-full">
+            <motion.div
+                ref={rootReference}
+                className="flex gap-[20px]"
+                style={{
+                    x: animatedScrollX,
+                }}
+            >
+                {deliveries}
+                <div ref={stopTriggerReference} />
+            </motion.div>
+            <div className="absolute -right-2 -top-16 flex gap-2">
+                <Button
+                    isDisabled={activeItemIndex === 0}
+                    isIconOnly
+                    variant="flat"
+                    className="rounded-full"
+                    onPress={onPressBack}
                 >
-                    {deliveries}
-                </motion.div>
-
-                {activeSlide > 0 && (
-                    <div className="absolute bottom-0 left-0 top-0 flex w-24 items-center justify-start bg-gradient-to-l from-transparent from-50% to-background text-2xl">
-                        <button
-                            type="button"
-                            className="h-full pr-8"
-                            onClick={() => updateSlide('prev')}
-                            disabled={activeSlide === 0}
-                        >
-                            <MdOutlineKeyboardArrowLeft className="text-4xl" />
-                        </button>
-                    </div>
-                )}
-
-                {activeSlide <= allowedCount && (
-                    <div className="absolute bottom-0 right-0 top-0 flex w-24 items-center justify-end bg-gradient-to-l from-background from-50% to-transparent text-2xl">
-                        <button
-                            type="button"
-                            className="z-50 h-full pl-8"
-                            onClick={() => updateSlide('next')}
-                            disabled={activeSlide === allowedCount - 1}
-                        >
-                            <MdOutlineKeyboardArrowRight className="text-4xl" />
-                        </button>
-                    </div>
-                )}
+                    <MdArrowLeft />
+                </Button>
+                <Button
+                    isDisabled={stopTriggerOnScreen}
+                    isIconOnly
+                    variant="flat"
+                    className="rounded-full"
+                    onPress={onPressNext}
+                >
+                    <MdArrowRight />
+                </Button>
             </div>
         </div>
     );
