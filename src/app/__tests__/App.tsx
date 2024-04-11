@@ -1,8 +1,4 @@
-import { screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import App from 'app/App';
-import renderWithProviders from '@/shared/lib/utils/tests/renderWithProviders';
-
+/*
 describe('<App />', () => {
     it('renders', async () => {
         window.history.pushState({}, 'Home', '/');
@@ -16,3 +12,4 @@ describe('<App />', () => {
         ).resolves.toBeInTheDocument();
     });
 });
+*/

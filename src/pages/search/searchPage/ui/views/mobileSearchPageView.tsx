@@ -67,6 +67,7 @@ const Header: FunctionComponent<{
             <Input
                 ref={inputReference}
                 value={query}
+                className="mx-auto max-w-3xl"
                 variant="bordered"
                 color="primary"
                 type="text"
@@ -125,7 +126,7 @@ const NotFound: FunctionComponent = () => {
     );
 };
 
-export const SearchResults: FunctionComponent = () => {
+const SearchResults: FunctionComponent = () => {
     const query = useUnit($searchQuery);
     const results = useList($searchResults, (result) => (
         <DeliverySearchResultCard
@@ -150,7 +151,6 @@ export const SearchResults: FunctionComponent = () => {
  */
 export const MobileSearchPageView: FunctionComponent = () => {
     const pageState = useUnit($finalSearchState);
-
     const renderState = (): ReactElement | ReactElement[] => {
         switch (pageState) {
             case PageState.EmptyQuery: {

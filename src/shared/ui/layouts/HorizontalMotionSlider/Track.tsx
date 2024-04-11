@@ -96,7 +96,6 @@ export const Track: FunctionComponent<ITrackProperties> = ({
 
     const { state, dispatch } = useContext(Context);
 
-    console.log(state);
     const negativeItems = state.items.map(
         (item) => item * -1 + trackDimensions.x || 0,
     );
@@ -122,8 +121,6 @@ export const Track: FunctionComponent<ITrackProperties> = ({
                 ? current
                 : previous,
         );
-
-        console.log(negativeItems);
 
         const activeSlide = negativeItems.indexOf(closestPosition);
         dispatch({ type: 'SET_ACTIVE_ITEM', activeItem: activeSlide });
