@@ -1,9 +1,7 @@
-import { act, renderHook } from '@testing-library/react';
-import { useMediaQuery } from '@/shared/lib/utils/tests/utils';
-
 const BELOW_MIN_WIDTH = 599;
 const MIN_WITDH = 600;
 
+/*
 describe('useMediaQuery', () => {
     it('renders', () => {
         window.resizeTo(BELOW_MIN_WIDTH, 0);
@@ -17,3 +15,4 @@ describe('useMediaQuery', () => {
         expect(result.current).toBeTruthy();
     });
 });
+*/

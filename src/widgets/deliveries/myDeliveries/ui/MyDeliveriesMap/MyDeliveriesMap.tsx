@@ -3,7 +3,6 @@ import { RiWifiOffFill } from 'react-icons/ri';
 import { useTranslation } from 'react-i18next';
 import { useList, useUnit } from 'effector-react';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
-import { HorizontalScroll } from '@/shared/ui/layouts';
 import { DeliveryMapCard } from '@/entities/delivery';
 import { sessionModel } from '@/entities/viewer';
 import {
@@ -62,11 +61,11 @@ const CardsRow: FunctionComponent = () => {
     ));
 
     return (
-        <HorizontalScroll>
-            <div className="flex h-[200px] flex-row flex-nowrap gap-2 px-4 pl-16">
+        <div className="overflow-x-auto">
+            <div className="flex h-[200px] flex-nowrap gap-2 px-4 pl-16">
                 {deliveries}
             </div>
-        </HorizontalScroll>
+        </div>
     );
 };
 

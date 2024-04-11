@@ -16,7 +16,6 @@ export const getDeliveriesHistoryFx = createEffect<
             queries: { from: dates.from, to: dates.to },
         });
     } catch (error: unknown) {
-        console.log('Error fetching deliveries history', error);
         if (error instanceof z.ZodError) {
             // To loop through and manually log each issue
             for (const issue of error.issues) {

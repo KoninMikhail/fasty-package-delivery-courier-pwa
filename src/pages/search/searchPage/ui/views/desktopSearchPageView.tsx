@@ -1,15 +1,22 @@
 import { widgetNavbarDesktopUi } from '@/widgets/layout/navbar-desktop';
-import { PropsWithChildren, useRef } from 'react';
-import { useUnit } from 'effector-react';
-import { $searchQuery } from '@/pages/search/searchPage/model';
+import React, { PropsWithChildren, Suspense, useRef } from 'react';
+import { useList, useUnit } from 'effector-react';
+import { $searchQuery, $searchResults } from '@/pages/search/searchPage/model';
 import { isEmpty } from '@/shared/lib/helpers';
 import { UserCardRow } from '@/entities/user';
 import { sessionModel } from '@/entities/viewer';
 import { widgetSearchQueryPopupModel } from '@/widgets/search/searchQueryPopup';
 import { SearchQueryInputModal } from '@/widgets/search/searchQueryPopup/ui';
-import { Input } from '@nextui-org/react';
+import { Input, Spacer, Spinner } from '@nextui-org/react';
 import { IoSearchSharp } from 'react-icons/io5';
-import { EmptyQuery, SearchResults } from './mobileSearchPageView';
+import { SearchResultsText } from '@/pages/search/searchPage/ui/common/locale/SearchResultsText';
+import { EmptyQuery } from './mobileSearchPageView';
+
+const DeliverySearchResultCardWide = React.lazy(() =>
+    import('@/entities/delivery').then((module) => ({
+        default: module.DeliverySearchResultCardWide,
+    })),
+);
 
 const { Navbar } = widgetNavbarDesktopUi;
 
@@ -22,6 +29,26 @@ const Layout: FunctionComponent<PropsWithChildren> = ({ children }) => (
 const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
     <main className="relative overflow-hidden">{children}</main>
 );
+
+const SearchResults: FunctionComponent = () => {
+    const query = useUnit($searchQuery);
+    const results = useList($searchResults, (result) => (
+        <DeliverySearchResultCardWide
+            key={result.id}
+            delivery={result}
+            query={query}
+        />
+    ));
+    return (
+        <>
+            <div className="font-medium">
+                <SearchResultsText />
+            </div>
+            <Spacer y={4} />
+            <div className="flex flex-col gap-4">{results}</div>
+        </>
+    );
+};
 
 const Toolbar: FunctionComponent = () => {
     const reference = useRef<HTMLInputElement>(null);
@@ -80,7 +107,9 @@ export const DesktopSearchPageView: FunctionComponent = () => {
             <Navbar />
             <MainContainer>
                 <Toolbar onSelectTab={() => {}} />
-                <SearchResults />
+                <Suspense fallback={<Spinner />}>
+                    <SearchResults />
+                </Suspense>
             </MainContainer>
         </Layout>
     );
