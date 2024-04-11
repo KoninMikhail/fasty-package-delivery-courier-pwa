@@ -1,0 +1,8 @@
+{
+  "email.label": "Email",
+  "email.placeholder": "Введите email",
+  "request.send": "Сбросить пароль",
+  "request.success": "Проверьте почту для сброса пароля",
+  "error.server": "Извините, сервер временно недоступен",
+  "error.unknown": "Неизвестная ошибка"
+}

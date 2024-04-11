@@ -1,0 +1,9 @@
+{
+  "data.empty": "Нет активных доставок",
+  "widget.error": "Произошла ошибка",
+  "widget.pending": "Обновляем данные",
+  "error.buttonRetry.label": "Повторить",
+  "error.noInternet": "Нет подключения к интернету",
+  "item.info.id": "Доставка: #{{id}}",
+  "widget.map.title": "Посмотреть на карте"
+}

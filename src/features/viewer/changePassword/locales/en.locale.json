@@ -1,0 +1,14 @@
+{
+  "form.input.create.label": "Create a new password",
+  "form.input.create.placeholder": "Enter a new password",
+  "form.input.confirm.label": "Confirm your new password",
+  "form.button.submit": "Submit",
+  "validation.label.guard": "A strong password contains:",
+  "validation.label.length": "At least 6 characters",
+  "validation.label.lowercase": "Lowercase and uppercase letters",
+  "validation.label.number": "Digits or other characters",
+  "validation.label.specialChars": "Other characters",
+  "validation.label.success": "Надёжный пароль",
+  "validation.label.error.easy": "Пароль легко подобрать",
+  "validation.label.match": "Пароли не совпадают"
+}

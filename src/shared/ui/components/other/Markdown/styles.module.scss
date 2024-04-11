@@ -1,0 +1,35 @@
+.markdown {
+  p:not(:last-of-type) {
+    margin-bottom: 10px;
+  }
+
+  li {
+    margin-left: 2em;
+  }
+
+  code {
+    background-color: rgba(255, 255, 255, 0.3);
+    border: thin solid white;
+    padding: 0 0.25em;
+  }
+
+  pre {
+    display: block;
+    width: 100%;
+    padding: 0.5em;
+    background-color: rgba(255, 255, 255, 0.3);
+    border: thin solid white;
+
+    code {
+      background-color: unset;
+      border: unset;
+      padding: unset;
+    }
+  }
+
+  a {
+    font-weight: 600;
+    text-decoration: underline;
+  }
+}
+

@@ -1,0 +1,13 @@
+{
+  "page.title": "Profile Edit | {{appName}} - {{appDescription}}",
+  "page.heading": "Profile Edit",
+  "section.label.changePassword": "Change Password",
+  "section.description.changePassword": "After changing the password, you will need to log in again.",
+  "section.label.personalInfo": "Personal info",
+  "section.label.fullName": "Full Name",
+  "section.label.email": "Email",
+  "section.label.phone": "Phone",
+  "section.description.avatarSize": "At least 200x200 pixels recommended.",
+  "section.description.avatarFormat": "JPG or PNG is allowed.",
+  "section.label.unknown": "unknown"
+}

@@ -1,0 +1,8 @@
+{
+  "uploadButton.text": "Выбрать аватар",
+  "popup.cancelButton.text": "Отмена",
+  "popup.confirmButton.text": "Сохранить",
+  "uploadButton.pending": "загрузка",
+  "popup.title": "Выберите аватар",
+  "error.minSize": "Изображение должно быть не менее {{size}} x {{size}} пикселей"
+}

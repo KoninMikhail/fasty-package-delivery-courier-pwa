@@ -1,0 +1,8 @@
+{
+  "page.title": "Sign in | {{appName}} - {{appDescription}}",
+  "greetings.welcome": "Welcome, Back!",
+  "greetings.description": "Log in to your profile to get started and receive new deliveries",
+  "buttons.sign_in": "Sign in",
+  "buttons.reset_password": "Reset password",
+  "buttons.github": "Project on GitHub"
+}

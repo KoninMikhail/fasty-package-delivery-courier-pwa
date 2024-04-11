@@ -1,0 +1,17 @@
+{
+  "page.title": "Settings | {{appName}} - {{appDescription}}",
+  "page.heading": "Settings",
+  "about.title": "About app",
+  "language.title": "Choose language",
+  "theme.title": "Theme",
+  "settings.notice": "Attention! All settings are saved locally on your device. Clearing cookies will reset the settings. Also, changing devices will require you to reapply the settings.",
+  "section.help.title": "Help and support",
+  "section.help.call": "Call us",
+    "section.help.email": "Email us",
+  "section.legal.title": "Terms of Service",
+    "section.legal.privacy": "Privacy policy",
+    "section.legal.terms": "Terms of use",
+  "section.legal.cookies": "Cookie policy",
+
+  "setting.upcoming.items.count": "Upcoming deliveries count"
+}

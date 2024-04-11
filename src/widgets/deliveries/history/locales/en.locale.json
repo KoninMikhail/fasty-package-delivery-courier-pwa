@@ -1,0 +1,8 @@
+{
+  "history.accordion.item.label.count.success_single": "You have {{successCount}} delivery",
+  "history.accordion.item.label.count.success_plural": "You have {{successCount}} deliveries",
+  "history.accordion.item.label.count.success_multi": "You have {{successCount}} deliveries",
+  "history.accordion.item.label.count.cancel_single": "{{canceledCount}} cancelled",
+  "history.accordion.item.label.count.cancel_plural": "{{canceledCount}} cancelled",
+  "history.accordion.item.label.count.cancel_multi": "{{canceledCount}} cancelled"
+}

@@ -1,0 +1,9 @@
+{
+  "client.type.organization": "Organization",
+  "client.type.person": "Individual",
+  "client.type.unknown": "Unknown",
+  "client.card.label.email": "Email",
+  "client.card.label.phone": "Phone",
+  "client.card.label.name": "Name",
+  "client.card.label.job": "Job"
+}

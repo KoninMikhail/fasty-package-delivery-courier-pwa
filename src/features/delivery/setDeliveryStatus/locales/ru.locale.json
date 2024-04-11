@@ -1,0 +1,13 @@
+{
+  "label.selector": "Назначить новый статус",
+  "label.selector.placeholder": "Выберите статус",
+  "label.status.created": "Создана",
+  "label.status.delivering": "В доставке",
+  "label.status.done": "Успешно доставлено",
+  "label.status.canceled": "Доставка отменена",
+  "label.button.cancel": "Отменить",
+  "label.button.set": "Установить",
+  "label.reason.reject": "Причина отмены (Обязательно)",
+  "label.reason.success": "Пометка для менеджера",
+  "textarea.placeholder": "Минимум 3 символа"
+}

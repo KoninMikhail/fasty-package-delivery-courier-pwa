@@ -1,0 +1,9 @@
+{
+  "data.empty": "No deliveries yet",
+  "widget.error": "An error occurred",
+  "widget.pending": "Updating data",
+  "error.buttonRetry.label": "Retry",
+  "error.noInternet": "No internet connection",
+  "item.info.id": "Delivery: #{{id}}",
+  "widget.map.title": "Show all on map"
+}

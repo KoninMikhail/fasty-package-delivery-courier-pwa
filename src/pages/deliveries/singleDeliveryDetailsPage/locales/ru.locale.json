@@ -1,0 +1,18 @@
+{
+  "page.title": "Доставка #{{id}} | {{appName}}",
+  "page.section.label.id": "Номер:",
+  "page.section.label.client": "Клиент",
+  "page.section.label.client.type": "Тип клиента",
+  "page.section.label.pickup": "Дата и время доставки",
+  "page.section.label.type": "Тип доставки",
+  "page.section.label.express": "Срочная",
+  "page.section.label.address": "Адрес",
+  "page.section.label.metro": "Метро",
+  "page.section.label.contents": "Содержимое",
+  "page.section.label.weight": "Вес",
+  "page.section.label.contactPerson": "Контактное лицо",
+  "page.section.label.manager": "Ответственный",
+  "page.section.label.courier": "Курьер",
+  "page.section.label.courier.chip.my": "Моя доставка",
+  "page.section.label.deliveryStatus": "Статус доставки"
+}

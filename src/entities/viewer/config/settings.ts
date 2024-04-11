@@ -1,0 +1,1 @@
+export const DEFAULT_UPCOMING_DELIVERIES_COUNT: number = 5;

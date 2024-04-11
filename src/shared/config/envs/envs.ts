@@ -1,15 +1,12 @@
-const getEnvironmentVariable = (key: string) => {
-	if (import.meta.env[key] === undefined) {
-		throw new Error(`Env variable ${key} is required`)
-	}
-	return import.meta.env[key] || ''
-}
+// eslint-disable-next-line unicorn/prevent-abbreviations
+const getEnvironmentVariable = (key: string): string => {
+    if (import.meta.env[key] === undefined) {
+        throw new Error(`Env variable ${key} is required`);
+    }
+    return (import.meta.env[key] || '') as string;
+};
 
-// region hosts
-// export const DELIVERIES_API_HOST = getEnvVar('VITE_DELIVERIES_API_HOST');
-
-// endregion
-
-export const NODE_ENV = getEnvironmentVariable('MODE')
-export const isDevEnv = NODE_ENV === 'development'
-export const isProdEnv = NODE_ENV === 'production'
+export const NODE_ENV = getEnvironmentVariable('MODE');
+export const isDevelopmentEnvironment = NODE_ENV === 'development';
+export const isPreviewEnvironment = NODE_ENV === 'preview';
+export const isProductionEnvironment = NODE_ENV === 'production';

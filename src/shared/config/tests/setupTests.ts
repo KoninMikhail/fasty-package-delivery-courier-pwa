@@ -1,19 +1,13 @@
 import '@testing-library/jest-dom';
-import mediaQuery from 'css-mediaquery';
 import 'whatwg-fetch';
-import {
-    DESKTOP_RESOLUTION_HEIGHT,
-    DESKTOP_RESOLUTION_WIDTH,
-} from '@/shared/config';
-import { mswApi } from '@/shared/api';
 
 beforeAll(() => {
-    mswApi.listen({ onUnhandledRequest: 'error' });
-
-    Object.defineProperty(window, 'IS_REACT_ACT_ENVIRONMENT', {
+    // mswApi.listen({ onUnhandledRequest: 'error' });
+    /* Object.defineProperty(window, 'IS_REACT_ACT_ENVIRONMENT', {
         writable: true,
         value: true,
     });
+
     Object.defineProperty(window, 'matchMedia', {
         writable: true,
         value: (query: string) => {
@@ -64,17 +58,17 @@ beforeAll(() => {
                 innerHeight: height,
             }).dispatchEvent(new Event('resize'));
         },
-    });
+    }); */
 });
 
 beforeEach(() => {
-    window.resizeTo(DESKTOP_RESOLUTION_WIDTH, DESKTOP_RESOLUTION_HEIGHT);
+    // window.resizeTo(DESKTOP_RESOLUTION_WIDTH, DESKTOP_RESOLUTION_HEIGHT);
 });
 
 afterEach(() => {
-    mswApi.resetHandlers();
+    // mswApi.resetHandlers();
 });
 
 afterAll(() => {
-    mswApi.close();
+    //  mswApi.close();
 });

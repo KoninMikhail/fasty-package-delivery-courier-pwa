@@ -1,0 +1,15 @@
+{
+  "form.input.create.label": "Придумайте пароль",
+  "form.input.create.placeholder": "Введите новый пароль",
+  "form.input.confirm.label": "Подтвердите новый пароль",
+  "form.input.confirm.placeholder": "Введите новый пароль еще раз",
+  "form.button.submit": "Сохранить",
+  "validation.label.guard": "Надежный пароль содержит:",
+  "validation.label.length": "Не менее 6 символов",
+  "validation.label.lowercase": "Строчные и прописные буквы",
+  "validation.label.number": "Цифры или другие символы",
+  "validation.label.specialChars": "Другие символы",
+  "validation.label.success": "Надёжный пароль",
+  "validation.label.error.easy": "Пароль легко подобрать",
+  "validation.label.match": "Пароли не совпадают"
+}

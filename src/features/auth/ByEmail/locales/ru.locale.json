@@ -1,0 +1,11 @@
+{
+  "email.label": "Email",
+  "email.placeholder": "Введите email",
+  "password.label": "Пароль",
+  "password.placeholder": "Введите пароль",
+  "password.validation.rules": "Минимальна длина 6 символов, буквы, цифры и спецсимволы.",
+  "signIn": "Войти в аккаунт",
+  "error.unauthorized": "Пожалуйста проверьте введённые данные",
+  "error.server": "Извините, сервер временно недоступен",
+  "error.unknown": "Неизвестная ошибка"
+}

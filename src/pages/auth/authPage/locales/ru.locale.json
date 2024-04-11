@@ -1,0 +1,8 @@
+{
+  "page.title": "Войти | {{appName}} - {{appDescription}}",
+  "greetings.welcome": "Добро пожаловать",
+  "greetings.description": "Войдите в свой профиль для того чтобы начать работу и получать новые доставки",
+  "buttons.sign_in": "Войти в аккаунт",
+  "buttons.reset_password": "Восстановить пароль",
+  "buttons.github": "Посмотреть на GitHub"
+}

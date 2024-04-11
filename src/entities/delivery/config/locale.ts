@@ -1,0 +1,29 @@
+export const translationNS = 'entity:delivery';
+
+export const EXPIRED = 'delivery.card.chip.expired';
+export const TIME_LEFT = 'delivery.card.chip.timeLeft';
+export const ADDRESS = 'delivery.card.label.address';
+export const CLIENT_NOT_FOUND = 'delivery.card.client.name.notFound';
+export const LABEL_ID = 'delivery.card.label.id';
+export const TYPE_ON_CAR = 'delivery.type.onCar';
+export const TYPE_ON_FOOT = 'delivery.type.onFoot';
+export const TYPE_EXPRESS = 'delivery.type.express';
+export const LABEL_ADDRESS = 'delivery.card.label.address';
+export const LABEL_WEIGHT = 'delivery.card.label.weight';
+export const WEIGHT_VALUE = 'delivery.card.weight.kg';
+export const LABEL_STORAGE = 'delivery.card.label.storage';
+export const LABEL_CLIENT = 'delivery.card.label.client';
+export const BUTTON_MORE = 'delivery.card.button.more';
+export const LABEL_CONTACT_PERSON = 'delivery.card.label.contactPerson';
+export const LABEL_COMMENT = 'delivery.card.label.comment';
+export const STATUS_CREATED = 'delivery.status.created';
+export const STATUS_DELIVERING = 'delivery.status.delivering';
+export const STATUS_DELIVERING_DESCRIPTION =
+    'delivery.status.delivering.description';
+export const STATUS_DONE = 'delivery.status.done';
+export const STATUS_NO_COMMENT = 'delivery.status.noComment';
+export const STATUS_DONE_COMMENT = 'delivery.status.done.comment';
+export const STATUS_CANCELLED = 'delivery.status.canceled';
+export const STATUS_CANCELLED_COMMENT = 'delivery.status.canceled.comment';
+export const NO_COMMENT_TEXT = 'delivery.card.noComment';
+export const LABEL_DATE = 'delivery.card.label.date';
