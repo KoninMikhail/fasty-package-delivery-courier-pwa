@@ -8,19 +8,17 @@ import { sharedUiComponents } from '@/shared/ui';
 import { useKeyPress } from '@/shared/lib/browser';
 import { factory } from '../model/model';
 
-import { translationNS } from '../config';
+import {
+    EMAIL_LABEL_TEXT_KEY,
+    EMAIL_PLACEHOLDER_TEXT_KEY,
+    PASSWORD_LABEL_TEXT_KEY,
+    PASSWORD_PLACEHOLDER_TEXT_KEY,
+    PASSWORD_VALIDATION_RULES_TEXT_KEY,
+    SIGN_IN_TEXT_KEY,
+    translationNS,
+} from '../config';
 
 const { PasswordField } = sharedUiComponents;
-
-/**
- * Constants
- */
-const EMAIL_LABEL_TEXT_KEY = 'email.label';
-const EMAIL_PLACEHOLDER_TEXT_KEY = 'email.placeholder';
-const PASSWORD_LABEL_TEXT_KEY = 'password.label';
-const PASSWORD_PLACEHOLDER_TEXT_KEY = 'password.placeholder';
-const PASSWORD_VALIDATION_RULES_TEXT_KEY = 'password.validation.rules';
-const SIGN_IN_TEXT_KEY = 'signIn';
 
 /**
  * Components
@@ -34,10 +32,12 @@ const EmailField: FunctionComponent = () => {
     /**
      * Error
      */
-    const [isInvalid, errorMessage] = useUnit([
+    const [isInvalid, errorMessageCode] = useUnit([
         model.$fail,
         model.$failMessage,
     ]);
+
+    const errorMessage = isInvalid ? t(errorMessageCode) : '';
 
     /**
      * Handlers
@@ -56,7 +56,7 @@ const EmailField: FunctionComponent = () => {
             isRequired
             isClearable
             isInvalid={isInvalid}
-            errorMessage={t(errorMessage)}
+            errorMessage={errorMessage}
             label={t(EMAIL_LABEL_TEXT_KEY)}
             placeholder={t(EMAIL_PLACEHOLDER_TEXT_KEY)}
             variant="flat"
@@ -76,10 +76,12 @@ const Password: FunctionComponent = () => {
     /**
      * Error
      */
-    const [isInvalid, errorMessage] = useUnit([
+    const [isInvalid, errorMessageCode] = useUnit([
         model.$fail,
         model.$failMessage,
     ]);
+
+    const errorMessage = isInvalid ? t(errorMessageCode) : '';
 
     /**
      * Handlers
@@ -95,7 +97,7 @@ const Password: FunctionComponent = () => {
             isRequired
             variant="flat"
             isInvalid={isInvalid}
-            errorMessage={t(errorMessage)}
+            errorMessage={errorMessage}
             value={value}
             label={t(PASSWORD_LABEL_TEXT_KEY)}
             placeholder={t(PASSWORD_PLACEHOLDER_TEXT_KEY)}
