@@ -3,9 +3,9 @@ import { modelFactory } from 'effector-factorio';
 import { Email } from '@/shared/lib/type-guards/isEmail';
 import isEmail from '@/shared/lib/type-guards/isEmail/isEmail';
 import { ResetPasswordRequest } from '@/shared/api';
-import { sharedLibHelpers } from '@/shared/lib';
+import { sharedLibTypeGuards } from '@/shared/lib';
 
-const { isEmpty } = sharedLibHelpers;
+const { isEmpty } = sharedLibTypeGuards;
 
 interface FactoryOptions {
     resetFx: Effect<ResetPasswordRequest, void, Error>;

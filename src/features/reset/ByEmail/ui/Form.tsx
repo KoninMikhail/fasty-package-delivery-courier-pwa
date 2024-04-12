@@ -1,21 +1,20 @@
 import { InputProps } from '@nextui-org/input/dist/input';
 import { useUnit } from 'effector-react';
-import { ChangeEvent, useEffect } from 'react';
+import { ChangeEvent } from 'react';
 import { Button, ButtonProps, Input } from '@nextui-org/react';
 import { modelView } from 'effector-factorio';
 import { useTranslation } from 'react-i18next';
 import { useKeyPress } from '@/shared/lib/browser';
+import { useUnmount } from 'usehooks-ts';
 import { factory } from '../model';
 
-import { translationNS } from '../config';
-
-/**
- * Constants
- */
-const EMAIL_LABEL_TEXT_KEY = 'email.label';
-const EMAIL_PLACEHOLDER_TEXT_KEY = 'email.placeholder';
-const SEND_REQUEST_TEXT_KEY = 'request.send';
-const SEND_SUCCESS_TEXT_KEY = 'request.success';
+import {
+    EMAIL_LABEL_TEXT_KEY,
+    EMAIL_PLACEHOLDER_TEXT_KEY,
+    SEND_REQUEST_TEXT_KEY,
+    SEND_SUCCESS_TEXT_KEY,
+    translationNS,
+} from '../config';
 
 /**
  * Components
@@ -29,7 +28,8 @@ const EmailField: FunctionComponent<
     const pending = useUnit(model.$pending);
     const done = useUnit(model.$done);
     const failed = useUnit(model.$fail);
-    const failedMessage = useUnit(model.$failMessage);
+    const failedMessageCode = useUnit(model.$failMessage);
+    const failMessage = failed ? t(failedMessageCode) : '';
 
     /**
      * Handlers
@@ -47,7 +47,7 @@ const EmailField: FunctionComponent<
         <Input
             isClearable
             isInvalid={failed}
-            errorMessage={t(failedMessage)}
+            errorMessage={failMessage}
             isDisabled={pending || done}
             label={label}
             placeholder={placeholder}
@@ -99,7 +99,9 @@ export const Form = modelView(factory, () => {
     const model = factory.useModel();
     const resetForm = useUnit(model.resetFormState);
 
-    useEffect(() => resetForm(), []);
+    useUnmount(() => {
+        resetForm();
+    });
 
     return (
         <form className="flex flex-col gap-4">
