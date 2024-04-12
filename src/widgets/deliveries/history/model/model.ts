@@ -2,8 +2,10 @@ import { Delivery } from '@/shared/api';
 import { createEvent, createStore } from 'effector';
 import { compareDesc, format, formatISO, parseISO, subDays } from 'date-fns';
 import { InfiniteScroll } from '@/features/page/infinite-scroll';
-import { isEmpty } from '@/shared/lib/helpers';
+import { sharedLibTypeGuards } from '@/shared/lib';
 import { getDeliveriesHistoryFx } from './effects';
+
+const { isEmpty } = sharedLibTypeGuards;
 
 export const init = createEvent();
 

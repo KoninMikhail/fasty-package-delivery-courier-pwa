@@ -2,7 +2,7 @@ import { createEvent, createStore, sample } from 'effector';
 import { getMyDeliveriesFx } from '@/entities/delivery';
 import { FilterDeliveriesByTimeRange } from '@/features/delivery/filterDeliveriesByTimeRange';
 import { sessionModel } from '@/entities/viewer';
-import { sharedLibHelpers } from '@/shared/lib';
+import { sharedLibTypeGuards } from '@/shared/lib';
 import { $deliveriesStore } from './deliveriesStore';
 
 import {
@@ -11,7 +11,7 @@ import {
     DELIVERY_TIME_STEP,
 } from '../config';
 
-const { isEmpty } = sharedLibHelpers;
+const { isEmpty } = sharedLibTypeGuards;
 
 /**
  * Events

@@ -8,10 +8,10 @@ import {
 import { isAfter } from 'date-fns/isAfter';
 import { sessionModel } from '@/entities/viewer';
 import { assignUserToDeliveryFx } from '@/entities/user';
-import { sharedLibHelpers } from '@/shared/lib';
+import { sharedLibTypeGuards } from '@/shared/lib';
 import { fetchAvailableDeliveriesFx } from './effects';
 
-const { isEmpty } = sharedLibHelpers;
+const { isEmpty } = sharedLibTypeGuards;
 
 type DatesRange = {
     dateFrom: string;
