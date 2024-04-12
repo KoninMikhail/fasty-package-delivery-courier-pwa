@@ -4,7 +4,6 @@ import { useUnit } from 'effector-react';
 import { UserCardRow } from '@/entities/user';
 import { sessionModel } from '@/entities/viewer';
 import { Button, Chip, Divider, Link, Spacer } from '@nextui-org/react';
-import { Section } from '@/shared/ui/layouts';
 import { CompanyLogoIcon } from '@/shared/ui/icons/CompanyLogoIcon';
 import { ChangeLanguageButton } from '@/features/viewer/changeLanguage';
 import { ChangeColorModeSwitchButton } from '@/features/viewer/changeColorMode';
@@ -56,8 +55,12 @@ const Layout: FunctionComponent<PropsWithChildren> = ({ children }) => (
 const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
     <main className="h-full w-full flex-col px-8">{children}</main>
 );
+const Section: FunctionComponent<PropsWithChildren> = ({ children }) => (
+    <section className="grid gap-4 p-2">{children}</section>
+);
 
 /**
+ *
  * =======================
  * Components
  * =======================

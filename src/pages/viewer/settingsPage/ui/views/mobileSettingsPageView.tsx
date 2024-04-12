@@ -1,7 +1,6 @@
 import { PropsWithChildren, useState } from 'react';
 
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
-import { sharedUiLayouts } from '@/shared/ui';
 import { sharedConfigConstants } from '@/shared/config';
 import { Button, Chip, Divider, Input, Link, Spacer } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
@@ -44,7 +43,6 @@ const { removeNonNumericChars } = sharedLibHelpers;
 const { TermsOfUseModal } = widgetTermsOfUseModalUi;
 const { CookiePolicyModal } = widgetCookiePolicyModalUi;
 const { PrivacyPolicyModal } = widgetPrivacyPolicyModalUi;
-const { Section } = sharedUiLayouts;
 const { NavbarMobile } = widgetNavbarMobileUi;
 const { APP_NAME, APP_DESCRIPTION, APP_SUPPORT_EMAIL, APP_SUPPORT_PHONE } =
     sharedConfigConstants;
@@ -55,6 +53,10 @@ const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
     <main className="h-full w-full flex-col px-2 pb-20 lg:mx-auto lg:w-[750px]">
         {children}
     </main>
+);
+
+const Section: FunctionComponent<PropsWithChildren> = ({ children }) => (
+    <section className="grid gap-4 p-2">{children}</section>
 );
 
 const Header: FunctionComponent = () => (
