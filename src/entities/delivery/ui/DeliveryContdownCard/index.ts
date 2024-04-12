@@ -1,1 +1,1 @@
-export * from './DeliveryContdownCard';
+export { DeliveryCountdownCard } from './DeliveryContdownCard';
