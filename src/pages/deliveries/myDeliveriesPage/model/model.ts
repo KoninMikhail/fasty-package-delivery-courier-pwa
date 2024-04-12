@@ -1,6 +1,6 @@
 import { createGate } from 'effector-react';
 import { createEvent, createStore, sample } from 'effector';
-import { and, debug, interval, once } from 'patronum';
+import { and, interval, once } from 'patronum';
 import { sessionModel } from '@/entities/viewer';
 import { widgetMyDeliveriesModel } from '@/widgets/deliveries/myDeliveries';
 import { getMyDeliveriesFx } from '@/entities/delivery';
@@ -69,4 +69,3 @@ sample({
         Date.now() - lastUpdateTimestamp > POLLING_TIMEOUT * 60 * 1000,
     target: widgetMyDeliveriesModel.fetchData,
 });
-debug(getMyDeliveriesFx.done);
