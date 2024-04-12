@@ -2,7 +2,6 @@ import { PropsWithChildren } from 'react';
 
 import { widgetMyDeliveriesUi } from '@/widgets/deliveries/myDeliveries';
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
-import { sharedUiComponents } from '@/shared/ui';
 import { Spacer } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { PAGE_HEADER, PAGE_SUBHEADER, translationNS } from '../../config';
@@ -10,7 +9,6 @@ import { PAGE_HEADER, PAGE_SUBHEADER, translationNS } from '../../config';
 const { MyDeliveriesList, MyDeliveriesFilters, MyDeliveriesMapPopup } =
     widgetMyDeliveriesUi;
 const { NavbarMobile } = widgetNavbarMobileUi;
-const { Heading, Text, NativeScroll } = sharedUiComponents;
 
 const Wrapper: FunctionComponent<PropsWithChildren> = ({ children }) => (
     <div className="mx-auto h-full w-full flex-col rounded-t-3xl pb-24 lg:w-[750px]">
@@ -31,15 +29,9 @@ const ListSection: FunctionComponent<PropsWithChildren> = ({ children }) => (
 const Header: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
     return (
-        <header className="max-w-full gap-4 px-4 pt-4">
-            <div>
-                <Heading size="large" weight="bold">
-                    {t(PAGE_HEADER)}
-                </Heading>
-                <Text as="span" size="small">
-                    {t(PAGE_SUBHEADER)}
-                </Text>
-            </div>
+        <header className="max-w-full px-4 pt-4">
+            <h1 className="text-lg font-bold">{t(PAGE_HEADER)}</h1>
+            <span className="text-sm">{t(PAGE_SUBHEADER)}</span>
         </header>
     );
 };
