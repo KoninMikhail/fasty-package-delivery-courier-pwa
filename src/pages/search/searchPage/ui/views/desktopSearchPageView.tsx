@@ -2,9 +2,7 @@ import { widgetNavbarDesktopUi } from '@/widgets/layout/navbar-desktop';
 import React, { PropsWithChildren, Suspense, useRef } from 'react';
 import { useList, useUnit } from 'effector-react';
 import { $searchQuery, $searchResults } from '@/pages/search/searchPage/model';
-import { isEmpty } from '@/shared/lib/helpers';
-import { UserCardRow } from '@/entities/user';
-import { sessionModel } from '@/entities/viewer';
+import { sharedLibTypeGuards } from '@/shared/lib';
 import { widgetSearchQueryPopupModel } from '@/widgets/search/searchQueryPopup';
 import { SearchQueryInputModal } from '@/widgets/search/searchQueryPopup/ui';
 import { Input, Spacer, Spinner } from '@nextui-org/react';
@@ -12,6 +10,7 @@ import { IoSearchSharp } from 'react-icons/io5';
 import { SearchResultsText } from '@/pages/search/searchPage/ui/common/locale/SearchResultsText';
 import { EmptyQuery } from './mobileSearchPageView';
 
+const { isEmpty } = sharedLibTypeGuards;
 const DeliverySearchResultCardWide = React.lazy(() =>
     import('@/entities/delivery').then((module) => ({
         default: module.DeliverySearchResultCardWide,
@@ -20,10 +19,8 @@ const DeliverySearchResultCardWide = React.lazy(() =>
 
 const { Navbar } = widgetNavbarDesktopUi;
 
-const Layout: FunctionComponent<PropsWithChildren> = ({ children }) => (
-    <div className="grid h-screen w-screen grid-cols-[max-content_auto] gap-8 pr-6">
-        {children}
-    </div>
+const Root: FunctionComponent<PropsWithChildren> = ({ children }) => (
+    <div className="mx-auto w-[1400px] gap-8 pr-6">{children}</div>
 );
 
 const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
@@ -52,7 +49,6 @@ const SearchResults: FunctionComponent = () => {
 
 const Toolbar: FunctionComponent = () => {
     const reference = useRef<HTMLInputElement>(null);
-    const user = useUnit(sessionModel.$viewerProfileData);
     const [openSearchModal, query] = useUnit([
         widgetSearchQueryPopupModel.modal.clickTriggerElement,
         widgetSearchQueryPopupModel.base.$query,
@@ -70,14 +66,11 @@ const Toolbar: FunctionComponent = () => {
                         ref={reference}
                         size="lg"
                         value={query}
-                        className="w-2/3"
+                        className="w-full p-8"
                         type="search"
                         onClick={onClickSearchInput}
                         startContent={<IoSearchSharp className="text-xl" />}
                     />
-                </div>
-                <div>
-                    <UserCardRow user={user} avatarPosition="right" />
                 </div>
             </div>
             <SearchQueryInputModal backdrop="blur" size="2xl" />
@@ -90,7 +83,7 @@ export const DesktopSearchPageView: FunctionComponent = () => {
 
     if (isEmpty(query)) {
         return (
-            <Layout>
+            <Root>
                 <Navbar />
                 <MainContainer>
                     <Toolbar onSelectTab={() => {}} />
@@ -98,19 +91,18 @@ export const DesktopSearchPageView: FunctionComponent = () => {
                         <EmptyQuery />
                     </div>
                 </MainContainer>
-            </Layout>
+            </Root>
         );
     }
 
     return (
-        <Layout>
+        <Root>
             <Navbar />
             <MainContainer>
-                <Toolbar onSelectTab={() => {}} />
                 <Suspense fallback={<Spinner />}>
                     <SearchResults />
                 </Suspense>
             </MainContainer>
-        </Layout>
+        </Root>
     );
 };

@@ -27,7 +27,7 @@ import { assignUserToDeliveryFx } from '@/entities/user';
 import { getClientTypeLocale } from '@/entities/client/lib/utils/getClientTypeLocale';
 import { getClientName, getClientType } from '@/entities/client';
 import { condition, once } from 'patronum';
-import { isEmpty } from '@/shared/lib/helpers';
+import { sharedLibTypeGuards } from '@/shared/lib';
 import { $myDeliveriesStore } from './parts/deliveriesCache';
 import { handleDeliveryError, handleDeliveryNotLoaded } from '../lib';
 import { PageState } from '../types';
@@ -36,6 +36,8 @@ import { DELIVERY_ID_LENGTH } from '../config';
 
 /* eslint-disable unicorn/no-array-method-this-argument */
 /* eslint-disable unicorn/no-thenable */
+
+const { isEmpty } = sharedLibTypeGuards;
 
 /**
  * Gateway for the delivery details page

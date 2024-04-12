@@ -1,10 +1,10 @@
 import { combine, createEvent, createStore, restore, sample } from 'effector';
 import { Delivery } from '@/shared/api';
-import { sharedLibHelpers } from '@/shared/lib';
+import { sharedLibTypeGuards } from '@/shared/lib';
 import { searchDeliveriesByQueryFx } from './effects';
 import { PageState, SearchPageState } from '../types';
 
-const { isEmpty } = sharedLibHelpers;
+const { isEmpty } = sharedLibTypeGuards;
 
 /**
  * Events

@@ -1,7 +1,6 @@
 import { ChangeEvent, forwardRef } from 'react';
-import { Input } from '@nextui-org/react';
+import { Input, InputProps } from '@nextui-org/react';
 import { sharedLibHelpers } from '@/shared/lib';
-import { InputProps } from '@nextui-org/input/dist/input';
 
 const { padCharacters, clearPaddedCharacters } = sharedLibHelpers;
 
@@ -20,11 +19,6 @@ export const IdentifierField = forwardRef<
         const extractNumbers = (inputValue: InputProps['value']): string => {
             if (!inputValue) return '';
             return inputValue.replaceAll(/\D/g, '');
-        };
-
-        const padWithZeros = (inputValue: string): string => {
-            if (!inputValue) return '';
-            return padCharacters(inputValue, padLength || 8, '0');
         };
 
         const sanitizeValue = (inputValue: string): string => {
