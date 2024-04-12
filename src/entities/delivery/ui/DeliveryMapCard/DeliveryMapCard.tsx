@@ -21,7 +21,7 @@ import {
 /**
  * Renders the address section of the delivery card.
  */
-export const AddressDisplay: FunctionComponent<{
+const AddressDisplay: FunctionComponent<{
     address: string;
 }> = ({ address }) => {
     const { t } = useTranslation(translationNS);
@@ -43,7 +43,7 @@ interface HeaderLayoutProperties {
     countdown: ReactNode;
 }
 
-export const HeaderLayout: FunctionComponent<HeaderLayoutProperties> = ({
+const HeaderLayout: FunctionComponent<HeaderLayoutProperties> = ({
     station,
     countdown,
 }) => (
@@ -53,7 +53,7 @@ export const HeaderLayout: FunctionComponent<HeaderLayoutProperties> = ({
     </div>
 );
 
-export const DeliveryTimer: FunctionComponent<{
+const DeliveryTimer: FunctionComponent<{
     date: Date;
 }> = ({ date }) => {
     const { t } = useTranslation(translationNS);
