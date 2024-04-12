@@ -1,11 +1,10 @@
 import { modelFactory } from 'effector-factorio';
 import { combine, createEvent, createStore, Store } from 'effector';
 import { Delivery } from '@/shared/api';
-import { sharedLibHelpers } from '@/shared/lib';
 import { filterAndSortDeliveries } from '@/features/delivery/filterDeliveriesByTimeRange/utils';
 import { readonly } from 'patronum';
 
-const { getTimesRange } = sharedLibHelpers;
+import { getTimesRange } from './lib/utils/getTimesRange';
 
 interface FactoryOptions {
     startTime: string;

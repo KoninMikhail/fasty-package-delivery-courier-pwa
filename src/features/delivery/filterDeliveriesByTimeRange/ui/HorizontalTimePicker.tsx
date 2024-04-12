@@ -1,6 +1,6 @@
 import { HorizontalScroll } from '@/shared/ui/layouts';
 import { Chip } from '@nextui-org/react';
-import { useUnit } from 'effector-react';
+import { useList, useUnit } from 'effector-react';
 import { modelView } from 'effector-factorio';
 import clsx from 'clsx';
 import { HTMLAttributes } from 'react';
@@ -14,11 +14,27 @@ export const HorizontalTimePicker = modelView(
     factory,
     ({ containerProps }: HorizontalTimePickerProperties) => {
         const model = factory.useModel();
-        const [timesRange, selected, pick] = useUnit([
-            model.$readOnlyTimesRange,
+        const [selected, pick] = useUnit([
             model.$selectedTimeRange,
             model.timePicked,
         ]);
+
+        const times = useList(model.$readOnlyTimesRange, (time) => {
+            const onClickChip = (): void => {
+                pick(time);
+            };
+            const isSelected = selected.includes(time);
+
+            return (
+                <Chip
+                    onClick={onClickChip}
+                    size="lg"
+                    color={isSelected ? 'primary' : 'default'}
+                >
+                    {time}
+                </Chip>
+            );
+        });
 
         return (
             <div className="relative grid grid-cols-1 gap-1">
@@ -29,22 +45,7 @@ export const HorizontalTimePicker = modelView(
                             containerProps && `${containerProps.className}`,
                         )}
                     >
-                        {timesRange.map((time) => {
-                            const onClickChip = (): void => {
-                                pick(time);
-                            };
-                            const isSelected = selected.includes(time);
-                            return (
-                                <Chip
-                                    key={time}
-                                    color={isSelected ? 'primary' : 'default'}
-                                    size="lg"
-                                    onClick={onClickChip}
-                                >
-                                    {time}
-                                </Chip>
-                            );
-                        })}
+                        {times}
                     </div>
                 </HorizontalScroll>
             </div>
