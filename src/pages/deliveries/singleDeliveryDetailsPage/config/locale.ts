@@ -1,5 +1,6 @@
 export const translationNS = 'page=single_delivery_details';
 
+export const PAGE_TITLE = 'page.title';
 export const LABEL_CLIENT = 'page.section.label.client';
 export const LABEL_CLIENT_TYPE = 'page.section.label.client.type';
 export const LABEL_PICKUP = 'page.section.label.pickup';

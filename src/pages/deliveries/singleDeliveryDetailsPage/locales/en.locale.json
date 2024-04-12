@@ -1,5 +1,5 @@
 {
-  "page.title": "Delivery #{{id}} | {{appName}}",
+  "page.title": "Delivery #{{id}} | {{appName}} - {{appDescription}}",
   "page.section.label.id": "Delivery ID:",
   "page.section.label.client": "Client",
   "page.section.label.client.type": "Client type",

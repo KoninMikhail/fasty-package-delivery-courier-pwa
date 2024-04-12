@@ -4,33 +4,29 @@ import { useTranslation } from 'react-i18next';
 import { useDocumentTitle } from 'usehooks-ts';
 import { useGate, useUnit } from 'effector-react';
 import { useParams } from 'react-router-dom';
-import { DeliveryDetailsPageGateway } from '@/pages/deliveries/singleDeliveryDetailsPage/model';
+import { DeliveryDetailsPageGateway } from '../model';
 
 import {
     DesktopDeliveryDetailsPageView,
     MobileDeliveryDetailsPageView,
 } from './views';
-import { translationNS } from '../config';
+import { PAGE_TITLE, translationNS } from '../config';
 
-const { APP_NAME } = sharedConfigConstants;
+const { APP_NAME, APP_DESCRIPTION } = sharedConfigConstants;
 
-/**
- * @name SingleDeliveryDetailsPage
- * @description Page for deliveries exchange
- * @constructor
- */
 export const SingleDeliveryDetailsPage: FunctionComponent = () => {
     const isDesktop = useUnit(sessionModel.$$isDesktop);
     const { deliveryId } = useParams();
-    const { t } = useTranslation(translationNS);
+    const { t, i18n } = useTranslation(translationNS);
+    const currentLanguage = i18n.language as keyof typeof APP_DESCRIPTION;
 
-    const pageTitle = t('page.title', {
-        id: deliveryId,
-        appName: APP_NAME,
-        appDescription: t('page.description'),
-    });
-
-    useDocumentTitle(pageTitle);
+    useDocumentTitle(
+        t(PAGE_TITLE, {
+            id: deliveryId,
+            appName: APP_NAME,
+            appDescription: APP_DESCRIPTION[currentLanguage],
+        }),
+    );
     useGate(DeliveryDetailsPageGateway, { deliveryId });
 
     return isDesktop ? (
