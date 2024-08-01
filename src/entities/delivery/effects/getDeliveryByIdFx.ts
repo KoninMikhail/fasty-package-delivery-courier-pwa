@@ -22,7 +22,7 @@ export const getDeliveryByIdFx = createEffect(
             });
         } catch (error: unknown) {
             const zodError = error instanceof ZodError;
-
+            console.log(error);
             if (zodError) {
                 // eslint-disable-next-line no-console
                 error.issues.map((issue) => console.error(issue));

@@ -1,16 +1,34 @@
 import { Delivery } from '@/shared/api';
-import { createEvent, createStore } from 'effector';
-import { compareDesc, format, formatISO, parseISO, subDays } from 'date-fns';
-import { InfiniteScroll } from '@/features/page/infinite-scroll';
+import { createEvent, sample } from 'effector';
+import { compareDesc, format, parseISO } from 'date-fns';
+import { InfiniteScroll } from 'features/other/infinite-scroll';
 import { sharedLibTypeGuards } from '@/shared/lib';
+import { FetchDeliveriesByParameters } from '@/features/delivery/fetchDeliveriesByParams';
+import { debug } from 'patronum';
 import { getDeliveriesHistoryFx } from './effects';
 
 const { isEmpty } = sharedLibTypeGuards;
 
+/**
+ * Providers
+ */
+
+const fetchDeliveriesHistoryModel =
+    FetchDeliveriesByParameters.factory.createModel({
+        fetchDeliveriesFx: getDeliveriesHistoryFx,
+    });
+
 export const init = createEvent();
 
+sample({
+    clock: init,
+    target: fetchDeliveriesHistoryModel.fetch,
+});
+
+debug(fetchDeliveriesHistoryModel.$fetchedDeliveries);
+
 // Store the fetched deliveries
-export const $fetchedData = createStore<Set<Delivery>>(new Set(), {
+/* export const $fetchedData = createStore<Set<Delivery>>(new Set(), {
     name: 'fetchedDeliveries',
 }).on(getDeliveriesHistoryFx.doneData, (currentState, payload) => {
     // Create a new set to merge current items and new items
@@ -30,61 +48,54 @@ export const $fetchedData = createStore<Set<Delivery>>(new Set(), {
     }
 
     return updatedSet;
-});
+}); */
 
 /**
  * Store the sorted deliveries history
  */
-export const $sortedDeliveriesHistory = $fetchedData.map((deliveriesSet) => {
-    const deliveries = [...deliveriesSet];
-    const groupedByDate: Record<string, Delivery[]> = {};
+export const $sortedDeliveriesHistory =
+    fetchDeliveriesHistoryModel.$fetchedDeliveries.map((deliveriesSet) => {
+        const deliveries = [...deliveriesSet];
+        const groupedByDate: Record<string, Delivery[]> = {};
 
-    for (const delivery of deliveries) {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        const { updated_at } = delivery;
-        const updatedAt = format(updated_at, 'yyyy-MM-dd');
+        for (const delivery of deliveries) {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            const { updatedAt } = delivery;
+            const updatedAtFormatted = format(updatedAt, 'yyyy-MM-dd');
 
-        if (!groupedByDate[updatedAt]) groupedByDate[updatedAt] = [];
-        groupedByDate[updatedAt].push(delivery);
-    }
+            if (!groupedByDate[updatedAtFormatted])
+                groupedByDate[updatedAtFormatted] = [];
+            groupedByDate[updatedAtFormatted].push(delivery);
+        }
 
-    return Object.entries(groupedByDate)
-        .map(([date, items]) => {
-            return {
-                date,
-                count: items.length,
-                canceled: items.filter((item) => item.states === 'canceled')
-                    .length,
-                items,
-            };
-        })
-        .sort((a, b) => compareDesc(parseISO(a.date), parseISO(b.date)));
-});
+        return Object.entries(groupedByDate)
+            .map(([date, items]) => {
+                return {
+                    date,
+                    count: items.length,
+                    canceled: items.filter((item) => item.state === 'canceled')
+                        .length,
+                    items,
+                };
+            })
+            .sort((a, b) => compareDesc(parseISO(a.date), parseISO(b.date)));
+    });
 
 /**
  * Infinite scroll model
  */
 
-const today = new Date();
-const amountOfDays = 7;
-
 export const InfiniteScrollModel = InfiniteScroll.factory.createModel({
     initialPagination: {
-        from: formatISO(subDays(today, amountOfDays), {
-            representation: 'date',
-        }),
-        to: formatISO(today, { representation: 'date' }),
+        page: 0,
     },
-    paginationOnLoadNewPage: (store) => {
+    paginationOnLoadNewPage: (query) => {
         return {
-            from: formatISO(subDays(parseISO(store.from), amountOfDays), {
-                representation: 'date',
-            }),
-            to: formatISO(subDays(parseISO(store.to), amountOfDays), {
-                representation: 'date',
-            }),
+            page: query.page + 1,
         };
     },
     stopOn: (payload) => isEmpty(payload),
-    requestContentFx: getDeliveriesHistoryFx,
+    provider: getDeliveriesHistoryFx,
 });
+
+debug(InfiniteScrollModel.newPageRequested);

@@ -10,7 +10,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useUnit } from 'effector-react';
 import { AuthByEmail } from '@/features/auth/ByEmail';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useEffect } from 'react';
+import { sharedConfigConstants } from '@/shared/config';
 import {
     $isSignInModalVisible,
     authByEmailModel,
@@ -28,6 +29,8 @@ import {
     MODAL_TITLE,
     translationNS,
 } from '../config';
+
+const { APP_DEMO_MODE, APP_DEMO_CREDENTIALS } = sharedConfigConstants;
 
 /**
  * Layout
@@ -60,6 +63,13 @@ export const SignInModal: FunctionComponent = () => {
     const onCloseHandler = (): void => {
         setClosed();
     };
+
+    useEffect(() => {
+        if (APP_DEMO_MODE) {
+            authByEmailModel.loginChanged(APP_DEMO_CREDENTIALS.email);
+            authByEmailModel.passwordChanged(APP_DEMO_CREDENTIALS.password);
+        }
+    }, []);
 
     return (
         <Modal isOpen={isOpened} onClose={onCloseHandler} placement="auto">

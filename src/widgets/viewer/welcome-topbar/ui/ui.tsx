@@ -7,7 +7,7 @@ import {
 import { memo, PropsWithChildren } from 'react';
 import { useUnit } from 'effector-react';
 import { sessionModel } from '@/entities/viewer';
-import { UserAvatar } from '@/entities/user';
+import { getUserName, UserAvatar } from '@/entities/user';
 import { sharedConfigRoutes } from '@/shared/config';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -40,7 +40,7 @@ const Root: FunctionComponent<PropsWithChildren> = ({ children }) => {
 const Greetings: FunctionComponent = memo(() => {
     const { t } = useTranslation(translationNS);
     const profile = useUnit(sessionModel.$viewerProfileData);
-    const name = profile?.first_name;
+    const name = getUserName(profile);
     const helloText = name
         ? t(HELLO_TEXT, { name })
         : t(HELLO_TEXT_WITHOUT_NAME);

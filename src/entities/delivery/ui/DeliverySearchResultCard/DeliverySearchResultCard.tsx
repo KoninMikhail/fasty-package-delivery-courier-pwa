@@ -15,14 +15,7 @@ import { sharedConfigRoutes } from '@/shared/config';
 import { useNavigate } from 'react-router-dom';
 import React, { useCallback } from 'react';
 import { LuMail, LuPhone, LuUser } from 'react-icons/lu';
-import {
-    getDeliveryAddress,
-    getDeliveryClientName,
-    getDeliveryContents,
-    getDeliveryId,
-    getDeliveryPickupDateTime,
-    getDeliveryStatus,
-} from '../../lib';
+
 import {
     LABEL_ID,
     LABEL_STORAGE,
@@ -36,6 +29,12 @@ import {
     STATUS_CREATED,
     LABEL_DATE,
 } from '../../config';
+import { getDeliveryId } from '../../lib/utils/getDeliveryId';
+import { getDeliveryStatus } from '../../lib/utils/getDeliveryStatus';
+import { getDeliveryContents } from '../../lib/utils/getDeliveryContents';
+import { getDeliveryClientName } from '../../lib/utils/getDeliveryClientName';
+import { getDeliveryAddress } from '../../lib/utils/getDeliveryAdress';
+import { getDeliveryPickupDateTime } from '../../lib/utils/getDeliveryPickupDateTime';
 
 const { RouteName } = sharedConfigRoutes;
 const { DELIVERIES } = RouteName;

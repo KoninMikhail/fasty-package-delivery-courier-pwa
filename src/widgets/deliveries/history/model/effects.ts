@@ -3,17 +3,21 @@ import { apiClient, Delivery } from '@/shared/api';
 import { z } from 'zod';
 
 interface GetDeliveriesHistoryFxParameters {
-    from: string;
-    to: string;
+    page: Nullable<number>;
+    limit: number;
 }
 
 export const getDeliveriesHistoryFx = createEffect<
     GetDeliveriesHistoryFxParameters,
     Delivery[]
->(async (dates) => {
+>(async (queries) => {
+    const { page, limit } = queries;
     try {
         return await apiClient.getDeliveriesHistory({
-            queries: { from: dates.from, to: dates.to },
+            queries: {
+                page,
+                limit,
+            },
         });
     } catch (error: unknown) {
         if (error instanceof z.ZodError) {

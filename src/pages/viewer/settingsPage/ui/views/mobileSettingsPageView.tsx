@@ -1,12 +1,11 @@
-import { PropsWithChildren, useState } from 'react';
+import { PropsWithChildren } from 'react';
 
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { sharedConfigConstants } from '@/shared/config';
-import { Button, Chip, Divider, Input, Link, Spacer } from '@nextui-org/react';
+import { Button, Chip, Divider, Link, Spacer } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { ChangeColorModeSwitchButton } from '@/features/viewer/changeColorMode';
 import { ChangeLanguageButton } from '@/features/viewer/changeLanguage';
-import { resetDeliveryById } from '@/entities/delivery/effects/resetDeliveryById';
 import {
     MdOutlineMarkunreadMailbox,
     MdOutlinePhoneEnabled,
@@ -128,19 +127,11 @@ const PolicesLinks: FunctionComponent = () => {
  */
 export const MobileSettingsPageView: FunctionComponent = () => {
     const { t, i18n } = useTranslation(translationNS);
-    const [id, setId] = useState<string>('0');
 
     /**
      * Translation
      */
     const currentLanguage = i18n.language as keyof typeof APP_DESCRIPTION;
-
-    const onResetPress = (): void => {
-        if (id !== '0') {
-            void resetDeliveryById(id);
-            setId('0');
-        }
-    };
 
     return (
         <>
@@ -213,18 +204,6 @@ export const MobileSettingsPageView: FunctionComponent = () => {
                         <PolicesLinks />
                     </div>
                 </Section>
-
-                <div className="px-2 py-4">Обнуление доставки</div>
-                <div className="flex gap-2 px-2">
-                    <Input
-                        type="text"
-                        value={id}
-                        onValueChange={(value) => setId(value)}
-                        variant="bordered"
-                        className="max-w-xs"
-                    />
-                    <Button onPress={onResetPress}>Сбросить</Button>
-                </div>
             </MainContainer>
             <NavbarMobile />
             <CookiePolicyModal size="5xl" />

@@ -8,4 +8,4 @@ export const DEFAULT_MAP_CENTER: LatLngExpression = {
     lng: 37.622_093_000_000_01,
 };
 
-export const DEFAULT_MAP_ZOOM: MapContainerProps['zoom'] = 13;
+export const DEFAULT_MAP_ZOOM: MapContainerProps['zoom'] = 11;

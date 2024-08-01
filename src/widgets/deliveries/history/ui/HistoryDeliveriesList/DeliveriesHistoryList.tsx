@@ -3,7 +3,7 @@ import { Accordion, AccordionItem } from '@nextui-org/react';
 import { LuPackage } from 'react-icons/lu';
 import { useUnit } from 'effector-react';
 import { DeliveryHistoryCard } from '@/entities/delivery';
-import { InfiniteScroll } from '@/features/page/infinite-scroll';
+import { InfiniteScroll } from 'features/other/infinite-scroll';
 import {
     getCanceledDeliveriesCountText,
     getLocaledDate,

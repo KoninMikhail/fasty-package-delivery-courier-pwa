@@ -22,12 +22,14 @@ export const assignUserToDeliveryFx = createEffect<
     AssignUserToDeliveryResponse,
     Error
 >(async ({ userId, deliveryId }) => {
-    return apiClient.patchDelivery(
-        { courier_id: userId, states: 'delivering' },
-        {
+    try {
+        return await apiClient.assignUserToDelivery(undefined, {
             params: {
                 deliveryId,
+                userId,
             },
-        },
-    );
+        });
+    } catch (error) {
+        throw new Error(error.response.data.message);
+    }
 });

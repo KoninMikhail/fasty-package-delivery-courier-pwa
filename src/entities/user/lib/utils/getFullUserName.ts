@@ -6,10 +6,10 @@ import { User } from "@/shared/api";
  * @param user
  */
 export const getFullUserName = (user: Nullable<User>): string => {
-  const name = user?.first_name;
-  const surname = user?.last_name;
+  const name = user?.firstName;
+  const surname = user?.lastName;
 
   if (!name && !surname) return "";
 
-  return `${user.first_name} ${user.last_name}`;
+  return `${name} ${surname}`;
 };

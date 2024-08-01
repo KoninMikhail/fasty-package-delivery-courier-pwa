@@ -1,11 +1,9 @@
 import { onRequestFail } from '@/shared/api/middleware';
-import { sharedLibErrors } from '@/shared/lib';
-import { requestViewerLogout } from '@/entities/viewer/model/session';
-
-const { ErrorCodes } = sharedLibErrors;
+import httpStatus from 'http-status';
+import { refreshAuthTokensFx } from '../model/effects';
 
 onRequestFail.watch((event) => {
-    if (event.response?.status === ErrorCodes.UNAUTHORIZED) {
-        requestViewerLogout();
+    if (event.response?.status === httpStatus.UNAUTHORIZED) {
+        void refreshAuthTokensFx();
     }
 });

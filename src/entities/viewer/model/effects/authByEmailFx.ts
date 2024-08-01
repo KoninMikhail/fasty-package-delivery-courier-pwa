@@ -1,14 +1,15 @@
 // Import necessary dependencies and types.
-import { apiClient, AuthResponse, LoginByEmailCredentials } from '@/shared/api';
+import { apiClient, LoginByEmailCredentials, User } from '@/shared/api';
 import { createEffect } from 'effector';
 import { AxiosError } from 'axios';
-import { sharedConfigLocale } from '@/shared/config';
+import { sharedConfigLocale, sharedConfigConstants } from '@/shared/config';
+import httpStatus from 'http-status';
+import Cookies from 'js-cookie';
+import { z } from 'zod';
 
 const { ErrorMessageKeys } = sharedConfigLocale;
-
-// Constants for error handling.
-const UNAUTHORIZED_ERROR_CODE = 401;
-const SERVER_ERROR_CODE = 500;
+const { APP_JWT_ACCESS_TOKEN_KEY, APP_JWT_REFRESH_TOKEN_KEY } =
+    sharedConfigConstants;
 
 /**
  * Create an effect to handle authentication by email.
@@ -21,27 +22,43 @@ const SERVER_ERROR_CODE = 500;
  * @param {LoginByEmailCredentials} credentials The user's login credentials.
  * @returns {Promise<AuthResponse>} A promise that resolves to the user's auth data.
  */
-export const authByEmailFx = createEffect<
-    LoginByEmailCredentials,
-    AuthResponse,
-    Error
->(async (credentials) => {
-    try {
-        // Attempt to authenticate the user with the provided credentials.
-        return await apiClient.authByEmail(credentials);
-    } catch (error: unknown) {
-        // Handle errors from the API call.
-        if (error instanceof AxiosError) {
-            // Check if the error is due to unauthorized access.
-            if (error.response?.status === UNAUTHORIZED_ERROR_CODE) {
-                throw new Error(ErrorMessageKeys.ERROR_UNAUTHORIZED);
+export const authByEmailFx = createEffect<LoginByEmailCredentials, User, Error>(
+    async (credentials) => {
+        try {
+            const { user, tokens } = await apiClient.authByEmail(credentials);
+
+            Cookies.set(APP_JWT_ACCESS_TOKEN_KEY, tokens.access.token, {
+                expires: tokens.access.expires,
+            });
+            Cookies.set(APP_JWT_REFRESH_TOKEN_KEY, tokens.refresh.token, {
+                expires: tokens.refresh.expires,
+            });
+            return user;
+        } catch (error: unknown) {
+            if (error instanceof z.ZodError) {
+                // Iterate over the errors and log them
+                for (const error_ of error.errors) {
+                    console.error(
+                        `Error at path ${error_.path.join('.')}: ${error_.message}`,
+                    );
+                }
             }
-            // Check if the error is due to an issue on the server.
-            if (error.response?.status === SERVER_ERROR_CODE) {
-                throw new Error(ErrorMessageKeys.ERROR_SERVER);
+
+            // Handle errors from the API call.
+            if (error instanceof AxiosError) {
+                // Check if the error is due to unauthorized access.
+                if (error.response?.status === httpStatus.UNAUTHORIZED) {
+                    throw new Error(ErrorMessageKeys.ERROR_UNAUTHORIZED);
+                }
+                // Check if the error is due to an issue on the server.
+                if (
+                    error.response?.status === httpStatus.INTERNAL_SERVER_ERROR
+                ) {
+                    throw new Error(ErrorMessageKeys.ERROR_SERVER);
+                }
             }
+            // For unknown errors, throw a generic error message.
+            throw new Error(ErrorMessageKeys.ERROR_UNKNOWN);
         }
-        // For unknown errors, throw a generic error message.
-        throw new Error(ErrorMessageKeys.ERROR_UNKNOWN);
-    }
-});
+    },
+);

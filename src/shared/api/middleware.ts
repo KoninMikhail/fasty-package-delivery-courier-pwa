@@ -1,4 +1,4 @@
-import { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import { AxiosError } from 'axios';
 import { createEvent } from 'effector';
 
 export const onRequestFail = createEvent<AxiosError>();
@@ -12,18 +12,4 @@ export const axiosAuthErrorInterceptor = (
 ): Promise<AxiosError> => {
     onRequestFail(error);
     return Promise.reject(error);
-};
-
-/**
- * Axios interceptor to rewrite the URL to replace `/users/me` with `/me`
- * @param config
- */
-export const axiosRewriteUrlInterceptor = (
-    config: InternalAxiosRequestConfig,
-): InternalAxiosRequestConfig => {
-    const urlToReplace = '/users/me';
-    if (config.url?.includes(urlToReplace)) {
-        return { ...config, url: config.url.replace(urlToReplace, '/me') };
-    }
-    return config;
 };

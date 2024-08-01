@@ -20,7 +20,7 @@ import {
     DeliveryContents,
     DeliveryContactPerson,
     DeliveryCourier,
-    DeliveryId,
+    DeliveryNumber,
     BackButton,
 } from './common/components';
 import {
@@ -171,7 +171,7 @@ export const DesktopDeliveryDetailsPageView: FunctionComponent = () => {
                 <div className="flex items-center gap-2">
                     <BackButton />
                     <h1 className="px-2 py-4 text-xl font-bold">
-                        Доставка #<DeliveryId />
+                        Доставка #<DeliveryNumber />
                     </h1>
                 </div>
                 <Spacer y={2} />

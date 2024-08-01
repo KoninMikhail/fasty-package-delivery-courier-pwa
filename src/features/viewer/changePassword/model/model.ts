@@ -9,13 +9,8 @@ import {
 } from 'effector';
 import { modelFactory } from 'effector-factorio';
 import { ChangePasswordFxParameters } from '@/entities/viewer';
-import { pending } from 'patronum';
-import {
-    validatePasswordHasNumbers,
-    validatePasswordHasSpecialChars,
-    validatePasswordHasUpperCaseAndLowerCase,
-    validatePasswordLenght,
-} from '@/features/viewer/changePassword/model/effects';
+import { debug, pending } from 'patronum';
+
 import { MIN_PASSWORD_LENGTH } from '../config';
 
 /* eslint-disable no-useless-escape */
@@ -23,31 +18,31 @@ import { MIN_PASSWORD_LENGTH } from '../config';
 interface FactoryOptions {
     targetUser: Store<User>;
     updateUserFx: Effect<ChangePasswordFxParameters, void, Error>;
-    validatePasswordFx: Effect<string, boolean, Error>;
+    demoMode: boolean;
 }
 
 export const factory = modelFactory((options: FactoryOptions) => {
-    const { targetUser, updateUserFx } = options;
+    const { targetUser, updateUserFx, demoMode } = options;
 
     const passwordChanged = createEvent<string>();
     const passwordRepeatChanged = createEvent<string>();
     const submitPressed = createEvent<void>();
+    const reset = createEvent<void>();
 
     /**
      * Form Data
      */
-    const $password = createStore('');
-    const $passwordRepeat = createStore('');
+    const $password = createStore('').reset(reset);
+    const $passwordRepeat = createStore('').reset(reset);
 
     $password.on(passwordChanged, (_, password) => password);
     $passwordRepeat.on(passwordRepeatChanged, (_, password) => password);
 
-    const $inProcess = pending([
-        validatePasswordLenght,
-        validatePasswordHasNumbers,
-        validatePasswordHasUpperCaseAndLowerCase,
-        validatePasswordHasSpecialChars,
-    ]);
+    /**
+     * States
+     */
+
+    const $inPending = pending([updateUserFx]);
 
     /**
      * Validations
@@ -94,11 +89,19 @@ export const factory = modelFactory((options: FactoryOptions) => {
         target: updateUserFx,
     });
 
+    sample({
+        clock: updateUserFx.done,
+        target: reset,
+    });
+
+    debug(reset);
+
     return {
         targetUser,
         $password,
         $passwordRepeat,
         $formValidated,
+        $inPending,
         $passwordHasNumbers,
         $passwordHasUpperCaseAndLowerCase,
         $passwordLengthValid,
@@ -106,5 +109,6 @@ export const factory = modelFactory((options: FactoryOptions) => {
         passwordChanged,
         passwordRepeatChanged,
         submitPressed,
+        isDemoMode: demoMode,
     };
 });

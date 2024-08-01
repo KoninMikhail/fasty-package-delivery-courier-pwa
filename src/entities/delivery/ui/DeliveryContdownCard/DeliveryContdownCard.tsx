@@ -15,7 +15,8 @@ import { useTranslation } from 'react-i18next';
 import { forwardRef, ReactNode } from 'react';
 import { Link as ReactRouterLink } from 'react-router-dom';
 import { sharedConfigRoutes } from '@/shared/config';
-import { getDeliveryAddress, getDeliveryId, getDeliveryMetro } from '../../lib';
+import { sharedLibHelpers } from '@/shared/lib';
+import { getDeliveryContact } from '../../lib/utils/getDeliveryContact';
 import { useEstimatedTime } from '../../lib/hooks/useEstimatedTime';
 import {
     ADDRESS,
@@ -24,9 +25,13 @@ import {
     TIME_LEFT,
     translationNS,
 } from '../../config';
+import { getDeliveryId } from '../../lib/utils/getDeliveryId';
+import { getDeliveryAddress } from '../../lib/utils/getDeliveryAdress';
+import { getDeliveryMetro } from '../../lib/utils/getDeliveryMetro';
 
 const { SubwayStationWithIcon } = sharedServicesSubway;
 const { RouteName } = sharedConfigRoutes;
+const { getMaskedPhone } = sharedLibHelpers;
 const { DELIVERIES } = RouteName;
 
 /**
@@ -58,8 +63,8 @@ export const AddressDisplay: FunctionComponent<{
     const { t } = useTranslation(translationNS);
     return (
         <div className="flex flex-col">
-            <span className="text-md">{`${t(ADDRESS)}:`}</span>
-            <span className="text-md font-bold">{address}</span>
+            <span className="text-md truncate">{`${t(ADDRESS)}:`}</span>
+            <span className="text-md truncate font-bold">{address}</span>
         </div>
     );
 };
@@ -76,13 +81,13 @@ export const ContactDetails: FunctionComponent<{
     if (!name || !phone)
         return <div className="text-md font-bold">{t(CLIENT_NOT_FOUND)}</div>;
 
+    const maskedPhone = getMaskedPhone(phone);
+
     return (
         <>
             <div className="flex-grow">
                 <div className="truncate text-sm font-bold">{name}</div>
-                <div className="text-sm">
-                    {phone.replace('(', ' (').replace(')', ') ')}
-                </div>
+                <div className="text-sm">{maskedPhone}</div>
             </div>
             <Button
                 role="link"
@@ -146,12 +151,10 @@ export const DeliveryCountdownCard = forwardRef<
     HTMLDivElement,
     DeliveryCountdownCardProperties
 >(({ delivery }, reference) => {
-    const deadline = new Date(
-        `${delivery?.date || '2024-01-01'}T${delivery?.time_end || '00:00:00'}.999`,
-    );
+    const deadline = delivery.time_end;
     const id = getDeliveryId(delivery);
     const address = getDeliveryAddress(delivery);
-    const contact = delivery?.contact;
+    const contact = getDeliveryContact(delivery);
     const metro = getDeliveryMetro(delivery);
 
     const getDetailsPageLink = (): string => `${DELIVERIES}/${id}`;
@@ -174,7 +177,7 @@ export const DeliveryCountdownCard = forwardRef<
             <Divider />
             <CardFooter>
                 <Link
-                    href={`tel:+${contact?.phone.replaceAll(/\D/g, '')}`}
+                    href={`tel:+${contact?.phone}`}
                     className="flex w-full justify-between gap-2 text-lg text-foreground"
                 >
                     <ContactDetails

@@ -1,24 +1,20 @@
 import { z } from 'zod';
 
-export const userRoleSchema = z.object({
-    name: z.string(),
-    capabilities: z.array(z.string()),
-    states: z.array(z.string()),
-});
+export const userRoleSchema = z.enum(['COURIER', 'MANAGER']);
 
 export const userSchema = z.object({
-    id: z.number(),
-    first_name: z.string(),
-    last_name: z.string(),
+    id: z.string(),
+    firstName: z.string(),
+    lastName: z.string(),
     gender: z.string(),
     email: z.string().email(),
-    email_verified_at: z.null().or(z.string().datetime()),
-    deleted: z.boolean(),
-    created_at: z.string().datetime().nullable(),
-    updated_at: z.string().datetime().nullable(),
-    user_role: userRoleSchema,
+    role: userRoleSchema,
+    active: z.boolean(),
+    createdAt: z.coerce.date().nullish(),
+    updatedAt: z.coerce.date().nullish(),
     avatar_src: z.string().nullable(),
     phone: z.string().optional(),
 });
 
+export type UserRole = z.infer<typeof userRoleSchema>;
 export type User = z.infer<typeof userSchema>;

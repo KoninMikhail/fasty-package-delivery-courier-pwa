@@ -5,4 +5,4 @@ import {translationNS} from "../../config";
 const {locale} = sharedConfigLocale;
 
 
-export const getClientType = (client: Client) => client.client_type;
+export const getClientType = (client: Client) => client.type;

@@ -17,16 +17,18 @@ import {
     getDeliveryType,
     getDeliveryTypeTranslated,
     getDeliveryWeightPersisted,
-    setDeliveryStatus,
+    setDeliveryStatusFx,
+    isDeliveryAssignedToCourier,
+    getDeliveryNumber,
 } from '@/entities/delivery';
 import { sessionModel } from '@/entities/viewer';
 import { getCachedDeliveryByIdFx } from '@/entities/delivery/effects';
 import { Delivery } from '@/shared/api';
-import { isDeliveryAssignedToCourier } from '@/entities/delivery/lib';
+
 import { assignUserToDeliveryFx } from '@/entities/user';
 import { getClientTypeLocale } from '@/entities/client/lib/utils/getClientTypeLocale';
 import { getClientName, getClientType } from '@/entities/client';
-import { condition, once } from 'patronum';
+import { condition, debug, once } from 'patronum';
 import { sharedLibTypeGuards } from '@/shared/lib';
 import { $myDeliveriesStore } from './parts/deliveriesCache';
 import { handleDeliveryError, handleDeliveryNotLoaded } from '../lib';
@@ -50,7 +52,7 @@ const $deliveryId = createStore<string>('').on(
     DeliveryDetailsPageGateway.open,
     (_, { deliveryId }) => deliveryId ?? '',
 );
-
+debug($deliveryId);
 /**
  * Events
  */
@@ -90,12 +92,15 @@ export const $delivery = createStore<Delivery>(initialDelivery)
     .on(assignUserToDeliveryFx.doneData, (_, delivery) => delivery)
     .on(getDeliveryByIdFx.doneData, (_, delivery) => delivery)
     .on(getCachedDeliveryByIdFx.doneData, (_, delivery) => delivery)
-    .on(setDeliveryStatus.doneData, (_, delivery) => delivery)
+    .on(setDeliveryStatusFx.doneData, (_, delivery) => delivery)
     .reset(DeliveryDetailsPageGateway.close);
 
 // Derived stores to decompose the delivery object for easier consumption
 export const $$deliveryId = $delivery.map((delivery) =>
     getDeliveryId(delivery, DELIVERY_ID_LENGTH),
+);
+export const $$deliveryNumber = $delivery.map((delivery) =>
+    getDeliveryNumber(delivery, DELIVERY_ID_LENGTH),
 );
 export const $$deliveryContents = $delivery.map((delivery) =>
     getDeliveryContents(delivery),
@@ -132,11 +137,15 @@ export const $$deliveryCoordinates = $delivery.map((delivery) => {
         : null;
 });
 
+debug($delivery);
+
 export const $$deliveryPickupDateTime = $delivery.map((delivery) =>
     getDeliveryPickupDateTime(delivery, true, true),
 );
 
-export const $$deliveryContact = $delivery.map((delivery) => delivery.contact);
+export const $$deliveryContact = $delivery.map(
+    (delivery) => delivery.contact || {},
+);
 
 /**
  * Client
@@ -181,7 +190,7 @@ sample({
     clock: loadFromRemote,
     source: $deliveryId,
     fn: (deliveryId) => ({
-        deliveryId: Number.parseInt(deliveryId.toString(), 10),
+        deliveryId,
     }),
     target: getDeliveryByIdFx,
 });
@@ -203,7 +212,7 @@ sample({
  * Delivery details store
  */
 export const changeDeliveryStatusModel = SetDeliveryStatus.factory.createModel({
-    patchDeliveryStatusFx: setDeliveryStatus,
+    patchDeliveryStatusFx: setDeliveryStatusFx,
 });
 
 sample({

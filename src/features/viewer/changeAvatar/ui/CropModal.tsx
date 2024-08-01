@@ -16,9 +16,9 @@ import {
     PercentCrop,
     ReactCrop,
 } from 'react-image-crop';
-import { setCanvasPreview } from '@/features/viewer/changeAvatar/lib/utils';
 import { useTranslation } from 'react-i18next';
 import { useUnit } from 'effector-react';
+import { setCanvasPreview } from '../lib';
 import { factory } from '../model';
 import {
     ASPECT_RATIO,

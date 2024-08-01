@@ -1,20 +1,28 @@
 import { makeApi, makeErrors } from '@zodios/core';
 import { z } from 'zod';
-import { format, parse, isValid } from 'date-fns';
-import { deliverySchema } from '../schemas';
-import { API_BASE_URL } from '../instance';
+import { deliverySchema, deliveryStateSchema } from '../schemas';
 
-const dateFormat = 'yyyy-MM-dd';
-
-export const deliveriesErrors = makeErrors([]);
+export const deliveriesErrors = makeErrors([
+    {
+        status: 'default',
+        schema: z.object({
+            message: z.string(),
+        }),
+    },
+]);
 
 export const deliveriesApi = makeApi([
     {
         method: 'get',
-        path: '/',
+        path: '/upcoming',
         alias: 'fetchAvailableAssignDeliveries',
         description: 'Fetch upcoming deliveries',
         parameters: [
+            {
+                name: 'limit',
+                type: 'Query',
+                schema: z.number().optional(),
+            },
             {
                 name: 'from',
                 type: 'Query',
@@ -25,215 +33,110 @@ export const deliveriesApi = makeApi([
                 type: 'Query',
                 schema: z.string().optional(),
             },
+            {
+                name: 'express',
+                type: 'Query',
+                schema: z.boolean().optional(),
+            },
+            {
+                name: 'car',
+                type: 'Query',
+                schema: z.boolean().optional(),
+            },
+            {
+                name: 'weightMin',
+                type: 'Query',
+                schema: z.number().optional(),
+            },
+            {
+                name: 'weightMax',
+                type: 'Query',
+                schema: z.number().optional(),
+            },
         ],
-        response: z.array(deliverySchema).transform((data) =>
-            data
-                .filter(
-                    (delivery) => delivery.address.delivery_type === 'courier',
-                )
-                .map((item) => {
-                    return {
-                        ...item,
-                        manager: item.manager
-                            ? {
-                                  ...item.manager,
-                                  avatar_src: item.manager?.avatar_src
-                                      ? `${API_BASE_URL}${item.manager.avatar_src}`
-                                      : null,
-                              }
-                            : null,
-                        courier: item.courier
-                            ? {
-                                  ...item.courier,
-                                  avatar_src: item.courier?.avatar_src
-                                      ? `${API_BASE_URL}${item.courier.avatar_src}`
-                                      : null,
-                              }
-                            : null,
-                    };
-                }),
+        response: z.array(
+            deliverySchema.omit({
+                manager: true,
+                courier: true,
+                client: true,
+                contact: true,
+            }),
         ),
+        errors: deliveriesErrors,
     },
     {
         method: 'get',
-        path: '/:deliveryId',
+        path: '/item/:deliveryId',
         alias: 'fetchDeliveryById',
         description: 'Fetch a delivery by its ID',
-        response: deliverySchema.transform((item) => ({
-            ...item,
-            manager: item.manager
-                ? {
-                      ...item.manager,
-                      avatar_src: item?.manager?.avatar_src
-                          ? `${API_BASE_URL}${item.manager.avatar_src}`
-                          : null,
-                  }
-                : null,
-            courier: item.courier
-                ? {
-                      ...item.courier,
-                      avatar_src: item?.courier?.avatar_src
-                          ? `${API_BASE_URL}${item.courier.avatar_src}`
-                          : null,
-                  }
-                : null,
-        })),
-        errors: [
-            {
-                status: 'default',
-                schema: z.object({
-                    message: z.string(),
-                }),
-            },
-        ],
+        response: deliverySchema,
+        errors: deliveriesErrors,
+    },
+    {
+        method: 'post',
+        path: '/item/:deliveryId/assign/:userId',
+        alias: 'assignUserToDelivery',
+        description: 'Assign a user to a delivery',
+        parameters: [],
+        response: deliverySchema,
     },
     {
         method: 'patch',
-        path: '/:deliveryId',
-        alias: 'patchDelivery',
-        description: 'Patch a delivery by its ID',
+        path: '/item/:deliveryId/set-state',
+        alias: 'setDeliveryState',
+        description: 'Update delivery state',
         parameters: [
             {
-                name: 'Body',
                 type: 'Body',
-                schema: deliverySchema.omit({ id: true }).partial(),
+                name: 'Body',
+                schema: z.object({
+                    state: deliveryStateSchema,
+                    comment: z.string(),
+                }),
             },
         ],
-        response: deliverySchema.transform((item) => ({
-            ...item,
-            manager: item.manager
-                ? {
-                      ...item.manager,
-                      avatar_src: item.manager?.avatar_src
-                          ? `${API_BASE_URL}${item.manager.avatar_src}`
-                          : null,
-                  }
-                : null,
-            courier: item.courier
-                ? {
-                      ...item.courier,
-                      avatar_src: item.courier?.avatar_src
-                          ? `${API_BASE_URL}${item.courier.avatar_src}`
-                          : null,
-                  }
-                : null,
-        })),
+        response: deliverySchema,
+        errors: deliveriesErrors,
     },
     {
         method: 'get',
         path: '/my',
         alias: 'getMyDeliveries',
         description: 'Fetch active deliveries',
-        response: z
-            .array(deliverySchema)
-            .transform((data) =>
-                data.filter(
-                    (delivery) => delivery.address.delivery_type === 'courier',
-                ),
-            )
-            .transform((deliveries) =>
-                deliveries.map((item) => ({
-                    ...item,
-                    manager: item.manager
-                        ? {
-                              ...item.manager,
-                              avatar_src: item.manager?.avatar_src
-                                  ? `${API_BASE_URL}${item.manager.avatar_src}`
-                                  : null,
-                          }
-                        : null,
-                    courier: item.courier
-                        ? {
-                              ...item.courier,
-                              avatar_src: item.courier?.avatar_src
-                                  ? `${API_BASE_URL}${item.courier.avatar_src}`
-                                  : null,
-                          }
-                        : null,
-                })),
-            ),
+        response: z.array(deliverySchema),
+        errors: deliveriesErrors,
     },
     {
         method: 'get',
         path: '/history',
         alias: 'getDeliveriesHistory',
         description: 'Fetch deliveries history',
-        response: z.array(deliverySchema),
+        response: z.array(
+            deliverySchema.omit({
+                courier: true,
+                manager: true,
+            }),
+        ),
         parameters: [
             {
-                name: 'from',
+                name: 'page',
                 type: 'Query',
-                schema: z
-                    .string()
-                    .refine(
-                        (value) => {
-                            const parsedDate = parse(
-                                value,
-                                dateFormat,
-                                new Date(),
-                            );
-                            return (
-                                isValid(parsedDate) &&
-                                value === format(parsedDate, dateFormat)
-                            );
-                        },
-                        {
-                            message: `Date must be in the format ${dateFormat}`,
-                        },
-                    )
-                    .optional(),
+                schema: z.number().nullish(),
             },
             {
-                name: 'to',
+                name: 'limit',
                 type: 'Query',
-                schema: z
-                    .string()
-                    .refine(
-                        (value) => {
-                            const parsedDate = parse(
-                                value,
-                                dateFormat,
-                                new Date(),
-                            );
-                            return (
-                                isValid(parsedDate) &&
-                                value === format(parsedDate, dateFormat)
-                            );
-                        },
-                        {
-                            message: `Date must be in the format ${dateFormat}`,
-                        },
-                    )
-                    .optional(),
+                schema: z.number().nullish(),
             },
         ],
+        errors: deliveriesErrors,
     },
     {
         method: 'get',
         path: '/search',
         alias: 'searchDeliveriesByQuery',
         description: 'Search deliveries by query',
-        response: z.array(deliverySchema).transform((deliveries) => {
-            return deliveries.map((item) => ({
-                ...item,
-                manager: item.manager
-                    ? {
-                          ...item.manager,
-                          avatar_src: item.manager?.avatar_src
-                              ? `${API_BASE_URL}${item.manager.avatar_src}`
-                              : null,
-                      }
-                    : null,
-                courier: item.courier
-                    ? {
-                          ...item.courier,
-                          avatar_src: item.courier?.avatar_src
-                              ? `${API_BASE_URL}${item.courier.avatar_src}`
-                              : null,
-                      }
-                    : null,
-            }));
-        }),
+        response: z.array(deliverySchema),
         parameters: [
             {
                 name: 'query',
@@ -242,5 +145,6 @@ export const deliveriesApi = makeApi([
                 schema: z.string(),
             },
         ],
+        errors: deliveriesErrors,
     },
 ]);

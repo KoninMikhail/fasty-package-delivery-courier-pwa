@@ -5,7 +5,6 @@ import { Button, ButtonProps, Input } from '@nextui-org/react';
 import { modelView } from 'effector-factorio';
 import { useTranslation } from 'react-i18next';
 import { useKeyPress } from '@/shared/lib/browser';
-import { useUnmount } from 'usehooks-ts';
 import { factory } from '../model';
 
 import {
@@ -99,7 +98,7 @@ export const Form = modelView(factory, () => {
     const model = factory.useModel();
     const resetForm = useUnit(model.resetFormState);
 
-    useUnmount(() => {
+    const isDemoMode = model.useUnmount(() => {
         resetForm();
     });
 

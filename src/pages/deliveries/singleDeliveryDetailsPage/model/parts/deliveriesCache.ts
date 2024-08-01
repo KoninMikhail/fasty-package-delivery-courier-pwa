@@ -1,6 +1,6 @@
 import { createEvent, createStore } from 'effector';
 import { Delivery } from '@/shared/api';
-import { getMyDeliveriesFx, setDeliveryStatus } from '@/entities/delivery';
+import { getMyDeliveriesFx, setDeliveryStatusFx } from '@/entities/delivery';
 
 export const addDelivery = createEvent<Delivery>();
 export const removeDelivery = createEvent<Delivery>();
@@ -10,7 +10,7 @@ export const removeDelivery = createEvent<Delivery>();
  */
 export const $myDeliveriesStore = createStore<Delivery[]>([])
     .on(getMyDeliveriesFx.doneData, (_, deliveries) => deliveries)
-    .on(setDeliveryStatus.doneData, (state, payload) => {
+    .on(setDeliveryStatusFx.doneData, (state, payload) => {
         // Refactored to reduce repetition and improve clarity
         const shouldRemove = ['done', 'canceled'].includes(payload.states);
         const updatedStateWithoutPayload = state.filter(

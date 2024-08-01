@@ -1,6 +1,10 @@
 .dockerignore
 node_modules
-.git
+.github
 .gitignore
 *.md
+.resourses
+.vscode
+coverage
+dev-dist
 dist

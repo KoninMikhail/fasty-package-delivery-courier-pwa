@@ -2,4 +2,4 @@
 import { createGate } from 'effector-react';
 
 
-export const AppGate = createGate();
+export const AppGate = createGate<unknown>();

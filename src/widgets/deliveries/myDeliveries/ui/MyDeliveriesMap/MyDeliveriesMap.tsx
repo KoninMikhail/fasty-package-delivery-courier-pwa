@@ -2,7 +2,7 @@ import { Spacer } from '@nextui-org/react';
 import { RiWifiOffFill } from 'react-icons/ri';
 import { useTranslation } from 'react-i18next';
 import { useList, useUnit } from 'effector-react';
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
+import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 import { DeliveryMapCard } from '@/entities/delivery';
 import { sessionModel } from '@/entities/viewer';
 import {
@@ -47,9 +47,7 @@ const Map: FunctionComponent = () => {
         >
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             {markers.map((marker, index) => (
-                <Marker key={index} position={marker}>
-                    <Popup>маркер</Popup>
-                </Marker>
+                <Marker key={index} position={marker} />
             ))}
         </MapContainer>
     );

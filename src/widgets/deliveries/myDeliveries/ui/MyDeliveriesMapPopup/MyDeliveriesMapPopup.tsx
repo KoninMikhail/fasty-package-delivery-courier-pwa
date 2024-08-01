@@ -2,13 +2,7 @@ import { Modal, ModalContent, Spacer, useDisclosure } from '@nextui-org/react';
 import { RiWifiOffFill } from 'react-icons/ri';
 import { useTranslation } from 'react-i18next';
 import { useList, useUnit } from 'effector-react';
-import {
-    MapContainer,
-    Marker,
-    Popup,
-    TileLayer,
-    ZoomControl,
-} from 'react-leaflet';
+import { MapContainer, Marker, TileLayer, ZoomControl } from 'react-leaflet';
 import { HorizontalScroll } from '@/shared/ui/layouts';
 import { DeliveryMapCard } from '@/entities/delivery';
 import { sessionModel } from '@/entities/viewer';
@@ -55,9 +49,7 @@ const Map: FunctionComponent = () => {
         >
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             {markers.map((marker, index) => (
-                <Marker key={index} position={marker}>
-                    <Popup>маркер</Popup>
-                </Marker>
+                <Marker key={index} position={marker} />
             ))}
             <ZoomControl position="topleft" />
         </MapContainer>
@@ -65,8 +57,11 @@ const Map: FunctionComponent = () => {
 };
 
 const CardsRow: FunctionComponent = () => {
+    const onCardClick = () => {
+        console.log('work');
+    };
     const deliveries = useList($deliveriesStore, (delivery) => (
-        <DeliveryMapCard delivery={delivery} />
+        <DeliveryMapCard delivery={delivery} onPress={onCardClick} />
     ));
 
     return (
@@ -104,7 +99,7 @@ export const MyDeliveriesMapPopup: FunctionComponent = () => {
                 <ModalContent>
                     {online ? (
                         <div className="relative h-full w-full">
-                            <div className="absolute -bottom-[30px] z-[6000] h-40 w-full py-4 text-red-600">
+                            <div className="absolute bottom-[60px] z-[6000] h-40 w-full py-4 text-red-600">
                                 <CardsRow />
                             </div>
                             <Map />

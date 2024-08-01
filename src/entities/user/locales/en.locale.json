@@ -1,3 +1,5 @@
 {
-  "user.role.unknown": "Unknown"
+  "user.role.unknown": "Unknown",
+  "user.role.manager": "Manager",
+  "user.role.courier": "Courier"
 }

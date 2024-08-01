@@ -2,7 +2,7 @@ import { modelFactory } from 'effector-factorio';
 import { createEvent, createStore, Effect, sample } from 'effector';
 import { User } from '@/shared/api';
 import { sharedConfigLocale } from '@/shared/config';
-import { resizeImageFx } from './effects';
+import { convertBase64ToFileFx, resizeImageFx } from './effects';
 import { ERROR_MIN_SIZE, translationNS } from '../config';
 
 const { locale } = sharedConfigLocale;
@@ -12,7 +12,7 @@ interface FactoryOptions {
     minHeight: number;
     resizeToMaxWidth: number;
     resizeToMaxHeight: number;
-    changeAvatarFx: Effect<string, User>;
+    changeAvatarFx: Effect<File, User>;
 }
 
 export const factory = modelFactory((options: FactoryOptions) => {
@@ -93,7 +93,15 @@ export const factory = modelFactory((options: FactoryOptions) => {
         clock: confirmPressed,
         source: $imgDistribution,
         filter: (data) => !!data && data.length > 0,
-        fn: (upload) => upload,
+        fn: (upload) => ({
+            base64: upload,
+            filename: 'avatar.png',
+        }),
+        target: convertBase64ToFileFx,
+    });
+
+    sample({
+        clock: convertBase64ToFileFx.doneData,
         target: options.changeAvatarFx,
     });
 

@@ -16,7 +16,7 @@ type EventModifierKeys = Partial<Record<ModifierKey, boolean>>;
  * @param callback - (event: KeyboardEvent) => void
  * @param modifiers - An object of modifiers that we also want to listen for.
  */
-const useKeyPress = (
+export const useKeyPress = (
     keys: string[],
     callback: (event: KeyboardEvent) => void,
     modifiers: EventModifierKeys = {}
@@ -38,6 +38,4 @@ const useKeyPress = (
 
     useEventListener('keydown', handleEvent);
 };
-
-export default useKeyPress;
 

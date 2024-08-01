@@ -11,5 +11,6 @@
   "validation.label.specialChars": "Другие символы",
   "validation.label.success": "Надёжный пароль",
   "validation.label.error.easy": "Пароль легко подобрать",
-  "validation.label.match": "Пароли не совпадают"
+  "validation.label.match": "Пароли не совпадают",
+  "notification.demo": "Приложение запущено в демо режиме. Изменения не будут сохранены"
 }

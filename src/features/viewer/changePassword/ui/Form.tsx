@@ -10,6 +10,7 @@ import { factory } from '../model';
 import {
     INPUT_CREATE_LABEL,
     INPUT_REPEAT_LABEL,
+    NOTIFICATION_DEMO_MODE_TEXT,
     SUBMIT_BUTTON,
     translationNS,
     VALIDATION_ERR_EASY_LABEL,
@@ -160,6 +161,7 @@ const ResetPasswordButton: FunctionComponent<Omit<ButtonProps, 'onPress'>> = (
     const model = factory.useModel();
 
     const isFormValid = useUnit(model.$formValidated);
+    const isLoading = useUnit(model.$inPending);
 
     const onPress = useUnit(model.submitPressed);
     return (
@@ -167,11 +169,26 @@ const ResetPasswordButton: FunctionComponent<Omit<ButtonProps, 'onPress'>> = (
             color="primary"
             onPress={onPress}
             isDisabled={!isFormValid}
+            isLoading={isLoading}
             {...properties}
         >
             {t(SUBMIT_BUTTON)}
         </Button>
     );
+};
+
+const DemoModeNotice: FunctionComponent = () => {
+    const model = factory.useModel();
+    const { t } = useTranslation(translationNS);
+    const { isDemoMode } = model;
+    if (isDemoMode) {
+        return (
+            <div className="w-full p-2 text-center text-sm opacity-30">
+                {t(NOTIFICATION_DEMO_MODE_TEXT)}
+            </div>
+        );
+    }
+    return null;
 };
 
 export const Form = modelView(factory, () => {
@@ -182,6 +199,7 @@ export const Form = modelView(factory, () => {
             <Spacer y={1} />
             <PasswordChecks />
             <ResetPasswordButton />
+            <DemoModeNotice />
         </div>
     );
 });

@@ -3,8 +3,6 @@ import clsx from 'clsx';
 
 /**
  * @name HorizontalScroll
- * @description Horizontal scroll
- * @param children
  * @constructor
  */
 const HorizontalScroll: FunctionComponent<

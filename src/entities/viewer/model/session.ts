@@ -1,39 +1,36 @@
 import { createEvent, createStore, sample } from 'effector';
-import { and, condition, once } from 'patronum';
+import { and } from 'patronum';
 import { User } from '@/shared/api';
-import { AppGate } from '@/shared/lib/app';
+import { sharedConfigConstants } from '@/shared/config';
+import { Done } from 'effector-storage';
 import {
     authByEmailFx,
     changeViewerAvatarFx,
     getViewerProfileFx,
     logoutFx,
+    refreshAuthTokensFx,
     setViewerAccountPasswordFx,
 } from './effects';
 import { $$isOnline } from './parts/networkState';
 
-export const initSession = createEvent();
-export const validateSession = createEvent();
-export const forceInitComplete = createEvent();
-export const requestViewerLogout = createEvent();
+const { APP_DEMO_MODE } = sharedConfigConstants;
 
-sample({
-    clock: once(AppGate.open),
-    target: initSession,
-});
+export const viewerDataReceived = createEvent<Done<User>>();
+export const requestViewerLogout = createEvent();
 
 /**
  * Session initialization status
  */
-export const $initSessionComplete = createStore(false)
-    .on(forceInitComplete, () => true)
-    .on(getViewerProfileFx.done, () => true)
-    .on(getViewerProfileFx.fail, () => true);
+export const $initSessionComplete = createStore(true).on(
+    viewerDataReceived,
+    () => true,
+);
 
 /**
  * Viewer profile data
  */
 export const $viewerProfileData = createStore<Nullable<User>>(null)
-    .on(authByEmailFx.doneData, (_, payload) => payload.user)
+    .on(authByEmailFx.doneData, (_, payload) => payload)
     .on(getViewerProfileFx.doneData, (_, payload) => payload)
     .on(changeViewerAvatarFx.doneData, (_, payload) => payload)
     .reset([logoutFx.done, logoutFx.fail]);
@@ -44,17 +41,6 @@ export const $$hasProfileData = $viewerProfileData.map((data) => !!data);
  * Authorization status
  */
 export const $isAuthorized = and($initSessionComplete, $$hasProfileData);
-
-/**
- * Handle session initialization
- */
-
-condition({
-    source: initSession,
-    if: $$isOnline.map((isOnline) => isOnline),
-    then: getViewerProfileFx,
-    else: forceInitComplete,
-});
 
 /**
  * Handle logout
@@ -70,7 +56,13 @@ sample({
 });
 
 sample({
+    clock: refreshAuthTokensFx.fail,
+    target: logoutFx,
+});
+
+sample({
     clock: setViewerAccountPasswordFx.doneData,
+    filter: () => !APP_DEMO_MODE,
     target: logoutFx,
 });
 

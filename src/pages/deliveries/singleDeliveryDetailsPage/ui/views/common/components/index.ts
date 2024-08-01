@@ -8,7 +8,7 @@ export * from './DeliveryPickup';
 export * from './DeliveryManager';
 export * from './MyDeliveryChip';
 export * from './DeliveryContactPerson';
-export * from './DeliveryId';
+export * from './DeliveryNumber';
 export * from './DeliveryAddressSubway';
 export * from './DeliveryContents';
 export * from './DeliveryCourier';

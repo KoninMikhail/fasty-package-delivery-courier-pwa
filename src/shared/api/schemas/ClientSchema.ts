@@ -1,14 +1,13 @@
 import { z } from 'zod';
-import { contactSchema } from '@/shared/api/schemas/ContactSchema';
-import { addressSchema } from '@/shared/api/schemas/AddressSchema';
+
+export const clientTypeSchema = z.union([
+    z.literal('organization'),
+    z.literal('personal'),
+]);
 
 export const clientSchema = z.object({
-    id: z.number(),
-    client_type: z.union([z.literal('organization'), z.literal('person')]),
+    id: z.string(),
     name: z.string(),
-    deleted: z.boolean(),
-    created_at: z.string().datetime().nullable(),
-    updated_at: z.string().datetime().nullable(),
-    contacts: z.array(contactSchema),
-    addresses: z.array(addressSchema),
+    type: clientTypeSchema,
+    active: z.boolean(),
 });

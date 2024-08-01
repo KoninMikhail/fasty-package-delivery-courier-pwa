@@ -2,7 +2,7 @@ import {User} from "@/shared/api";
 import {EMPTY_USER_AVATAR_PLACEHOLDER_URL} from "../../config";
 
 export const getUserAvatarSource = (user: Nullable<User>) => {
-    const isUserHasName = user?.first_name && user?.last_name;
+    const isUserHasName = user?.firstName && user?.lastName;
 
     if (isUserHasName) {
         return user?.avatar_src || undefined;

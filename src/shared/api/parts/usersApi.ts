@@ -1,24 +1,8 @@
 import { makeApi } from '@zodios/core';
 import { z } from 'zod';
-import { API_BASE_URL } from '../instance';
 import { userSchema } from '../schemas';
 
 export const usersApi = makeApi([
-    {
-        method: 'get',
-        path: '/me',
-        alias: 'getMe',
-        description: 'Get the current user information',
-        response: userSchema.transform((user) => {
-            if (user.avatar_src) {
-                return {
-                    ...user,
-                    avatar_src: `${API_BASE_URL}${user.avatar_src}`,
-                };
-            }
-            return user;
-        }),
-    },
     {
         method: 'get',
         path: '/:userId',
@@ -27,42 +11,16 @@ export const usersApi = makeApi([
         response: userSchema,
     },
     {
-        method: 'patch',
-        path: '/:userId',
-        alias: 'patchUserById',
-        description: 'Update a user by its ID',
-        response: z.void().or(z.undefined()),
-        parameters: [
-            {
-                name: 'user',
-                type: 'Body',
-                schema: z.object({
-                    password: z.string(),
-                }),
-            },
-        ],
-    },
-    {
-        method: 'put',
-        path: '/avatar',
+        method: 'post',
+        path: '/me/uploadAvatar',
         alias: 'uploadViewerAvatar',
         parameters: [
             {
                 name: 'upload',
                 type: 'Body',
-                schema: z.object({
-                    upload: z.string(),
-                }),
+                schema: z.any(),
             },
         ],
-        response: userSchema.transform((user) => {
-            if (user.avatar_src) {
-                return {
-                    ...user,
-                    avatar_src: `${API_BASE_URL}${user.avatar_src}`,
-                };
-            }
-            return user;
-        }),
+        response: userSchema,
     },
 ]);

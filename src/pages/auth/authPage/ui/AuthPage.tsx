@@ -21,7 +21,6 @@ import { widgetSignInModalUi } from '@/widgets/viewer/sign-in-modal';
 import { widgetTermsOfUseModalUi } from '@/widgets/polices/termsOfUseModal';
 import { sharedUiBranding } from '@/shared/ui/';
 
-import { Navigate } from 'react-router-dom';
 import { Guest } from '@/entities/viewer/ui/Guest';
 import { requestAuthModel, requestRecoveryModel } from '../model';
 import {
@@ -165,7 +164,7 @@ export const AuthPage: FunctionComponent = () => {
     );
 
     return (
-        <Guest fallback={<Navigate to={RouteName.ROOT_PAGE} replace />}>
+        <Guest>
             <Root>
                 <Section>
                     <Navbar>

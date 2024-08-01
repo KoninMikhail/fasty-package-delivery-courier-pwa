@@ -1,7 +1,7 @@
 import { SetDeliveryStatus } from '@/features/delivery/setDeliveryStatus';
 import { createStore, sample } from 'effector';
 import { AssignDeliveryToUser } from '@/features/delivery/assignDeliveryToUser';
-import { getDeliveryByIdFx, setDeliveryStatus } from '@/entities/delivery';
+import { getDeliveryByIdFx, setDeliveryStatusFx } from '@/entities/delivery';
 import { Delivery } from '@/shared/api';
 import { assignUserToDeliveryFx } from '@/entities/user';
 
@@ -11,18 +11,18 @@ import { assignUserToDeliveryFx } from '@/entities/user';
 export const $delivery = createStore<Nullable<Delivery>>(null)
     .on(assignUserToDeliveryFx.doneData, (_, delivery) => delivery)
     .on(getDeliveryByIdFx.doneData, (_, delivery) => delivery)
-    .on(setDeliveryStatus.doneData, (_, delivery) => delivery);
+    .on(setDeliveryStatusFx.doneData, (_, delivery) => delivery);
 export const $$deliveryStatus = $delivery.map(
-    (delivery) => delivery && delivery?.states,
+    (delivery) => delivery && delivery?.state,
 );
 export const $$deliveryComment = $delivery.map(
     (delivery) => delivery && delivery?.comment,
 );
 export const $$deliveryCreateDate = $delivery.map(
-    (delivery) => delivery && delivery?.created_at,
+    (delivery) => delivery && delivery?.createdAt,
 );
 export const $$deliveryUpdateDate = $delivery.map(
-    (delivery) => delivery && delivery?.updated_at,
+    (delivery) => delivery && delivery?.updatedAt,
 );
 
 /**
@@ -34,7 +34,7 @@ export const assignToDeliveryModel = AssignDeliveryToUser.factory.createModel({
 
 export const setStatusModel = SetDeliveryStatus.factory.createModel({
     allowedStatuses: ['canceled', 'done'],
-    patchDeliveryStatusFx: setDeliveryStatus,
+    patchDeliveryStatusFx: setDeliveryStatusFx,
 });
 
 /**

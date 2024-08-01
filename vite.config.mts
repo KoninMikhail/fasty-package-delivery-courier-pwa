@@ -37,11 +37,6 @@ export default defineConfig(({ mode }) => ({
   optimizeDeps: {
     exclude: ["js-big-decimal"]
   },
-  server: {
-    proxy: {
-      "/api/users/me": "/api/me"
-    }
-  },
   plugins: [
     tsconfigPaths(),
     react(),

@@ -12,11 +12,9 @@ import { useTranslation } from 'react-i18next';
 import { SubwayStationWithIcon } from '@/shared/services/subway';
 import { useEstimatedTime } from '../../lib/hooks/useEstimatedTime';
 import { translationNS, EXPIRED, TIME_LEFT, ADDRESS } from '../../config';
-import {
-    getDeliveryAddress,
-    getDeliveryId,
-    getDeliveryMetro,
-} from '../../lib/utils';
+import { getDeliveryId } from '../../lib/utils/getDeliveryId';
+import { getDeliveryAddress } from '../../lib/utils/getDeliveryAdress';
+import { getDeliveryMetro } from '../../lib/utils/getDeliveryMetro';
 
 /**
  * Renders the address section of the delivery card.
@@ -95,21 +93,20 @@ export const DeliveryMapCard: FunctionComponent<DeliveryMapCardProperties> = ({
     delivery,
     onPress,
 }) => {
-    const deadline = new Date(
-        `${delivery?.date || '2024-01-01'}T${delivery?.time_end || '00:00:00'}.999`,
-    );
+    const deadline = delivery.time_end;
     const id = getDeliveryId(delivery);
     const metro = getDeliveryMetro(delivery);
     const address = getDeliveryAddress(delivery);
 
     const onPressCard = (): void => {
+        console.log('work');
         if (onPress) {
-            onPress(Number.parseInt(id, 10));
+            onPress(id);
         }
     };
 
     return (
-        <Card className="h-[182px] w-[300px]">
+        <Card className="h-[182px] w-[350px]" onPress={onPressCard}>
             <Divider />
             <CardHeader>
                 <HeaderLayout

@@ -1,4 +1,5 @@
 import { createEffect } from 'effector';
+import { base64ToFile } from '../lib';
 
 type ResizeImageParameters = {
     base64: string;
@@ -43,3 +44,8 @@ export const resizeImageFx = createEffect({
         });
     },
 });
+
+export const convertBase64ToFileFx = createEffect<
+    { base64: string; filename: string },
+    File
+>(({ base64, filename }) => base64ToFile(base64, filename));

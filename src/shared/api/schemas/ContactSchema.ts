@@ -1,13 +1,11 @@
 import { z } from 'zod';
 
 export const contactSchema = z.object({
-    id: z.number(),
-    client_id: z.number(),
+    id: z.string(),
     name: z.string(),
     email: z.string().optional(),
     job: z.string(),
-    default: z.boolean(),
-    deleted: z.boolean(),
+    active: z.boolean(),
     phone: z.string(),
 });
 

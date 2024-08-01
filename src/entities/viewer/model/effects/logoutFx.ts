@@ -1,5 +1,10 @@
 import { createEffect } from 'effector';
 import { apiClient } from '@/shared/api';
+import Cookies from 'js-cookie';
+import { sharedConfigConstants } from '@/shared/config';
+
+const { APP_JWT_REFRESH_TOKEN_KEY, APP_JWT_ACCESS_TOKEN_KEY } =
+    sharedConfigConstants;
 
 /**
  * Effect for handling user logout.
@@ -25,8 +30,22 @@ import { apiClient } from '@/shared/api';
 export const logoutFx = createEffect<void, unknown, Error>({
     name: 'logoutFx', // Giving a name to the effect for debuggability and reference.
     handler: async () => {
-        // Perform the logout operation using the API client. Details of the operation,
-        // including error handling, are managed within the apiClient.logoutMe method.
-        return apiClient.logoutMe({});
+        const refreshToken = Cookies.get(APP_JWT_REFRESH_TOKEN_KEY);
+
+        if (refreshToken) {
+            // Perform the logout operation using the API client. Details of the operation,
+            // including error handling, are managed within the apiClient.logoutMe method.
+            await apiClient.logout({
+                refreshToken,
+            });
+            Cookies.remove(APP_JWT_ACCESS_TOKEN_KEY, {
+                secure: true, // Ensure secure flag
+                sameSite: 'strict', // Ensure sameSite policy
+            });
+            Cookies.remove(APP_JWT_REFRESH_TOKEN_KEY, {
+                secure: true, // Ensure secure flag
+                sameSite: 'strict', // Ensure sameSite policy
+            });
+        }
     },
 });

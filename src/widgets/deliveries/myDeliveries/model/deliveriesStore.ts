@@ -1,6 +1,6 @@
 import { Delivery } from '@/shared/api';
 import { combine, createStore } from 'effector';
-import { getMyDeliveriesFx, setDeliveryStatus } from '@/entities/delivery';
+import { getMyDeliveriesFx, setDeliveryStatusFx } from '@/entities/delivery';
 import { assignUserToDeliveryFx } from '@/entities/user';
 import { authByEmailFx, logoutFx, settingsModel } from '@/entities/viewer';
 import { compareAsc, parse } from 'date-fns';
@@ -31,7 +31,7 @@ const updateDeliveryStatus = (
  */
 export const $deliveriesStore = createStore<Delivery[]>([])
     .on(getMyDeliveriesFx.doneData, (_, deliveries) => deliveries)
-    .on(setDeliveryStatus.doneData, (state, payload) =>
+    .on(setDeliveryStatusFx.doneData, (state, payload) =>
         updateDeliveryStatus(state, payload),
     )
     .on(assignUserToDeliveryFx.doneData, (state, payload) =>

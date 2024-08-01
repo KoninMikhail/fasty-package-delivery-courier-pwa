@@ -6,6 +6,7 @@ import {
     SetDeliveryStatusParameters,
     SetDeliveryStatusResponse,
 } from '@/entities/delivery';
+import { debug } from 'patronum';
 import { statuses } from '../data';
 
 interface FactoryOptions {
@@ -21,8 +22,12 @@ export const factory = modelFactory((options: FactoryOptions) => {
     const setDeliveryId = createEvent<Delivery['id']>();
     const messageChanged = createEvent<Delivery['comment']>();
     const statusChanged = createEvent<Selection>();
-    const submitPressed = createEvent();
+    const submitPressed = createEvent({
+        name: 'submit',
+    });
     const reset = createEvent();
+
+    debug(submitPressed);
 
     const $deliveryId = createStore<Nullable<Delivery['id']>>(null).on(
         setDeliveryId,

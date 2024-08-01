@@ -2,6 +2,7 @@ import { Link } from '@nextui-org/react';
 import { Contact } from '@/shared/api';
 import { PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
+import { sharedLibHelpers } from '@/shared/lib';
 import { convertPhoneToTelLink, convertStringToEmailLink } from '../../lib';
 import { translationNS } from '../../config';
 
@@ -11,6 +12,8 @@ const TRANSLATION = {
     LABEL_PHONE: 'client.card.label.phone',
     LABEL_EMAIL: 'client.card.label.email',
 };
+
+const { getMaskedPhone } = sharedLibHelpers;
 
 const Layout: FunctionComponent<PropsWithChildren> = ({ children }) => (
     <div className="flex flex-col gap-4">{children}</div>
@@ -39,13 +42,14 @@ const Job: FunctionComponent<{ value: string }> = ({ value }) => {
 const Phone: FunctionComponent<{ value: string }> = ({ value }) => {
     const { t } = useTranslation(translationNS);
     const link = convertPhoneToTelLink(value);
+    const phoneLabel = getMaskedPhone(value);
 
     return (
         <div className="flex gap-2">
             <div className="flex-grow">{t(TRANSLATION.LABEL_PHONE)}</div>
             <div>
                 <Link isExternal href={link}>
-                    {value}
+                    {phoneLabel}
                 </Link>
             </div>
         </div>

@@ -5,13 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import React, { useCallback } from 'react';
 import {
-    getDeliveryAddress,
-    getDeliveryComment,
-    getDeliveryContents,
-    getDeliveryId,
-    getDeliveryPickupDateTime,
-} from '../../lib';
-import {
     LABEL_ADDRESS,
     LABEL_COMMENT,
     LABEL_STORAGE,
@@ -23,6 +16,11 @@ import {
     BUTTON_MORE,
     NO_COMMENT_TEXT,
 } from '../../config';
+import { getDeliveryContents } from '../../lib/utils/getDeliveryContents';
+import { getDeliveryComment } from '../../lib/utils/getDeliveryComment';
+import { getDeliveryId } from '../../lib/utils/getDeliveryId';
+import { getDeliveryPickupDateTime } from '../../lib/utils/getDeliveryPickupDateTime';
+import { getDeliveryAddress } from '../../lib/utils/getDeliveryAdress';
 
 const { RouteName } = sharedConfigRoutes;
 const { DELIVERIES } = RouteName;
@@ -65,7 +63,7 @@ const Comment: FunctionComponent<{ comment: string }> = ({ comment }) => {
     );
 };
 
-const StateBadge: FunctionComponent<{ state: Delivery['states'] }> = ({
+const StateBadge: FunctionComponent<{ state: Delivery['state'] }> = ({
     state,
 }) => {
     const { t } = useTranslation(translationNS);
@@ -115,7 +113,7 @@ interface DeliveryHistoryCardProperties {
 
 export const DeliveryHistoryCard: FunctionComponent<DeliveryHistoryCardProperties> =
     React.memo(({ delivery }) => {
-        const { states } = delivery;
+        const { state } = delivery;
         const navigate = useNavigate();
 
         const id = getDeliveryId(delivery);
@@ -133,7 +131,7 @@ export const DeliveryHistoryCard: FunctionComponent<DeliveryHistoryCardPropertie
                 <div className="text-md text-gray-500">
                     <div className="grid w-full grid-cols-[max-content_auto] justify-between">
                         <ID id={id} />
-                        <StateBadge state={states} />
+                        <StateBadge state={state} />
                     </div>
                     <span className="whitespace-nowrap text-sm">{date}</span>
                 </div>

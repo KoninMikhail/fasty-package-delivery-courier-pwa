@@ -5,6 +5,7 @@ import { IoPencil } from 'react-icons/io5';
 import { useUnit } from 'effector-react';
 import { sessionModel } from '@/entities/viewer';
 import { memo } from 'react';
+import { sharedLibHelpers } from '@/shared/lib';
 import {
     EMAIL_LABEL,
     FULL_NAME_LABEL,
@@ -13,6 +14,8 @@ import {
     translationNS,
     UNKNOWN_LABEL,
 } from '../../../config';
+
+const { getMaskedPhone } = sharedLibHelpers;
 
 // Defining a TypeScript type for keys representing user information.
 type UserInfoKey = 'fullName' | 'email' | 'phone';
@@ -52,7 +55,7 @@ export const PersonalInfo: FunctionComponent = () => {
     const userInfo: Record<UserInfoKey, string> = {
         fullName: getFullUserName(user) || t(UNKNOWN_LABEL), // Attempts to get full name or defaults to 'Unknown'.
         email: user?.email ?? t(UNKNOWN_LABEL), // Uses the email if available or defaults to 'Unknown'.
-        phone: user?.phone ?? t(UNKNOWN_LABEL), // Uses the phone number if available or defaults to 'Unknown'.
+        phone: user?.phone ? getMaskedPhone(user.phone) : t(UNKNOWN_LABEL), // Uses the phone number if available or defaults to 'Unknown'.
     };
 
     // Mapping from user info keys to their respective label translation keys.

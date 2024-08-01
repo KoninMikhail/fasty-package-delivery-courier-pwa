@@ -6,8 +6,8 @@ import {User} from "@/shared/api";
  * @param user
  */
 export const getUserInitials = (user: Nullable<User>): string => {
-    const name = user?.first_name;
-    const surname = user?.last_name;
+    const name = user?.firstName;
+    const surname = user?.lastName;
     if (!name && !surname) return "";
-    return user.first_name[0] + user.last_name[0];
+    return user.firstName[0] + user.lastName[0];
 }

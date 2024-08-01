@@ -2,11 +2,9 @@ import { createEffect } from 'effector';
 import { apiClient, ResetPasswordRequest } from '@/shared/api';
 import { AxiosError } from 'axios';
 import { sharedConfigLocale } from '@/shared/config';
+import httpStatus from 'http-status';
 
 const { ErrorMessageKeys } = sharedConfigLocale;
-
-// Constants for handling errors.
-const SERVER_ERROR_CODE = 500;
 
 /**
  * Effect to handle password reset request by email.
@@ -35,7 +33,7 @@ export const resetByEmailRequestFx = createEffect<
         // Custom error handling for Axios errors, specifically checking for a 500 status code.
         if (
             error instanceof AxiosError &&
-            error.response?.status === SERVER_ERROR_CODE
+            error.response?.status === httpStatus.INTERNAL_SERVER_ERROR
         ) {
             throw new Error(ErrorMessageKeys.ERROR_SERVER);
         }

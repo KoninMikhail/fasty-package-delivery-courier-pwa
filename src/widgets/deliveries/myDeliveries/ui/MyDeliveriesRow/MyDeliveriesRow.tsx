@@ -1,4 +1,4 @@
-import { DeliveryCountdownCard, getDeliveryId } from '@/entities/delivery';
+import { DeliveryCountdownCard, getDeliveryNumber } from '@/entities/delivery';
 import { useList, useUnit } from 'effector-react';
 import { sharedUiLayouts } from '@/shared/ui';
 import { Button, Skeleton, Spacer, Spinner } from '@nextui-org/react';
@@ -124,7 +124,7 @@ export const MyDeliveriesRow: FunctionComponent = () => {
     ]);
 
     const items = useList($deliveriesStore, (delivery, index) => {
-        const deliveryId = getDeliveryId(delivery);
+        const deliveryId = getDeliveryNumber(delivery);
 
         if (index >= itemsLimit) return null;
 

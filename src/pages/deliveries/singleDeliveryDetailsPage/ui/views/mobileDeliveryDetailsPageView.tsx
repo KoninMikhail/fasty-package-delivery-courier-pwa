@@ -21,7 +21,7 @@ import {
     DeliveryManager,
     MyDeliveryChip,
     DeliveryContactPerson,
-    DeliveryId,
+    DeliveryNumber,
     DeliveryAddressSubway,
     DeliveryContents,
     DeliveryWeight,
@@ -30,7 +30,7 @@ import {
     BackButton,
 } from './common/components';
 
-import { $$deliveryId, $pageContentState } from '../../model';
+import { $$deliveryNumber, $pageContentState } from '../../model';
 import {
     LABEL_ADDRESS,
     LABEL_CLIENT,
@@ -92,7 +92,7 @@ const Header: FunctionComponent<{
     deliveryIdVisible?: boolean;
     className?: string;
 }> = ({ backButton, className, deliveryIdVisible = true }) => {
-    const deliveryId = useUnit($$deliveryId);
+    const deliveryId = useUnit($$deliveryNumber);
     return (
         <header
             className={clsx(
@@ -188,7 +188,7 @@ export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
                 <Section>
                     <div className="flex gap-2">
                         <Heading content={t(LABEL_ID)} />
-                        <DeliveryId />
+                        <DeliveryNumber />
                     </div>
                 </Section>
                 <Spacer y={4} />

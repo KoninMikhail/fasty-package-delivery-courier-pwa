@@ -1,1 +1,1 @@
-export {default as useKeyPress} from './useKeyPress';
+export {useKeyPress} from './useKeyPress';

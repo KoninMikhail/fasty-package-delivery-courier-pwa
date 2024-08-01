@@ -10,12 +10,12 @@ import { useTranslation } from 'react-i18next';
 import { GoAlert } from 'react-icons/go';
 import { AiOutlineReload } from 'react-icons/ai';
 import { BsBoxSeam } from 'react-icons/bs';
+import { InfiniteScroll } from '@/features/other/infinite-scroll';
 import {
-    $$deliveriesEmpty,
-    $$hasError,
-    $isDeliveriesLoading,
     $outputStore,
+    InfiniteScrollModel,
     assignDeliveryToUserModel,
+    fetchDeliveriesModel,
 } from '../model';
 
 /* eslint-disable unicorn/consistent-function-scoping */
@@ -121,11 +121,12 @@ export const MarketContent: FunctionComponent = () => {
     const online = useUnit(sessionModel.$$isOnline);
     const viewer = useUnit(sessionModel.$viewerProfileData);
 
-    const [isPending, hasError, isEmpty] = useUnit([
-        $isDeliveriesLoading,
-        $$hasError,
-        $$deliveriesEmpty,
-    ]);
+    const { isPending, hasErrors, isEmpty, isEnabledInfiniteScroll } = useUnit({
+        isPending: fetchDeliveriesModel.$pending,
+        hasErrors: fetchDeliveriesModel.$$hasErrors,
+        isEmpty: fetchDeliveriesModel.$$isEmpty,
+        isEnabledInfiniteScroll: InfiniteScrollModel.$enabled,
+    });
 
     const content = useList($outputStore, (delivery, index) => (
         <EaseIn isFirst={index === 0}>
@@ -145,10 +146,10 @@ export const MarketContent: FunctionComponent = () => {
     if (!online) {
         return <Offline />;
     }
-    if (isPending) {
+    if (isPending && !isEnabledInfiniteScroll) {
         return <Loading />;
     }
-    if (hasError) {
+    if (hasErrors) {
         return <Error />;
     }
     if (isEmpty) {
@@ -156,9 +157,11 @@ export const MarketContent: FunctionComponent = () => {
     }
     return (
         <Root>
-            <div className="relative grid grid-cols-1 gap-4 lg:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 4xl:grid-cols-5 5xl:grid-cols-6">
-                {content}
-            </div>
+            <InfiniteScroll.Wrapper model={InfiniteScrollModel}>
+                <div className="relative grid grid-cols-1 gap-4 lg:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 4xl:grid-cols-5 5xl:grid-cols-6">
+                    {content}
+                </div>
+            </InfiniteScroll.Wrapper>
         </Root>
     );
 };

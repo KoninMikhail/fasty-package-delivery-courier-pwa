@@ -17,17 +17,6 @@ import { sharedConfigRoutes } from '@/shared/config';
 import { sharedServicesSubway } from '@/shared/services';
 
 import {
-    getDeliveryAddress,
-    getDeliveryMetro,
-    getDeliveryWeight,
-    getDeliveryContents,
-    getDeliveryType,
-    getDeliveryPickupDateTime,
-    getDeliveryExpressState,
-    getDeliveryId,
-} from '../../lib';
-
-import {
     BUTTON_MORE,
     LABEL_ADDRESS,
     LABEL_ID,
@@ -39,6 +28,15 @@ import {
     TYPE_ON_FOOT,
     WEIGHT_VALUE,
 } from '../../config';
+import { getDeliveryNumber } from '../../lib/utils/getDeliveryNumber';
+import { getDeliveryId } from '../../lib/utils/getDeliveryId';
+import { getDeliveryAddress } from '../../lib/utils/getDeliveryAdress';
+import { getDeliveryMetro } from '../../lib/utils/getDeliveryMetro';
+import { getDeliveryContents } from '../../lib/utils/getDeliveryContents';
+import { getDeliveryType } from '../../lib/utils/getDeliveryType';
+import { getDeliveryExpressState } from '../../lib/utils/getDeliveryExpressState';
+import { getDeliveryPickupDateTime } from '../../lib/utils/getDeliveryPickupDateTime';
+import { getDeliveryWeight } from '../../lib/utils/getDeliveryWeight';
 
 const { SubwayStationWithIcon } = sharedServicesSubway;
 const { RouteName } = sharedConfigRoutes;
@@ -143,8 +141,9 @@ export const DeliveryMarketCard: FunctionComponent<{
     const navigate = useNavigate();
 
     const id = getDeliveryId(delivery);
+    const deliveryId = getDeliveryNumber(delivery);
     const address = getDeliveryAddress(delivery);
-    const metro = getDeliveryMetro(delivery);
+    const subway = getDeliveryMetro(delivery);
     const weight = getDeliveryWeight(delivery);
     const contents = getDeliveryContents(delivery);
     const type = getDeliveryType(delivery);
@@ -165,7 +164,7 @@ export const DeliveryMarketCard: FunctionComponent<{
             )}
         >
             <CardHeader className="flex justify-between gap-3">
-                <DeliveryId id={id} />
+                <DeliveryId id={deliveryId} />
                 <div className="flex flex-col text-right">
                     <DeliveryChips type={type} express={isExpress} />
                     <DeliverySchedule value={pickupDateTime} />
@@ -182,7 +181,7 @@ export const DeliveryMarketCard: FunctionComponent<{
                     </div>
                     <DeliveryWeight weight={weight} />
                 </div>
-                <SubwayStationWithIcon value={metro} />
+                <SubwayStationWithIcon value={subway} />
             </CardBody>
             <Divider />
             <CardFooter>
