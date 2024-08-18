@@ -297,3 +297,10 @@ fabric.properties
 # Azure Toolkit for IntelliJ plugin
 # https://plugins.jetbrains.com/plugin/8053-azure-toolkit-for-intellij
 .idea/**/azureSettings.xml
+/.idea/JetClient/state-backup-2024-08-10.xml
+/.idea/JetClient/state-backup-2024-08-12.xml
+/.idea/JetClient/state-backup-2024-08-14.xml
+/.idea/JetClient/state-backup-2024-08-15.xml
+/.idea/JetClient/state-backup-2024-08-17.xml
+/.idea/JetClient/state-backup-2024-08-18.xml
+dev-dist/
