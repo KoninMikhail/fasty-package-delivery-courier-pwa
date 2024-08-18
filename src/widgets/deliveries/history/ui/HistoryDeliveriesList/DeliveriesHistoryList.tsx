@@ -3,13 +3,17 @@ import { Accordion, AccordionItem } from '@nextui-org/react';
 import { LuPackage } from 'react-icons/lu';
 import { useUnit } from 'effector-react';
 import { DeliveryHistoryCard } from '@/entities/delivery';
-import { InfiniteScroll } from 'features/other/infinite-scroll';
+import { InfiniteScroll } from '@/features/other/infinite-scroll';
 import {
     getCanceledDeliveriesCountText,
     getLocaledDate,
     getSuccessDeliveriesCountText,
 } from '../../lib';
-import { $sortedDeliveriesHistory, InfiniteScrollModel } from '../../model';
+import {
+    $isInitialized,
+    $sortedDeliveriesHistory,
+    InfiniteScrollModel,
+} from '../../model';
 
 /**
  * Layout component for displaying a single history item.
@@ -34,6 +38,12 @@ const HistoryItemLayout: FunctionComponent<PropsWithChildren> = ({
         </div>
     </li>
 );
+
+const PaginationTrigger: FunctionComponent = () => {
+    const isInit = useUnit($isInitialized);
+    if (!isInit) return null;
+    return <InfiniteScroll.Trigger model={InfiniteScrollModel} />;
+};
 
 /**
  * Component for displaying a list of deliveries history with accordion and infinite scrolling.
@@ -74,39 +84,38 @@ export const DeliveriesHistoryList: FunctionComponent = () => {
 
     return (
         <div className="w-full px-2">
-            <InfiniteScroll.Wrapper model={InfiniteScrollModel}>
-                <Accordion
-                    motionProps={{
-                        variants: {
-                            enter: {
-                                y: 0,
-                                opacity: 1,
-                                height: 'auto',
-                                transition: {
-                                    height: {
-                                        type: 'spring',
-                                        stiffness: 500,
-                                        damping: 30,
-                                        duration: 1,
-                                    },
-                                    opacity: { easings: 'ease', duration: 1 },
+            <Accordion
+                motionProps={{
+                    variants: {
+                        enter: {
+                            y: 0,
+                            opacity: 1,
+                            height: 'auto',
+                            transition: {
+                                height: {
+                                    type: 'spring',
+                                    stiffness: 500,
+                                    damping: 30,
+                                    duration: 1,
                                 },
-                            },
-                            exit: {
-                                y: -10,
-                                opacity: 0,
-                                height: 0,
-                                transition: {
-                                    height: { easings: 'ease', duration: 0.25 },
-                                    opacity: { easings: 'ease', duration: 0.3 },
-                                },
+                                opacity: { easings: 'ease', duration: 1 },
                             },
                         },
-                    }}
-                >
-                    {renderHistoryItems}
-                </Accordion>
-            </InfiniteScroll.Wrapper>
+                        exit: {
+                            y: -10,
+                            opacity: 0,
+                            height: 0,
+                            transition: {
+                                height: { easings: 'ease', duration: 0.25 },
+                                opacity: { easings: 'ease', duration: 0.3 },
+                            },
+                        },
+                    },
+                }}
+            >
+                {renderHistoryItems}
+            </Accordion>
+            <PaginationTrigger />
         </div>
     );
 };

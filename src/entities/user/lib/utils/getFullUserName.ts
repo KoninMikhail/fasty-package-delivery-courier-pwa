@@ -5,7 +5,7 @@ import { User } from "@/shared/api";
  * @description Get full username from user object
  * @param user
  */
-export const getFullUserName = (user: Nullable<User>): string => {
+export const getFullUserName = (user: Optional<User>): string => {
   const name = user?.firstName;
   const surname = user?.lastName;
 

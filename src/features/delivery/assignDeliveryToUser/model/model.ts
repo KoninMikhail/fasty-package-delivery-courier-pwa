@@ -13,8 +13,8 @@ export const factory = modelFactory((options: FactoryOptions) => {
     const assignCompleted = createEvent<Delivery['id']>();
     const assignRejected = createEvent();
 
-    const $user = createStore<Nullable<User>>(null);
-    const $delivery = createStore<Nullable<Delivery>>(null);
+    const $user = createStore<Optional<User>>(null);
+    const $delivery = createStore<Optional<Delivery>>(null);
     const $assignedItems = createStore<Delivery['id'][]>([]);
 
     $user

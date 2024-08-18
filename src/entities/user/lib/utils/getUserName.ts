@@ -1,3 +1,3 @@
 import { User } from "@/shared/api";
 
-export const getUserName = (user: Nullable<User>): string => user?.firstName || '';
+export const getUserName = (user: Optional<User>): string => user?.firstName || '';

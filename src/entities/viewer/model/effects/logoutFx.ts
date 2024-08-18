@@ -38,14 +38,8 @@ export const logoutFx = createEffect<void, unknown, Error>({
             await apiClient.logout({
                 refreshToken,
             });
-            Cookies.remove(APP_JWT_ACCESS_TOKEN_KEY, {
-                secure: true, // Ensure secure flag
-                sameSite: 'strict', // Ensure sameSite policy
-            });
-            Cookies.remove(APP_JWT_REFRESH_TOKEN_KEY, {
-                secure: true, // Ensure secure flag
-                sameSite: 'strict', // Ensure sameSite policy
-            });
+            Cookies.remove(APP_JWT_ACCESS_TOKEN_KEY);
+            Cookies.remove(APP_JWT_REFRESH_TOKEN_KEY);
         }
     },
 });

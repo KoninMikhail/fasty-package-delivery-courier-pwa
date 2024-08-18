@@ -11,7 +11,7 @@ export type NetworkState = {
 /* eslint @typescript-eslint/no-unsafe-member-access: off */
 
 export const setNetworkState = createEvent<NetworkState>();
-export const $networkState = createStore<Nullable<NetworkState>>(null).on(
+export const $networkState = createStore<Optional<NetworkState>>(null).on(
     setNetworkState,
     (_, payload) => payload,
 );

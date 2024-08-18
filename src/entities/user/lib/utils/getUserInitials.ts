@@ -5,7 +5,7 @@ import {User} from "@/shared/api";
  * @description Get user initials from user object
  * @param user
  */
-export const getUserInitials = (user: Nullable<User>): string => {
+export const getUserInitials = (user: Optional<User>): string => {
     const name = user?.firstName;
     const surname = user?.lastName;
     if (!name && !surname) return "";

@@ -29,7 +29,7 @@ export const factory = modelFactory((options: FactoryOptions) => {
 
     debug(submitPressed);
 
-    const $deliveryId = createStore<Nullable<Delivery['id']>>(null).on(
+    const $deliveryId = createStore<Optional<Delivery['id']>>(null).on(
         setDeliveryId,
         (_, id) => id,
     );

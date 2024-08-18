@@ -1,14 +1,14 @@
 import { createEffect } from 'effector';
-import { apiClient, deliverySchema } from '@/shared/api';
+import { apiClient, UpcomingDelivery } from '@/shared/api';
 import { z } from 'zod';
+import { MAX_WEIGHT_KG } from '@/widgets/deliveries/market/config';
 
 export const GetAvailableDeliveriesByParametersSchema = z.object({
     fromDate: z.string().optional(),
     toDate: z.string().optional(),
-    car: z.boolean().optional(),
+    type: z.enum(['car', 'foot', 'unset']).optional(),
     express: z.boolean().optional(),
-    weightMin: z.number().optional(),
-    weightMax: z.number().optional(),
+    weight: z.tuple([z.number(), z.number()]).optional(),
     limit: z.number().optional(),
     page: z.number(),
 });
@@ -17,36 +17,25 @@ export type GetAvailableDeliveriesByParameters = z.infer<
     typeof GetAvailableDeliveriesByParametersSchema
 >;
 
-export const GetAvailableDeliveriesResponseSchema = z.array(
-    deliverySchema.omit({
-        manager: true,
-        courier: true,
-        client: true,
-        contact: true,
-    }),
-);
-
-export type GetAvailableDeliveriesResponse = z.infer<
-    typeof GetAvailableDeliveriesResponseSchema
->;
-
 export const fetchAvailableDeliveriesFx = createEffect<
     GetAvailableDeliveriesByParameters,
-    GetAvailableDeliveriesResponse
+    UpcomingDelivery[]
 >({
     handler: async (parameters) => {
-        const { fromDate, toDate, car, express, weightMin, weightMax, limit } =
+        const { fromDate, toDate, type, express, weight, limit, page } =
             parameters || {};
 
         return apiClient.fetchAvailableAssignDeliveries({
             queries: {
+                page,
                 limit,
                 from: fromDate || undefined,
                 to: toDate || undefined,
-                car,
-                express,
-                weightMin,
-                weightMax,
+                car:
+                    type === 'car' ? true : type === 'foot' ? false : undefined,
+                express: express === true ? true : undefined,
+                weightMin: weight[0] === 0 ? undefined : weight[0],
+                weightMax: weight[1] <= MAX_WEIGHT_KG ? undefined : weight[1],
             },
         });
     },

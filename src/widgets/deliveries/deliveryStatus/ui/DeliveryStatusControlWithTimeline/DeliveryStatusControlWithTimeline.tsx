@@ -4,7 +4,7 @@ import { TbTruckDelivery } from 'react-icons/tb';
 import { LuUserCheck } from 'react-icons/lu';
 import { PropsWithChildren } from 'react';
 import { Spacer } from '@nextui-org/react';
-import { AssignDeliveryToUser } from '@/features/delivery/assignDeliveryToUser';
+import { AssignDeliveryWithMe } from '@/features/delivery/assignDeliveryToUser';
 import { useUnit } from 'effector-react';
 import { sessionModel } from '@/entities/viewer';
 import { useTranslation } from 'react-i18next';
@@ -51,7 +51,7 @@ const StatusList: FunctionComponent<PropsWithChildren> = ({ children }) => {
 };
 
 const StatusCreated: FunctionComponent<{
-    createDate: Nullable<Date>;
+    createDate: Optional<Date>;
 }> = ({ createDate }) => {
     const { i18n, t } = useTranslation([DeliveriesTranslationNS]);
     // @ts-expect-error i18n
@@ -92,7 +92,7 @@ const StatusInDelivery: FunctionComponent = () => {
     );
 };
 const StatusDelivered: FunctionComponent<{
-    comment: Nullable<string>;
+    comment: Optional<string>;
 }> = ({ comment }) => {
     const { t } = useTranslation([DeliveriesTranslationNS]);
     return (
@@ -114,7 +114,7 @@ const StatusDelivered: FunctionComponent<{
     );
 };
 const StatusCanceled: FunctionComponent<{
-    comment: Nullable<string>;
+    comment: Optional<string>;
 }> = ({ comment }) => {
     const { t } = useTranslation([DeliveriesTranslationNS]);
     return (
@@ -139,7 +139,7 @@ const StatusCanceled: FunctionComponent<{
 };
 
 const LastEdited: FunctionComponent<{
-    updateDate?: Nullable<Date>;
+    updateDate?: Optional<Date>;
 }> = ({ updateDate }) => {
     const { i18n, t } = useTranslation(translationNS);
     // @ts-expect-error i18n
@@ -172,7 +172,7 @@ export const DeliveryStatusControlWithTimeline: FunctionComponent = () => {
                 <StatusList>
                     <StatusCreated createDate={createDate} />
                 </StatusList>
-                <AssignDeliveryToUser.AssignRequestButton
+                <AssignDeliveryWithMe.AssignRequestButton
                     model={assignToDeliveryModel}
                     user={user}
                     delivery={delivery}

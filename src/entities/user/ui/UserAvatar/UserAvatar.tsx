@@ -7,7 +7,7 @@ import { getFullUserName, getUserAvatarSource } from '../../lib';
 /* eslint-disable react/jsx-props-no-spreading */
 
 interface IUserAvatarProperties extends AvatarProps {
-    user: Nullable<User>;
+    user: Optional<User>;
 }
 
 export const UserAvatar = forwardRef<HTMLButtonElement, IUserAvatarProperties>(

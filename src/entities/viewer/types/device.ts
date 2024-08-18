@@ -34,6 +34,6 @@ export type UserAgentInfo = {
 export type ScreenInfo = {
     width: number;
     height: number;
-    currentScreenSize: Nullable<ScreenCode>;
-    assignedToDeviceType: Nullable<DeviceType>;
+    currentScreenSize: Optional<ScreenCode>;
+    assignedToDeviceType: Optional<DeviceType>;
 };

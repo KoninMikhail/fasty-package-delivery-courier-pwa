@@ -1,5 +1,9 @@
 import { createEvent, createStore } from 'effector';
-import { DEFAULT_UPCOMING_DELIVERIES_COUNT } from '../config';
+import { persist } from 'effector-storage/local';
+import {
+    DEFAULT_UPCOMING_DELIVERIES_COUNT,
+    UPCOMING_DELIVERIES_LOCAL_STORAGE_KEY,
+} from '../config';
 
 /**
  * Defines an event `countChanged` to be dispatched when the count of upcoming deliveries changes.
@@ -26,4 +30,13 @@ $homeUpcomingDeliveriesCount.on(countChanged, (_, count) => {
     const isValidCount = Number.isInteger(count) && count >= MIN_ITEMS_COUNT;
     // Updates the store's state with the new count if valid, otherwise resets to the default count.
     return isValidCount ? count : DEFAULT_UPCOMING_DELIVERIES_COUNT;
+});
+
+/**
+ * Persists the `$homeUpcomingDeliveriesCount` store to local storage using the key
+ * On initialization, it retrieves the count from local storage and sets it to the store.
+ */
+persist({
+    store: $homeUpcomingDeliveriesCount,
+    key: UPCOMING_DELIVERIES_LOCAL_STORAGE_KEY,
 });

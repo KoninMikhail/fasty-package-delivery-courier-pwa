@@ -21,7 +21,7 @@ export const instance = axios.create({
     },
 });
 
-axiosRetry(instance, { retries: 3 });
+axiosRetry(instance, { retries: 1 });
 
 /**
  * Add an interceptor to handle 401 errors

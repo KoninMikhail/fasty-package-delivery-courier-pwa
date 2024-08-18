@@ -25,7 +25,7 @@ locale.addResourceBundle('ru', translationNS, locale_ru);
 interface HorizontalDatePickerProperties {
     startDate?: string;
     periodDays?: number;
-    selectedDates: Nullable<DatePeriod>;
+    selectedDates: Optional<DatePeriod>;
     onChangeDate: (date: DatePeriod) => void;
     offsetY?: TailwindSize;
 }
@@ -40,9 +40,9 @@ export const HorizontalDatePicker: FunctionComponent<
     offsetY,
 }) => {
     const [startPeriodState, setStartPeriodState] =
-        useState<Nullable<string>>(null);
+        useState<Optional<string>>(null);
     const [endPeriodState, setEndPeriodState] =
-        useState<Nullable<string>>(null);
+        useState<Optional<string>>(null);
 
     const startDateParsed = startDate;
     const periodDaysParsed = format(

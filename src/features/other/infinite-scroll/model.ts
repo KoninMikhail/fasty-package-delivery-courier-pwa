@@ -1,67 +1,79 @@
-import { createEvent, createStore, Effect, sample } from 'effector';
-
+import { combine, createEvent, createStore, Effect, sample } from 'effector';
 import { modelFactory } from 'effector-factorio';
-import { pending } from 'patronum';
+import { debug, throttle } from 'patronum';
+import { sharedLibTypeGuards } from '@/shared/lib';
 
-interface FactoryOptions<Payload, Result> {
-    trashHold?: number;
-    initialPagination: Payload;
-    paginationOnLoadNewPage: (payload: Payload) => Payload;
-    stopOn?: (payload: Result) => boolean;
-    provider: Effect<Payload, Result>;
+const { isEmpty } = sharedLibTypeGuards;
+
+type Pagination = {
+    page: number;
+    limit?: number;
+};
+
+interface FactoryOptions<T extends Pagination, P> {
+    provider: Effect<T, P>;
+    throttleTimeoutInMs: number;
+    initial: T;
+    onTriggerNewPage: (payload: T) => T;
 }
 
 export const factory = modelFactory(
-    <Payload, Result>(options: FactoryOptions<Payload, Result>) => {
-        const pageEnded = createEvent({
-            name: 'pageEnded',
-        });
-        const pageActual = createEvent();
-        const lastPageReached = createEvent();
-        const newPageRequested = createEvent<Payload>();
+    <T extends Pagination, P>(options: FactoryOptions<T, P>) => {
+        const pageEndTriggered = createEvent();
+        const newPageRequested = createEvent<T>();
+        const reset = createEvent();
+
+        /**
+         * Guards
+         */
+        const $readyToLoadNewPage = createStore(false);
 
         /**
          * State
          */
-        const $enabled = createStore(false).on(
-            options.provider.done,
-            () => true,
-        );
-        const $paginationData = createStore<Payload>(options.initialPagination);
-        const $loading = pending([options.provider]);
-        const $lastPageReached = createStore(false).on(
-            lastPageReached,
-            () => true,
-        );
+        const $pagination = createStore<T>(options.initial).reset(reset);
+        const $lastPageLoaded = createStore<boolean>(false)
+            .on(options.provider.doneData, (_, payload) => isEmpty(payload))
+            .reset(reset);
 
         sample({
-            clock: pageEnded,
-            source: $paginationData,
-            filter: $enabled,
+            clock: throttle(pageEndTriggered, options.throttleTimeoutInMs),
+            source: $pagination,
             fn: (pagination) => pagination,
             target: newPageRequested,
         });
 
         sample({
-            clock: options.provider.doneData,
-            source: $paginationData,
-            filter: $lastPageReached.map((isLast) => !isLast),
-            fn: (payloadStore) => options.paginationOnLoadNewPage(payloadStore),
-            target: $paginationData,
+            clock: newPageRequested,
+            source: $pagination,
+            filter: combine(
+                $readyToLoadNewPage,
+                $lastPageLoaded,
+                (ready, last) => ready && !last,
+            ),
+            fn: options.onTriggerNewPage,
+            target: $pagination,
+        });
+
+        sample({
+            clock: newPageRequested,
+            fn: () => false,
+            target: $readyToLoadNewPage,
         });
 
         sample({
             clock: options.provider.doneData,
-            filter: (payload) => options.stopOn?.(payload) ?? false,
-            target: lastPageReached,
+            fn: () => true,
+            target: $readyToLoadNewPage,
         });
 
+        debug($pagination);
+
         return {
-            $enabled,
-            $loading,
-            pageActual,
-            pageEnded,
+            $pagination,
+            pageEndTriggered,
             newPageRequested,
+            reset,
         };
     },
 );

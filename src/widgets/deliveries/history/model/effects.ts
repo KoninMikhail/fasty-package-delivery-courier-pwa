@@ -1,15 +1,15 @@
 import { createEffect } from 'effector';
-import { apiClient, Delivery } from '@/shared/api';
+import { apiClient, HistoryDelivery } from '@/shared/api';
 import { z } from 'zod';
 
-interface GetDeliveriesHistoryFxParameters {
-    page: Nullable<number>;
-    limit: number;
+export interface GetDeliveriesHistoryFxParameters {
+    page: number;
+    limit?: number;
 }
 
 export const getDeliveriesHistoryFx = createEffect<
     GetDeliveriesHistoryFxParameters,
-    Delivery[]
+    HistoryDelivery[]
 >(async (queries) => {
     const { page, limit } = queries;
     try {

@@ -1,7 +1,7 @@
 import { factory } from './model';
-import { Wrapper } from './ui';
+import { Trigger } from './ui';
 
 export const InfiniteScroll = {
     factory,
-    Wrapper,
+    Trigger,
 };

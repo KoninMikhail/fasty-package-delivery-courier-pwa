@@ -9,7 +9,7 @@ import {
 } from 'effector';
 import { modelFactory } from 'effector-factorio';
 import { ChangePasswordFxParameters } from '@/entities/viewer';
-import { debug, pending } from 'patronum';
+import { pending } from 'patronum';
 
 import { MIN_PASSWORD_LENGTH } from '../config';
 
@@ -18,11 +18,12 @@ import { MIN_PASSWORD_LENGTH } from '../config';
 interface FactoryOptions {
     targetUser: Store<User>;
     updateUserFx: Effect<ChangePasswordFxParameters, void, Error>;
+    logoutFx: Effect<void, unknown, Error>;
     demoMode: boolean;
 }
 
 export const factory = modelFactory((options: FactoryOptions) => {
-    const { targetUser, updateUserFx, demoMode } = options;
+    const { targetUser, updateUserFx, logoutFx, demoMode } = options;
 
     const passwordChanged = createEvent<string>();
     const passwordRepeatChanged = createEvent<string>();
@@ -94,7 +95,11 @@ export const factory = modelFactory((options: FactoryOptions) => {
         target: reset,
     });
 
-    debug(reset);
+    sample({
+        clock: updateUserFx.done,
+        filter: () => !demoMode,
+        target: logoutFx,
+    });
 
     return {
         targetUser,

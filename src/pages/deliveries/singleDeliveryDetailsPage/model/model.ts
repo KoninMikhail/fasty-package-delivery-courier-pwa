@@ -75,7 +75,7 @@ sample({
  * Page
  */
 
-export const $pageContentState = createStore<Nullable<PageState>>(null)
+export const $pageContentState = createStore<Optional<PageState>>(null)
     .on(getDeliveryByIdFx.doneData, () => PageState.Done)
     .on(getDeliveryByIdFx.failData, (_, error) => handleDeliveryError(error))
     .on(getCachedDeliveryByIdFx.doneData, () => PageState.Done)
@@ -94,6 +94,8 @@ export const $delivery = createStore<Delivery>(initialDelivery)
     .on(getCachedDeliveryByIdFx.doneData, (_, delivery) => delivery)
     .on(setDeliveryStatusFx.doneData, (_, delivery) => delivery)
     .reset(DeliveryDetailsPageGateway.close);
+
+debug($delivery);
 
 // Derived stores to decompose the delivery object for easier consumption
 export const $$deliveryId = $delivery.map((delivery) =>

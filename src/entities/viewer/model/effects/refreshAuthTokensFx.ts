@@ -20,17 +20,12 @@ export const refreshAuthTokensFx = createEffect<void, void>(async () => {
 
         Cookies.set(APP_JWT_REFRESH_TOKEN_KEY, refresh.token, {
             expires: refresh.expires,
-            secure: true, // Ensure secure flag
-            sameSite: 'strict', // Ensure sameSite policy
         });
 
         Cookies.set(APP_JWT_ACCESS_TOKEN_KEY, access.token, {
             expires: access.expires,
-            secure: true, // Ensure secure flag
-            sameSite: 'strict', // Ensure sameSite policy
         });
-    } catch (error) {
-        console.error('Failed to refresh tokens:', error);
-        // Optional: Add more error handling logic
+    } catch {
+        throw new Error('Failed to refresh tokens');
     }
 });

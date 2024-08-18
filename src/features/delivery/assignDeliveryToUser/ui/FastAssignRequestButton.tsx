@@ -18,7 +18,7 @@ import { factory } from '../model/model';
 
 interface RequestButtonProperties {
     delivery: Delivery;
-    user: Nullable<User>;
+    user: Optional<User>;
     popoverProps?: Pick<PopoverProps, 'placement' | 'backdrop'>;
     buttonProps?: Omit<
         ButtonProps,

@@ -4,18 +4,21 @@ import { useList, useUnit } from 'effector-react';
 import { Button, Skeleton, Spacer } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { RiWifiOffLine } from 'react-icons/ri';
-import { AssignDeliveryToUser } from '@/features/delivery/assignDeliveryToUser';
+import { AssignDeliveryWithMe } from '@/features/delivery/assignDeliveryToUser';
 import { sessionModel } from '@/entities/viewer';
 import { useTranslation } from 'react-i18next';
 import { GoAlert } from 'react-icons/go';
 import { AiOutlineReload } from 'react-icons/ai';
 import { BsBoxSeam } from 'react-icons/bs';
 import { InfiniteScroll } from '@/features/other/infinite-scroll';
+import { $hasErrors } from '@/shared/services/subway';
+import { $outputDeliveriesStore } from '@/widgets/deliveries/market/model/stores';
 import {
-    $outputStore,
     InfiniteScrollModel,
     assignDeliveryToUserModel,
-    fetchDeliveriesModel,
+    $isDeliveriesLoading,
+    $isInitialized,
+    $hasNoDeliveries,
 } from '../model';
 
 /* eslint-disable unicorn/consistent-function-scoping */
@@ -121,19 +124,19 @@ export const MarketContent: FunctionComponent = () => {
     const online = useUnit(sessionModel.$$isOnline);
     const viewer = useUnit(sessionModel.$viewerProfileData);
 
-    const { isPending, hasErrors, isEmpty, isEnabledInfiniteScroll } = useUnit({
-        isPending: fetchDeliveriesModel.$pending,
-        hasErrors: fetchDeliveriesModel.$$hasErrors,
-        isEmpty: fetchDeliveriesModel.$$isEmpty,
-        isEnabledInfiniteScroll: InfiniteScrollModel.$enabled,
+    const { isInit, isPending, hasErrors, isEmpty } = useUnit({
+        isInit: $isInitialized,
+        isPending: $isDeliveriesLoading,
+        hasErrors: $hasErrors,
+        isEmpty: $hasNoDeliveries,
     });
 
-    const content = useList($outputStore, (delivery, index) => (
+    const content = useList($outputDeliveriesStore, (delivery, index) => (
         <EaseIn isFirst={index === 0}>
             <DeliveryMarketCard
                 delivery={delivery}
                 featureSlot={
-                    <AssignDeliveryToUser.FastAssignRequestButton
+                    <AssignDeliveryWithMe.FastAssignRequestButton
                         model={assignDeliveryToUserModel}
                         user={viewer}
                         delivery={delivery}
@@ -143,10 +146,11 @@ export const MarketContent: FunctionComponent = () => {
         </EaseIn>
     ));
 
+    if (!isInit) return <Loading />;
     if (!online) {
         return <Offline />;
     }
-    if (isPending && !isEnabledInfiniteScroll) {
+    if (isPending) {
         return <Loading />;
     }
     if (hasErrors) {
@@ -157,11 +161,10 @@ export const MarketContent: FunctionComponent = () => {
     }
     return (
         <Root>
-            <InfiniteScroll.Wrapper model={InfiniteScrollModel}>
-                <div className="relative grid grid-cols-1 gap-4 lg:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 4xl:grid-cols-5 5xl:grid-cols-6">
-                    {content}
-                </div>
-            </InfiniteScroll.Wrapper>
+            <div className="relative grid grid-cols-1 gap-4 lg:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 4xl:grid-cols-5 5xl:grid-cols-6">
+                {content}
+            </div>
+            <InfiniteScroll.Trigger model={InfiniteScrollModel} />
         </Root>
     );
 };

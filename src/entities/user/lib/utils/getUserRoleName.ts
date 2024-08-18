@@ -10,7 +10,7 @@ import {
 const {locale} = sharedConfigLocale;
 
 
-export const getUserRoleName = (user: Nullable<User>): string => {
+export const getUserRoleName = (user: Optional<User>): string => {
     const roleName = user?.role;
     switch (roleName) {
         case "MANAGER":

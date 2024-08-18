@@ -1,77 +1,188 @@
-import { createEvent, createStore, sample } from 'effector';
-import { AssignDeliveryToUser } from '@/features/delivery/assignDeliveryToUser';
-import { sessionModel } from '@/entities/viewer';
+import { combine, createEvent, createStore, sample } from 'effector';
+import { AssignDeliveryWithMe } from '@/features/delivery/assignDeliveryToUser';
 import { assignUserToDeliveryFx } from '@/entities/user';
-import { sharedLibTypeGuards } from '@/shared/lib';
 import { fetchAvailableDeliveriesFx } from '@/entities/delivery';
 import { FetchDeliveriesByParameters } from '@/features/delivery/fetchDeliveriesByParams';
 import { InfiniteScroll } from '@/features/other/infinite-scroll';
-import { Delivery } from '@/shared/api';
-
-const { isEmpty } = sharedLibTypeGuards;
+import { isEmpty } from '@/shared/lib/type-guards';
+import { condition, delay } from "patronum";
+import {
+  $datesRange,
+  $deliveryType,
+  $express,
+  $outputDeliveriesStore, $weight, clearDeliveries,
+  datesRangePicked,
+  deliveryTypeChanged,
+  expressChanged, filtersChanged,
+  setDeliveries,
+  weightRangeSelected
+} from "./stores";
+import { sessionModel } from '@/entities/viewer';
 
 /**
  * Events
  */
-export const init = createEvent(); // full reset of the market
-export const fetchData = createEvent(); // refetch data
+
+export const init = createEvent();
+export const fetchData = createEvent();
+
 
 /**
- * Providers
+ * Fetching
  */
-export const fetchDeliveriesModel =
-    FetchDeliveriesByParameters.factory.createModel({
-        fetchDeliveriesFx: fetchAvailableDeliveriesFx,
-    });
 
-/**
- * Infinite scroll
- */
 export const InfiniteScrollModel = InfiniteScroll.factory.createModel({
     provider: fetchAvailableDeliveriesFx,
-    initialPagination: {
-        page: 0,
+    throttleTimeoutInMs: 500,
+    initial: {
+        page: 1,
+        limit: 50,
     },
-    paginationOnLoadNewPage: (payload) => ({
+    onTriggerNewPage: (payload) => ({
         page: payload.page + 1,
+        limit: payload.limit,
     }),
-    stopOn: (payload) => isEmpty(payload),
+});
+
+export const fetchDeliveriesModel =
+    FetchDeliveriesByParameters.factory.createModel({
+        provider: fetchAvailableDeliveriesFx,
+        pagination: InfiniteScrollModel.$pagination,
+        sourceData: combine(
+            $express,
+            $deliveryType,
+            $weight,
+            $datesRange,
+            (express, type, weight, dates) => ({
+                express,
+                type: [...type][0],
+                weight,
+                fromDate: dates?.dateFrom,
+                toDate: dates?.toDate,
+            }),
+        ),
+    });
+
+sample({
+  clock: fetchDeliveriesModel.deliveriesFetched,
+  source: {
+    pagination: InfiniteScrollModel.$pagination,
+    outputStore: $outputDeliveriesStore,
+  },
+  fn: ({ pagination, outputStore }, data) => {
+    if (pagination.page === 1) return data;
+    return [...outputStore, ...data];
+  },
+  target: setDeliveries,
 });
 
 /**
- * Actions
+ * Assign delivery with current user
  */
 export const assignDeliveryToUserModel =
-    AssignDeliveryToUser.factory.createModel({
+    AssignDeliveryWithMe.factory.createModel({
         assignToDeliveryFx: assignUserToDeliveryFx,
     });
 
 /**
- * State
+ * Widget initialization
  */
+const initStarted = createEvent()
+const initComplete = createEvent()
+const $firstDataFetched = createStore<boolean>(false)
 
-/**
- * Handlers
- */
+export const $isInitialized = createStore<boolean>(false).on(initComplete, () => true)
+  .reset(init);
+
 sample({
-    clock: [init, fetchData],
-    source: sessionModel.$$isOnline,
-    filter: (isOnline) => isOnline,
-    fn: () => {},
-    target: fetchDeliveriesModel.fetch,
+  clock: delay(init, 400),
+  source: $isInitialized,
+  filter: (initialized) => !initialized,
+  target: fetchDeliveriesModel.fetch,
+});
+
+condition({
+  source: initStarted,
+  if: sessionModel.$$isOnline,
+  then: fetchDeliveriesModel.fetch,
+  else: initComplete
 });
 
 sample({
-    clock: InfiniteScrollModel.newPageRequested,
-    fn: ({ page }) => page,
-    target: fetchDeliveriesModel.pageChanged,
+  clock: fetchDeliveriesModel.deliveriesFetched,
+  source: $isInitialized,
+  filter: (initialized) => !initialized,
+  fn: (_, deliveries) => deliveries,
+  target: setDeliveries,
 });
 
+sample({
+  clock: delay($outputDeliveriesStore, 100),
+  source: $isInitialized,
+  filter: (initialized) => !initialized,
+  fn: () => true,
+  target: $firstDataFetched,
+})
+
+sample({
+  clock: $firstDataFetched,
+  target: initComplete,
+})
+
 /**
- * Exports
+ * Re-fetch Data
  */
-export const $outputStore = createStore<Delivery[]>([])
-    .on(fetchDeliveriesModel.$fetchedDeliveries, (state, payload) => {
-        return [...state, ...(payload as Delivery)];
-    })
-    .reset(init);
+
+sample({
+  clock: fetchData,
+  source:{
+    isInit: $isInitialized,
+    isOnline: sessionModel.$$isOnline,
+    isAuthorized: sessionModel.$isAuthorized,
+  },
+  filter: ({ isInit, isOnline, isAuthorized }) => isInit && isOnline && isAuthorized,
+  target: fetchDeliveriesModel.fetch,
+})
+
+/**
+ * Change Filters
+ */
+
+sample({
+  clock: [
+    datesRangePicked,
+    expressChanged,
+    deliveryTypeChanged,
+    weightRangeSelected,
+  ],
+  target: filtersChanged,
+});
+
+sample({
+  clock: filtersChanged,
+  target: [InfiniteScrollModel.reset,  clearDeliveries],
+});
+
+sample({
+  clock: delay(filtersChanged, 500),
+  source:{
+    isInit: $isInitialized,
+    isOnline: sessionModel.$$isOnline,
+    isAuthorized: sessionModel.$isAuthorized,
+  },
+  filter: ({ isInit, isOnline, isAuthorized }) => isInit && isOnline && isAuthorized,
+  target: fetchDeliveriesModel.fetch,
+});
+
+
+/**
+ * Handle states
+ */
+
+export const $hasNoDeliveries = createStore<boolean>(false)
+  .on(fetchDeliveriesModel.deliveriesFetched, (state, deliveries) => isEmpty(deliveries))
+  .on(fetchDeliveriesModel.deliveriesFetchFailed, (state, deliveries) => true)
+  .reset([fetchDeliveriesModel.deliveriesFetched]);
+
+export const $isDeliveriesLoading = fetchDeliveriesModel.$pending;
+export const $hasErrors = fetchDeliveriesModel.$$hasErrors;

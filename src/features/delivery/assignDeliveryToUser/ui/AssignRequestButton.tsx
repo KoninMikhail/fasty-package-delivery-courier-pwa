@@ -16,7 +16,7 @@ const TRANSLATION = {
 
 interface RequestButtonProperties {
     delivery: Delivery;
-    user: Nullable<User>;
+    user: Optional<User>;
     buttonProps?: Omit<
         ButtonProps,
         'onPress' | 'isLoading' | 'isDisabled' | 'children' | 'isIconOnly'

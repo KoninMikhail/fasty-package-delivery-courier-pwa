@@ -1,11 +1,11 @@
 import { makeApi, makeErrors } from '@zodios/core';
 import { z } from 'zod';
+import { transformPathToUrl } from '@/shared/api/uilts/transformPathToUrl';
 import {
     AuthByEmailCredentialsSchema,
     AuthResponseSchema,
     AuthTokensSchema,
     ForgotPasswordSchema,
-    userSchema,
 } from '../schemas';
 
 const errors = makeErrors([
@@ -23,7 +23,17 @@ export const authApi = makeApi([
         path: '/login',
         alias: 'authByEmail',
         description: 'Authenticate a user by Email and Password',
-        response: AuthResponseSchema,
+        response: AuthResponseSchema.transform((response) => {
+            return {
+                ...response,
+                user: {
+                    ...response.user,
+                    avatar_src: response.user.avatar_src
+                        ? transformPathToUrl(response.user.avatar_src)
+                        : null,
+                },
+            };
+        }),
         parameters: [
             {
                 name: 'credentials',
@@ -94,14 +104,6 @@ export const authApi = makeApi([
             },
         ],
         response: z.unknown(), // "204 No Contents
-        errors,
-    },
-    {
-        method: 'get',
-        path: '/me',
-        alias: 'getMe',
-        description: 'Get the current user information',
-        response: userSchema,
         errors,
     },
 ]);

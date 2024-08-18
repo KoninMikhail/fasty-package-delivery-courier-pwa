@@ -1,22 +1,18 @@
-import { createEvent, createStore, sample } from 'effector';
+import { createEvent, createStore } from 'effector';
 import { and } from 'patronum';
-import { User } from '@/shared/api';
-import { sharedConfigConstants } from '@/shared/config';
+import { User, userSchema } from '@/shared/api';
 import { Done } from 'effector-storage';
+import { persist } from 'effector-storage/local';
+import { SESSION_USER_PROFILE_LOCAL_STORAGE_KEY } from '../config';
+import { revalidateAuthFx } from './effects/revalidateAuthFx';
 import {
     authByEmailFx,
     changeViewerAvatarFx,
     getViewerProfileFx,
     logoutFx,
-    refreshAuthTokensFx,
-    setViewerAccountPasswordFx,
 } from './effects';
-import { $$isOnline } from './parts/networkState';
-
-const { APP_DEMO_MODE } = sharedConfigConstants;
 
 export const viewerDataReceived = createEvent<Done<User>>();
-export const requestViewerLogout = createEvent();
 
 /**
  * Session initialization status
@@ -27,44 +23,36 @@ export const $initSessionComplete = createStore(true).on(
 );
 
 /**
+ * =================================================
  * Viewer profile data
+ * =================================================
  */
-export const $viewerProfileData = createStore<Nullable<User>>(null)
-    .on(authByEmailFx.doneData, (_, payload) => payload)
+export const $viewerProfileData = createStore<Optional<User>>(null)
+    .on(authByEmailFx.doneData, (_, payload) => payload.user)
     .on(getViewerProfileFx.doneData, (_, payload) => payload)
     .on(changeViewerAvatarFx.doneData, (_, payload) => payload)
     .reset([logoutFx.done, logoutFx.fail]);
 
 export const $$hasProfileData = $viewerProfileData.map((data) => !!data);
 
+/*
+ * Persist viewer profile data from local storage for correctly work offline mode
+ *
+ * It takes data from localstorage on appInit and if it's valid, it sets it to the store.
+ * If it's not valid, it triggers re-fetch data from backend and if re-fetch fails, it triggers logout.
+ */
+persist({
+    store: $viewerProfileData,
+    key: SESSION_USER_PROFILE_LOCAL_STORAGE_KEY,
+    contract: (raw): raw is User => userSchema.safeParse(raw).success,
+    done: viewerDataReceived,
+    fail: revalidateAuthFx,
+});
+
 /**
  * Authorization status
  */
 export const $isAuthorized = and($initSessionComplete, $$hasProfileData);
-
-/**
- * Handle logout
- */
-sample({
-    clock: requestViewerLogout,
-    source: {
-        isOnline: $$isOnline,
-        isAuthorized: $isAuthorized,
-    },
-    filter: ({ isOnline, isAuthorized }) => isOnline && isAuthorized,
-    target: logoutFx,
-});
-
-sample({
-    clock: refreshAuthTokensFx.fail,
-    target: logoutFx,
-});
-
-sample({
-    clock: setViewerAccountPasswordFx.doneData,
-    filter: () => !APP_DEMO_MODE,
-    target: logoutFx,
-});
 
 export { $$isOnline } from './parts/networkState';
 export {

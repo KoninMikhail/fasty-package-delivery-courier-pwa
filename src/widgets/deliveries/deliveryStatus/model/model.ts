@@ -1,6 +1,6 @@
 import { SetDeliveryStatus } from '@/features/delivery/setDeliveryStatus';
 import { createStore, sample } from 'effector';
-import { AssignDeliveryToUser } from '@/features/delivery/assignDeliveryToUser';
+import { AssignDeliveryWithMe } from '@/features/delivery/assignDeliveryToUser';
 import { getDeliveryByIdFx, setDeliveryStatusFx } from '@/entities/delivery';
 import { Delivery } from '@/shared/api';
 import { assignUserToDeliveryFx } from '@/entities/user';
@@ -8,7 +8,7 @@ import { assignUserToDeliveryFx } from '@/entities/user';
 /**
  * Data
  */
-export const $delivery = createStore<Nullable<Delivery>>(null)
+export const $delivery = createStore<Optional<Delivery>>(null)
     .on(assignUserToDeliveryFx.doneData, (_, delivery) => delivery)
     .on(getDeliveryByIdFx.doneData, (_, delivery) => delivery)
     .on(setDeliveryStatusFx.doneData, (_, delivery) => delivery);
@@ -28,7 +28,7 @@ export const $$deliveryUpdateDate = $delivery.map(
 /**
  * Feature models
  */
-export const assignToDeliveryModel = AssignDeliveryToUser.factory.createModel({
+export const assignToDeliveryModel = AssignDeliveryWithMe.factory.createModel({
     assignToDeliveryFx: assignUserToDeliveryFx,
 });
 

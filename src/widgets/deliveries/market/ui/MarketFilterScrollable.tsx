@@ -16,10 +16,7 @@ import {
 import { FaCar, FaFireAlt } from 'react-icons/fa';
 import { useMemo, useState } from 'react';
 import { GiGymBag } from 'react-icons/gi';
-import {
-    DeliveryType,
-    WeightRange,
-} from '@/features/delivery/filterDeliveriesByParams/model/model';
+
 import {
     EXPRESS_LABEL_KEY,
     LABEL_ONCAR_KEY,
@@ -35,7 +32,14 @@ import {
     translationNS,
 } from '../config';
 
-import { fetchDeliveriesModel } from '../model';
+import {
+    $deliveryType,
+    $express,
+    $weight,
+    deliveryTypeChanged,
+    expressChanged,
+    weightRangeSelected,
+} from '../model/stores';
 
 /**
  * Types
@@ -60,8 +64,8 @@ const ExpressSelector: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
 
     const { isSelected, setExpress } = useUnit({
-        isSelected: fetchDeliveriesModel.$express,
-        setExpress: fetchDeliveriesModel.expressPressed,
+        isSelected: $express,
+        setExpress: expressChanged,
     });
     const onPress = (): void => {
         if (isSelected) {
@@ -88,8 +92,8 @@ const DeliveryTypeSelector: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
 
     const { selectedKeys, onSelectKeys } = useUnit({
-        selectedKeys: fetchDeliveriesModel.$type,
-        onSelectKeys: fetchDeliveriesModel.typeSelected,
+        selectedKeys: $deliveryType,
+        onSelectKeys: deliveryTypeChanged,
     });
     const selectedValue = useMemo(
         () => [...selectedKeys].join(', ').replaceAll('_', ' '),
@@ -147,10 +151,10 @@ const DeliveryTypeSelector: FunctionComponent = () => {
 const WeightSelector: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
 
-    const [value, setValue] = useState<WeightRange>([0, MAX_WEIGHT_KG]);
+    const [value, setValue] = useState<[number, number]>([0, MAX_WEIGHT_KG]);
     const { selected, weightChanged } = useUnit({
-        selected: fetchDeliveriesModel.$weight,
-        weightChanged: fetchDeliveriesModel.weightChanged,
+        selected: $weight,
+        weightChanged: weightRangeSelected,
     });
 
     const isSelected =

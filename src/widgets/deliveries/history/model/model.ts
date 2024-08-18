@@ -1,101 +1,93 @@
-import { Delivery } from '@/shared/api';
-import { createEvent, sample } from 'effector';
+import { createEvent, createStore, sample } from 'effector';
 import { compareDesc, format, parseISO } from 'date-fns';
 import { InfiniteScroll } from 'features/other/infinite-scroll';
-import { sharedLibTypeGuards } from '@/shared/lib';
 import { FetchDeliveriesByParameters } from '@/features/delivery/fetchDeliveriesByParams';
-import { debug } from 'patronum';
+import { delay } from 'patronum';
+import { HistoryDelivery } from '@/shared/api';
 import { getDeliveriesHistoryFx } from './effects';
 
-const { isEmpty } = sharedLibTypeGuards;
-
 /**
- * Providers
+ * Features
  */
+export const InfiniteScrollModel = InfiniteScroll.factory.createModel({
+    provider: getDeliveriesHistoryFx,
+    throttleTimeoutInMs: 500,
+    initial: {
+        page: 1,
+    },
+    onTriggerNewPage: (query) => {
+        return {
+            page: query.page + 1,
+        };
+    },
+});
 
 const fetchDeliveriesHistoryModel =
     FetchDeliveriesByParameters.factory.createModel({
-        fetchDeliveriesFx: getDeliveriesHistoryFx,
+        provider: getDeliveriesHistoryFx,
+        pagination: InfiniteScrollModel.$pagination,
     });
 
+/**
+ * Events
+ */
 export const init = createEvent();
+
+/**
+ * Initialize the model
+ */
+export const $isInitialized = createStore(false);
 
 sample({
     clock: init,
     target: fetchDeliveriesHistoryModel.fetch,
 });
 
-debug(fetchDeliveriesHistoryModel.$fetchedDeliveries);
+sample({
+    clock: delay(fetchDeliveriesHistoryModel.deliveriesFetched, 200),
+    fn: () => true,
+    target: $isInitialized,
+});
 
-// Store the fetched deliveries
-/* export const $fetchedData = createStore<Set<Delivery>>(new Set(), {
-    name: 'fetchedDeliveries',
-}).on(getDeliveriesHistoryFx.doneData, (currentState, payload) => {
-    // Create a new set to merge current items and new items
-    const updatedSet = new Set(currentState);
+/**
+ * Data
+ */
 
-    for (const newDelivery of payload) {
-        const existingDelivery = [...updatedSet].find(
-            (delivery) => delivery.id === newDelivery.id,
-        );
-        if (existingDelivery) {
-            // Optionally update an existing delivery
-            updatedSet.delete(existingDelivery);
-            updatedSet.add(newDelivery);
-        } else {
-            updatedSet.add(newDelivery);
-        }
-    }
+const $fetchedData = createStore<HistoryDelivery[]>([]);
 
-    return updatedSet;
-}); */
+sample({
+    clock: fetchDeliveriesHistoryModel.deliveriesFetched,
+    source: $fetchedData,
+    fn: (previous, next) => [...previous, ...next],
+    target: $fetchedData,
+});
 
 /**
  * Store the sorted deliveries history
  */
-export const $sortedDeliveriesHistory =
-    fetchDeliveriesHistoryModel.$fetchedDeliveries.map((deliveriesSet) => {
-        const deliveries = [...deliveriesSet];
-        const groupedByDate: Record<string, Delivery[]> = {};
+export const $sortedDeliveriesHistory = $fetchedData.map((deliveriesSet) => {
+    const deliveries = [...deliveriesSet];
+    const groupedByDate: Record<string, HistoryDelivery[]> = {};
 
-        for (const delivery of deliveries) {
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            const { updatedAt } = delivery;
-            const updatedAtFormatted = format(updatedAt, 'yyyy-MM-dd');
+    for (const delivery of deliveries) {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        const { updatedAt } = delivery;
+        const updatedAtFormatted = format(updatedAt, 'yyyy-MM-dd');
 
-            if (!groupedByDate[updatedAtFormatted])
-                groupedByDate[updatedAtFormatted] = [];
-            groupedByDate[updatedAtFormatted].push(delivery);
-        }
+        if (!groupedByDate[updatedAtFormatted])
+            groupedByDate[updatedAtFormatted] = [];
+        groupedByDate[updatedAtFormatted].push(delivery);
+    }
 
-        return Object.entries(groupedByDate)
-            .map(([date, items]) => {
-                return {
-                    date,
-                    count: items.length,
-                    canceled: items.filter((item) => item.state === 'canceled')
-                        .length,
-                    items,
-                };
-            })
-            .sort((a, b) => compareDesc(parseISO(a.date), parseISO(b.date)));
-    });
-
-/**
- * Infinite scroll model
- */
-
-export const InfiniteScrollModel = InfiniteScroll.factory.createModel({
-    initialPagination: {
-        page: 0,
-    },
-    paginationOnLoadNewPage: (query) => {
-        return {
-            page: query.page + 1,
-        };
-    },
-    stopOn: (payload) => isEmpty(payload),
-    provider: getDeliveriesHistoryFx,
+    return Object.entries(groupedByDate)
+        .map(([date, items]) => {
+            return {
+                date,
+                count: items.length,
+                canceled: items.filter((item) => item.state === 'canceled')
+                    .length,
+                items,
+            };
+        })
+        .sort((a, b) => compareDesc(parseISO(a.date), parseISO(b.date)));
 });
-
-debug(InfiniteScrollModel.newPageRequested);

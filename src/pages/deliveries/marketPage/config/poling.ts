@@ -1,1 +1,1 @@
-export const POLLING_TIMEOUT = 3; // MINUTES
+export const POLLING_TIMEOUT_SEC = 3; // Seconds

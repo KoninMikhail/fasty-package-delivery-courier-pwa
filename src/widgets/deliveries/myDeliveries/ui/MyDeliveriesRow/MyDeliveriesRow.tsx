@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
 import { PropsWithChildren } from 'react';
 import { settingsModel } from '@/entities/viewer';
-import { $$empty, $inPending, $$hasError } from '../../model';
+import { $$empty, $inPending, $$hasError, $isInitialized } from '../../model';
 import { $deliveriesStore } from '../../model/deliveriesStore';
 
 import {
@@ -54,7 +54,7 @@ const EmptyItemsPlaceholder: FunctionComponent = () => {
 /**
  * Renders skeletons as placeholders during loading states.
  */
-const LoadPlaceholder: FunctionComponent = () => (
+const Loading: FunctionComponent = () => (
     <div className="block py-4">
         <HorizontalScroll>
             <div className="flex flex-nowrap justify-start gap-4 px-4">
@@ -116,12 +116,12 @@ export const MyDeliveriesRow: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
     const itemsLimit = useUnit(settingsModel.$homeUpcomingDeliveriesCount);
 
-    // Simulated states (example purposes)
-    const [isEmpty, isUpdating, hasError] = useUnit([
-        $$empty,
-        $inPending,
-        $$hasError,
-    ]);
+    const { isInit, isEmpty, isUpdating, hasError } = useUnit({
+        isInit: $isInitialized,
+        isEmpty: $$empty,
+        isUpdating: $inPending,
+        hasError: $$hasError,
+    });
 
     const items = useList($deliveriesStore, (delivery, index) => {
         const deliveryId = getDeliveryNumber(delivery);
@@ -143,9 +143,11 @@ export const MyDeliveriesRow: FunctionComponent = () => {
         );
     });
 
+    if (!isInit) return <Loading />;
+
     if (isEmpty) {
         if (hasError) return <ErrorInitPlaceholder />;
-        if (isUpdating) return <LoadPlaceholder />;
+        if (isUpdating) return <Loading />;
         return <EmptyItemsPlaceholder />;
     }
 

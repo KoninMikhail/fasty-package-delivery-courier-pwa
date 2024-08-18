@@ -1,6 +1,12 @@
 import { makeApi, makeErrors } from '@zodios/core';
 import { z } from 'zod';
-import { deliverySchema, deliveryStateSchema } from '../schemas';
+import { transformPathToUrl } from '@/shared/api/uilts/transformPathToUrl';
+import {
+    changeDeliveryStateSchema,
+    deliverySchema,
+    historyDeliverySchema,
+    upcomingDeliverySchema,
+} from '../schemas';
 
 export const deliveriesErrors = makeErrors([
     {
@@ -54,14 +60,7 @@ export const deliveriesApi = makeApi([
                 schema: z.number().optional(),
             },
         ],
-        response: z.array(
-            deliverySchema.omit({
-                manager: true,
-                courier: true,
-                client: true,
-                contact: true,
-            }),
-        ),
+        response: z.array(upcomingDeliverySchema),
         errors: deliveriesErrors,
     },
     {
@@ -69,7 +68,30 @@ export const deliveriesApi = makeApi([
         path: '/item/:deliveryId',
         alias: 'fetchDeliveryById',
         description: 'Fetch a delivery by its ID',
-        response: deliverySchema,
+        response: deliverySchema.transform((delivery) => {
+            const managerAvatarUrl = delivery.manager.avatar_src;
+            const courierAvatarUrl = delivery.courier?.avatar_src;
+            if (managerAvatarUrl || courierAvatarUrl) {
+                return {
+                    ...delivery,
+                    manager: {
+                        ...delivery.manager,
+                        avatar_src: managerAvatarUrl
+                            ? transformPathToUrl(managerAvatarUrl)
+                            : null,
+                    },
+                    courier: delivery.courier
+                        ? {
+                              ...delivery.courier,
+                              avatar_src: courierAvatarUrl
+                                  ? transformPathToUrl(courierAvatarUrl)
+                                  : null,
+                          }
+                        : null,
+                };
+            }
+            return delivery;
+        }),
         errors: deliveriesErrors,
     },
     {
@@ -78,7 +100,30 @@ export const deliveriesApi = makeApi([
         alias: 'assignUserToDelivery',
         description: 'Assign a user to a delivery',
         parameters: [],
-        response: deliverySchema,
+        response: deliverySchema.transform((delivery) => {
+            const managerAvatarUrl = delivery.manager.avatar_src;
+            const courierAvatarUrl = delivery.courier?.avatar_src;
+            if (managerAvatarUrl || courierAvatarUrl) {
+                return {
+                    ...delivery,
+                    manager: {
+                        ...delivery.manager,
+                        avatar_src: managerAvatarUrl
+                            ? transformPathToUrl(managerAvatarUrl)
+                            : null,
+                    },
+                    courier: delivery.courier
+                        ? {
+                              ...delivery.courier,
+                              avatar_src: courierAvatarUrl
+                                  ? transformPathToUrl(courierAvatarUrl)
+                                  : null,
+                          }
+                        : null,
+                };
+            }
+            return delivery;
+        }),
     },
     {
         method: 'patch',
@@ -89,13 +134,33 @@ export const deliveriesApi = makeApi([
             {
                 type: 'Body',
                 name: 'Body',
-                schema: z.object({
-                    state: deliveryStateSchema,
-                    comment: z.string(),
-                }),
+                schema: changeDeliveryStateSchema,
             },
         ],
-        response: deliverySchema,
+        response: deliverySchema.transform((delivery) => {
+            const managerAvatarUrl = delivery.manager.avatar_src;
+            const courierAvatarUrl = delivery.courier?.avatar_src;
+            if (managerAvatarUrl || courierAvatarUrl) {
+                return {
+                    ...delivery,
+                    manager: {
+                        ...delivery.manager,
+                        avatar_src: managerAvatarUrl
+                            ? transformPathToUrl(managerAvatarUrl)
+                            : null,
+                    },
+                    courier: delivery.courier
+                        ? {
+                              ...delivery.courier,
+                              avatar_src: courierAvatarUrl
+                                  ? transformPathToUrl(courierAvatarUrl)
+                                  : null,
+                          }
+                        : null,
+                };
+            }
+            return delivery;
+        }),
         errors: deliveriesErrors,
     },
     {
@@ -103,7 +168,32 @@ export const deliveriesApi = makeApi([
         path: '/my',
         alias: 'getMyDeliveries',
         description: 'Fetch active deliveries',
-        response: z.array(deliverySchema),
+        response: z.array(deliverySchema).transform((deliveries) => {
+            return deliveries.map((delivery) => {
+                const managerAvatarUrl = delivery.manager.avatar_src;
+                const courierAvatarUrl = delivery.courier?.avatar_src;
+                if (managerAvatarUrl || courierAvatarUrl) {
+                    return {
+                        ...delivery,
+                        manager: {
+                            ...delivery.manager,
+                            avatar_src: managerAvatarUrl
+                                ? transformPathToUrl(managerAvatarUrl)
+                                : null,
+                        },
+                        courier: delivery.courier
+                            ? {
+                                  ...delivery.courier,
+                                  avatar_src: courierAvatarUrl
+                                      ? transformPathToUrl(courierAvatarUrl)
+                                      : null,
+                              }
+                            : null,
+                    };
+                }
+                return delivery;
+            });
+        }),
         errors: deliveriesErrors,
     },
     {
@@ -111,12 +201,7 @@ export const deliveriesApi = makeApi([
         path: '/history',
         alias: 'getDeliveriesHistory',
         description: 'Fetch deliveries history',
-        response: z.array(
-            deliverySchema.omit({
-                courier: true,
-                manager: true,
-            }),
-        ),
+        response: z.array(historyDeliverySchema),
         parameters: [
             {
                 name: 'page',

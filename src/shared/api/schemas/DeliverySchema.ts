@@ -3,7 +3,6 @@ import { contactSchema } from './ContactSchema';
 import { clientSchema } from './ClientSchema';
 import { userSchema } from './UserSchema';
 import { addressSchema } from './AddressSchema';
-import { createPaginationSchema } from './PaginationSchema';
 
 export const deliveryStateSchema = z.union([
     z.literal('created'),
@@ -33,19 +32,28 @@ export const deliverySchema = z.object({
     address: addressSchema,
 });
 
-export const deliveryPaginationSchema = createPaginationSchema(deliverySchema);
-export const GetAvailableDeliveriesParametersSchema = z.void().or(
-    z.object({
-        fromDate: z.string(),
-        toDate: z.string(),
-        car: z.boolean().optional(),
-        express: z.boolean().optional(),
-        weightFrom: z.number().optional(),
-        weightTo: z.number().optional(),
-    }),
-);
-
-export const PatchDeliveryToCourierParametersSchema = z.object({
-    deliveryId: deliverySchema.pick({ id: true }).transform((data) => data.id),
-    userId: userSchema.pick({ id: true }).transform((data) => data.id),
+export const upcomingDeliverySchema = deliverySchema.omit({
+    manager: true,
+    courier: true,
+    client: true,
+    contact: true,
 });
+
+export const historyDeliverySchema = deliverySchema
+    .extend({
+        updatedAt: z.coerce.date(),
+    })
+    .omit({
+        courier: true,
+        manager: true,
+    });
+
+export const changeDeliveryStateSchema = z.object({
+    state: deliveryStateSchema,
+    comment: z.string(),
+});
+
+export type Delivery = z.infer<typeof deliverySchema>;
+export type DeliveryStates = Delivery['state'];
+export type HistoryDelivery = z.infer<typeof historyDeliverySchema>;
+export type UpcomingDelivery = z.infer<typeof upcomingDeliverySchema>;

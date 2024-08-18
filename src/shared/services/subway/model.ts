@@ -60,7 +60,7 @@ export const revalidateSubwayExpireStationsListFx = createEffect<
  * States
  */
 export const $isInit = createStore(false).on(initComplete, () => true);
-export const $error = createStore<Nullable<Error>>(null).reset(
+export const $error = createStore<Optional<Error>>(null).reset(
     getSubwayStationsListFx.done,
 );
 export const $hasErrors = $error.map((error) => error !== null);
@@ -72,7 +72,7 @@ export const $subwayStationsList = createStore<SubwayStation[]>([]).on(
     getSubwayStationsListFx.doneData,
     (_, payload) => payload,
 );
-const $subwayStationsCacheExpired = createStore<Nullable<boolean>>(null)
+const $subwayStationsCacheExpired = createStore<Optional<boolean>>(null)
     .on(revalidateSubwayExpireStationsListFx.doneData, (_, payload) => payload)
     .on(revalidateSubwayExpireStationsListFx.fail, () => true)
     .on(setExpireSubwayStationsListFx.done, () => false);

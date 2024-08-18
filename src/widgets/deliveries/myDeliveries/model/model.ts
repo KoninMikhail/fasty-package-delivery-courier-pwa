@@ -17,17 +17,29 @@ const { isEmpty } = sharedLibTypeGuards;
  * Events
  */
 export const init = createEvent();
-const initCompleted = createEvent();
 export const fetchData = createEvent();
 
 /**
  * init
  */
+const initCompleted = createEvent();
 
-const widgetInitialized = createStore<boolean>(false).on(
+export const $isInitialized = createStore<boolean>(false).on(
     initCompleted,
-    () => true,
+    () => false,
 );
+
+sample({
+    clock: init,
+    source: $isInitialized,
+    filter: (initialized) => !initialized,
+    target: fetchData,
+});
+
+sample({
+    clock: getMyDeliveriesFx.done,
+    target: initCompleted,
+});
 
 /**
  * State
@@ -49,12 +61,6 @@ export const $$hasError = $error.map((error) => !isEmpty(error));
 /**
  * Initial data fetching
  */
-sample({
-    clock: init,
-    source: widgetInitialized,
-    filter: (initialized) => !initialized,
-    target: [fetchData, initCompleted],
-});
 
 sample({
     clock: fetchData,

@@ -11,7 +11,7 @@ import {
 /* eslint-disable react/jsx-props-no-spreading */
 
 interface IUserCardRowProperties {
-    user: Nullable<User>;
+    user: Optional<User>;
     size?: 'lg' | 'md' | 'sm';
     avatarPosition?: 'left' | 'right';
 }

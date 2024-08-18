@@ -1,4 +1,4 @@
-import { Delivery } from '@/shared/api';
+import { UpcomingDelivery } from '@/shared/api';
 import {
     Button,
     Card,
@@ -79,10 +79,10 @@ const DeliveryChips: FunctionComponent<{
 };
 
 const DeliverySchedule: FunctionComponent<{
-    value: string;
+    value?: string;
 }> = ({ value }) => (
     <div>
-        <span className="text-small text-default-500">{value}</span>
+        <span className="text-small text-default-500">{value ?? ''}</span>
     </div>
 );
 
@@ -135,7 +135,7 @@ const MoreButton: FunctionComponent<{
  * View
  */
 export const DeliveryMarketCard: FunctionComponent<{
-    delivery: Delivery;
+    delivery: UpcomingDelivery;
     featureSlot?: ReactNode;
 }> = ({ delivery, featureSlot }) => {
     const navigate = useNavigate();
