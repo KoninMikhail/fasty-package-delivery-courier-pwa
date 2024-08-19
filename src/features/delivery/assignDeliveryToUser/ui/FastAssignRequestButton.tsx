@@ -13,12 +13,18 @@ import { useState } from 'react';
 import { FaCheck } from 'react-icons/fa';
 import { BiSolidError } from 'react-icons/bi';
 import { useUnit } from 'effector-react';
-import type { User } from '@/shared/api';
+import { useTranslation } from 'react-i18next';
 import { factory } from '../model/model';
+import {
+    BUTTON_LABEL_CANCEL,
+    BUTTON_LABEL_CONFIRM,
+    LABEL_ASSIGN_DELIVERY,
+    translationNS,
+} from '../config';
 
 interface RequestButtonProperties {
-    delivery: Delivery;
-    user: Optional<User>;
+    deliverySystemId: Delivery['id'];
+    deliveryId: Delivery['deliveryId'];
     popoverProps?: Pick<PopoverProps, 'placement' | 'backdrop'>;
     buttonProps?: Omit<
         ButtonProps,
@@ -29,13 +35,14 @@ interface RequestButtonProperties {
 export const FastAssignRequestButton = modelView(
     factory,
     ({
-        delivery,
-        user,
+        deliverySystemId,
+        deliveryId,
         popoverProps,
         buttonProps,
         ...rest
     }: RequestButtonProperties) => {
         const model = factory.useModel();
+        const { t } = useTranslation(translationNS);
 
         const [isOpen, setIsOpen] = useState<boolean>(false);
         const [assignedItems, assignPressed, assignConfirmed, assignRejected] =
@@ -48,16 +55,16 @@ export const FastAssignRequestButton = modelView(
             ]);
 
         const isProcessing = useUnit(model.$processing);
-        const isAssigned = delivery
-            ? assignedItems.includes(delivery.id)
+        const isAssigned = deliverySystemId
+            ? assignedItems.includes(deliverySystemId)
             : false;
         const isError = false;
 
-        const deliveryId = delivery.id.toString().padStart(6, '0');
+        const labelDeliveryId = deliveryId.toString().padStart(6, '0');
 
         const onOpenChange = (open: boolean): void => {
-            if (open && delivery && user) {
-                assignPressed({ delivery, user });
+            if (open && deliverySystemId) {
+                assignPressed(deliverySystemId);
                 setIsOpen(true);
             } else {
                 assignRejected();
@@ -110,19 +117,21 @@ export const FastAssignRequestButton = modelView(
                 <PopoverContent>
                     <div className="flex flex-col gap-2 px-1 py-2">
                         <div className="max-w-48 text-center text-2xl font-bold text-content3">
-                            {`#${deliveryId}`}
+                            {`#${labelDeliveryId}`}
                         </div>
                         <div className="max-w-48 text-center font-bold">
-                            Уверены, что хотите начать эту доставку?
+                            {t(LABEL_ASSIGN_DELIVERY)}
                         </div>
                         <div className="flex flex-col gap-2">
-                            <Button onPress={onPressReject}>Cancel</Button>
+                            <Button onPress={onPressReject}>
+                                {t(BUTTON_LABEL_CANCEL)}
+                            </Button>
                             <Button
                                 isLoading={isProcessing}
                                 onPress={onPressAssign}
                                 color="primary"
                             >
-                                Confirm
+                                {t(BUTTON_LABEL_CONFIRM)}
                             </Button>
                         </div>
                     </div>

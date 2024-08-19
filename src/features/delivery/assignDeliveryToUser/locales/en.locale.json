@@ -1,4 +1,7 @@
 {
-  "button.label": "Assign with me",
-  "button.label.assigned": "Assigned"
+  "button.label.assignWithMe": "Assign with me",
+  "button.label.assigned": "Assigned",
+  "label.alert.beforeAssign": "Are you sure you want to assign this delivery ?",
+  "button.label.confirm": "Confirm",
+    "button.label.cancel": "Cancel"
 }

@@ -113,9 +113,9 @@ const DeliveryAddress: FunctionComponent<{ address: string }> = ({
 }) => {
     const { t } = useTranslation(translationNS);
     return (
-        <div>
+        <div className="min-h-16">
             <div className="font-bold">{t(LABEL_ADDRESS)}</div>
-            <div className="text-sm">{address}</div>
+            <div className="line-clamp-2 text-sm">{address}</div>
         </div>
     );
 };

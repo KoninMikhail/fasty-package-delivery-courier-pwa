@@ -5,18 +5,15 @@ import { useTranslation } from 'react-i18next';
 import { Delivery } from '@/shared/api';
 import { BiSolidError } from 'react-icons/bi';
 import { useUnit } from 'effector-react';
-import type { User } from '@/shared/api';
-import { translationNS } from '../config';
+import {
+    BUTTON_LABEL_ALREADY_ASSIGNED,
+    BUTTON_LABEL_ASSIGN_WITH_ME,
+    translationNS,
+} from '../config';
 import { factory } from '../model/model';
 
-const TRANSLATION = {
-    LABEL_TO_ASSIGN: 'button.label',
-    LABEL_ASSIGNED: 'button.label.assigned',
-};
-
 interface RequestButtonProperties {
-    delivery: Delivery;
-    user: Optional<User>;
+    deliverySystemId: Delivery['id'];
     buttonProps?: Omit<
         ButtonProps,
         'onPress' | 'isLoading' | 'isDisabled' | 'children' | 'isIconOnly'
@@ -25,7 +22,7 @@ interface RequestButtonProperties {
 
 export const AssignRequestButton = modelView(
     factory,
-    ({ delivery, user, buttonProps, ...rest }: RequestButtonProperties) => {
+    ({ deliverySystemId, buttonProps, ...rest }: RequestButtonProperties) => {
         const model = factory.useModel();
         const { t } = useTranslation(translationNS);
         const [assignedItems, assignPressed, assignConfirmed] = useUnit([
@@ -35,14 +32,14 @@ export const AssignRequestButton = modelView(
         ]);
 
         const isProcessing = useUnit(model.$processing);
-        const isAssigned = delivery
-            ? assignedItems.includes(delivery.id)
+        const isAssigned = deliverySystemId
+            ? assignedItems.includes(deliverySystemId)
             : false;
         const isError = false;
 
         const onPress = (): void => {
-            if (delivery && user) {
-                assignPressed({ delivery, user });
+            if (deliverySystemId) {
+                assignPressed(deliverySystemId);
                 setTimeout(() => {
                     assignConfirmed();
                 }, 300);
@@ -52,7 +49,7 @@ export const AssignRequestButton = modelView(
         if (isAssigned) {
             return (
                 <Button {...buttonProps} {...rest}>
-                    {t(TRANSLATION.LABEL_ASSIGNED)}
+                    {t(BUTTON_LABEL_ALREADY_ASSIGNED)}
                 </Button>
             );
         }
@@ -75,7 +72,7 @@ export const AssignRequestButton = modelView(
                 {isError ? (
                     <BiSolidError className="text-md" />
                 ) : (
-                    t(TRANSLATION.LABEL_TO_ASSIGN)
+                    t(BUTTON_LABEL_ASSIGN_WITH_ME)
                 )}
             </Button>
         );

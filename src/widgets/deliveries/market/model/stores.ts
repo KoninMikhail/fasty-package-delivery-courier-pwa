@@ -1,5 +1,5 @@
 import { createEvent, createStore } from 'effector';
-import { UpcomingDelivery } from '@/shared/api';
+import { DeliveryType, UpcomingDelivery } from '@/shared/api';
 import { DatePeriod } from '@/shared/ui/components/forms/horizontal-date-picker/types';
 import { isAfter } from 'date-fns';
 import { MAX_WEIGHT_KG } from '../config';
@@ -29,8 +29,9 @@ export const $outputDeliveriesStore = createStore<UpcomingDelivery[]>([])
  */
 export const datesRangePicked = createEvent<DatePeriod>();
 export const expressChanged = createEvent<boolean>();
-export const deliveryTypeChanged = createEvent<'car' | 'foot' | 'unset'>();
+export const deliveryTypeChanged = createEvent<DeliveryType>();
 export const weightRangeSelected = createEvent<[number, number]>();
+export const weightRangeChanged = createEvent();
 
 export const filtersChanged = createEvent();
 export const resetFilters = createEvent();
@@ -59,8 +60,11 @@ export const $express = createStore<boolean>(false)
     .on(expressChanged, (_, payload) => payload)
     .reset(resetFilters);
 
-export const $deliveryType = createStore<Set<'car' | 'foot' | 'unset'>>(
-    new Set(['unset']),
-)
-    .on(deliveryTypeChanged, (_, selection) => selection)
+export const $deliveryType = createStore<Set<DeliveryType>>(new Set(['unset']))
+    .on(deliveryTypeChanged, (state, selection) => {
+        const newState = new Set(state);
+        newState.clear();
+        newState.add(selection);
+        return newState;
+    })
     .reset(resetFilters);

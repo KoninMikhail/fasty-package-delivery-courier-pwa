@@ -6,7 +6,6 @@ import { PropsWithChildren } from 'react';
 import { Spacer } from '@nextui-org/react';
 import { AssignDeliveryWithMe } from '@/features/delivery/assignDeliveryToUser';
 import { useUnit } from 'effector-react';
-import { sessionModel } from '@/entities/viewer';
 import { useTranslation } from 'react-i18next';
 import { enUS, ru } from 'date-fns/locale';
 import {
@@ -164,7 +163,6 @@ export const DeliveryStatusControlWithTimeline: FunctionComponent = () => {
     const createDate = useUnit($$deliveryCreateDate);
     const updateDate = useUnit($$deliveryUpdateDate);
     const comment = useUnit($$deliveryComment);
-    const user = useUnit(sessionModel.$viewerProfileData);
 
     if (status === 'created') {
         return (
@@ -174,8 +172,7 @@ export const DeliveryStatusControlWithTimeline: FunctionComponent = () => {
                 </StatusList>
                 <AssignDeliveryWithMe.AssignRequestButton
                     model={assignToDeliveryModel}
-                    user={user}
-                    delivery={delivery}
+                    deliverySystemId={delivery.id}
                 />
             </Root>
         );

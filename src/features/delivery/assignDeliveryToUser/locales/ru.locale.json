@@ -1,4 +1,7 @@
 {
-  "button.label": "Взять доставку",
-  "button.label.assigned": "Уже моя доставка"
+  "button.label.assignWithMe": "Взять доставку",
+  "button.label.assigned": "Уже моя доставка",
+  "label.alert.beforeAssign": "Вы уверены, что хотите взять эту доставку ?",
+  "button.label.confirm": "Подтвердить",
+    "button.label.cancel": "Отмена"
 }

@@ -11,3 +11,5 @@ export const LABEL_CARGO_WEIGHT_POPOVER_RANGE_LABEL_KEY =
 export const VALUE_WRAPPER_KEY = 'value.weight';
 export const CONTENT_TEXT_SELECT_WEIGHT = 'content.weight.text.selectWeight';
 export const CONTENT_TEXT_WEIGHT_RANGE = 'content.weight.text.inRange';
+export const LABEL_NO_DELIVERIES = 'label.noDeliveries';
+export const LABEL_OFFLINE = 'label.offline';

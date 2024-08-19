@@ -96,7 +96,7 @@ export const deliveriesApi = makeApi([
     },
     {
         method: 'post',
-        path: '/item/:deliveryId/assign/:userId',
+        path: '/item/:deliveryId/assign',
         alias: 'assignUserToDelivery',
         description: 'Assign a user to a delivery',
         parameters: [],
