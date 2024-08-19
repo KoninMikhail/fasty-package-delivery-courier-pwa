@@ -15,11 +15,6 @@ export {
 } from './config';
 
 /**
- * Effects
- */
-export * from './effects/fetchAvailableDeliveriesFx';
-
-/**
  * Utils
  */
 export { isDeliveryAssignedToCourier } from './lib/guards/isDeliveryAssignedToCourier';

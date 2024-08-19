@@ -1,6 +1,11 @@
 import { Model, modelFactory } from 'effector-factorio';
 import { createEvent, createStore, Effect, sample, Store } from 'effector';
 import { pending } from 'patronum';
+import { sharedLibTypeGuards } from '@/shared/lib';
+import httpStatus from 'http-status';
+import axios from 'axios';
+
+const { isEmpty } = sharedLibTypeGuards;
 
 interface FactoryOptions<T extends Pagination, Pagination, Payload> {
     provider: Effect<T, Payload>;
@@ -30,7 +35,20 @@ export const factory = modelFactory(
                 payload,
             ])
             .reset([reset, options.provider.done]);
-        const $$hasErrors = $errors.map((errors) => errors.length > 0);
+
+        const $$hasCriticalErrors = $errors.map((errors) => {
+            const criticalErrorCodes = new Set([
+                httpStatus.INTERNAL_SERVER_ERROR,
+                httpStatus.BAD_REQUEST,
+                httpStatus.BAD_GATEWAY,
+            ]) as Set<number>;
+            return errors.some((error) => {
+                if (axios.isAxiosError(error)) {
+                    return criticalErrorCodes.has(error.response?.status ?? 0);
+                }
+                return false;
+            });
+        });
 
         /**
          * Handlers
@@ -65,7 +83,8 @@ export const factory = modelFactory(
             deliveriesFetched,
             deliveriesFetchFailed,
             $pending,
-            $$hasErrors,
+            $errors,
+            $$hasCriticalErrors,
         };
     },
 );

@@ -8,5 +8,7 @@
   "value.weight": "{{value}}кг",
   "content.weight.text.selectWeight": "Выберите вес",
   "content.weight.text.inRange": "в заданном диапазоне",
-  "label.express": "Cрочно"
+  "label.express": "Cрочно",
+  "label.noDeliveries": "Пока нет доступных доставок",
+  "label.offline": "Нет интернет соединения"
 }

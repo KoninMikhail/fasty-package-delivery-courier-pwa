@@ -79,7 +79,7 @@ define(['./workbox-ddf0a90e'], (function (workbox) { 'use strict';
    */
   workbox.precacheAndRoute([{
     "url": "index.html",
-    "revision": "0.v1oajgn0rtg"
+    "revision": "0.ub21l97il28"
   }], {});
   workbox.cleanupOutdatedCaches();
   workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
@@ -103,11 +103,11 @@ define(['./workbox-ddf0a90e'], (function (workbox) { 'use strict';
       statuses: [0, 200]
     })]
   }), 'GET');
-  workbox.registerRoute(/^(.*\/deliveries\/history)(\?(?=.*from=)(?=.*to=).*)?$/i, new workbox.StaleWhileRevalidate({
+  workbox.registerRoute(/^(.*\/deliveries\/history.*)?$/i, new workbox.StaleWhileRevalidate({
     "cacheName": "deliveries-history-cache",
     plugins: [new workbox.ExpirationPlugin({
       maxEntries: 200,
-      maxAgeSeconds: 2592000
+      maxAgeSeconds: 21600
     }), new workbox.CacheableResponsePlugin({
       statuses: [0, 200]
     })]

@@ -1,24 +1,23 @@
 import { PropsWithChildren } from 'react';
 import { DeliveryMarketCard } from '@/entities/delivery';
 import { useList, useUnit } from 'effector-react';
-import { Button, Skeleton, Spacer } from '@nextui-org/react';
+import { Skeleton } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { RiWifiOffLine } from 'react-icons/ri';
 import { AssignDeliveryWithMe } from '@/features/delivery/assignDeliveryToUser';
 import { sessionModel } from '@/entities/viewer';
-import { useTranslation } from 'react-i18next';
-import { GoAlert } from 'react-icons/go';
-import { AiOutlineReload } from 'react-icons/ai';
 import { BsBoxSeam } from 'react-icons/bs';
 import { InfiniteScroll } from '@/features/other/infinite-scroll';
-import { $hasErrors } from '@/shared/services/subway';
-import { $outputDeliveriesStore } from '@/widgets/deliveries/market/model/stores';
+import { useTranslation } from 'react-i18next';
+import { LABEL_NO_DELIVERIES, LABEL_OFFLINE, translationNS } from '../config';
+import { $outputDeliveriesStore } from '../model/stores';
 import {
     InfiniteScrollModel,
     assignDeliveryToUserModel,
     $isDeliveriesLoading,
     $isInitialized,
     $hasNoDeliveries,
+    $isFirstPage,
 } from '../model';
 
 /* eslint-disable unicorn/consistent-function-scoping */
@@ -27,7 +26,7 @@ import {
  * Layout
  */
 const Root: FunctionComponent<PropsWithChildren> = ({ children }) => (
-    <div className="flex w-full flex-col gap-6 pb-24">{children}</div>
+    <div className="flex w-full flex-col gap-6 pb-36">{children}</div>
 );
 const EaseIn: FunctionComponent<PropsWithChildren & { isFirst: boolean }> = ({
     children,
@@ -70,44 +69,27 @@ const Loading: FunctionComponent = () => {
         </Root>
     );
 };
-const Error: FunctionComponent = () => {
-    const { t } = useTranslation();
-    return (
-        <Root>
-            <div className="block p-4">
-                <div className="flex h-44 w-full flex-col items-center justify-center gap-1 p-4">
-                    <GoAlert className="text-6xl text-content3" />
-                    <div className="text-content3">
-                        {t('MESSAGE_ERROR_DATA_KEY')}
-                    </div>
-                    <Spacer y={1} />
-                    <Button size="sm">
-                        <AiOutlineReload />
-                        {t('BUTTON_ERROR_LABEL_RETRY_KEY')}
-                    </Button>
-                </div>
-            </div>
-        </Root>
-    );
-};
+
 const Offline: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
     return (
         <div className="block p-4">
             <div className="flex h-56 w-full flex-col items-center justify-center gap-4 pb-24">
                 <RiWifiOffLine className="text-5xl text-content3" />
-                <div className="text-content3">No internet connection</div>
+                <div className="text-content3">{t(LABEL_OFFLINE)}</div>
             </div>
         </div>
     );
 };
 const Empty: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
     return (
         <Root>
             <div className="block p-4">
                 <div className="flex h-56 w-full flex-col items-center justify-center gap-4 p-4 pb-24">
                     <BsBoxSeam className="text-5xl text-content3" />
                     <div className="w-full text-center text-content3">
-                        Пока нет доступных доставок
+                        {t(LABEL_NO_DELIVERIES)}
                     </div>
                 </div>
             </div>
@@ -124,11 +106,11 @@ export const MarketContent: FunctionComponent = () => {
     const online = useUnit(sessionModel.$$isOnline);
     const viewer = useUnit(sessionModel.$viewerProfileData);
 
-    const { isInit, isPending, hasErrors, isEmpty } = useUnit({
+    const { isInit, isPending, isEmpty, isFirstPage } = useUnit({
         isInit: $isInitialized,
         isPending: $isDeliveriesLoading,
-        hasErrors: $hasErrors,
         isEmpty: $hasNoDeliveries,
+        isFirstPage: $isFirstPage,
     });
 
     const content = useList($outputDeliveriesStore, (delivery, index) => (
@@ -138,8 +120,8 @@ export const MarketContent: FunctionComponent = () => {
                 featureSlot={
                     <AssignDeliveryWithMe.FastAssignRequestButton
                         model={assignDeliveryToUserModel}
-                        user={viewer}
-                        delivery={delivery}
+                        deliverySystemId={delivery.id}
+                        deliveryId={delivery.deliveryId}
                     />
                 }
             />
@@ -147,24 +129,22 @@ export const MarketContent: FunctionComponent = () => {
     ));
 
     if (!isInit) return <Loading />;
-    if (!online) {
-        return <Offline />;
-    }
-    if (isPending) {
-        return <Loading />;
-    }
-    if (hasErrors) {
-        return <Error />;
-    }
-    if (isEmpty) {
-        return <Empty />;
-    }
+    if (!online) return <Offline />;
+    if (isPending && isFirstPage) return <Loading />;
+    if (isEmpty) return <Empty />;
+
+    const paginationAllowed = isInit && !isPending && !isEmpty;
+
     return (
         <Root>
-            <div className="relative grid grid-cols-1 gap-4 lg:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 4xl:grid-cols-5 5xl:grid-cols-6">
+            <div className="relative grid grid-cols-1 gap-4 md:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 4xl:grid-cols-5 5xl:grid-cols-6">
                 {content}
             </div>
-            <InfiniteScroll.Trigger model={InfiniteScrollModel} />
+            <InfiniteScroll.Trigger
+                model={InfiniteScrollModel}
+                allowed={paginationAllowed}
+            />
+            <InfiniteScroll.Spinner model={InfiniteScrollModel} />
         </Root>
     );
 };

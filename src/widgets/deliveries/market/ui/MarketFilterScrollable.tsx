@@ -14,9 +14,10 @@ import {
     Slider,
 } from '@nextui-org/react';
 import { FaCar, FaFireAlt } from 'react-icons/fa';
-import { useMemo, useState } from 'react';
+import { Key, useMemo, useState } from 'react';
 import { GiGymBag } from 'react-icons/gi';
 
+import { DeliveryType } from '@/shared/api';
 import {
     EXPRESS_LABEL_KEY,
     LABEL_ONCAR_KEY,
@@ -38,6 +39,7 @@ import {
     $weight,
     deliveryTypeChanged,
     expressChanged,
+    weightRangeChanged,
     weightRangeSelected,
 } from '../model/stores';
 
@@ -110,11 +112,17 @@ const DeliveryTypeSelector: FunctionComponent = () => {
     );
 
     const isSelected = selectedValue !== 'unset';
-    const icon = isSelected ? options[selectedValue.toLowerCase()].icon : null;
+    const icon = isSelected
+        ? options[selectedValue as DeliveryType].icon
+        : null;
 
     const label = isSelected
-        ? options[selectedValue.toLowerCase()].text
+        ? options[selectedValue as DeliveryType].text
         : t(LABEL_SELECT_TYPE_KEY);
+
+    const onSelectDeliveryType = (key: Key): void => {
+        onSelectKeys(key as DeliveryType);
+    };
 
     return (
         <Dropdown>
@@ -134,7 +142,7 @@ const DeliveryTypeSelector: FunctionComponent = () => {
                 disallowEmptySelection
                 selectionMode="single"
                 selectedKeys={selectedKeys}
-                onSelectionChange={onSelectKeys}
+                onAction={onSelectDeliveryType}
             >
                 {Object.keys(options).map((key) => (
                     <DropdownItem
@@ -152,9 +160,10 @@ const WeightSelector: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
 
     const [value, setValue] = useState<[number, number]>([0, MAX_WEIGHT_KG]);
-    const { selected, weightChanged } = useUnit({
+    const { selected, weightChanged, applied } = useUnit({
         selected: $weight,
         weightChanged: weightRangeSelected,
+        applied: weightRangeChanged,
     });
 
     const isSelected =
@@ -175,6 +184,8 @@ const WeightSelector: FunctionComponent = () => {
             weightChanged([range[0], range[1]]);
         }
     };
+
+    const onSliderChangeEnd = () => applied();
 
     return (
         <Popover placement="bottom" offset={20} showArrow>
@@ -204,6 +215,7 @@ const WeightSelector: FunctionComponent = () => {
                             minValue={0}
                             value={value}
                             onChange={onSliderChange}
+                            onChangeEnd={onSliderChangeEnd}
                             className="max-w-lg"
                         />
                         <p className="text-small font-medium text-default-500">

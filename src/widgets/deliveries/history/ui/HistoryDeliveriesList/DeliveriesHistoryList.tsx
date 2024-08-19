@@ -9,11 +9,8 @@ import {
     getLocaledDate,
     getSuccessDeliveriesCountText,
 } from '../../lib';
-import {
-    $isInitialized,
-    $sortedDeliveriesHistory,
-    InfiniteScrollModel,
-} from '../../model';
+import { $isInitialized, InfiniteScrollModel } from '../../model';
+import { $$sortedDeliveriesHistory } from '../../model/stores';
 
 /**
  * Layout component for displaying a single history item.
@@ -39,18 +36,12 @@ const HistoryItemLayout: FunctionComponent<PropsWithChildren> = ({
     </li>
 );
 
-const PaginationTrigger: FunctionComponent = () => {
-    const isInit = useUnit($isInitialized);
-    if (!isInit) return null;
-    return <InfiniteScroll.Trigger model={InfiniteScrollModel} />;
-};
-
 /**
  * Component for displaying a list of deliveries history with accordion and infinite scrolling.
  */
 export const DeliveriesHistoryList: FunctionComponent = () => {
-    const history = useUnit($sortedDeliveriesHistory);
-
+    const isInit = useUnit($isInitialized);
+    const history = useUnit($$sortedDeliveriesHistory);
     const renderHistoryItems = history.map(
         ({ count, canceled, date, items }) => {
             const title = getLocaledDate(date);
@@ -115,7 +106,10 @@ export const DeliveriesHistoryList: FunctionComponent = () => {
             >
                 {renderHistoryItems}
             </Accordion>
-            <PaginationTrigger />
+            <InfiniteScroll.Trigger
+                model={InfiniteScrollModel}
+                allowed={isInit}
+            />
         </div>
     );
 };

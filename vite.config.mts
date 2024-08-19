@@ -163,13 +163,13 @@ export default defineConfig(({ mode }) => ({
                 }
               }
             }, {
-              urlPattern: /^(.*\/deliveries\/history)(\?(?=.*from=)(?=.*to=).*)?$/i,
+              urlPattern: /^(.*\/deliveries\/history.*)?$/i,
               handler: "StaleWhileRevalidate",
               options: {
                 cacheName: "deliveries-history-cache",
                 expiration: {
                   maxEntries: 200,
-                  maxAgeSeconds: 60 * 60 * 24 * 30 // <== 30 days
+                  maxAgeSeconds: 60 * 60 * 6 // <== 6 Hours
                 },
                 cacheableResponse: {
                   statuses: [0, 200]

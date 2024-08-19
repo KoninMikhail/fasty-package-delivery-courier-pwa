@@ -8,5 +8,7 @@
   "value.weight": "{{value}}kg",
   "content.weight.text.selectWeight": "Select a weight",
   "content.weight.text.inRange": "within a given range",
-  "label.express": "Express"
+  "label.express": "Express",
+  "label.noDeliveries": "No deliveries available yet",
+  "label.offline": "No internet connection"
 }

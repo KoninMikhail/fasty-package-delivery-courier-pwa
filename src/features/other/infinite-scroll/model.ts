@@ -1,6 +1,6 @@
 import { combine, createEvent, createStore, Effect, sample } from 'effector';
 import { modelFactory } from 'effector-factorio';
-import { debug, throttle } from 'patronum';
+import { throttle } from 'patronum';
 import { sharedLibTypeGuards } from '@/shared/lib';
 
 const { isEmpty } = sharedLibTypeGuards;
@@ -35,6 +35,7 @@ export const factory = modelFactory(
         const $lastPageLoaded = createStore<boolean>(false)
             .on(options.provider.doneData, (_, payload) => isEmpty(payload))
             .reset(reset);
+        const $isLoading = options.provider.pending;
 
         sample({
             clock: throttle(pageEndTriggered, options.throttleTimeoutInMs),
@@ -67,10 +68,10 @@ export const factory = modelFactory(
             target: $readyToLoadNewPage,
         });
 
-        debug($pagination);
-
         return {
             $pagination,
+            $isLoading,
+            $lastPageLoaded,
             pageEndTriggered,
             newPageRequested,
             reset,

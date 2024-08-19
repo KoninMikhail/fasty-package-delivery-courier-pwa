@@ -1,27 +1,22 @@
 import { modelFactory } from 'effector-factorio';
-import { combine, createEvent, createStore, Effect, sample } from 'effector';
-import { Delivery, User } from '@/shared/api';
-import { AssignUserToDeliveryParameters } from '@/entities/user';
+import { createEvent, createStore, Effect, sample } from 'effector';
+import { Delivery } from '@/shared/api';
 
 type FactoryOptions = {
-    assignToDeliveryFx: Effect<AssignUserToDeliveryParameters, Delivery, Error>;
+    assignToDeliveryFx: Effect<Delivery['id'], Delivery>;
 };
 
 export const factory = modelFactory((options: FactoryOptions) => {
-    const assignPressed = createEvent<{ delivery: Delivery; user: User }>();
+    const assignPressed = createEvent<Delivery['id']>();
     const assignConfirmed = createEvent();
     const assignCompleted = createEvent<Delivery['id']>();
     const assignRejected = createEvent();
 
-    const $user = createStore<Optional<User>>(null);
-    const $delivery = createStore<Optional<Delivery>>(null);
+    const $deliveryIdForAssign = createStore<Optional<Delivery['id']>>(null);
     const $assignedItems = createStore<Delivery['id'][]>([]);
 
-    $user
-        .on(assignPressed, (_, { user }) => user)
-        .on(assignRejected, () => null);
-    $delivery
-        .on(assignPressed, (_, { delivery }) => delivery)
+    $deliveryIdForAssign
+        .on(assignPressed, (_, payload) => payload)
         .on(assignRejected, () => null);
     $assignedItems.on(assignCompleted, (state, id) => [...state, id]);
 
@@ -33,23 +28,15 @@ export const factory = modelFactory((options: FactoryOptions) => {
 
     sample({
         clock: assignConfirmed,
-        source: combine($user, $delivery, (user, delivery) => ({
-            user,
-            delivery,
-        })),
-        filter: ({ user, delivery }) => !!user && !!delivery,
-        fn: ({ user, delivery }) => {
-            return {
-                userId: user!.id,
-                deliveryId: delivery!.id,
-            };
-        },
+        source: $deliveryIdForAssign,
+        filter: (deliveryId) => !!deliveryId,
+        fn: (deliveryId) => deliveryId as string,
         target: options.assignToDeliveryFx,
     });
 
     sample({
         clock: options.assignToDeliveryFx.done,
-        fn: (data) => data.params.deliveryId,
+        fn: (data) => data.params,
         target: assignCompleted,
     });
 
@@ -61,6 +48,6 @@ export const factory = modelFactory((options: FactoryOptions) => {
         assignCompleted,
         $assignedItems,
         $processing,
-        $delivery,
+        $delivery: $deliveryIdForAssign,
     };
 });

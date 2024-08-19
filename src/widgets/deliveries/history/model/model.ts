@@ -1,10 +1,15 @@
 import { createEvent, createStore, sample } from 'effector';
-import { compareDesc, format, parseISO } from 'date-fns';
 import { InfiniteScroll } from 'features/other/infinite-scroll';
 import { FetchDeliveriesByParameters } from '@/features/delivery/fetchDeliveriesByParams';
-import { delay } from 'patronum';
-import { HistoryDelivery } from '@/shared/api';
+import { and, condition, delay } from 'patronum';
+import { sessionModel } from '@/entities/viewer';
+import { $fetchedData, setDeliveriesHistory } from './stores';
 import { getDeliveriesHistoryFx } from './effects';
+
+/**
+ * Events
+ */
+export const init = createEvent();
 
 /**
  * Features
@@ -20,6 +25,7 @@ export const InfiniteScrollModel = InfiniteScroll.factory.createModel({
             page: query.page + 1,
         };
     },
+    shouldLoadNextPage: (data) => data.length > 0,
 });
 
 const fetchDeliveriesHistoryModel =
@@ -28,66 +34,40 @@ const fetchDeliveriesHistoryModel =
         pagination: InfiniteScrollModel.$pagination,
     });
 
-/**
- * Events
- */
-export const init = createEvent();
+sample({
+    clock: fetchDeliveriesHistoryModel.deliveriesFetched,
+    source: $fetchedData,
+    fn: (previous, next) => [...previous, ...next],
+    target: setDeliveriesHistory,
+});
+
+sample({
+    clock: delay(InfiniteScrollModel.newPageRequested, 300),
+    target: fetchDeliveriesHistoryModel.fetch,
+});
 
 /**
  * Initialize the model
  */
-export const $isInitialized = createStore(false);
+const initStarted = createEvent();
+const initCompleted = createEvent();
+export const $isInitialized = createStore(false).on(initCompleted, () => true);
+
+condition({
+    source: init,
+    if: and(sessionModel.$isAuthorized, sessionModel.$$isOnline),
+    then: initStarted,
+    else: initCompleted,
+});
 
 sample({
-    clock: init,
+    clock: initStarted,
     target: fetchDeliveriesHistoryModel.fetch,
 });
 
 sample({
     clock: delay(fetchDeliveriesHistoryModel.deliveriesFetched, 200),
-    fn: () => true,
-    target: $isInitialized,
-});
-
-/**
- * Data
- */
-
-const $fetchedData = createStore<HistoryDelivery[]>([]);
-
-sample({
-    clock: fetchDeliveriesHistoryModel.deliveriesFetched,
-    source: $fetchedData,
-    fn: (previous, next) => [...previous, ...next],
-    target: $fetchedData,
-});
-
-/**
- * Store the sorted deliveries history
- */
-export const $sortedDeliveriesHistory = $fetchedData.map((deliveriesSet) => {
-    const deliveries = [...deliveriesSet];
-    const groupedByDate: Record<string, HistoryDelivery[]> = {};
-
-    for (const delivery of deliveries) {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        const { updatedAt } = delivery;
-        const updatedAtFormatted = format(updatedAt, 'yyyy-MM-dd');
-
-        if (!groupedByDate[updatedAtFormatted])
-            groupedByDate[updatedAtFormatted] = [];
-        groupedByDate[updatedAtFormatted].push(delivery);
-    }
-
-    return Object.entries(groupedByDate)
-        .map(([date, items]) => {
-            return {
-                date,
-                count: items.length,
-                canceled: items.filter((item) => item.state === 'canceled')
-                    .length,
-                items,
-            };
-        })
-        .sort((a, b) => compareDesc(parseISO(a.date), parseISO(b.date)));
+    source: $isInitialized,
+    filter: (initialized) => !initialized,
+    target: initCompleted,
 });

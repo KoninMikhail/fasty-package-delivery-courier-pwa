@@ -11,6 +11,8 @@ export const deliveryStateSchema = z.union([
     z.literal('done'),
 ]);
 
+export const deliveryTypeSchema = z.enum(['car', 'foot', 'unset']);
+
 export const deliverySchema = z.object({
     id: z.string(),
     deliveryId: z.number(),
@@ -53,7 +55,16 @@ export const changeDeliveryStateSchema = z.object({
     comment: z.string(),
 });
 
+export const assignUserToDeliverySchema = z.object({
+    userId: z.string(),
+    deliveryId: z.string(),
+});
+
 export type Delivery = z.infer<typeof deliverySchema>;
 export type DeliveryStates = Delivery['state'];
 export type HistoryDelivery = z.infer<typeof historyDeliverySchema>;
 export type UpcomingDelivery = z.infer<typeof upcomingDeliverySchema>;
+export type DeliveryType = z.infer<typeof deliveryTypeSchema>;
+export type AssignUserToDeliveryRequest = z.infer<
+    typeof assignUserToDeliverySchema
+>;
