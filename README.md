@@ -222,7 +222,7 @@ We use `i18n` as our primary library to handle multilingual capabilities. This a
   - We organize our translations into multiple namespaces, making it easier to manage and scale our localization files.
 
 2. **Locale Folders:**
-  - Translations are segregated into JSON files based on their context (e.g., `entities/**/*`, `features/**/*`, `widgets/**/*`, etc.).
+  - Translations are segregated into JSON files based on their context (e.g., `entities/**/*/locale`, `features/**/*/locale`, `widgets/**/*/locale`, etc.).
   - This ensures that translations are neatly organized and modular.
 
 <br /><br />
