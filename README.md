@@ -117,9 +117,9 @@ With every donation you make - you're helping with development of this project. 
 #### OR CLICK BUTTON
 
 [![GitHub followers](https://img.shields.io/github/followers/koninmikhail.svg?style=social)](https://github.com/koninmikhail)
-[![GitHub stars](https://img.shields.io/github/stars/koninmikhail/social-analytics-dashboard-template.svg?style=social)](https://github.com/koninmikhail/social-analytics-dashboard-template/stargazers)
-[![GitHub watchers](https://img.shields.io/github/watchers/koninmikhail/social-analytics-dashboard-template.svg?style=social)](https://github.com/koninmikhail/social-analytics-dashboard-template/watchers)
-[![GitHub forks](https://img.shields.io/github/forks/koninmikhail/social-analytics-dashboard-template.svg?style=social)](https://github.com/koninmikhail/social-analytics-dashboard-template/network/members)
+[![GitHub stars](https://img.shields.io/github/stars/koninmikhail/fasty-package-delivery-courier-pwa.svg?style=social)](https://github.com/koninmikhail/fasty-package-delivery-courier-pwa/stargazers)
+[![GitHub watchers](https://img.shields.io/github/watchers/koninmikhail/fasty-package-delivery-courier-pwa.svg?style=social)](https://github.com/koninmikhail/fasty-package-delivery-courier-pwa/watchers)
+[![GitHub forks](https://img.shields.io/github/forks/koninmikhail/fasty-package-delivery-courier-pwa.svg?style=social)](https://github.com/koninmikhail/fasty-package-delivery-courier-pwa/network/members)
 
 <br /><br />
 
