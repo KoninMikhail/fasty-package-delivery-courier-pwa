@@ -209,7 +209,21 @@ The mechanism for determining if the user is online can be found in `@/entities/
 
 
 ## Multilingual Support
-uiuuiui
+
+Our project supports multiple languages, ensuring a localized experience for users worldwide. Below are the details of our multilingual implementation:
+
+### Language Provider: `i18n`
+
+We use `i18n` as our primary library to handle multilingual capabilities. This allows us to dynamically switch languages and handle translations efficiently.
+
+### Structure of Translations
+
+1. **Translation Namespaces (`translationNS`s):**
+  - We organize our translations into multiple namespaces, making it easier to manage and scale our localization files.
+
+2. **Locale Folders:**
+  - Translations are segregated into JSON files based on their context (e.g., `entities/**/*`, `features/**/*`, `widgets/**/*`, etc.).
+  - This ensures that translations are neatly organized and modular.
 
 <br /><br />
 
