@@ -81,7 +81,6 @@ Experience the future of delivery management with the Fasty App — where effici
   - [Request feature](#request-features-)
   - [Report bug](#report-bug-)
 - [Quick start](#quick-start)
-  - [Backend With Demo Data](#demo-backend)
   - [Requirements](#requirements)
   - [Installation](#installation)
   - [Running the App](#running-the-app)
@@ -104,6 +103,42 @@ Experience the future of delivery management with the Fasty App — where effici
 - [Contributing](#contributors)
 - [Buy Me A Coffee](#buy-me-a-coffee)
 - [License and Changelog](#license-and-changelog)
+
+
+<br /><br />
+
+<img align="left" src="https://raw.githubusercontent.com/KoninMikhail/fasty-package-delivery-courier-pwa/master/.repo/iconpack/qs.png" width="50px" />
+
+## Quick start
+
+### Requirements:
+>- **NodeJS:** 20 (My version at building time)
+>- **PNPM**
+>- **Yarn:** 1.22 (only if you doesnt have backend)
+
+### Installation
+
+> If you have your own backend:
+1. Clone this repository:
+2. Go to `fasty-package-delivery-courier-pwa` folder.
+3. Make `.env` from `.env.example` and past your data
+4. Install pnpm via `npm install -g pnpm`
+5. Install depends via `pnpm i`
+6. Build project -> `pnpm build` & Enjoy !
+7. (optional) If you need run on test web-server -> `pnpm preview`
+8. (optional) if you use `nginx` you can pass `dist` to config;
+
+> If you need backend with demoData:
+1. Register [Atlas](https://www.mongodb.com/products/platform/atlas-database) account and create mongodb database
+2. clone [Fasty.API](https://github.com/KoninMikhail/fasty-pwa-demo-api) 
+3. Go to `fasty-pwa-demo-api`
+4. Make `.env` from `.env.example` and past your settings
+5. Install yarn via `npm install -g yarn`
+6. Install deps `yarn install`;
+7. Seed demo data via `prisma db seed`.
+8. Start your backend `yarn dev` (start in dev mode)
+9. Return to upper guide & Enjoy it!
+
 
 <br /><br />
 
