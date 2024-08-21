@@ -256,7 +256,7 @@ jwt
 ## Delivery Management
 jwt
 
-<br /><br />
+<br /><br /> 
 
 <img align="left" src="https://github.com/KoninMikhail/fasty-package-delivery-courier-pwa/blob/main/.resources/icons/contributors.png" width="50px" />
 
