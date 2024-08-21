@@ -107,7 +107,7 @@ Experience the future of delivery management with the Fasty App — where effici
 
 <br /><br />
 
-<img align="left" src="https://raw.githubusercontent.com/KoninMikhail/fasty-package-delivery-courier-pwa/master/.repo/iconpack/qs.png" width="50px" />
+<img align="left" src="https://raw.githubusercontent.com/KoninMikhail/fasty-package-delivery-courier-pwa/master/.resources/icons/qs.png" width="50px" />
 
 ## Quick start
 
@@ -117,6 +117,7 @@ Experience the future of delivery management with the Fasty App — where effici
 >- **Yarn:** 1.22 (only if you doesnt have backend)
 
 ### Installation
+
 
 > If you have your own backend:
 1. Clone this repository:
