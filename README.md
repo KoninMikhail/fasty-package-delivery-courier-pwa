@@ -109,14 +109,14 @@ Experience the future of delivery management with the Fasty App — where effici
 
 <img align="left" src="https://raw.githubusercontent.com/KoninMikhail/fasty-package-delivery-courier-pwa/master/.resources/icons/qs.png" width="50px" />
 
-## Quick start
+# Quick start
 
-### Requirements:
+## Requirements:
 >- **NodeJS:** 20 (My version at building time)
 >- **PNPM**
 >- **Yarn:** 1.22 (only if you doesnt have backend)
 
-### Installation
+## Installation
 
 
 > If you have your own backend:
