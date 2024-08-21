@@ -27,9 +27,28 @@
 
 <br />
 
-# **About heading**
+Welcome to the Fasty App, a robust PWA designed to streamline delivery operations for couriers. Built with cutting-edge technologies like React, TypeScript, and Feature Sliced Design, our app is tailored to meet the dynamic needs of modern courier services.
 
-- <!-- ... [WHY DID YOU CREATED THIS PROJECT?, MOTIVATION, PURPOSE, DESCRIPTION, OBJECTIVES, etc] -->
+## Key Features:
+- **Day/Night Theme:** Seamlessly switch between day and night modes for optimal readability and user experience.
+- **Multilingual Support:** Effortlessly switch between Russian and English languages.
+- **Offline Capable:** Enjoy uninterrupted service with PWA capabilities, ensuring your deliveries are managed even without an active internet connection.
+- **Multi-Platform:** Access the app from mobile, tablet, or PC, ensuring a consistent experience across all devices.
+- **Courier Authentication:** Secure login for couriers to manage their deliveries.
+- **Delivery Selection:** Choose suitable deliveries from a list of upcoming tasks.
+- **My Deliveries:** View your current and scheduled deliveries easily.
+- **History:** Browse through completed deliveries for reference and record-keeping.
+- **Search Function:** Quickly find specific deliveries using the in-app search.
+- **Delivery Maps:** Utilize OpenStreetMap integration for precise navigation on the delivery page.
+- **Profile Management:** Edit your profile information and change your avatar quickly and intuitively.
+
+## Our Objectives:
+- **Rapid Deployment:** Quickly set up a comprehensive delivery service.
+- **Feature Sliced Design Best Practices:** Showcase the best practices in Feature Sliced Design for scalable and maintainable architecture.
+- **Easy Onboarding:** Facilitate rapid learning of the architecture for new developers.
+- **Collaboration-Friendly:** Enable users to suggest and contribute new functionalities.
+
+Experience the future of delivery management with the Fasty App — where efficiency meets innovation.
 
 <br />
 
