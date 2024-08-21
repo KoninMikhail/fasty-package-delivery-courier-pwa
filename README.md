@@ -20,7 +20,7 @@
     <a href="https://github.com/KoninMikhail/fasty-package-delivery-courier-pwa/pulls">
       <img src="https://img.shields.io/github/issues-pr/koninmikhail/social-analytics-dashboard-template?color=0088ff&style=for-the-badge&logo=github"  alt="KoninMikhail/ pull requests"/>
     </a>
-    <a href="https://case.mikekonin.com/fasty-package-delivery-courier-pwa/">
+    <a href="https://fasty-app.vercel.app/">
          <img src="https://img.shields.io/badge/ -live demo-blue?style=for-the-badge&color=important" alt="KoninMikhail/fasty-package-delivery-courier-pwa link to live demo.">
     </a>
 </div>
