@@ -148,10 +148,9 @@ Experience the future of delivery management with the Fasty App — where effici
 
 > Production with nginx
 - install `nginx` on your server
-- copy `dist` to `/usr/share/nginx/html
-- create nginx config file
+- copy `dist` to `/usr/share/nginx/html`
+- create nginx config file based on template
 
-template for config
 ```
 user nginx;
 
@@ -197,6 +196,20 @@ http {
     }
 }
 ```
+
+## Offline Mode
+
+The offline mode is enabled through the following mechanisms:
+- **Data Provider:** [Workbox by Google](https://developers.google.com/web/tools/workbox) for PWA capabilities.
+- **Connection Status Tracking:** Monitoring the internet connection status.
+
+Caching settings for requests can be found in `vite.config.mts`, allowing you to customize how data is cached and retrieved when offline.
+
+The mechanism for determining if the user is online can be found in `@/entities/viewer`, ensuring a seamless user experience even when the internet connection is interrupted.
+
+
+## Multilingual Support
+uiuuiui
 
 <br /><br />
 
