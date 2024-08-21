@@ -3,7 +3,7 @@
 
 # **Fasty - Package Delivery Courier PWA**
 
-> Using it for fast creation exchange of deliveries.
+> Empower your delivery management with my cutting-edge tool designed for rapid creation and seamless exchange of deliveries. Learn and apply best practices of Feature Sliced Design along the way..
 
 <div align="center">
   <!-- Change your logo -->
