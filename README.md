@@ -245,6 +245,21 @@ jwt
 
 <img align="left" src="https://github.com/KoninMikhail/fasty-package-delivery-courier-pwa/blob/main/.resources/icons/contributors.png" width="50px" />
 
+## Profile Management
+jwt
+
+<br /><br />
+
+
+<img align="left" src="https://github.com/KoninMikhail/fasty-package-delivery-courier-pwa/blob/main/.resources/icons/contributors.png" width="50px" />
+
+## Delivery Management
+jwt
+
+<br /><br />
+
+<img align="left" src="https://github.com/KoninMikhail/fasty-package-delivery-courier-pwa/blob/main/.resources/icons/contributors.png" width="50px" />
+
 ## Contributors
 
 I am <3 contributions big or small. If you help my project --> 🍰**link to your profile will be here**🍰.
