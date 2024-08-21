@@ -97,9 +97,6 @@ Experience the future of delivery management with the Fasty App — where effici
   - [Delivery History](#delivery-history)
   - [Search Functionality](#search-functionality)
   - [OpenStreetMap Integration](#openstreetmap-integration)
-- [Customization](#customization)
-  - [Themes](#themes)
-  - [Extending Functionality](#extending-functionality)
 - [Contributing](#contributors)
 - [Buy Me A Coffee](#buy-me-a-coffee)
 - [License and Changelog](#license-and-changelog)
@@ -224,6 +221,25 @@ We use `i18n` as our primary library to handle multilingual capabilities. This a
 2. **Locale Folders:**
   - Translations are segregated into JSON files based on their context (e.g., `entities/**/*/locale`, `features/**/*/locale`, `widgets/**/*/locale`, etc.).
   - This ensures that translations are neatly organized and modular.
+
+<br /><br />
+
+<img align="left" src="https://github.com/KoninMikhail/fasty-package-delivery-courier-pwa/blob/main/.resources/icons/contributors.png" width="50px" />
+
+## Architecture
+
+## Feature Sliced Design
+sdfsdfsdf
+
+## Component Structure
+fdgdfg
+
+<br /><br />
+
+<img align="left" src="https://github.com/KoninMikhail/fasty-package-delivery-courier-pwa/blob/main/.resources/icons/contributors.png" width="50px" />
+
+## Authentication
+jwt
 
 <br /><br />
 
