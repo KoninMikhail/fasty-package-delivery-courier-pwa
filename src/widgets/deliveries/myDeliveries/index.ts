@@ -1,5 +1,21 @@
 import './init';
-import './middleware/persist';
+import {
+    init,
+    fetchData,
+    dataUpdated,
+    $isInitialized,
+    $isOnline,
+    initOffline,
+    $errors,
+} from './model/model';
 
-export * as widgetMyDeliveriesModel from './model';
+export const widgetMyDeliveriesModel = {
+    init,
+    initOffline,
+    $errors,
+    fetchData,
+    $isOnline,
+    dataUpdated,
+    $isInitialized,
+};
 export * as widgetMyDeliveriesUi from './ui';

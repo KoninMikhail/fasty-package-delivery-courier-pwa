@@ -1,11 +1,11 @@
 import { createEvent, createStore, sample } from 'effector';
 
 import { FetchProfileData } from '@/features/auth/fetchProfileData';
-
 /**
  * Events
  */
 export const init = createEvent();
+export const initOffline = createEvent();
 export const fetchData = createEvent();
 export const initCompleted = createEvent();
 
@@ -17,9 +17,7 @@ export const $isInitialized = createStore<boolean>(false).on(
     () => true,
 );
 
-/**
- * Handlers
- */
+// Online
 sample({
     clock: [init, fetchData],
     target: FetchProfileData.model.profileDataRequested,
@@ -27,5 +25,11 @@ sample({
 
 sample({
     clock: FetchProfileData.model.profileDataReceived,
+    target: initCompleted,
+});
+
+// Offline
+sample({
+    clock: initOffline,
     target: initCompleted,
 });

@@ -64,6 +64,7 @@ export type Delivery = z.infer<typeof deliverySchema>;
 export type DeliveryStates = Delivery['state'];
 export type HistoryDelivery = z.infer<typeof historyDeliverySchema>;
 export type UpcomingDelivery = z.infer<typeof upcomingDeliverySchema>;
+export type MyDelivery = z.infer<typeof deliverySchema>;
 export type DeliveryType = z.infer<typeof deliveryTypeSchema>;
 export type AssignUserToDeliveryRequest = z.infer<
     typeof assignUserToDeliverySchema

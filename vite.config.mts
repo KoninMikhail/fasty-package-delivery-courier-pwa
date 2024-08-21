@@ -136,59 +136,7 @@ export default defineConfig(({ mode }) => ({
             ]
           },
           workbox: {
-            runtimeCaching: [{
-              urlPattern: /.*\/files\/.*/i,
-              handler: "CacheFirst",
-              options: {
-                cacheName: "files-cache",
-                expiration: {
-                  maxEntries: 5,
-                  maxAgeSeconds: 60 * 60 * 24 * 365 // <== 365 days
-                },
-                cacheableResponse: {
-                  statuses: [0, 200]
-                }
-              }
-            }, {
-              urlPattern: /.*\/icons\/subway\/.*.svg/i,
-              handler: "CacheFirst",
-              options: {
-                cacheName: "subway-icons-cache",
-                expiration: {
-                  maxEntries: 50,
-                  maxAgeSeconds: 60 * 60 * 24 * 365 // <== 365 days
-                },
-                cacheableResponse: {
-                  statuses: [0, 200]
-                }
-              }
-            }, {
-              urlPattern: /^(.*\/deliveries\/history.*)?$/i,
-              handler: "StaleWhileRevalidate",
-              options: {
-                cacheName: "deliveries-history-cache",
-                expiration: {
-                  maxEntries: 200,
-                  maxAgeSeconds: 60 * 60 * 6 // <== 6 Hours
-                },
-                cacheableResponse: {
-                  statuses: [0, 200]
-                }
-              }
-            }, {
-              urlPattern: /^(.*\/deliveries)(\?(?=.*from=)(?=.*to=).*)?$/i,
-              handler: "CacheFirst",
-              options: {
-                cacheName: "market-deliveries-cache",
-                expiration: {
-                  maxEntries: 200,
-                  maxAgeSeconds: 120 // <== 2 minutes
-                },
-                cacheableResponse: {
-                  statuses: [0, 200]
-                }
-              }
-            }]
+            globPatterns: ['**/*.{js,css,html,ico,png,svg}']
           }
         }),
         vitePluginVersionMark({

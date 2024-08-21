@@ -29,13 +29,21 @@ export const fetchAvailableDeliveriesFx = createEffect<
             queries: {
                 page,
                 limit,
-                dateFrom: fromDate || undefined,
-                dateTo: toDate || undefined,
+                dateFrom: fromDate,
+                dateTo: toDate,
                 car:
-                    type === 'car' ? true : type === 'foot' ? false : undefined,
+                    type === 'car' ? true : (type === 'foot' ? false : undefined),
                 express: express === true ? true : undefined,
-                weightMin: weight[0] === 0 ? undefined : weight[0],
-                weightMax: weight[1] >= MAX_WEIGHT_KG ? undefined : weight[1],
+                weightMin: weight
+                    ? (weight[0] === 0
+                        ? undefined
+                        : weight[0])
+                    : undefined,
+                weightMax: weight
+                    ? (weight[1] >= MAX_WEIGHT_KG
+                        ? undefined
+                        : weight[1])
+                    : undefined,
             },
         });
     },

@@ -18,6 +18,7 @@ import {
     translationNS,
     GOTO_MY_DELIVERIES_LINK_LABEL,
     MARKET_LABEL,
+    SEARCH_PLACEHOLDER,
 } from '../../config';
 
 const { RouteName } = sharedConfigRoutes;
@@ -58,10 +59,11 @@ const SectionBody: FunctionComponent<PropsWithChildren> = ({ children }) => (
  * Components
  */
 const Header: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
     const reference = useRef<HTMLInputElement>(null);
-    const [openSearchModal] = useUnit([
-        widgetSearchQueryPopupModel.modal.clickTriggerElement,
-    ]);
+    const { openSearchModal } = useUnit({
+        openSearchModal: widgetSearchQueryPopupModel.searchTriggerClicked,
+    });
 
     const onClickSearchInput = (): void => {
         reference?.current?.blur();
@@ -75,7 +77,7 @@ const Header: FunctionComponent = () => {
             <Input
                 ref={reference}
                 autoFocus={false}
-                placeholder="поиск по заказам"
+                placeholder={t(SEARCH_PLACEHOLDER)}
                 labelPlacement="outside"
                 className="mx-auto lg:w-[750px]"
                 onClick={onClickSearchInput}

@@ -29,7 +29,7 @@ import {
     LABEL_DATE,
     LABEL_CLIENT,
 } from '../../config';
-import { getDeliveryId } from '../../lib/utils/getDeliveryId';
+import { getDeliverySystemId } from '../../lib/utils/getDeliverySystemId';
 import { getDeliveryContents } from '../../lib/utils/getDeliveryContents';
 import { getDeliveryAddress } from '../../lib/utils/getDeliveryAdress';
 import { getDeliveryClientName } from '../../lib/utils/getDeliveryClientName';
@@ -223,7 +223,7 @@ export const DeliverySearchResultCardWide: FunctionComponent<DeliverySearchResul
         const navigate = useNavigate();
         const queryWords = query.split(' ');
 
-        const id = getDeliveryId(delivery);
+        const id = getDeliverySystemId(delivery);
         const state = getDeliveryStatus(delivery);
         const contactPerson = getDeliveryContact(delivery);
         const content = getDeliveryContents(delivery);

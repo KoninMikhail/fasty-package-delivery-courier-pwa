@@ -1,7 +1,6 @@
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 import { sharedConfigConstants } from '@/shared/config';
-import { axiosAuthErrorInterceptor } from './middleware';
 
 /**
  * Create an axios instance with default configuration
@@ -22,8 +21,3 @@ export const instance = axios.create({
 });
 
 axiosRetry(instance, { retries: 1 });
-
-/**
- * Add an interceptor to handle 401 errors
- */
-instance.interceptors.response.use(undefined, axiosAuthErrorInterceptor);

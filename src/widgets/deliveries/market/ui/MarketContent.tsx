@@ -5,7 +5,6 @@ import { Skeleton } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { RiWifiOffLine } from 'react-icons/ri';
 import { AssignDeliveryWithMe } from '@/features/delivery/assignDeliveryToUser';
-import { sessionModel } from '@/entities/viewer';
 import { BsBoxSeam } from 'react-icons/bs';
 import { InfiniteScroll } from '@/features/other/infinite-scroll';
 import { useTranslation } from 'react-i18next';
@@ -18,6 +17,7 @@ import {
     $isInitialized,
     $hasNoDeliveries,
     $isFirstPage,
+    $isOnline,
 } from '../model';
 
 /* eslint-disable unicorn/consistent-function-scoping */
@@ -103,11 +103,9 @@ const Empty: FunctionComponent = () => {
  * @constructor
  */
 export const MarketContent: FunctionComponent = () => {
-    const online = useUnit(sessionModel.$$isOnline);
-    const viewer = useUnit(sessionModel.$viewerProfileData);
-
-    const { isInit, isPending, isEmpty, isFirstPage } = useUnit({
+    const { isInit, isOnline, isPending, isEmpty, isFirstPage } = useUnit({
         isInit: $isInitialized,
+        isOnline: $isOnline,
         isPending: $isDeliveriesLoading,
         isEmpty: $hasNoDeliveries,
         isFirstPage: $isFirstPage,
@@ -129,7 +127,7 @@ export const MarketContent: FunctionComponent = () => {
     ));
 
     if (!isInit) return <Loading />;
-    if (!online) return <Offline />;
+    if (!isOnline) return <Offline />;
     if (isPending && isFirstPage) return <Loading />;
     if (isEmpty) return <Empty />;
 

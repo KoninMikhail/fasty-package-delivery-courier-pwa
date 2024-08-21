@@ -53,13 +53,13 @@ const Header: FunctionComponent<{
 }> = ({ isDisabled }) => {
     const inputReference = useRef<HTMLInputElement>(null);
     const query = useUnit($searchQuery);
-    const makeSearchPopupOpened = useUnit(
-        widgetSearchQueryPopupModel.modal.clickTriggerElement,
+    const triggerOpenSearchPopup = useUnit(
+        widgetSearchQueryPopupModel.searchTriggerClicked,
     );
 
     const onClickInput = (): void => {
         inputReference?.current?.blur();
-        makeSearchPopupOpened();
+        triggerOpenSearchPopup();
     };
 
     return (

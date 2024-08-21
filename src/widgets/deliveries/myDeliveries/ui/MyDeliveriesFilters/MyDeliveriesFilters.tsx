@@ -1,5 +1,5 @@
 import { FilterDeliveriesByTimeRange } from '@/features/delivery/filterDeliveriesByTimeRange';
-import { filteredDeliveriesByTimeModel } from '../../model';
+import { filteredDeliveriesByTimeModel } from '../../model/model';
 
 export const MyDeliveriesFilters: FunctionComponent = () => {
     return (

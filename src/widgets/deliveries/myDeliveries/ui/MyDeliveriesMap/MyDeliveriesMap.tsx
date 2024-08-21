@@ -4,15 +4,14 @@ import { useTranslation } from 'react-i18next';
 import { useList, useUnit } from 'effector-react';
 import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 import { DeliveryMapCard } from '@/entities/delivery';
-import { sessionModel } from '@/entities/viewer';
+import { $isOnline } from '@/widgets/deliveries/myDeliveries/model/model';
 import {
     DEFAULT_MAP_CENTER,
     DEFAULT_MAP_ZOOM,
     ERROR_NO_INTERNET_TEXT_KEY,
     translationNS,
 } from '../../config';
-import { $$deliveriesMarkers } from '../../model/deliveriesMapMarkers';
-import { $deliveriesStore } from '../../model/deliveriesStore';
+import { $myDeliveriesStore, $$deliveriesMarkers } from '../../model/stores';
 
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -54,7 +53,7 @@ const Map: FunctionComponent = () => {
 };
 
 const CardsRow: FunctionComponent = () => {
-    const deliveries = useList($deliveriesStore, (delivery) => (
+    const deliveries = useList($myDeliveriesStore, (delivery) => (
         <DeliveryMapCard delivery={delivery} />
     ));
 
@@ -75,7 +74,7 @@ interface MyDeliveriesMapProperties {
 export const MyDeliveriesMap: FunctionComponent<MyDeliveriesMapProperties> = ({
     classNames,
 }) => {
-    const online = useUnit(sessionModel.$$isOnline);
+    const online = useUnit($isOnline);
     return online ? (
         <div className="relative h-full w-full">
             <div className="absolute bottom-0 z-[6000]  w-full py-4 text-red-600">
