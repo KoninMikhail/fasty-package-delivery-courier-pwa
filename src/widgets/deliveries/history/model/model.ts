@@ -10,6 +10,18 @@ import { getDeliveriesHistoryFx } from './effects';
  * Events
  */
 export const init = createEvent();
+export const initOffline = createEvent();
+export const setOnline = createEvent<boolean>();
+export const fetchData = createEvent();
+
+/**
+ * Network status
+ */
+
+const $isOnline = createStore(false)
+    .on(initOffline, () => false)
+    .on(setOnline, (_, isOnline) => isOnline)
+    .reset(init);
 
 /**
  * Features
@@ -51,6 +63,7 @@ sample({
  */
 const initStarted = createEvent();
 const initCompleted = createEvent();
+
 export const $isInitialized = createStore(false).on(initCompleted, () => true);
 
 condition({
@@ -60,6 +73,7 @@ condition({
     else: initCompleted,
 });
 
+// Online
 sample({
     clock: initStarted,
     target: fetchDeliveriesHistoryModel.fetch,
@@ -71,3 +85,11 @@ sample({
     filter: (initialized) => !initialized,
     target: initCompleted,
 });
+
+// Offline
+sample({
+    clock: initOffline,
+    target: initCompleted,
+});
+
+export const { $errors } = fetchDeliveriesHistoryModel;
