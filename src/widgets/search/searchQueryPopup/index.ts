@@ -1,4 +1,9 @@
 import './init';
+import { $isInitialized, init, searchTriggerClicked } from './model/model';
 
-export * as widgetSearchQueryPopupModel from './model';
+export const widgetSearchQueryPopupModel = {
+    init,
+    $isInitialized,
+    searchTriggerClicked,
+};
 export * as widgetSearchQueryPopupUi from './ui';

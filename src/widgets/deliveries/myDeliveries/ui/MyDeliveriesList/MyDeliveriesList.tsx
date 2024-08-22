@@ -5,7 +5,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { LuAlertTriangle } from 'react-icons/lu';
 import { BsBoxSeam } from 'react-icons/bs';
-import { sessionModel } from '@/entities/viewer';
 import { RiWifiOffLine } from 'react-icons/ri';
 import React, { PropsWithChildren, ReactElement, useMemo } from 'react';
 import clsx from 'clsx';
@@ -19,11 +18,12 @@ import {
 } from '../../config';
 import {
     $$empty,
-    $deliveriesList,
     init,
-    $inPending,
+    $$inPending,
     $$hasError,
-} from '../../model';
+    $isOnline,
+} from '../../model/model';
+import { $myDeliveriesStore } from '../../model/stores';
 
 const Root: FunctionComponent<PropsWithChildren> = ({ children }) => {
     return <div className="grid grid-cols-1 gap-4">{children}</div>;
@@ -102,14 +102,14 @@ const RestartButton: FunctionComponent<RestartButtonProperties> = ({
 
 export const MyDeliveriesList: FunctionComponent = () => {
     const [online, isLoading, hasError, isEmpty, reInit] = useUnit([
-        sessionModel.$$isOnline,
-        $inPending,
+        $isOnline,
+        $$inPending,
         $$hasError,
         $$empty,
         init,
     ]);
 
-    const items = useList($deliveriesList, (delivery) => (
+    const items = useList($myDeliveriesStore, (delivery) => (
         <motion.div key={delivery.date} whileTap={{ scale: 0.98 }}>
             <DeliveryMarketCard delivery={delivery} />
         </motion.div>

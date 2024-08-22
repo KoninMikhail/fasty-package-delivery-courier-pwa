@@ -67,7 +67,7 @@ if (!self.define) {
     });
   };
 }
-define(['./workbox-ddf0a90e'], (function (workbox) { 'use strict';
+define(['./workbox-c676b6d3'], (function (workbox) { 'use strict';
 
   self.skipWaiting();
   workbox.clientsClaim();
@@ -79,47 +79,11 @@ define(['./workbox-ddf0a90e'], (function (workbox) { 'use strict';
    */
   workbox.precacheAndRoute([{
     "url": "index.html",
-    "revision": "0.ub21l97il28"
+    "revision": "0.bvcrni6ftu"
   }], {});
   workbox.cleanupOutdatedCaches();
   workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
     allowlist: [/^\/$/]
   }));
-  workbox.registerRoute(/.*\/files\/.*/i, new workbox.CacheFirst({
-    "cacheName": "files-cache",
-    plugins: [new workbox.ExpirationPlugin({
-      maxEntries: 5,
-      maxAgeSeconds: 31536000
-    }), new workbox.CacheableResponsePlugin({
-      statuses: [0, 200]
-    })]
-  }), 'GET');
-  workbox.registerRoute(/.*\/icons\/subway\/.*.svg/i, new workbox.CacheFirst({
-    "cacheName": "subway-icons-cache",
-    plugins: [new workbox.ExpirationPlugin({
-      maxEntries: 50,
-      maxAgeSeconds: 31536000
-    }), new workbox.CacheableResponsePlugin({
-      statuses: [0, 200]
-    })]
-  }), 'GET');
-  workbox.registerRoute(/^(.*\/deliveries\/history.*)?$/i, new workbox.StaleWhileRevalidate({
-    "cacheName": "deliveries-history-cache",
-    plugins: [new workbox.ExpirationPlugin({
-      maxEntries: 200,
-      maxAgeSeconds: 21600
-    }), new workbox.CacheableResponsePlugin({
-      statuses: [0, 200]
-    })]
-  }), 'GET');
-  workbox.registerRoute(/^(.*\/deliveries)(\?(?=.*from=)(?=.*to=).*)?$/i, new workbox.CacheFirst({
-    "cacheName": "market-deliveries-cache",
-    plugins: [new workbox.ExpirationPlugin({
-      maxEntries: 200,
-      maxAgeSeconds: 120
-    }), new workbox.CacheableResponsePlugin({
-      statuses: [0, 200]
-    })]
-  }), 'GET');
 
 }));

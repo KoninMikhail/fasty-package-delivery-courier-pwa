@@ -48,7 +48,7 @@ import {
     LABEL_WEIGHT,
     translationNS,
 } from '../../config';
-import { Loading, NotFound } from './common/states';
+import { NotFound } from './common/states';
 
 const { NavbarMobile } = widgetNavbarMobileUi;
 const { DeliveryStatusControlWithTimeline } = widgetDeliveryStatusUi;
@@ -141,14 +141,14 @@ export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
     const [pageState] = useUnit([$pageContentState]);
 
-    if (!pageState)
+    /*    if (!pageState)
         return (
             <>
                 <Header backButton={<BackButton />} deliveryIdVisible={false} />
                 <Loading />
                 <NavbarMobile />
             </>
-        );
+        ); */
 
     if (pageState === PageState.NOT_LOADED)
         return (

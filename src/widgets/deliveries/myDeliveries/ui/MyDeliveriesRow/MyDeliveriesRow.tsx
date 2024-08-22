@@ -9,8 +9,6 @@ import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
 import { PropsWithChildren } from 'react';
 import { settingsModel } from '@/entities/viewer';
-import { $$empty, $inPending, $$hasError, $isInitialized } from '../../model';
-import { $deliveriesStore } from '../../model/deliveriesStore';
 
 import {
     BUTTON_RETRY_TEXT_KEY,
@@ -19,6 +17,13 @@ import {
     DATA_EMPTY_TEXT_KEY,
     translationNS,
 } from '../../config';
+import {
+    $$empty,
+    $$hasError,
+    $$inPending,
+    $isInitialized,
+} from '../../model/model';
+import { $myDeliveriesStore } from '../../model/stores';
 
 const { HorizontalScroll } = sharedUiLayouts;
 
@@ -119,11 +124,11 @@ export const MyDeliveriesRow: FunctionComponent = () => {
     const { isInit, isEmpty, isUpdating, hasError } = useUnit({
         isInit: $isInitialized,
         isEmpty: $$empty,
-        isUpdating: $inPending,
+        isUpdating: $$inPending,
         hasError: $$hasError,
     });
 
-    const items = useList($deliveriesStore, (delivery, index) => {
+    const items = useList($myDeliveriesStore, (delivery, index) => {
         const deliveryId = getDeliveryNumber(delivery);
 
         if (index >= itemsLimit) return null;
@@ -145,8 +150,9 @@ export const MyDeliveriesRow: FunctionComponent = () => {
 
     if (!isInit) return <Loading />;
 
+    if (hasError) return <ErrorInitPlaceholder />;
+
     if (isEmpty) {
-        if (hasError) return <ErrorInitPlaceholder />;
         if (isUpdating) return <Loading />;
         return <EmptyItemsPlaceholder />;
     }

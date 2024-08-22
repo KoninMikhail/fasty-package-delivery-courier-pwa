@@ -29,7 +29,7 @@ import {
     WEIGHT_VALUE,
 } from '../../config';
 import { getDeliveryNumber } from '../../lib/utils/getDeliveryNumber';
-import { getDeliveryId } from '../../lib/utils/getDeliveryId';
+import { getDeliverySystemId } from '../../lib/utils/getDeliverySystemId';
 import { getDeliveryAddress } from '../../lib/utils/getDeliveryAdress';
 import { getDeliveryMetro } from '../../lib/utils/getDeliveryMetro';
 import { getDeliveryContents } from '../../lib/utils/getDeliveryContents';
@@ -140,7 +140,7 @@ export const DeliveryMarketCard: FunctionComponent<{
 }> = ({ delivery, featureSlot }) => {
     const navigate = useNavigate();
 
-    const id = getDeliveryId(delivery);
+    const id = getDeliverySystemId(delivery);
     const deliveryId = getDeliveryNumber(delivery);
     const address = getDeliveryAddress(delivery);
     const subway = getDeliveryMetro(delivery);

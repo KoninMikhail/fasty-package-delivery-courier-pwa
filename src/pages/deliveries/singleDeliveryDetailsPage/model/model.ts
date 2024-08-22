@@ -1,5 +1,5 @@
 import { createGate } from 'effector-react';
-import { combine, createEvent, createStore, sample } from 'effector';
+import { combine, createStore, sample } from 'effector';
 import { SetDeliveryStatus } from '@/features/delivery/setDeliveryStatus';
 import {
     getDeliveryAddress,
@@ -10,7 +10,7 @@ import {
     getDeliveryCourier,
     getDeliveryExpressState,
     getDeliveryExpressStateTranslated,
-    getDeliveryId,
+    getDeliverySystemId,
     getDeliveryManager,
     getDeliveryMetro,
     getDeliveryPickupDateTime,
@@ -28,10 +28,13 @@ import { Delivery } from '@/shared/api';
 import { assignUserToDeliveryFx } from '@/entities/user';
 import { getClientTypeLocale } from '@/entities/client/lib/utils/getClientTypeLocale';
 import { getClientName, getClientType } from '@/entities/client';
-import { condition, debug, once } from 'patronum';
+import { debug, once } from 'patronum';
 import { sharedLibTypeGuards } from '@/shared/lib';
-import { $myDeliveriesStore } from './parts/deliveriesCache';
-import { handleDeliveryError, handleDeliveryNotLoaded } from '../lib';
+import { FetchDeliveryById } from '@/features/delivery/fetchDeliveryById';
+import {
+    $pageDeliveryDetails,
+    setDeliveryDetails,
+} from '@/pages/deliveries/singleDeliveryDetailsPage/model/stores';
 import { PageState } from '../types';
 import { initialDelivery } from '../data';
 import { DELIVERY_ID_LENGTH } from '../config';
@@ -52,14 +55,10 @@ const $deliveryId = createStore<string>('').on(
     DeliveryDetailsPageGateway.open,
     (_, { deliveryId }) => deliveryId ?? '',
 );
-debug($deliveryId);
+
 /**
  * Events
  */
-
-const requestPageContent = createEvent();
-const loadFromRemote = createEvent();
-const loadFromCache = createEvent();
 
 sample({
     clock: once({
@@ -68,7 +67,7 @@ sample({
     }),
     source: $deliveryId,
     filter: (deliveryId) => !isEmpty(deliveryId),
-    target: requestPageContent,
+    target: FetchDeliveryById.fetch,
 });
 
 /**
@@ -76,13 +75,13 @@ sample({
  */
 
 export const $pageContentState = createStore<Optional<PageState>>(null)
-    .on(getDeliveryByIdFx.doneData, () => PageState.Done)
-    .on(getDeliveryByIdFx.failData, (_, error) => handleDeliveryError(error))
-    .on(getCachedDeliveryByIdFx.doneData, () => PageState.Done)
-    .on(getCachedDeliveryByIdFx.failData, (_, error) =>
-        handleDeliveryNotLoaded(error),
-    )
+    .on(FetchDeliveryById.fetchSuccess, () => PageState.Done)
     .reset(DeliveryDetailsPageGateway.close);
+
+sample({
+    clock: FetchDeliveryById.fetchSuccess,
+    target: setDeliveryDetails,
+});
 
 /**
  * Main delivery store, stores a nullable Delivery object.
@@ -95,41 +94,39 @@ export const $delivery = createStore<Delivery>(initialDelivery)
     .on(setDeliveryStatusFx.doneData, (_, delivery) => delivery)
     .reset(DeliveryDetailsPageGateway.close);
 
-debug($delivery);
-
 // Derived stores to decompose the delivery object for easier consumption
-export const $$deliveryId = $delivery.map((delivery) =>
-    getDeliveryId(delivery, DELIVERY_ID_LENGTH),
+export const $$deliveryId = $pageDeliveryDetails.map((delivery) =>
+    getDeliverySystemId(delivery, DELIVERY_ID_LENGTH),
 );
-export const $$deliveryNumber = $delivery.map((delivery) =>
+export const $$deliveryNumber = $pageDeliveryDetails.map((delivery) =>
     getDeliveryNumber(delivery, DELIVERY_ID_LENGTH),
 );
-export const $$deliveryContents = $delivery.map((delivery) =>
+export const $$deliveryContents = $pageDeliveryDetails.map((delivery) =>
     getDeliveryContents(delivery),
 );
-export const $$deliveryWeight = $delivery.map((delivery) =>
+export const $$deliveryWeight = $pageDeliveryDetails.map((delivery) =>
     getDeliveryWeightPersisted(delivery),
 );
-export const $$deliveryType = $delivery.map((delivery) =>
+export const $$deliveryType = $pageDeliveryDetails.map((delivery) =>
     getDeliveryType(delivery),
 );
-export const $$deliveryTypeTranslated = $delivery.map((delivery) =>
+export const $$deliveryTypeTranslated = $pageDeliveryDetails.map((delivery) =>
     getDeliveryTypeTranslated(delivery),
 );
-export const $$deliveryIsExpress = $delivery.map((delivery) =>
+export const $$deliveryIsExpress = $pageDeliveryDetails.map((delivery) =>
     getDeliveryExpressState(delivery),
 );
-export const $$deliveryIsExpressTranslated = $delivery.map((delivery) =>
-    getDeliveryExpressStateTranslated(delivery),
+export const $$deliveryIsExpressTranslated = $pageDeliveryDetails.map(
+    (delivery) => getDeliveryExpressStateTranslated(delivery),
 );
-export const $$deliveryAddress = $delivery.map((delivery) =>
+export const $$deliveryAddress = $pageDeliveryDetails.map((delivery) =>
     getDeliveryAddress(delivery),
 );
-export const $$deliveryMetro = $delivery.map((delivery) =>
+export const $$deliveryMetro = $pageDeliveryDetails.map((delivery) =>
     getDeliveryMetro(delivery),
 );
 
-export const $$deliveryCoordinates = $delivery.map((delivery) => {
+export const $$deliveryCoordinates = $pageDeliveryDetails.map((delivery) => {
     const coordinates = getDeliveryCoordinates(delivery);
     return coordinates?.latitude && coordinates?.longitude
         ? {
@@ -141,18 +138,18 @@ export const $$deliveryCoordinates = $delivery.map((delivery) => {
 
 debug($delivery);
 
-export const $$deliveryPickupDateTime = $delivery.map((delivery) =>
+export const $$deliveryPickupDateTime = $pageDeliveryDetails.map((delivery) =>
     getDeliveryPickupDateTime(delivery, true, true),
 );
 
-export const $$deliveryContact = $delivery.map(
+export const $$deliveryContact = $pageDeliveryDetails.map(
     (delivery) => delivery.contact || {},
 );
 
 /**
  * Client
  */
-export const $$deliveryClient = $delivery.map((delivery) =>
+export const $$deliveryClient = $pageDeliveryDetails.map((delivery) =>
     getDeliveryClient(delivery),
 );
 export const $$deliveryClientName = $$deliveryClient.map((client) =>
@@ -164,15 +161,15 @@ export const $$deliveryClientType = $$deliveryClient.map((client) =>
 export const $$deliveryClientTypeLocaled = $$deliveryClient.map((client) =>
     getClientTypeLocale(client),
 );
-export const $$deliveryManager = $delivery.map((delivery) =>
+export const $$deliveryManager = $pageDeliveryDetails.map((delivery) =>
     getDeliveryManager(delivery),
 );
-export const $$deliveryCourier = $delivery.map((delivery) =>
+export const $$deliveryCourier = $pageDeliveryDetails.map((delivery) =>
     getDeliveryCourier(delivery),
 );
 
 export const $$isViewerDelivery = combine(
-    $delivery,
+    $pageDeliveryDetails,
     sessionModel.$viewerProfileData,
     (delivery, viewer) => {
         return (
@@ -180,35 +177,6 @@ export const $$isViewerDelivery = combine(
         );
     },
 );
-
-condition({
-    source: requestPageContent,
-    if: sessionModel.$$isOnline,
-    then: loadFromRemote,
-    else: loadFromCache,
-});
-
-sample({
-    clock: loadFromRemote,
-    source: $deliveryId,
-    fn: (deliveryId) => ({
-        deliveryId,
-    }),
-    target: getDeliveryByIdFx,
-});
-
-sample({
-    clock: loadFromCache,
-    source: {
-        deliveryId: $deliveryId,
-        cache: $myDeliveriesStore,
-    },
-    fn: ({ deliveryId, cache }) => ({
-        deliveryId: Number.parseInt(deliveryId.toString(), 10),
-        cache,
-    }),
-    target: getCachedDeliveryByIdFx,
-});
 
 /**
  * Delivery details store

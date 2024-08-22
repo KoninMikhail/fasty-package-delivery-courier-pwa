@@ -18,9 +18,9 @@ import {
 } from '../../config';
 import { getDeliveryContents } from '../../lib/utils/getDeliveryContents';
 import { getDeliveryComment } from '../../lib/utils/getDeliveryComment';
-import { getDeliveryId } from '../../lib/utils/getDeliveryId';
 import { getDeliveryPickupDateTime } from '../../lib/utils/getDeliveryPickupDateTime';
 import { getDeliveryAddress } from '../../lib/utils/getDeliveryAdress';
+import { getDeliveryId } from '../../lib/utils/getDeliveryId';
 
 const { RouteName } = sharedConfigRoutes;
 const { DELIVERIES } = RouteName;

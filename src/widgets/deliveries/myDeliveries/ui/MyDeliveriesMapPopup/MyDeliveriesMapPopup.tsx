@@ -5,7 +5,7 @@ import { useList, useUnit } from 'effector-react';
 import { MapContainer, Marker, TileLayer, ZoomControl } from 'react-leaflet';
 import { HorizontalScroll } from '@/shared/ui/layouts';
 import { DeliveryMapCard } from '@/entities/delivery';
-import { sessionModel } from '@/entities/viewer';
+import { $isOnline } from '@/widgets/deliveries/myDeliveries/model/model';
 import {
     DEFAULT_MAP_CENTER,
     DEFAULT_MAP_ZOOM,
@@ -13,8 +13,7 @@ import {
     translationNS,
     WIDGET_MAP_TITLE_KEY,
 } from '../../config';
-import { $$deliveriesMarkers } from '../../model/deliveriesMapMarkers';
-import { $deliveriesStore } from '../../model/deliveriesStore';
+import { $$deliveriesMarkers, $myDeliveriesStore } from '../../model/stores';
 
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -60,7 +59,7 @@ const CardsRow: FunctionComponent = () => {
     const onCardClick = () => {
         console.log('work');
     };
-    const deliveries = useList($deliveriesStore, (delivery) => (
+    const deliveries = useList($myDeliveriesStore, (delivery) => (
         <DeliveryMapCard delivery={delivery} onPress={onCardClick} />
     ));
 
@@ -74,7 +73,7 @@ const CardsRow: FunctionComponent = () => {
 };
 
 export const MyDeliveriesMapPopup: FunctionComponent = () => {
-    const online = useUnit(sessionModel.$$isOnline);
+    const online = useUnit($isOnline);
     const { t } = useTranslation(translationNS);
     const { isOpen, onOpen: onMapClick, onClose } = useDisclosure();
 

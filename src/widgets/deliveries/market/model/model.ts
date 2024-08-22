@@ -4,8 +4,8 @@ import { assignUserToDeliveryFx } from '@/entities/user';
 import { FetchDeliveriesByParameters } from '@/features/delivery/fetchDeliveriesByParams';
 import { InfiniteScroll } from '@/features/other/infinite-scroll';
 import { isEmpty } from '@/shared/lib/type-guards';
-import { condition, debounce, delay } from 'patronum';
-import { sessionModel } from '@/entities/viewer';
+import { debounce, debug, delay } from 'patronum';
+import { FetchDeliveryById } from '@/features/delivery/fetchDeliveryById';
 import { fetchAvailableDeliveriesFx } from './effects';
 import {
     $datesRange,
@@ -27,7 +27,18 @@ import {
  */
 
 export const init = createEvent();
+export const initOffline = createEvent();
 export const fetchData = createEvent();
+export const deliveryAssignCompleted = createEvent();
+export const setOnline = createEvent<boolean>();
+
+/**
+ * Network
+ */
+export const $isOnline = createStore<boolean>(true)
+    .on(initOffline, () => false)
+    .on(setOnline, (_, payload) => payload)
+    .reset(init);
 
 /**
  * Fetching
@@ -84,7 +95,7 @@ sample({
 });
 
 sample({
-    clock: sessionModel.$$isOnline,
+    clock: $isOnline,
     filter: (isOnline) => !isOnline,
     target: InfiniteScrollModel.reset,
 });
@@ -97,10 +108,20 @@ export const assignDeliveryToUserModel =
         assignToDeliveryFx: assignUserToDeliveryFx,
     });
 
+sample({
+    clock: assignDeliveryToUserModel.assignCompleted,
+    target: deliveryAssignCompleted,
+});
+
+// fetch for available offline
+sample({
+    clock: assignDeliveryToUserModel.assignCompleted,
+    target: FetchDeliveryById.fetch,
+});
+
 /**
  * Widget initialization
  */
-const initStarted = createEvent();
 const initComplete = createEvent();
 const $firstDataFetched = createStore<boolean>(false);
 
@@ -108,18 +129,12 @@ export const $isInitialized = createStore<boolean>(false)
     .on(initComplete, () => true)
     .reset(init);
 
+// Online
 sample({
     clock: delay(init, 400),
     source: $isInitialized,
     filter: (initialized) => !initialized,
     target: fetchDeliveriesModel.fetch,
-});
-
-condition({
-    source: initStarted,
-    if: sessionModel.$$isOnline,
-    then: fetchDeliveriesModel.fetch,
-    else: initComplete,
 });
 
 sample({
@@ -143,6 +158,19 @@ sample({
     target: initComplete,
 });
 
+// Offline
+sample({
+    clock: delay(initOffline, 400),
+    source: $isInitialized,
+    filter: (initialized) => !initialized,
+    target: [setOnline.prepend(() => false), initComplete],
+});
+
+debug({
+    init,
+    initOffline,
+});
+
 /**
  * Re-fetch Data
  */
@@ -151,11 +179,9 @@ sample({
     clock: fetchData,
     source: {
         isInit: $isInitialized,
-        isOnline: sessionModel.$$isOnline,
-        isAuthorized: sessionModel.$isAuthorized,
+        isOnline: $isOnline,
     },
-    filter: ({ isInit, isOnline, isAuthorized }) =>
-        isInit && isOnline && isAuthorized,
+    filter: ({ isInit, isOnline }) => isInit && isOnline,
     target: fetchDeliveriesModel.fetch,
 });
 
@@ -182,11 +208,9 @@ sample({
     clock: delay(filtersChanged, 500),
     source: {
         isInit: $isInitialized,
-        isOnline: sessionModel.$$isOnline,
-        isAuthorized: sessionModel.$isAuthorized,
+        isOnline: $isOnline,
     },
-    filter: ({ isInit, isOnline, isAuthorized }) =>
-        isInit && isOnline && isAuthorized,
+    filter: ({ isInit, isOnline }) => isInit && isOnline,
     target: fetchDeliveriesModel.fetch,
 });
 
@@ -207,5 +231,12 @@ export const $isFirstPage = InfiniteScrollModel.$pagination.map(
 
 /**
  * ------------------------------------------------
- * Here you can implement the logic for handling critical errors
+ * Erorrs
  */
+
+export const $errors = combine(
+    fetchDeliveriesModel.$errors,
+    (fetchDeliveriesByParametersErrors) => {
+        return [...fetchDeliveriesByParametersErrors];
+    },
+);

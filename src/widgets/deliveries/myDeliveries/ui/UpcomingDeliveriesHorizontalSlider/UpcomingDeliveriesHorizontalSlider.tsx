@@ -5,7 +5,7 @@ import { motion, useMotionValue, useSpring, useInView } from 'framer-motion';
 import { Button } from '@nextui-org/react';
 import { MdArrowLeft, MdArrowRight } from 'react-icons/md';
 import { useList } from 'effector-react';
-import { $$upcomingDeliveries } from '../../model/deliveriesStore';
+import { $$upcomingPickups } from '../../model/stores';
 
 export const UpcomingDeliveriesHorizontalSlider: FunctionComponent = () => {
     const [activeItemIndex, setActiveItemIndex] = useState<number>(0);
@@ -32,7 +32,7 @@ export const UpcomingDeliveriesHorizontalSlider: FunctionComponent = () => {
         setActiveItemIndex(activeItemIndex + 1);
     };
 
-    const deliveries = useList($$upcomingDeliveries, (delivery) => {
+    const deliveries = useList($$upcomingPickups, (delivery) => {
         return <DeliveryCountdownCard delivery={delivery} />;
     });
 

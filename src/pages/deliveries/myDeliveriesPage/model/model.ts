@@ -1,41 +1,88 @@
 import { createGate } from 'effector-react';
-import { createEvent, createStore, sample } from 'effector';
-import { and, interval, once } from 'patronum';
+import { combine, createEvent, createStore, sample } from 'effector';
+import { and, condition, delay, interval, once } from 'patronum';
 import { sessionModel } from '@/entities/viewer';
 import { widgetMyDeliveriesModel } from '@/widgets/deliveries/myDeliveries';
-import { getMyDeliveriesFx } from '@/entities/delivery';
+import { Logout } from '@/features/auth/logout';
+import axios from 'axios';
+import httpStatus from 'http-status';
+import { RefreshToken } from '@/features/auth/refreshToken';
 import { POLLING_TIMEOUT } from '../config';
 
 export const MyDeliveriesPageGate = createGate<void>();
-
-const canStartPollingData = createEvent();
 
 /**
  * Initial data fetching
  */
 
-const $pageLoaded = createStore<boolean>(false).on(
-    MyDeliveriesPageGate.open,
-    () => true,
-);
+const $isPageInitialized = createStore<boolean>(false)
+    .on(
+        once({
+            source: MyDeliveriesPageGate.open,
+            reset: Logout.model.userLoggedOut,
+        }),
+        () => true,
+    )
+    .reset(Logout.model.userLoggedOut);
 
-const $$readyForInit = and(
-    sessionModel.$isAuthorized,
-    sessionModel.$$isOnline,
-    $pageLoaded,
-);
+/**
+ * Current page mode
+ */
+const { $isAuthorized, $$isOnline } = sessionModel;
+
+/**
+ * Widgets initialization
+ */
+const initWidgetsOnline = createEvent();
+const initWidgetsOffline = createEvent();
+
+const $initWidgetsCompleted = and(widgetMyDeliveriesModel.$isInitialized);
+
+condition({
+    source: delay($isPageInitialized, 500),
+    if: and($$isOnline, $isAuthorized),
+    then: initWidgetsOnline,
+    else: initWidgetsOffline,
+});
+
+// Online
+sample({
+    clock: initWidgetsOnline,
+    source: widgetMyDeliveriesModel.$isInitialized,
+    filter: (isInitialized) => !isInitialized,
+    target: widgetMyDeliveriesModel.init,
+});
 
 sample({
-    clock: $$readyForInit,
-    target: [widgetMyDeliveriesModel.init, canStartPollingData],
+    clock: initWidgetsOnline,
+    target: RefreshToken.startTokenRefreshWatcher,
+});
+
+// Offline
+sample({
+    clock: initWidgetsOffline,
+    source: widgetMyDeliveriesModel.$isInitialized,
+    filter: (isInitialized) => !isInitialized,
+    target: widgetMyDeliveriesModel.initOffline,
 });
 
 /**
  * Data polling
  */
+const pollingDataAllowed = createEvent();
+const pollingDataForbidden = createEvent();
+
+condition({
+    source: $initWidgetsCompleted,
+    if: and($$isOnline, $isAuthorized, $initWidgetsCompleted),
+    then: pollingDataAllowed,
+    else: pollingDataForbidden,
+});
+
 const { tick: makePageExpired } = interval({
     timeout: POLLING_TIMEOUT * 60 * 1000,
-    start: once({ source: MyDeliveriesPageGate.open }),
+    start: pollingDataAllowed,
+    stop: pollingDataForbidden,
 });
 
 const updateContent = createEvent();
@@ -58,7 +105,7 @@ sample({
  * Update my deliveries page content
  */
 const $lastUpdateContentTimestamp = createStore<number>(0).on(
-    getMyDeliveriesFx.done,
+    widgetMyDeliveriesModel.dataUpdated,
     () => Date.now(),
 );
 
@@ -68,4 +115,36 @@ sample({
     filter: (lastUpdateTimestamp) =>
         Date.now() - lastUpdateTimestamp > POLLING_TIMEOUT * 60 * 1000,
     target: widgetMyDeliveriesModel.fetchData,
+});
+
+/**
+ * Logout when user is not authorized
+ */
+
+const $widgetErrors = combine(
+    widgetMyDeliveriesModel.$errors,
+    (myDeliveriesErrors) => {
+        return [...myDeliveriesErrors].some((error) => {
+            if (axios.isAxiosError(error) && !!error.response) {
+                return error?.response.status === httpStatus.UNAUTHORIZED;
+            }
+            return false;
+        });
+    },
+);
+
+sample({
+    clock: $widgetErrors,
+    filter: (hasUnauthorizedError) => !!hasUnauthorizedError,
+    target: RefreshToken.forceRefreshRequested,
+});
+
+sample({
+    clock: RefreshToken.updateTokenSuccess,
+    target: widgetMyDeliveriesModel.fetchData,
+});
+
+sample({
+    clock: RefreshToken.updateTokenFail,
+    target: Logout.model.logout,
 });

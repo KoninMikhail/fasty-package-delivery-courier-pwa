@@ -18,7 +18,6 @@ export {
  * Utils
  */
 export { isDeliveryAssignedToCourier } from './lib/guards/isDeliveryAssignedToCourier';
-export { getDeliveryId } from './lib/utils/getDeliveryId';
 export { getDeliveryAddress } from './lib/utils/getDeliveryAdress';
 export { getDeliveryContents } from './lib/utils/getDeliveryContents';
 export { getDeliveryWeight } from './lib/utils/getDeliveryWeight';
@@ -29,6 +28,8 @@ export { getDeliveryCourier } from './lib/utils/getDeliveryCourier';
 export { getDeliveryManager } from './lib/utils/getDeliveryManager';
 export { getDeliveryExpressState } from './lib/utils/getDeliveryExpressState';
 export { getDeliveryContact } from './lib/utils/getDeliveryContact';
+export { getDeliverySystemId } from './lib/utils/getDeliverySystemId';
+export { getDeliveryId } from './lib/utils/getDeliveryId';
 export { getDeliveryComment } from './lib/utils/getDeliveryComment';
 export { getDeliveryStatus } from './lib/utils/getDeliveryStatus';
 export { getDeliveryClient } from './lib/utils/getDeliveryClient';

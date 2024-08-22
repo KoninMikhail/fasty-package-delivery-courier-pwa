@@ -1,82 +1,163 @@
-import { createEvent, createStore, sample } from 'effector';
+import { combine, createEvent, createStore, sample } from 'effector';
 import { widgetMyDeliveriesModel } from '@/widgets/deliveries/myDeliveries';
-import { and, interval, once } from 'patronum';
+import { and, condition, delay, interval, once } from 'patronum';
 import { widgetMarketModel } from '@/widgets/deliveries/market';
-import { getMyDeliveriesFx } from '@/entities/delivery';
 import { createGate } from 'effector-react';
 import { widgetTopbarModel } from '@/widgets/viewer/welcome-topbar';
 import { sessionModel } from '@/entities/viewer';
+import { widgetSearchQueryPopupModel } from '@/widgets/search/searchQueryPopup';
+import { deliveryAssignCompleted } from '@/widgets/deliveries/market/model';
+import { Logout } from '@/features/auth/logout';
+import httpStatus from 'http-status';
+import axios from 'axios';
+import { RefreshToken } from '@/features/auth/refreshToken';
 import { POLLING_TIMEOUT_SEC } from '../config';
 
 export const MarketPageGate = createGate<void>();
 /**
  * Events
  */
-const dataPollingAllowed = createEvent();
 
 /**
- * First load
+ * Initialization
  */
-const $isPageInitialized = createStore<boolean>(false).on(
-    MarketPageGate.open,
-    () => true,
+const $isPageInitialized = createStore<boolean>(false)
+    .on(
+        once({
+            source: MarketPageGate.open,
+            reset: Logout.model.userLoggedOut,
+        }),
+        () => true,
+    )
+    .reset(Logout.model.userLoggedOut);
+
+/**
+ * Current page mode
+ */
+const { $isAuthorized, $$isOnline } = sessionModel;
+
+/**
+ * Widgets initialization
+ */
+const initWidgetsOnline = createEvent();
+const initWidgetsOffline = createEvent();
+
+const $initWidgetsCompleted = and(
+    widgetTopbarModel.$isInitialized,
+    widgetMarketModel.$isInitialized,
+    widgetMyDeliveriesModel.$isInitialized,
+    widgetSearchQueryPopupModel.$isInitialized,
 );
 
-const $$initWidgetsAllowed = and(
-    sessionModel.$isAuthorized,
-    $isPageInitialized,
-);
+condition({
+    source: delay($isPageInitialized, 500),
+    if: and($$isOnline, $isAuthorized),
+    then: initWidgetsOnline,
+    else: initWidgetsOffline,
+});
 
+// Online
 sample({
-    clock: $$initWidgetsAllowed,
+    clock: initWidgetsOnline,
     target: widgetTopbarModel.init,
 });
 
 sample({
-    clock: $$initWidgetsAllowed,
+    clock: initWidgetsOnline,
     source: widgetMarketModel.$isInitialized,
-    filter: (isInitialized, initAllowed) => initAllowed && !isInitialized,
+    filter: (isInitialized) => !isInitialized,
     target: widgetMarketModel.init,
 });
 
 sample({
-    clock: $$initWidgetsAllowed,
-    filter: () => !widgetMyDeliveriesModel.$isInitialized,
+    clock: initWidgetsOnline,
     target: widgetMyDeliveriesModel.init,
 });
 
-const $$allWidgetsInitialized = and(
-    widgetTopbarModel.$isInitialized,
-    widgetMarketModel.$isInitialized,
-    widgetMyDeliveriesModel.$isInitialized,
-);
+sample({
+    clock: initWidgetsOnline,
+    source: widgetSearchQueryPopupModel.$isInitialized,
+    filter: (isInitialized) => !isInitialized,
+    target: widgetSearchQueryPopupModel.init,
+});
 
 sample({
-    clock: $$allWidgetsInitialized,
-    filter: (isInitialized) => isInitialized,
-    target: dataPollingAllowed,
+    clock: initWidgetsOnline,
+    target: RefreshToken.startTokenRefreshWatcher,
+});
+
+// Offline
+sample({
+    clock: initWidgetsOffline,
+    target: widgetTopbarModel.initOffline,
+});
+
+sample({
+    clock: initWidgetsOffline,
+    source: widgetMarketModel.$isInitialized,
+    filter: (isInitialized) => !isInitialized,
+    target: widgetMarketModel.initOffline,
+});
+
+sample({
+    clock: initWidgetsOffline,
+    target: widgetMyDeliveriesModel.init,
+});
+
+sample({
+    clock: initWidgetsOffline,
+    source: widgetSearchQueryPopupModel.$isInitialized,
+    filter: (isInitialized) => !isInitialized,
+    target: widgetSearchQueryPopupModel.init,
 });
 
 /**
  * ============================
- * Data polling
+ * Change network status
+ * ============================
+ */
+
+sample({
+    clock: $$isOnline,
+    target: [widgetMarketModel.setOnline],
+});
+
+/**
+ * ============================
+ * Update my deliveries when delivery is assigned
+ * ============================
+ */
+
+sample({
+    clock: deliveryAssignCompleted,
+    target: widgetMyDeliveriesModel.fetchData,
+});
+
+/**
+ * ============================
+ * Periodic data polling for market
  * ============================
  */
 const newContentRequested = createEvent();
+const dataPollingAllowed = createEvent();
+const dataPollingForbidden = createEvent();
 
-const { tick: pageContentMarkObsolete } = interval({
+const { tick: marketContentObsolete } = interval({
     timeout: POLLING_TIMEOUT_SEC * 1000,
     start: dataPollingAllowed,
+    stop: dataPollingForbidden,
+});
+
+condition({
+    source: $initWidgetsCompleted,
+    if: and($$isOnline, $isAuthorized),
+    then: dataPollingAllowed,
+    else: dataPollingForbidden,
 });
 
 const $isContentObsolete = createStore<boolean>(false)
-    .on(pageContentMarkObsolete, () => true)
+    .on(marketContentObsolete, () => true)
     .reset(newContentRequested);
-
-const $lastUpdateContentTimestamp = createStore<number>(0).on(
-    getMyDeliveriesFx.done,
-    () => Date.now(),
-);
 
 sample({
     clock: once({
@@ -85,27 +166,46 @@ sample({
     }),
     source: {
         isExpired: $isContentObsolete,
-        isOnline: sessionModel.$$isOnline,
+        isOnline: $$isOnline,
     },
     filter: ({ isExpired, isOnline }) => isExpired && isOnline,
     target: newContentRequested,
 });
 
-/**
- * Update my deliveries
- */
-sample({
-    clock: newContentRequested,
-    source: $lastUpdateContentTimestamp,
-    filter: (lastUpdateTimestamp) =>
-        Date.now() - lastUpdateTimestamp > POLLING_TIMEOUT_SEC * 60 * 1000,
-    target: widgetMyDeliveriesModel.fetchData,
-});
-
-/**
- * Update market page content
- */
 sample({
     clock: newContentRequested,
     target: widgetMarketModel.fetchData,
+});
+
+/**
+ * Logout when user is not authorized
+ */
+
+const $widgetErrors = combine(
+    widgetMarketModel.$errors,
+    widgetMyDeliveriesModel.$errors,
+    (marketErrors, myDeliveriesErrors) => {
+        return [...marketErrors, ...myDeliveriesErrors].some((error) => {
+            if (axios.isAxiosError(error) && !!error.response) {
+                return error?.response.status === httpStatus.UNAUTHORIZED;
+            }
+            return false;
+        });
+    },
+);
+
+sample({
+    clock: $widgetErrors,
+    filter: (hasUnauthorizedError) => !!hasUnauthorizedError,
+    target: RefreshToken.forceRefreshRequested,
+});
+
+sample({
+    clock: RefreshToken.updateTokenSuccess,
+    target: [widgetMyDeliveriesModel.fetchData, widgetMarketModel.fetchData],
+});
+
+sample({
+    clock: RefreshToken.updateTokenFail,
+    target: Logout.model.logout,
 });

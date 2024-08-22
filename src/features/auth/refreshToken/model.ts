@@ -3,24 +3,20 @@ import {
     authByEmailFx,
     logoutFx,
     refreshAuthTokensFx,
-    sessionModel,
 } from '@/entities/viewer';
-import httpStatus from 'http-status';
-import { createGate } from 'effector-react';
-import { AxiosError } from 'axios';
-import { onRequestFail } from '@/shared/api/middleware';
-import { interval } from 'patronum';
 import { Token } from '@/shared/api';
 import { persist } from 'effector-storage/local';
 import { isBefore, subMinutes } from 'date-fns';
+import { interval, once } from 'patronum';
 import {
-    CHECK_NEED_TOKEN_REFRESH_INTERVAL_SEC,
+    CHECK_NEED_TOKEN_REFRESH_INTERVAL_MIN,
     UPDATE_BEFORE_EXPIRATION_MINUTES,
 } from './config';
 
-export const InitGate = createGate();
-
-const refreshRequested = createEvent();
+export const startTokenRefreshWatcher = createEvent();
+export const forceRefreshRequested = createEvent();
+export const updateTokenSuccess = createEvent();
+export const updateTokenFail = createEvent();
 
 /**
  * ACCESS TOKEN EXPIRE DATE
@@ -41,9 +37,9 @@ persist({
  * Periodic token refresh
  */
 const { tick } = interval({
-    timeout: CHECK_NEED_TOKEN_REFRESH_INTERVAL_SEC,
-    start: InitGate.open,
-    stop: InitGate.close,
+    timeout: 1000 * 60 * CHECK_NEED_TOKEN_REFRESH_INTERVAL_MIN,
+    start: once({ source: startTokenRefreshWatcher, reset: updateTokenFail }),
+    stop: updateTokenFail,
 });
 
 const $$accessRequiredUpdate = $accessTokenExpiredDate.map((date) => {
@@ -58,16 +54,7 @@ sample({
     clock: tick,
     source: $$accessRequiredUpdate,
     filter: (isRequired) => !!isRequired,
-    target: refreshRequested,
-});
-
-/**
- * Refresh when 401
- */
-onRequestFail.watch((error: AxiosError) => {
-    const hasErrorStatus = error.response?.status;
-    const isUnauthorized = hasErrorStatus === httpStatus.UNAUTHORIZED;
-    if (hasErrorStatus && isUnauthorized) refreshRequested();
+    target: forceRefreshRequested,
 });
 
 /**
@@ -75,11 +62,16 @@ onRequestFail.watch((error: AxiosError) => {
  */
 
 sample({
-    clock: refreshRequested,
-    source: {
-        isOnline: sessionModel.$$isOnline,
-        isAuthorized: sessionModel.$isAuthorized,
-    },
-    filter: ({ isOnline, isAuthorized }) => isOnline && isAuthorized,
+    clock: forceRefreshRequested,
     target: refreshAuthTokensFx,
+});
+
+sample({
+    clock: refreshAuthTokensFx.done,
+    target: updateTokenSuccess,
+});
+
+sample({
+    clock: refreshAuthTokensFx.fail,
+    target: updateTokenFail,
 });

@@ -25,7 +25,7 @@ import {
     TIME_LEFT,
     translationNS,
 } from '../../config';
-import { getDeliveryId } from '../../lib/utils/getDeliveryId';
+import { getDeliverySystemId } from '../../lib/utils/getDeliverySystemId';
 import { getDeliveryAddress } from '../../lib/utils/getDeliveryAdress';
 import { getDeliveryMetro } from '../../lib/utils/getDeliveryMetro';
 
@@ -152,7 +152,7 @@ export const DeliveryCountdownCard = forwardRef<
     DeliveryCountdownCardProperties
 >(({ delivery }, reference) => {
     const deadline = delivery.time_end;
-    const id = getDeliveryId(delivery);
+    const id = getDeliverySystemId(delivery);
     const address = getDeliveryAddress(delivery);
     const contact = getDeliveryContact(delivery);
     const metro = getDeliveryMetro(delivery);
