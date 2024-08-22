@@ -1,21 +1,16 @@
 import { widgetNavbarDesktopUi } from '@/widgets/layout/navbar-desktop';
 import React, { PropsWithChildren, Suspense, useRef } from 'react';
-import { useList, useUnit } from 'effector-react';
-import { $searchQuery, $searchResults } from '@/pages/search/searchPage/model';
+import { useUnit } from 'effector-react';
 import { sharedLibTypeGuards } from '@/shared/lib';
 import { widgetSearchQueryPopupModel } from '@/widgets/search/searchQueryPopup';
 import { SearchQueryInputModal } from '@/widgets/search/searchQueryPopup/ui';
-import { Input, Spacer, Spinner } from '@nextui-org/react';
+import { Input } from '@nextui-org/react';
 import { IoSearchSharp } from 'react-icons/io5';
-import { SearchResultsText } from '@/pages/search/searchPage/ui/common/locale/SearchResultsText';
-import { EmptyQuery } from './mobileSearchPageView';
+import {SearchDeliveriesByQueryResults} from "@/widgets/deliveries/searchDeliveries/ui/SearchDeliveriesByQueryResults";
+import {widgetSearchDeliveriesModel} from "@/widgets/deliveries/searchDeliveries";
 
 const { isEmpty } = sharedLibTypeGuards;
-const DeliverySearchResultCardWide = React.lazy(() =>
-    import('@/entities/delivery').then((module) => ({
-        default: module.DeliverySearchResultCardWide,
-    })),
-);
+
 
 const { Navbar } = widgetNavbarDesktopUi;
 
@@ -27,36 +22,16 @@ const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
     <main className="relative overflow-hidden">{children}</main>
 );
 
-const SearchResults: FunctionComponent = () => {
-    const query = useUnit($searchQuery);
-    const results = useList($searchResults, (result) => (
-        <DeliverySearchResultCardWide
-            key={result.id}
-            delivery={result}
-            query={query}
-        />
-    ));
-    return (
-        <>
-            <div className="font-medium">
-                <SearchResultsText />
-            </div>
-            <Spacer y={4} />
-            <div className="flex flex-col gap-4">{results}</div>
-        </>
-    );
-};
-
 const Toolbar: FunctionComponent = () => {
     const reference = useRef<HTMLInputElement>(null);
-    const [openSearchModal, query] = useUnit([
-        widgetSearchQueryPopupModel.modal.clickTriggerElement,
-        widgetSearchQueryPopupModel.base.$query,
-    ]);
+    const { query, onClickInput } = useUnit({
+        onClickInput: widgetSearchQueryPopupModel.searchTriggerClicked,
+        query: widgetSearchDeliveriesModel.$currentQuery,
+    });
 
     const onClickSearchInput = (): void => {
         reference?.current?.blur();
-        openSearchModal();
+        onClickInput();
     };
     return (
         <>
@@ -79,29 +54,12 @@ const Toolbar: FunctionComponent = () => {
 };
 
 export const DesktopSearchPageView: FunctionComponent = () => {
-    const query = useUnit($searchQuery);
-
-    if (isEmpty(query)) {
-        return (
-            <Root>
-                <Navbar />
-                <MainContainer>
-                    <Toolbar onSelectTab={() => {}} />
-                    <div className="flex h-full w-full flex-col items-center justify-center">
-                        <EmptyQuery />
-                    </div>
-                </MainContainer>
-            </Root>
-        );
-    }
-
     return (
         <Root>
             <Navbar />
+            <Toolbar />
             <MainContainer>
-                <Suspense fallback={<Spinner />}>
-                    <SearchResults />
-                </Suspense>
+               <SearchDeliveriesByQueryResults fullWidth/>
             </MainContainer>
         </Root>
     );

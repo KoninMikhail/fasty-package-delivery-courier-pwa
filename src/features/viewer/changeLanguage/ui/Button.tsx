@@ -1,5 +1,5 @@
 import {
-    Button,
+    Button as NextUiButton,
     Dropdown,
     DropdownItem,
     DropdownMenu,
@@ -14,10 +14,10 @@ import { translationNS } from '../config';
 const { UsFlagIcon, RuFlagIcon } = sharedUiIcons;
 
 /**
- * @name ChangeLanguageButton
+ * @name Button
  * @constructor
  */
-export const ChangeLanguageButton = (): JSX.Element => {
+export const Button = (): JSX.Element => {
     const { t, i18n } = useTranslation(translationNS);
     const [selectedLanguage, setSelectedLanguage] = useState<string>(
         i18n.language,
@@ -35,16 +35,16 @@ export const ChangeLanguageButton = (): JSX.Element => {
     return (
         <Dropdown>
             <DropdownTrigger>
-                <Button
+                <NextUiButton
                     variant="light"
                     size="md"
                     className={
-                        'data-[hover=true]:bg-transparent" bg-transparent bg-none px-unit-0 capitalize'
+                        'data-[hover=true]:bg-transparent" px-unit-0 bg-transparent bg-none capitalize'
                     }
                     endContent={<RiArrowDownSFill />}
                 >
                     {t('language_name')}
-                </Button>
+                </NextUiButton>
             </DropdownTrigger>
             <DropdownMenu
                 aria-label="Change language"

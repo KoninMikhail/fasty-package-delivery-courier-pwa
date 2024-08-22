@@ -1,5 +1,5 @@
 import { factory } from './model';
 
-export const GetDeliveriesByQuery = {
+export const FetchDeliveriesByQuery = {
     factory,
 };

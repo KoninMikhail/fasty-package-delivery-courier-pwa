@@ -12,7 +12,7 @@ import { ImKey } from 'react-icons/im';
 import { useUnit } from 'effector-react';
 import { FaGithub } from 'react-icons/fa6';
 
-import { ChangeLanguageIconButton } from '@/features/viewer/changeLanguage';
+import { IconButton } from '@/features/viewer/changeLanguage';
 
 import { widgetCookiePolicyModalUi } from '@/widgets/polices/cookiePolicyModal';
 import { widgetResetPasswordModalUi } from '@/widgets/viewer/reset-password-modal';
@@ -172,7 +172,7 @@ export const AuthPage: FunctionComponent = () => {
                             <Logo />
                         </NavbarBrand>
                         <NavbarTools>
-                            <ChangeLanguageIconButton />
+                            <IconButton />
                         </NavbarTools>
                     </Navbar>
                 </Section>

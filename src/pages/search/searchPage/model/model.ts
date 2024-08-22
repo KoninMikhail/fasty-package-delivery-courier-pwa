@@ -3,6 +3,7 @@ import { Delivery } from '@/shared/api';
 import { sharedLibTypeGuards } from '@/shared/lib';
 import { searchDeliveriesByQueryFx } from './effects';
 import { PageState, SearchPageState } from '../types';
+import { sessionModel } from '@/entities/session';
 
 const { isEmpty } = sharedLibTypeGuards;
 
@@ -12,11 +13,18 @@ const { isEmpty } = sharedLibTypeGuards;
 export const queryChanged = createEvent<string>();
 
 /**
+ * Network state
+ */
+
+const { $$isOnline, $isAuthorized } = sessionModel;
+
+/**
  * Query
  */
-export const $searchQuery = createStore<string>('', {
-    name: 'searchQuery',
-}).on(queryChanged, (_, query) => query);
+export const $searchQuery = createStore<string>('').on(
+    queryChanged,
+    (_, query) => query,
+);
 
 sample({
     clock: $searchQuery,

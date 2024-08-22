@@ -25,6 +25,7 @@ export const RelatedQueries: FunctionComponent<{
 }> = ({ limit = MAX_RECENT_REQUESTS }) => {
     const { t } = useTranslation(translationNS);
     const navigate = useNavigate();
+
     const { addQueryToHistory, onStartSearchCloseModal, onDeleteRelatedQuery } =
         useUnit({
             addQueryToHistory: queryAddedToHistory,
@@ -49,15 +50,9 @@ export const RelatedQueries: FunctionComponent<{
     const items = useList($relatedQueries, (item, index) => {
         if (index >= limit) return null;
 
-        const onPressItemElement = (): void => {
-            onPressRelatedQuery(item);
-        };
-
-        const onPressDeleteItemButton = (): void => {
-            if (onDeleteRelatedQuery) {
-                onDeleteRelatedQuery(item);
-            }
-        };
+        const onPressItemElement = (): void => onPressRelatedQuery(item);
+        const onPressDeleteItemButton = (): string =>
+            onDeleteRelatedQuery?.(item);
 
         return (
             <div

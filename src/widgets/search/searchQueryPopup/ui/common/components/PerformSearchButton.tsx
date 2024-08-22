@@ -18,6 +18,7 @@ const { SEARCH_PAGE } = RouteName;
 export const PerformSearchButton: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
     const navigate = useNavigate();
+
     const { query, addToHistory, onStartSearchCloseModal } = useUnit({
         addToHistory: queryAddedToHistory,
         query: $query,

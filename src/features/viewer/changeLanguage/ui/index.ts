@@ -1,2 +1,2 @@
-export * from './ChangeLanguageButton';
-export * from './ChangeLanguageIconButton';
+export * from './Button';
+export * from './IconButton';

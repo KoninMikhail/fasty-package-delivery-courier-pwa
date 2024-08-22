@@ -24,7 +24,10 @@ export const SearchPage: FunctionComponent = () => {
     // Search
     const [searchParameters] = useSearchParams();
     const urlQuery = searchParameters.get('q') || '';
-    const [query, setQuery] = useUnit([$searchQuery, queryChanged]);
+    const { query, setQuery } = useUnit({
+        query: $searchQuery,
+        setQuery: queryChanged,
+    });
 
     useEffect(() => {
         setQuery(urlQuery);
