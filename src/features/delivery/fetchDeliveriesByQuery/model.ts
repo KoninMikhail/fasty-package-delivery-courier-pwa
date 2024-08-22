@@ -5,34 +5,38 @@ import { Delivery } from '@/shared/api';
 interface FactoryOptions {
     debounceTime: number;
     minQueryLength: number;
-    searchFx: Effect<string, Delivery[], Error>;
+    provider: Effect<string, Delivery[], Error>;
 }
 
 export const factory = modelFactory((options: FactoryOptions) => {
     const queryChanged = createEvent<string>();
+    const deliveriesFetched = createEvent<Delivery[]>();
 
     const $query = createStore<string>('').on(
         queryChanged,
         (_, query) => query,
     );
-    const $pending = options.searchFx.pending;
-    const $searchResults = createStore<Delivery[]>([]);
+    const $pending = options.provider.pending;
+    const $errors = createStore<Error[]>([])
+        .on(options.provider.failData, (state, error) => [...state, error])
+        .reset(options.provider.doneData);
 
     sample({
         source: $query,
         filter: (query) => query.length >= options.minQueryLength,
-        target: options.searchFx,
+        target: options.provider,
     });
 
     sample({
-        clock: options.searchFx.doneData,
-        target: $searchResults,
+        clock: options.provider.doneData,
+        target: deliveriesFetched,
     });
 
     return {
         queryChanged,
-        $searchResults,
+        deliveriesFetched,
         $query,
+        $errors,
         $pending,
     };
 });

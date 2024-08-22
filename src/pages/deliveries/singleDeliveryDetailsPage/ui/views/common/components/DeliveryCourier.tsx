@@ -1,11 +1,11 @@
 import { useUnit } from 'effector-react';
-import { lazily } from 'react-lazily';
-import { $$deliveryCourier } from '../../../../model';
-
-const { UserCardRow } = lazily(() => import('@/entities/user'));
+import { getDeliveryCourier } from '@/entities/delivery';
+import { UserCardRow } from '@/entities/user';
+import { $delivery } from '../../../../model';
 
 export const DeliveryCourier: FunctionComponent = () => {
-    const courier = useUnit($$deliveryCourier);
+    const delivery = useUnit($delivery);
+    const courier = getDeliveryCourier(delivery);
 
     if (!courier)
         return (

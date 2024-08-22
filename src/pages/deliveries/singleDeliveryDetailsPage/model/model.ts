@@ -1,21 +1,9 @@
 import { createGate } from 'effector-react';
-import { combine, createStore, sample } from 'effector';
+import { combine, createEvent, createStore, sample } from 'effector';
 import { SetDeliveryStatus } from '@/features/delivery/setDeliveryStatus';
 import {
-    getDeliveryAddress,
     getDeliveryByIdFx,
-    getDeliveryClient,
-    getDeliveryContents,
     getDeliveryCoordinates,
-    getDeliveryCourier,
-    getDeliveryExpressState,
-    getDeliveryExpressStateTranslated,
-    getDeliverySystemId,
-    getDeliveryManager,
-    getDeliveryMetro,
-    getDeliveryPickupDateTime,
-    getDeliveryType,
-    getDeliveryTypeTranslated,
     getDeliveryWeightPersisted,
     setDeliveryStatusFx,
     isDeliveryAssignedToCourier,
@@ -26,13 +14,12 @@ import { getCachedDeliveryByIdFx } from '@/entities/delivery/effects';
 import { Delivery } from '@/shared/api';
 
 import { assignUserToDeliveryFx } from '@/entities/user';
-import { getClientTypeLocale } from '@/entities/client/lib/utils/getClientTypeLocale';
-import { getClientName, getClientType } from '@/entities/client';
-import { debug, once } from 'patronum';
+import { and, condition, delay, not } from 'patronum';
 import { sharedLibTypeGuards } from '@/shared/lib';
 import { FetchDeliveryById } from '@/features/delivery/fetchDeliveryById';
 import {
     $pageDeliveryDetails,
+    $pageDeliveryDetailsCache,
     setDeliveryDetails,
 } from '@/pages/deliveries/singleDeliveryDetailsPage/model/stores';
 import { PageState } from '../types';
@@ -51,32 +38,64 @@ export const DeliveryDetailsPageGateway = createGate<{
     deliveryId?: string;
 }>();
 
+/**
+ * Page State
+ */
+
+export const $pageContentState = createStore<PageState>(PageState.INIT)
+    .on(FetchDeliveryById.fetchSuccess, () => PageState.Done)
+    .reset(DeliveryDetailsPageGateway.close);
+
+/**
+ * Network state
+ */
+
+const { $$isOnline, $isAuthorized } = sessionModel;
+
+/**
+ * Data fetching
+ */
+
+const loadFromCache = createEvent<Delivery['id']>();
+
 const $deliveryId = createStore<string>('').on(
     DeliveryDetailsPageGateway.open,
     (_, { deliveryId }) => deliveryId ?? '',
 );
+const $deliveryFetched = createStore<boolean>(false)
+    .on(FetchDeliveryById.fetchSuccess, () => true)
+    .on(setDeliveryDetails, () => true)
+    .reset($deliveryId);
 
-/**
- * Events
- */
+const $availableInCache = combine(
+    $pageDeliveryDetailsCache,
+    $deliveryId,
+    (cache, id) => {
+        return cache.some((x) => x.id === id);
+    },
+);
+
+condition({
+    source: delay($deliveryId, 600),
+    if: and($availableInCache, not($$isOnline), $isAuthorized),
+    then: loadFromCache,
+    else: FetchDeliveryById.fetch,
+});
 
 sample({
-    clock: once({
-        source: DeliveryDetailsPageGateway.open,
-        reset: DeliveryDetailsPageGateway.close,
-    }),
-    source: $deliveryId,
-    filter: (deliveryId) => !isEmpty(deliveryId),
-    target: FetchDeliveryById.fetch,
+    clock: loadFromCache,
+    source: $pageDeliveryDetailsCache,
+    fn: (cache, id) => cache.find((x) => x.id === id) as Delivery,
+    target: setDeliveryDetails,
 });
 
 /**
  * Page
  */
 
-export const $pageContentState = createStore<Optional<PageState>>(null)
+/* export const $pageContentState = createStore<Optional<PageState>>(null)
     .on(FetchDeliveryById.fetchSuccess, () => PageState.Done)
-    .reset(DeliveryDetailsPageGateway.close);
+    .reset(DeliveryDetailsPageGateway.close); */
 
 sample({
     clock: FetchDeliveryById.fetchSuccess,
@@ -95,35 +114,13 @@ export const $delivery = createStore<Delivery>(initialDelivery)
     .reset(DeliveryDetailsPageGateway.close);
 
 // Derived stores to decompose the delivery object for easier consumption
-export const $$deliveryId = $pageDeliveryDetails.map((delivery) =>
-    getDeliverySystemId(delivery, DELIVERY_ID_LENGTH),
-);
+
 export const $$deliveryNumber = $pageDeliveryDetails.map((delivery) =>
     getDeliveryNumber(delivery, DELIVERY_ID_LENGTH),
 );
-export const $$deliveryContents = $pageDeliveryDetails.map((delivery) =>
-    getDeliveryContents(delivery),
-);
+
 export const $$deliveryWeight = $pageDeliveryDetails.map((delivery) =>
     getDeliveryWeightPersisted(delivery),
-);
-export const $$deliveryType = $pageDeliveryDetails.map((delivery) =>
-    getDeliveryType(delivery),
-);
-export const $$deliveryTypeTranslated = $pageDeliveryDetails.map((delivery) =>
-    getDeliveryTypeTranslated(delivery),
-);
-export const $$deliveryIsExpress = $pageDeliveryDetails.map((delivery) =>
-    getDeliveryExpressState(delivery),
-);
-export const $$deliveryIsExpressTranslated = $pageDeliveryDetails.map(
-    (delivery) => getDeliveryExpressStateTranslated(delivery),
-);
-export const $$deliveryAddress = $pageDeliveryDetails.map((delivery) =>
-    getDeliveryAddress(delivery),
-);
-export const $$deliveryMetro = $pageDeliveryDetails.map((delivery) =>
-    getDeliveryMetro(delivery),
 );
 
 export const $$deliveryCoordinates = $pageDeliveryDetails.map((delivery) => {
@@ -135,38 +132,6 @@ export const $$deliveryCoordinates = $pageDeliveryDetails.map((delivery) => {
           }
         : null;
 });
-
-debug($delivery);
-
-export const $$deliveryPickupDateTime = $pageDeliveryDetails.map((delivery) =>
-    getDeliveryPickupDateTime(delivery, true, true),
-);
-
-export const $$deliveryContact = $pageDeliveryDetails.map(
-    (delivery) => delivery.contact || {},
-);
-
-/**
- * Client
- */
-export const $$deliveryClient = $pageDeliveryDetails.map((delivery) =>
-    getDeliveryClient(delivery),
-);
-export const $$deliveryClientName = $$deliveryClient.map((client) =>
-    getClientName(client),
-);
-export const $$deliveryClientType = $$deliveryClient.map((client) =>
-    getClientType(client),
-);
-export const $$deliveryClientTypeLocaled = $$deliveryClient.map((client) =>
-    getClientTypeLocale(client),
-);
-export const $$deliveryManager = $pageDeliveryDetails.map((delivery) =>
-    getDeliveryManager(delivery),
-);
-export const $$deliveryCourier = $pageDeliveryDetails.map((delivery) =>
-    getDeliveryCourier(delivery),
-);
 
 export const $$isViewerDelivery = combine(
     $pageDeliveryDetails,

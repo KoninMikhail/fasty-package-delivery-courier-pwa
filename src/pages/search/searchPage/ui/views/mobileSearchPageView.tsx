@@ -23,6 +23,7 @@ import {
 } from '@/pages/search/searchPage/model';
 import { SearchNotFoundText } from '@/pages/search/searchPage/ui/common/locale/SearchNotFoundText';
 import { SearchEmptyQueryText } from '../common/locale/SearchEmptyQueryText';
+import {SearchDeliveriesByQueryResults} from "@/widgets/deliveries/searchDeliveries/ui/SearchDeliveriesByQueryResults";
 
 const SearchPopup = React.lazy(() =>
     import('@/widgets/search/searchQueryPopup').then((module) => ({
@@ -151,6 +152,7 @@ const SearchResults: FunctionComponent = () => {
  */
 export const MobileSearchPageView: FunctionComponent = () => {
     const pageState = useUnit($finalSearchState);
+
     const renderState = (): ReactElement | ReactElement[] => {
         switch (pageState) {
             case PageState.EmptyQuery: {
@@ -183,10 +185,7 @@ export const MobileSearchPageView: FunctionComponent = () => {
                 <Header />
                 <Content>
                     <Spacer y={2} />
-                    <div className="flex h-full flex-col gap-4">
-                        {renderState()}
-                        <Spacer y={16} />
-                    </div>
+                    <SearchDeliveriesByQueryResults/>
                     <Spacer y={4} />
                     <NavbarMobile />
                 </Content>

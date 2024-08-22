@@ -1,7 +1,9 @@
 import { useUnit } from 'effector-react';
-import { $$deliveryContents } from '../../../../model';
+import { getDeliveryContents } from '@/entities/delivery';
+import { $delivery } from '../../../../model';
 
 export const DeliveryContents: FunctionComponent = () => {
-    const contents = useUnit($$deliveryContents);
+    const delivery = useUnit($delivery);
+    const contents = getDeliveryContents(delivery);
     return <p>{contents}</p>;
 };

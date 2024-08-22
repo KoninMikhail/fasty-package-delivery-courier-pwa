@@ -5,7 +5,7 @@ import { sharedConfigConstants } from '@/shared/config';
 import { Button, Chip, Divider, Link, Spacer } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { ChangeColorModeSwitchButton } from '@/features/viewer/changeColorMode';
-import { ChangeLanguageButton } from '@/features/viewer/changeLanguage';
+import { Button, ChangeLanguage } from '@/features/viewer/changeLanguage';
 import {
     MdOutlineMarkunreadMailbox,
     MdOutlinePhoneEnabled,
@@ -15,27 +15,28 @@ import { widgetCookiePolicyModalUi } from '@/widgets/polices/cookiePolicyModal';
 import { widgetPrivacyPolicyModalUi } from '@/widgets/polices/privacyPolicyModal';
 import { widgetTermsOfUseModalUi } from '@/widgets/polices/termsOfUseModal';
 import { useUnit } from 'effector-react';
-import { UpcomingItemsCountDropdown } from '@/features/viewer/setHomeUpcommingCount';
+import { SetHomeUpcomingCount } from '@/features/viewer/setHomeUpcommingCount';
 import { sharedLibApp, sharedLibHelpers } from '@/shared/lib';
-import {
-    SettingsNotice,
-    BackButton,
-    PageTitle,
-    SectionHelpSupportTitle,
-    SectionLegalTitle,
-    CallButtonText,
-    EmailButtonText,
-    TermsOfUseButtonText,
-    PrivacyPolicyButtonText,
-    CookiesPolicyButtonText,
-} from '../common';
+
+import { BackButton } from '../common/BackButton';
 
 import {
     pressOpenCookiePolicyLink,
     pressOpenPrivacyPolicyLink,
     pressOpenTermsOfUseLink,
 } from '../../model';
-import { translationNS } from '../../config';
+import {
+    NOTIFICATION_CONTENT,
+    PAGE_HEADING,
+    SECTION_HELP_SUPPORT_CALL_BUTTON,
+    SECTION_HELP_SUPPORT_EMAIL_BUTTON,
+    SECTION_HELP_SUPPORT_TITLE,
+    SECTION_LEGAL_COOKIE_POLICY,
+    SECTION_LEGAL_PRIVACY_POLICY,
+    SECTION_LEGAL_TERMS_OF_USE,
+    SECTION_LEGAL_TITLE,
+    translationNS,
+} from '../../config';
 
 const { AppVersion } = sharedLibApp;
 const { removeNonNumericChars } = sharedLibHelpers;
@@ -58,18 +59,22 @@ const Section: FunctionComponent<PropsWithChildren> = ({ children }) => (
     <section className="grid gap-4 p-2">{children}</section>
 );
 
-const Header: FunctionComponent = () => (
-    <header className="flex w-full items-center px-4 pt-4">
-        <h1 className="flex-grow truncate text-xl font-bold">
-            <PageTitle />
-        </h1>
-        <div className="flex-shrink">
-            <BackButton />
-        </div>
-    </header>
-);
+const Header: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
+    return (
+        <header className="flex w-full items-center px-4 pt-4">
+            <h1 className="flex-grow truncate text-xl font-bold">
+                {t(PAGE_HEADING)}
+            </h1>
+            <div className="flex-shrink">
+                <BackButton />
+            </div>
+        </header>
+    );
+};
 
 const ContactLinks: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
     const phoneLink = `tel:+${removeNonNumericChars(APP_SUPPORT_PHONE)}`;
     const emailLink = `mailto:${APP_SUPPORT_EMAIL}`;
     return (
@@ -84,7 +89,7 @@ const ContactLinks: FunctionComponent = () => {
                 showAnchorIcon
                 anchorIcon={<MdOutlinePhoneEnabled />}
             >
-                <CallButtonText />
+                {t(SECTION_HELP_SUPPORT_CALL_BUTTON)}
             </Button>
             <Button
                 href={emailLink}
@@ -96,26 +101,27 @@ const ContactLinks: FunctionComponent = () => {
                 showAnchorIcon
                 isExternal
             >
-                <EmailButtonText />
+                {t(SECTION_HELP_SUPPORT_EMAIL_BUTTON)}
             </Button>
         </div>
     );
 };
 
 const PolicesLinks: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
     const onPressCookiePolicy = useUnit(pressOpenCookiePolicyLink);
     const onPressPrivacyPolicy = useUnit(pressOpenPrivacyPolicyLink);
     const onPressTermsOfUse = useUnit(pressOpenTermsOfUseLink);
     return (
         <>
             <Button onPress={onPressTermsOfUse} variant="bordered">
-                <TermsOfUseButtonText />
+                {t(SECTION_LEGAL_TERMS_OF_USE)}
             </Button>
             <Button onPress={onPressPrivacyPolicy} variant="bordered">
-                <PrivacyPolicyButtonText />
+                {t(SECTION_LEGAL_PRIVACY_POLICY)}
             </Button>
             <Button onPress={onPressCookiePolicy} variant="bordered">
-                <CookiesPolicyButtonText />
+                {t(SECTION_LEGAL_COOKIE_POLICY)}
             </Button>
         </>
     );
@@ -159,7 +165,7 @@ export const MobileSettingsPageView: FunctionComponent = () => {
                     <div className="flex items-center gap-2">
                         <div className="flex-grow">{t('language.title')}</div>
                         <div>
-                            <ChangeLanguageButton />
+                            <ChangeLanguage.Button />
                         </div>
                     </div>
                 </Section>
@@ -177,14 +183,14 @@ export const MobileSettingsPageView: FunctionComponent = () => {
                             {t('setting.upcoming.items.count')}
                         </div>
                         <div>
-                            <UpcomingItemsCountDropdown />
+                            <SetHomeUpcomingCount.Dropdown />
                         </div>
                     </div>
                 </Section>
                 <Spacer />
                 <Section>
                     <p className="text-xs text-danger-400">
-                        <SettingsNotice />
+                        {t(NOTIFICATION_CONTENT)}
                     </p>
                 </Section>
                 <Spacer />
@@ -192,14 +198,14 @@ export const MobileSettingsPageView: FunctionComponent = () => {
                 <Spacer y={2} />
                 <Section>
                     <div className="w-full font-bold">
-                        <SectionHelpSupportTitle />
+                        {t(SECTION_HELP_SUPPORT_TITLE)}
                     </div>
                     <ContactLinks />
                 </Section>
                 <Section>
                     <div className="flex flex-col gap-2">
                         <div className="mb-2 w-full font-bold">
-                            <SectionLegalTitle />
+                            {t(SECTION_LEGAL_TITLE)}
                         </div>
                         <PolicesLinks />
                     </div>

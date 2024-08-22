@@ -12,11 +12,7 @@ import { translationNS } from '../config';
 
 const { UsFlagIcon, RuFlagIcon } = sharedUiIcons;
 
-/**
- * @name ChangeLanguageButton
- * @constructor
- */
-export const ChangeLanguageIconButton = (): JSX.Element => {
+export const IconButton: FunctionComponent = () => {
     const { i18n } = useTranslation(translationNS);
     const [selectedLanguage, setSelectedLanguage] = useState<string>(
         i18n.language,

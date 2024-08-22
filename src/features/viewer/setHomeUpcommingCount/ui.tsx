@@ -4,7 +4,7 @@ import { settingsModel } from '@/entities/viewer';
 import { ChangeEventHandler } from 'react';
 import { ALLOWED_COUNTS } from './config';
 
-export const UpcomingItemsCountDropdown: FunctionComponent = () => {
+export const Dropdown: FunctionComponent = () => {
     const currentCount = useUnit(settingsModel.$homeUpcomingDeliveriesCount);
     const setCount = useUnit(settingsModel.countChanged);
 

@@ -1,7 +1,9 @@
 import { useUnit } from 'effector-react';
-import { $$deliveryPickupDateTime } from '../../../../model';
+import { getDeliveryPickupDateTime } from '@/entities/delivery';
+import { $delivery } from '../../../../model';
 
 export const DeliveryPickup: FunctionComponent = () => {
-    const pickup = useUnit($$deliveryPickupDateTime);
+    const delivery = useUnit($delivery);
+    const pickup = getDeliveryPickupDateTime(delivery, true, true);
     return <p>{pickup}</p>;
 };

@@ -1,22 +1,25 @@
 import { useUnit } from 'effector-react';
 import { HiLightningBolt } from 'react-icons/hi';
 import {
-    $$deliveryIsExpress,
-    $$deliveryIsExpressTranslated,
-} from '../../../../model';
+    getDeliveryExpressState,
+    getDeliveryExpressStateTranslated,
+} from '@/entities/delivery';
+import { $delivery } from '../../../../model';
 
 export const DeliveryTypeExpress: FunctionComponent = () => {
-    const express = useUnit($$deliveryIsExpressTranslated);
-    const isExpress = useUnit($$deliveryIsExpress);
+    const delivery = useUnit($delivery);
+    const isExpress = getDeliveryExpressState(delivery);
+    const label = getDeliveryExpressStateTranslated(delivery);
 
-    return (
-        <div className="flex items-center gap-1">
-            {isExpress ? (
+    if (isExpress)
+        return (
+            <div className="flex items-center gap-1">
                 <span className="text-xl text-secondary">
                     <HiLightningBolt />
                 </span>
-            ) : null}
-            {express}
-        </div>
-    );
+                {label}
+            </div>
+        );
+
+    return <div className="flex items-center gap-1">{label}</div>;
 };

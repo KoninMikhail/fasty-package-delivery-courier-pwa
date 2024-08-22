@@ -120,8 +120,7 @@ sample({
 /**
  * Logout when user is not authorized
  */
-
-const $widgetErrors = combine(
+const $hasUnauthorizedError = combine(
     widgetMyDeliveriesModel.$errors,
     (myDeliveriesErrors) => {
         return [...myDeliveriesErrors].some((error) => {
@@ -134,13 +133,15 @@ const $widgetErrors = combine(
 );
 
 sample({
-    clock: $widgetErrors,
+    clock: $hasUnauthorizedError,
     filter: (hasUnauthorizedError) => !!hasUnauthorizedError,
     target: RefreshToken.forceRefreshRequested,
 });
 
 sample({
     clock: RefreshToken.updateTokenSuccess,
+    source: $initWidgetsCompleted,
+    filter: (isInitialized) => isInitialized,
     target: widgetMyDeliveriesModel.fetchData,
 });
 

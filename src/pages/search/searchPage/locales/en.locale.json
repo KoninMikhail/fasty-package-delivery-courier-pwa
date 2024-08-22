@@ -1,7 +1,5 @@
 {
   "page.title_default": "Search | {{appName}}-{{appDescription}}",
   "page.title_search": "{{query}} | {{appName}}-{{appDescription}}",
-  "page.section.heading.results": "Search Results",
-  "page.section.notfound.message": "No results found",
-  "page.section.noquery.message": "Please enter a search query"
+
 }

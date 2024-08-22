@@ -181,7 +181,7 @@ sample({
  * Logout when user is not authorized
  */
 
-const $widgetErrors = combine(
+const $hasUnauthorizedErrors = combine(
     widgetMarketModel.$errors,
     widgetMyDeliveriesModel.$errors,
     (marketErrors, myDeliveriesErrors) => {
@@ -195,7 +195,7 @@ const $widgetErrors = combine(
 );
 
 sample({
-    clock: $widgetErrors,
+    clock: $hasUnauthorizedErrors,
     filter: (hasUnauthorizedError) => !!hasUnauthorizedError,
     target: RefreshToken.forceRefreshRequested,
 });
