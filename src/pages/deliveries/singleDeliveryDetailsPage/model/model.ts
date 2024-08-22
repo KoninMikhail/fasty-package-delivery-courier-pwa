@@ -14,7 +14,7 @@ import { getCachedDeliveryByIdFx } from '@/entities/delivery/effects';
 import { Delivery } from '@/shared/api';
 
 import { assignUserToDeliveryFx } from '@/entities/user';
-import { and, condition, delay } from 'patronum';
+import { and, condition, delay, not } from 'patronum';
 import { sharedLibTypeGuards } from '@/shared/lib';
 import { FetchDeliveryById } from '@/features/delivery/fetchDeliveryById';
 import {
@@ -37,6 +37,14 @@ const { isEmpty } = sharedLibTypeGuards;
 export const DeliveryDetailsPageGateway = createGate<{
     deliveryId?: string;
 }>();
+
+/**
+ * Page State
+ */
+
+export const $pageContentState = createStore<PageState>(PageState.INIT)
+    .on(FetchDeliveryById.fetchSuccess, () => PageState.Done)
+    .reset(DeliveryDetailsPageGateway.close);
 
 /**
  * Network state
@@ -69,7 +77,7 @@ const $availableInCache = combine(
 
 condition({
     source: delay($deliveryId, 600),
-    if: and($availableInCache, $$isOnline, $isAuthorized),
+    if: and($availableInCache, not($$isOnline), $isAuthorized),
     then: loadFromCache,
     else: FetchDeliveryById.fetch,
 });
@@ -85,9 +93,9 @@ sample({
  * Page
  */
 
-export const $pageContentState = createStore<Optional<PageState>>(null)
+/* export const $pageContentState = createStore<Optional<PageState>>(null)
     .on(FetchDeliveryById.fetchSuccess, () => PageState.Done)
-    .reset(DeliveryDetailsPageGateway.close);
+    .reset(DeliveryDetailsPageGateway.close); */
 
 sample({
     clock: FetchDeliveryById.fetchSuccess,
