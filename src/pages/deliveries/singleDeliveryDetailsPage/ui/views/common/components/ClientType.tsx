@@ -1,21 +1,23 @@
 import { useUnit } from 'effector-react';
 import { RiBuildingFill } from 'react-icons/ri';
 import { IoPersonSharp } from 'react-icons/io5';
-import {
-    $$deliveryClientType,
-    $$deliveryClientTypeLocaled,
-} from '../../../../model';
+import { getClientType, getClientTypeLocale } from '@/entities/client';
+import { $delivery } from '../../../../model';
 
 export const ClientType: FunctionComponent = () => {
-    const type = useUnit($$deliveryClientType);
-    const text = useUnit($$deliveryClientTypeLocaled);
-    if (type === 'organization') {
+    const { client } = useUnit($delivery);
+    const clientType = getClientType(client);
+    const clientTypeLocaled = getClientTypeLocale(client);
+
+    const isOrganization = clientType === 'organization';
+
+    if (isOrganization) {
         return (
             <div className="flex items-center gap-1">
                 <span className="text-xl">
                     <RiBuildingFill />
                 </span>
-                {text}
+                {clientTypeLocaled}
             </div>
         );
     }
@@ -24,7 +26,7 @@ export const ClientType: FunctionComponent = () => {
             <span className="text-xl">
                 <IoPersonSharp />
             </span>
-            {text}
+            {clientTypeLocaled}
         </div>
     );
 };

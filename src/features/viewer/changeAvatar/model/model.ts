@@ -68,9 +68,7 @@ export const factory = modelFactory((options: FactoryOptions) => {
         .on(imgSourceChanged, (_, dataUrl) => dataUrl)
         .reset([options.changeAvatarFx.doneData, cancelPressed]);
 
-    const $imgSourceResized = createStore<string>('', {
-        name: 'imgSourceResized',
-    })
+    const $imgSourceResized = createStore<string>('')
         .on(resizeImageFx.doneData, (_, payload) => payload)
         .reset([options.changeAvatarFx.doneData, cancelPressed]);
 
