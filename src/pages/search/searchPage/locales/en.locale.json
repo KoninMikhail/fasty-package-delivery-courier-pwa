@@ -1,5 +1,5 @@
 {
   "page.title_default": "Search | {{appName}}-{{appDescription}}",
-  "page.title_search": "{{query}} | {{appName}}-{{appDescription}}",
+  "page.title_search": "{{query}} | {{appName}}-{{appDescription}}"
 
 }

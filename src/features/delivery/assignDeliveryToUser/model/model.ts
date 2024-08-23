@@ -9,7 +9,7 @@ type FactoryOptions = {
 export const factory = modelFactory((options: FactoryOptions) => {
     const assignPressed = createEvent<Delivery['id']>();
     const assignConfirmed = createEvent();
-    const assignCompleted = createEvent<Delivery['id']>();
+    const assignCompleted = createEvent<Delivery>();
     const assignRejected = createEvent();
 
     const $deliveryIdForAssign = createStore<Optional<Delivery['id']>>(null);
@@ -18,7 +18,10 @@ export const factory = modelFactory((options: FactoryOptions) => {
     $deliveryIdForAssign
         .on(assignPressed, (_, payload) => payload)
         .on(assignRejected, () => null);
-    $assignedItems.on(assignCompleted, (state, id) => [...state, id]);
+    $assignedItems.on(assignCompleted, (state, delivery) => [
+        ...state,
+        delivery.id,
+    ]);
 
     /**
      * State
@@ -35,8 +38,7 @@ export const factory = modelFactory((options: FactoryOptions) => {
     });
 
     sample({
-        clock: options.assignToDeliveryFx.done,
-        fn: (data) => data.params,
+        clock: options.assignToDeliveryFx.doneData,
         target: assignCompleted,
     });
 

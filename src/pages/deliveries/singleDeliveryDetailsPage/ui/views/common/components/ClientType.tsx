@@ -2,10 +2,10 @@ import { useUnit } from 'effector-react';
 import { RiBuildingFill } from 'react-icons/ri';
 import { IoPersonSharp } from 'react-icons/io5';
 import { getClientType, getClientTypeLocale } from '@/entities/client';
-import { $delivery } from '../../../../model';
+import { $pageDeliveryDetails } from '../../../../model/stores';
 
 export const ClientType: FunctionComponent = () => {
-    const { client } = useUnit($delivery);
+    const { client } = useUnit($pageDeliveryDetails);
     const clientType = getClientType(client);
     const clientTypeLocaled = getClientTypeLocale(client);
 

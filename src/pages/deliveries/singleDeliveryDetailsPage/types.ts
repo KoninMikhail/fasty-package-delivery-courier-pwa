@@ -4,4 +4,5 @@ export enum PageState {
     NotFound = 'notFound',
     Error = 'error',
     NOT_LOADED = 'notLoaded',
+    NotFoundOffline = 'notFoundOffline',
 }

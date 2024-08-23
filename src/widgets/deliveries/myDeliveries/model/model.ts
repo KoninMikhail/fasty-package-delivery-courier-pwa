@@ -3,7 +3,7 @@ import { FilterDeliveriesByTimeRange } from '@/features/delivery/filterDeliverie
 import { sharedLibTypeGuards } from '@/shared/lib';
 import { empty } from 'patronum';
 import { FetchDeliveriesByParameters } from '@/features/delivery/fetchDeliveriesByParams';
-import { $myDeliveriesStore, setDeliveries } from './stores';
+import { $myDeliveriesStore, resetDeliveries, setDeliveries } from './stores';
 import { getMyDeliveriesFx } from './effects';
 import {
     DELIVERY_END_TIME,
@@ -21,6 +21,7 @@ export const initOffline = createEvent();
 export const setOnline = createEvent<boolean>();
 export const fetchData = createEvent();
 export const dataUpdated = createEvent();
+export const reset = createEvent();
 
 /**
  * Network
@@ -28,7 +29,8 @@ export const dataUpdated = createEvent();
 export const $isOnline = createStore<boolean>(true)
     .on(initOffline, () => false)
     .on(setOnline, (_, payload) => payload)
-    .reset(init);
+    .reset(init)
+    .reset(reset);
 
 /**
  * Data fetching
@@ -59,10 +61,9 @@ sample({
  */
 const initCompleted = createEvent();
 
-export const $isInitialized = createStore<boolean>(false).on(
-    initCompleted,
-    () => true,
-);
+export const $isInitialized = createStore<boolean>(false)
+    .on(initCompleted, () => true)
+    .reset(reset);
 
 // Online
 sample({
@@ -105,3 +106,12 @@ export const filteredDeliveriesByTimeModel =
         stepMins: DELIVERY_TIME_STEP,
         sourceStore: $myDeliveriesStore,
     });
+
+/**
+ * Reset
+ */
+
+sample({
+    clock: reset,
+    target: [resetDeliveries, fetchMyDeliveriesModel.reset],
+});

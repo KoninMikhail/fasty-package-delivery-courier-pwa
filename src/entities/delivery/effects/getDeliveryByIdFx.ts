@@ -7,15 +7,12 @@ import { ZodError } from 'zod';
  * Defines the parameter type for the `getDeliveryByIdFx` effect.
  * @property {Delivery['id']} deliveryId - The unique identifier of a delivery.
  */
-export interface GetDeliveryByIdParameters {
-    deliveryId: Delivery['id'];
-}
 
 /**
  * Effect to fetch a delivery by its ID. Handles known errors specifically.
  */
-export const getDeliveryByIdFx = createEffect(
-    async ({ deliveryId }: GetDeliveryByIdParameters) => {
+export const getDeliveryByIdFx = createEffect<Delivery['id'], Delivery>(
+    async (deliveryId) => {
         try {
             return await apiClient.fetchDeliveryById({
                 params: { deliveryId },

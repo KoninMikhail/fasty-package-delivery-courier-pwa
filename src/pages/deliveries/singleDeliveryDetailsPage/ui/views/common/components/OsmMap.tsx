@@ -8,11 +8,9 @@ import { useLayoutEffect, useMemo, useState } from 'react';
 import { generateYandexMapsLink } from '@/pages/deliveries/singleDeliveryDetailsPage/lib';
 import { Offline, Online } from '@/entities/viewer';
 import { useUnit } from 'effector-react';
-import {
-    $$deliveryCoordinates,
-    $delivery,
-} from '@/pages/deliveries/singleDeliveryDetailsPage/model';
 import { getDeliveryAddress } from '@/entities/delivery';
+import { $$deliveryCoordinates } from '../../../../model/model';
+import { $pageDeliveryDetails } from '../../../../model/stores';
 import { FALLBACK_MAP_CENTER, FALLBACK_MAP_ZOOM } from '../../../../config';
 
 interface IYMAPSFallback {
@@ -130,7 +128,7 @@ export const OSMMap: FunctionComponent<IOSMMapProperties> = ({
     zoom,
     classNames,
 }) => {
-    const delivery = useUnit($delivery);
+    const delivery = useUnit($pageDeliveryDetails);
 
     const { container, controlsPanel } = classNames || {};
     const [unmountMap, setUnmountMap] = useState<boolean>(false);

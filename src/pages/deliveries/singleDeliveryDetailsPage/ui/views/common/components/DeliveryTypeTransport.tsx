@@ -5,10 +5,10 @@ import {
     getDeliveryType,
     getDeliveryTypeTranslated,
 } from '@/entities/delivery';
-import { $delivery } from '../../../../model';
+import { $pageDeliveryDetails } from '../../../../model/stores';
 
 export const DeliveryTypeTransport: FunctionComponent = () => {
-    const delivery = useUnit($delivery);
+    const delivery = useUnit($pageDeliveryDetails);
     const type = getDeliveryType(delivery);
     const text = getDeliveryTypeTranslated(delivery);
 

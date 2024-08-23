@@ -1,6 +1,6 @@
 import { createEvent, sample } from 'effector';
 import { Delivery } from '@/shared/api';
-import { getDeliveryByIdFx } from './effects';
+import { getDeliveryByIdFx } from '@/entities/delivery/effects/getDeliveryByIdFx';
 
 export const fetch = createEvent<Delivery['id']>();
 export const fetchSuccess = createEvent<Delivery>();

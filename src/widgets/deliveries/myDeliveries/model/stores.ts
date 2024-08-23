@@ -1,5 +1,5 @@
 import { combine, createEvent, createStore } from 'effector';
-import { Delivery, MyDelivery } from '@/shared/api';
+import { Delivery } from '@/shared/api';
 import { settingsModel } from '@/entities/viewer';
 import { compareAsc, parse } from 'date-fns';
 import { persist } from 'effector-storage/local';
@@ -8,16 +8,16 @@ import { LOCAL_STORAGE_CACHE_KEY } from '../config';
 /**
  * Deliveries store
  */
-export const setDeliveries = createEvent<MyDelivery[]>();
+export const setDeliveries = createEvent<Delivery[]>();
 export const resetDeliveries = createEvent();
-export const updateDelivery = createEvent<Partial<MyDelivery>>();
+export const updateDelivery = createEvent<Partial<Delivery>>();
 export const updateDeliveryState = createEvent<{
     id: Delivery['id'];
     comment: string;
     state: Delivery['state'];
 }>();
 
-export const $myDeliveriesStore = createStore<MyDelivery[]>([])
+export const $myDeliveriesStore = createStore<Delivery[]>([])
     .on(setDeliveries, (_, deliveries) => deliveries)
     .reset(resetDeliveries);
 /*
@@ -26,7 +26,7 @@ export const $myDeliveriesStore = createStore<MyDelivery[]>([])
 persist({
     store: $myDeliveriesStore,
     key: LOCAL_STORAGE_CACHE_KEY,
-    contract: (raw): raw is MyDelivery[] => {
+    contract: (raw): raw is Delivery[] => {
         return Array.isArray(raw) && raw.every((item) => item.id);
     },
 });

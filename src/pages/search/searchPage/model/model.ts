@@ -1,9 +1,9 @@
 import { combine, createEvent, createStore, restore, sample } from 'effector';
 import { Delivery } from '@/shared/api';
 import { sharedLibTypeGuards } from '@/shared/lib';
+import { sessionModel } from '@/entities/viewer';
 import { searchDeliveriesByQueryFx } from './effects';
 import { PageState, SearchPageState } from '../types';
-import { sessionModel } from '@/entities/session';
 
 const { isEmpty } = sharedLibTypeGuards;
 

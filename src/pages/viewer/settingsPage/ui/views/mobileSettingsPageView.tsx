@@ -5,7 +5,7 @@ import { sharedConfigConstants } from '@/shared/config';
 import { Button, Chip, Divider, Link, Spacer } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { ChangeColorModeSwitchButton } from '@/features/viewer/changeColorMode';
-import { Button, ChangeLanguage } from '@/features/viewer/changeLanguage';
+import { ChangeLanguage } from '@/features/viewer/changeLanguage';
 import {
     MdOutlineMarkunreadMailbox,
     MdOutlinePhoneEnabled,

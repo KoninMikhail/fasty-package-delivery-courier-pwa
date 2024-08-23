@@ -1,10 +1,10 @@
 import { useUnit } from 'effector-react';
 import { ClientContactCardList } from '@/entities/client';
 import { getDeliveryContact } from '@/entities/delivery';
-import { $delivery } from '../../../../model';
+import { $pageDeliveryDetails } from '../../../../model/stores';
 
 export const DeliveryContactPerson: FunctionComponent = () => {
-    const delivery = useUnit($delivery);
+    const delivery = useUnit($pageDeliveryDetails);
     const contact = getDeliveryContact(delivery);
     return <ClientContactCardList contact={contact} />;
 };

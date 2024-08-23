@@ -4,10 +4,10 @@ import {
     getDeliveryExpressState,
     getDeliveryExpressStateTranslated,
 } from '@/entities/delivery';
-import { $delivery } from '../../../../model';
+import { $pageDeliveryDetails } from '../../../../model/stores';
 
 export const DeliveryTypeExpress: FunctionComponent = () => {
-    const delivery = useUnit($delivery);
+    const delivery = useUnit($pageDeliveryDetails);
     const isExpress = getDeliveryExpressState(delivery);
     const label = getDeliveryExpressStateTranslated(delivery);
 

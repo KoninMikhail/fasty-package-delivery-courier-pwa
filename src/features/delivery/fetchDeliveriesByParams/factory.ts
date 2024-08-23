@@ -1,11 +1,8 @@
 import { Model, modelFactory } from 'effector-factorio';
 import { createEvent, createStore, Effect, sample, Store } from 'effector';
 import { pending } from 'patronum';
-import { sharedLibTypeGuards } from '@/shared/lib';
 import httpStatus from 'http-status';
 import axios from 'axios';
-
-const { isEmpty } = sharedLibTypeGuards;
 
 interface FactoryOptions<T extends Pagination, Pagination, Payload> {
     provider: Effect<T, Payload>;
@@ -84,6 +81,7 @@ export const factory = modelFactory(
             deliveriesFetchFailed,
             $pending,
             $errors,
+            reset,
             $$hasCriticalErrors,
         };
     },

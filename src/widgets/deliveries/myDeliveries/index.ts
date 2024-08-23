@@ -1,4 +1,5 @@
 import './init';
+import { $myDeliveriesStore } from '@/widgets/deliveries/myDeliveries/model/stores';
 import {
     init,
     fetchData,
@@ -7,14 +8,17 @@ import {
     $isOnline,
     initOffline,
     $errors,
+    reset,
 } from './model/model';
 
 export const widgetMyDeliveriesModel = {
     init,
     initOffline,
     $errors,
+    $myDeliveriesStore,
     fetchData,
     $isOnline,
+    reset,
     dataUpdated,
     $isInitialized,
 };

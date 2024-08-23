@@ -1,10 +1,10 @@
 import { useUnit } from 'effector-react';
 import { getDeliveryCourier } from '@/entities/delivery';
 import { UserCardRow } from '@/entities/user';
-import { $delivery } from '../../../../model';
+import { $pageDeliveryDetails } from '../../../../model/stores';
 
 export const DeliveryCourier: FunctionComponent = () => {
-    const delivery = useUnit($delivery);
+    const delivery = useUnit($pageDeliveryDetails);
     const courier = getDeliveryCourier(delivery);
 
     if (!courier)

@@ -10,6 +10,8 @@ import { RiWifiOffLine } from 'react-icons/ri';
 import { sessionModel } from '@/entities/viewer';
 
 import { DeliveryPickup } from '@/pages/deliveries/singleDeliveryDetailsPage/ui/views/common/components/DeliveryPickup';
+import { $pageDeliveryDetails } from '@/pages/deliveries/singleDeliveryDetailsPage/model/stores';
+import { getDeliveryNumber } from '@/entities/delivery';
 import { PageState } from '../../types';
 
 import {
@@ -30,7 +32,7 @@ import {
     BackButton,
 } from './common/components';
 
-import { $$deliveryNumber, $pageContentState } from '../../model';
+import { $pageContentState } from '../../model';
 import {
     LABEL_ADDRESS,
     LABEL_CLIENT,
@@ -92,7 +94,8 @@ const Header: FunctionComponent<{
     deliveryIdVisible?: boolean;
     className?: string;
 }> = ({ backButton, className, deliveryIdVisible = true }) => {
-    const deliveryId = useUnit($$deliveryNumber);
+    const delivery = useUnit($pageDeliveryDetails);
+    const deliveryId = delivery ? getDeliveryNumber(delivery) : null;
     return (
         <header
             className={clsx(
@@ -140,16 +143,10 @@ const BlockWhenOffline: FunctionComponent<{
 export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
     const [pageState] = useUnit([$pageContentState]);
+    const delivery = useUnit($pageDeliveryDetails);
+    if (!delivery) return null;
 
-    /*    if (!pageState)
-        return (
-            <>
-                <Header backButton={<BackButton />} deliveryIdVisible={false} />
-                <Loading />
-                <NavbarMobile />
-            </>
-        ); */
-
+    console.log(delivery);
     if (pageState === PageState.NOT_LOADED)
         return (
             <div className="flex h-full w-full items-center justify-center">

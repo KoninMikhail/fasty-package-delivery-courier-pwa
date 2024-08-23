@@ -1,12 +1,10 @@
 import { useUnit } from 'effector-react';
-import { lazily } from 'react-lazily';
 import { getDeliveryManager } from '@/entities/delivery';
-import { $delivery } from '../../../../model';
-
-const { UserCardRow } = lazily(() => import('@/entities/user'));
+import { UserCardRow } from '@/entities/user';
+import { $pageDeliveryDetails } from '../../../../model/stores';
 
 export const DeliveryManager: FunctionComponent = () => {
-    const delivery = useUnit($delivery);
+    const delivery = useUnit($pageDeliveryDetails);
     const manager = getDeliveryManager(delivery);
     if (!manager)
         return (

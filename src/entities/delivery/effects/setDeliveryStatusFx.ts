@@ -41,6 +41,11 @@ export const setDeliveryStatusFx = createEffect<
                 console.log(issue.message);
             });
         }
-        throw new Error(error.message);
+
+        if (error instanceof Error) {
+            throw new TypeError(error.message);
+        }
+
+        throw new Error('Unexpected error');
     }
 });

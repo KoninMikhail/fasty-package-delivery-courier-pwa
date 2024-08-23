@@ -209,3 +209,8 @@ sample({
     clock: RefreshToken.updateTokenFail,
     target: Logout.model.logout,
 });
+
+sample({
+    clock: Logout.model.userLoggedOut,
+    target: widgetMyDeliveriesModel.reset,
+});

@@ -1,11 +1,12 @@
 import { useUnit } from 'effector-react';
 import { Link, Spacer } from '@nextui-org/react';
 import { getDeliveryAddress } from '@/entities/delivery';
-import { $delivery } from '../../../../model';
+import { $pageDeliveryDetails } from '../../../../model/stores';
+
 import { generateYandexMapsLink } from '../../../../lib';
 
 export const DeliveryAddress: FunctionComponent = () => {
-    const delivery = useUnit($delivery);
+    const delivery = useUnit($pageDeliveryDetails);
     const address = getDeliveryAddress(delivery);
     return (
         <div>

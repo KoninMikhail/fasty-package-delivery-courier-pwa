@@ -12,8 +12,6 @@ import { ImKey } from 'react-icons/im';
 import { useUnit } from 'effector-react';
 import { FaGithub } from 'react-icons/fa6';
 
-import { IconButton } from '@/features/viewer/changeLanguage';
-
 import { widgetCookiePolicyModalUi } from '@/widgets/polices/cookiePolicyModal';
 import { widgetResetPasswordModalUi } from '@/widgets/viewer/reset-password-modal';
 import { widgetPrivacyPolicyModalUi } from '@/widgets/polices/privacyPolicyModal';
@@ -22,6 +20,7 @@ import { widgetTermsOfUseModalUi } from '@/widgets/polices/termsOfUseModal';
 import { sharedUiBranding } from '@/shared/ui/';
 
 import { Guest } from '@/entities/viewer/ui/Guest';
+import { ChangeLanguage } from '@/features/viewer/changeLanguage';
 import { requestAuthModel, requestRecoveryModel } from '../model';
 import {
     BUTTON_GITHUB,
@@ -172,7 +171,7 @@ export const AuthPage: FunctionComponent = () => {
                             <Logo />
                         </NavbarBrand>
                         <NavbarTools>
-                            <IconButton />
+                            <ChangeLanguage.IconButton />
                         </NavbarTools>
                     </Navbar>
                 </Section>
