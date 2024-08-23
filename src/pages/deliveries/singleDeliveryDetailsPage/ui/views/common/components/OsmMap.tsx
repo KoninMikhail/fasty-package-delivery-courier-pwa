@@ -9,8 +9,10 @@ import { generateYandexMapsLink } from '@/pages/deliveries/singleDeliveryDetails
 import { Offline, Online } from '@/entities/viewer';
 import { useUnit } from 'effector-react';
 import { getDeliveryAddress } from '@/entities/delivery';
-import { $$deliveryCoordinates } from '../../../../model/model';
-import { $pageDeliveryDetails } from '../../../../model/stores';
+import {
+    $pageDeliveryDetails,
+    $$deliveryCoordinates,
+} from '../../../../model/stores';
 import { FALLBACK_MAP_CENTER, FALLBACK_MAP_ZOOM } from '../../../../config';
 
 interface IYMAPSFallback {

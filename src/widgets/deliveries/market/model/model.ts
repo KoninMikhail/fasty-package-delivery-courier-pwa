@@ -5,7 +5,6 @@ import { FetchDeliveriesByParameters } from '@/features/delivery/fetchDeliveries
 import { InfiniteScroll } from '@/features/other/infinite-scroll';
 import { isEmpty } from '@/shared/lib/type-guards';
 import { debounce, debug, delay } from 'patronum';
-import { addDeliveryToLocalStorageCacheFx } from '@/entities/delivery';
 import { fetchAvailableDeliveriesFx } from './effects';
 import {
     $datesRange,
@@ -111,12 +110,6 @@ export const assignDeliveryToUserModel =
 sample({
     clock: assignDeliveryToUserModel.assignCompleted,
     target: deliveryAssignCompleted,
-});
-
-// save for available offline
-sample({
-    clock: assignDeliveryToUserModel.assignCompleted,
-    target: addDeliveryToLocalStorageCacheFx,
 });
 
 /**

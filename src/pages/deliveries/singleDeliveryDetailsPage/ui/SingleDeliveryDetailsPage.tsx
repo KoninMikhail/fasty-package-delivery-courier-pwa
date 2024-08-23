@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useDocumentTitle } from 'usehooks-ts';
 import { useGate, useUnit } from 'effector-react';
 import { useParams } from 'react-router-dom';
-import { DeliveryDetailsPageGateway } from '../model';
+import { DeliveryDetailsPageGateway } from '../model/model';
 
 import {
     DesktopDeliveryDetailsPageView,

@@ -37,7 +37,7 @@ const Headline: FunctionComponent<PropsWithChildren> = ({ children }) => {
 
 const Content: FunctionComponent<PropsWithChildren> = ({ children }) => {
     return (
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 4xl:grid-cols-5 5xl:grid-cols-6">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 4xl:grid-cols-5 5xl:grid-cols-6">
             {children}
         </div>
     );
