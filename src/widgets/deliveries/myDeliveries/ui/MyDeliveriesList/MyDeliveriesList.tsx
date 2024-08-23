@@ -23,7 +23,7 @@ import {
     $$hasError,
     $isOnline,
 } from '../../model/model';
-import { $myDeliveriesStore } from '../../model/stores';
+import { $myDeliveriesStoreSorted } from '../../model/stores';
 
 const Root: FunctionComponent<PropsWithChildren> = ({ children }) => {
     return <div className="grid grid-cols-1 gap-4">{children}</div>;
@@ -109,11 +109,13 @@ export const MyDeliveriesList: FunctionComponent = () => {
         init,
     ]);
 
-    const items = useList($myDeliveriesStore, (delivery) => (
-        <motion.div key={delivery.date} whileTap={{ scale: 0.98 }}>
-            <DeliveryMarketCard delivery={delivery} />
-        </motion.div>
-    ));
+    const items = useList($myDeliveriesStoreSorted, (delivery) => {
+        return (
+            <motion.div key={delivery.id} whileTap={{ scale: 0.98 }}>
+                <DeliveryMarketCard delivery={delivery} />
+            </motion.div>
+        );
+    });
 
     const state = useMemo(() => {
         switch (true) {

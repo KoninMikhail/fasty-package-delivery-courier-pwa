@@ -1,7 +1,7 @@
 import { combine, createEvent, createStore } from 'effector';
 import { Delivery } from '@/shared/api';
 import { settingsModel } from '@/entities/viewer';
-import { compareAsc, parse } from 'date-fns';
+import { compareAsc, isBefore, parse } from 'date-fns';
 import { persist } from 'effector-storage/local';
 import { LOCAL_STORAGE_CACHE_KEY } from '../config';
 
@@ -20,8 +20,32 @@ export const updateDeliveryState = createEvent<{
 export const $myDeliveriesStore = createStore<Delivery[]>([])
     .on(setDeliveries, (_, deliveries) => deliveries)
     .reset(resetDeliveries);
-/*
-    .reset([authByEmailFx.done, logoutFx.done, logoutFx.fail]); */
+
+export const $myDeliveriesStoreSorted = $myDeliveriesStore.map((deliveries) => {
+    return deliveries
+        .sort((a, b) => {
+            const dateComparison = compareAsc(
+                new Date(b.date),
+                new Date(a.date),
+            );
+            if (dateComparison === 0) {
+                const template = 'yyyy-MM-dd HH:mm:ss';
+                const aTime = parse(
+                    `${a.date} ${a.time_end}`,
+                    template,
+                    new Date(),
+                );
+                const bTime = parse(
+                    `${b.date} ${b.time_end}`,
+                    template,
+                    new Date(),
+                );
+                return compareAsc(bTime, aTime);
+            }
+            return dateComparison;
+        })
+        .sort((a, b) => (isBefore(new Date(), new Date(a.date)) ? -1 : 1));
+});
 
 persist({
     store: $myDeliveriesStore,

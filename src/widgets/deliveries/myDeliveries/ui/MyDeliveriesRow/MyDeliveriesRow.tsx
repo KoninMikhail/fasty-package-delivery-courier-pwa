@@ -23,7 +23,7 @@ import {
     $$inPending,
     $isInitialized,
 } from '../../model/model';
-import { $myDeliveriesStore } from '../../model/stores';
+import { $myDeliveriesStoreSorted } from '../../model/stores';
 
 const { HorizontalScroll } = sharedUiLayouts;
 
@@ -128,11 +128,11 @@ export const MyDeliveriesRow: FunctionComponent = () => {
         hasError: $$hasError,
     });
 
-    const items = useList($myDeliveriesStore, (delivery, index) => {
+    const items = useList($myDeliveriesStoreSorted, (delivery, index) => {
         const deliveryId = getDeliveryNumber(delivery);
 
         if (index >= itemsLimit) return null;
-
+        console.log(delivery);
         return (
             <div className="flex items-end py-1 pl-0.5">
                 <div

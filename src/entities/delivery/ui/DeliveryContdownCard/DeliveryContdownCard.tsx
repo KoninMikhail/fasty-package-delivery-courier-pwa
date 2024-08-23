@@ -108,7 +108,6 @@ export const DeliveryTimer: FunctionComponent<{
     date: Date;
 }> = ({ date }) => {
     const { t } = useTranslation(translationNS);
-
     const EXPIRED_MINS_COUNT = 0;
     const MINUTES_IN_HOUR = 60;
     const CLOSE_TO_EXPIRED_THRESHOLD = 30; // Minutes before considered close to expired
