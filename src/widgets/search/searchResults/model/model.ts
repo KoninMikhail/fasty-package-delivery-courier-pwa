@@ -28,11 +28,12 @@ export const $isOnline = createStore<boolean>(true)
  * Data
  */
 
-const fetchDeliveriesByQueryModel = FetchDeliveriesByQuery.factory.createModel({
-    debounceTime: 300,
-    minQueryLength: 3,
-    provider: searchDeliveriesByQueryFx,
-});
+export const fetchDeliveriesByQueryModel =
+    FetchDeliveriesByQuery.factory.createModel({
+        debounceTime: 300,
+        minQueryLength: 3,
+        provider: searchDeliveriesByQueryFx,
+    });
 
 sample({
     clock: delay(queryChanged, 300),
@@ -69,7 +70,6 @@ sample({
 /**
  * States
  */
-export const $currentQuery = fetchDeliveriesByQueryModel.$query;
 export const $isEmptyResults = and(
     $isInitialized,
     $searchResults.map((results) => isEmpty(results)),

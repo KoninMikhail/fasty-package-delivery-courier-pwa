@@ -3,12 +3,13 @@ import { sharedConfigConstants } from '@/shared/config';
 
 import { useTranslation } from 'react-i18next';
 import { useDocumentTitle } from 'usehooks-ts';
-import { useUnit } from 'effector-react';
+import { useGate, useUnit } from 'effector-react';
 import { useSearchParams } from 'react-router-dom';
 import { useEffect } from 'react';
+import { widgetSearchResultsModel } from '@/widgets/search/searchResults';
 import { DesktopSearchPageView, MobileSearchPageView } from './views';
 import { translationNS } from '../config';
-import { $searchQuery, queryChanged } from '../model';
+import { queryChanged, SearchPageGate } from '../model/model';
 
 const { APP_NAME, APP_DESCRIPTION } = sharedConfigConstants;
 
@@ -25,7 +26,7 @@ export const SearchPage: FunctionComponent = () => {
     const [searchParameters] = useSearchParams();
     const urlQuery = searchParameters.get('q') || '';
     const { query, setQuery } = useUnit({
-        query: $searchQuery,
+        query: widgetSearchResultsModel.$searchQuery,
         setQuery: queryChanged,
     });
 
@@ -41,6 +42,8 @@ export const SearchPage: FunctionComponent = () => {
             appDescription: APP_DESCRIPTION[appLanguage],
         }),
     );
+
+    useGate(SearchPageGate);
 
     return isDesktop ? (
         <Authorized>

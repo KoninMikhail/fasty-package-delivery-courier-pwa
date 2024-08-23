@@ -1,41 +1,49 @@
 import { useRef, type PropsWithChildren } from 'react';
 import { widgetMarketUi } from '@/widgets/deliveries/market';
-import { Spacer } from '@nextui-org/react';
+import { Input, Spacer } from '@nextui-org/react';
 
+import { UserCardRow } from '@/entities/user';
 import { useUnit } from 'effector-react';
+import { widgetNavbarDesktopUi } from '@/widgets/layout/navbar-desktop';
 import { sessionModel } from '@/entities/viewer';
 import {
     widgetSearchQueryPopupModel,
     widgetSearchQueryPopupUi,
 } from '@/widgets/search/searchQueryPopup';
 import { widgetMyDeliveriesUi } from '@/widgets/deliveries/myDeliveries';
-import { Link } from 'react-router-dom';
-import { sharedConfigRoutes } from '@/shared/config';
-import { sharedUiBranding, sharedUiComponents } from '@/shared/ui';
-import { navbarItems } from '@/widgets/layout/navbar-desktop/data';
+import { IoSearchSharp } from 'react-icons/io5';
 import { useTranslation } from 'react-i18next';
-import { translationNS } from '@/widgets/layout/navbar-desktop/config';
-import { UserMenu } from '@/widgets/viewer/user-menu/ui/UserMenu';
+import { SEARCH_PLACEHOLDER, translationNS } from '../../config';
 import {
     MarketHeadingText,
     UpcomingDeliveriesHeadingText,
 } from '../common/data';
 
-const { Menu, MenuItem } = sharedUiComponents;
-const { Logo } = sharedUiBranding;
-const { RouteName } = sharedConfigRoutes;
-const { ROOT_PAGE } = RouteName;
 const { SearchQueryInputModal } = widgetSearchQueryPopupUi;
 const { UpcomingDeliveriesHorizontalSlider } = widgetMyDeliveriesUi;
+
+const { Navbar } = widgetNavbarDesktopUi;
 const { MarketContent, MarketDateSelector, MarketFilterScrollable } =
     widgetMarketUi;
 
 const Root: FunctionComponent<PropsWithChildren> = ({ children }) => (
-    <div className="mx-auto w-[1400px]">{children}</div>
+    <div className="relative grid h-screen w-screen overflow-hidden">
+        {children}
+    </div>
 );
 
+const Sidebar: FunctionComponent<PropsWithChildren> = ({ children }) => {
+    return (
+        <div className="fixed z-[7000] h-full w-48 border-r border-gray-200 bg-white">
+            {children}
+        </div>
+    );
+};
+
 const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
-    <main className="relative h-full">{children}</main>
+    <main className="relative h-full flex-col overflow-hidden overflow-y-scroll pl-72 pt-20">
+        {children}
+    </main>
 );
 
 const Toolbar: FunctionComponent = () => {
@@ -43,7 +51,7 @@ const Toolbar: FunctionComponent = () => {
     const reference = useRef<HTMLInputElement>(null);
     const user = useUnit(sessionModel.$viewerProfileData);
     const [openSearchModal] = useUnit([
-        widgetSearchQueryPopupModel.modal.clickTriggerElement,
+        widgetSearchQueryPopupModel.searchTriggerClicked,
     ]);
     const onClickSearchInput = (): void => {
         reference?.current?.blur();
@@ -51,37 +59,20 @@ const Toolbar: FunctionComponent = () => {
     };
     return (
         <>
-            <header className="sticky top-0 z-50 h-24 w-full bg-gradient-to-b from-background to-transparent px-8">
-                <div className="flex h-24 w-full items-center justify-between">
-                    <Link to={ROOT_PAGE}>
-                        <Logo />
-                    </Link>
-                    <div className="mx-auto w-80">
-                        <Menu
-                            items={navbarItems}
-                            stretch
-                            orientation="horizontal"
-                            renderItem={(item) => {
-                                return (
-                                    <MenuItem
-                                        vertical
-                                        icon={item.icon}
-                                        key={item.href}
-                                        to={item.href}
-                                        classNames={{
-                                            item: 'py-3 !text-sm',
-                                        }}
-                                        label={t(item.label)}
-                                    />
-                                );
-                            }}
-                        />
-                    </div>
-                    <div>
-                        <UserMenu type="userCard" />
-                    </div>
+            <div className="fixed left-64 right-0 top-0 z-[20] flex items-center justify-between bg-gradient-to-b from-background to-transparent px-8 py-6 pl-16">
+                <div className="w-1/2">
+                    <Input
+                        ref={reference}
+                        size="lg"
+                        placeholder={t(SEARCH_PLACEHOLDER)}
+                        onClick={onClickSearchInput}
+                        startContent={<IoSearchSharp className="text-xl" />}
+                    />
                 </div>
-            </header>
+                <div>
+                    <UserCardRow user={user} avatarPosition="right" />
+                </div>
+            </div>
             <SearchQueryInputModal size="2xl" backdrop="blur" />
         </>
     );
@@ -89,7 +80,7 @@ const Toolbar: FunctionComponent = () => {
 
 const UpcomingDeliveries: FunctionComponent = () => {
     return (
-        <div className="overflow-hidden px-8">
+        <div className="px-8">
             <h2 className="text-2xl font-bold capitalize">
                 <UpcomingDeliveriesHeadingText />
             </h2>
@@ -119,9 +110,12 @@ const MarketDeliveries: FunctionComponent = () => {
 export const DesktopMarketPageView: FunctionComponent = () => {
     return (
         <Root>
+            <Sidebar>
+                <Navbar />
+            </Sidebar>
             <MainContainer>
                 <Toolbar />
-                <Spacer y={16} />
+                <Spacer y={8} />
                 <UpcomingDeliveries />
                 <Spacer y={8} />
                 <MarketDeliveries />

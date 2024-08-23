@@ -5,6 +5,32 @@ import { Divider, Spacer } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { widgetDeliveryStatusUi } from '@/widgets/deliveries/deliveryStatus';
 
+import { useUnit } from 'effector-react';
+import { $pageDeliveryDetails } from '@/pages/deliveries/singleDeliveryDetailsPage/model/stores';
+import { $pageContentState } from '@/pages/deliveries/singleDeliveryDetailsPage/model/model';
+import { PageState } from '@/pages/deliveries/singleDeliveryDetailsPage/types';
+import {
+    Error,
+    Loading,
+    NotFound,
+    NotFoundOffline,
+} from '@/pages/deliveries/singleDeliveryDetailsPage/ui/views/common';
+import {
+    LABEL_ADDRESS,
+    LABEL_CLIENT,
+    LABEL_CLIENT_TYPE,
+    LABEL_CONTACT_PERSON,
+    LABEL_CONTENTS,
+    LABEL_COURIER,
+    LABEL_DELIVERY_STATUS,
+    LABEL_EXPRESS,
+    LABEL_MANAGER,
+    LABEL_METRO,
+    LABEL_PICKUP,
+    LABEL_TYPE,
+    LABEL_WEIGHT,
+    translationNS,
+} from '../../config';
 import {
     Client,
     ClientType,
@@ -23,22 +49,6 @@ import {
     DeliveryNumber,
     BackButton,
 } from './common/components';
-import {
-    LABEL_ADDRESS,
-    LABEL_CLIENT,
-    LABEL_CLIENT_TYPE,
-    LABEL_CONTACT_PERSON,
-    LABEL_CONTENTS,
-    LABEL_COURIER,
-    LABEL_DELIVERY_STATUS,
-    LABEL_EXPRESS,
-    LABEL_MANAGER,
-    LABEL_METRO,
-    LABEL_PICKUP,
-    LABEL_TYPE,
-    LABEL_WEIGHT,
-    translationNS,
-} from '../../config';
 
 const { Navbar } = widgetNavbarDesktopUi;
 const { DeliveryStatusControlWithTimeline } = widgetDeliveryStatusUi;
@@ -154,6 +164,53 @@ const DeliveryWeightLabel: FunctionComponent = () => {
  * @constructor
  */
 export const DesktopDeliveryDetailsPageView: FunctionComponent = () => {
+    const { pageState, delivery } = useUnit({
+        delivery: $pageDeliveryDetails,
+        pageState: $pageContentState,
+    });
+
+    const isPageNotReady = pageState === PageState.INIT || !delivery;
+    const isPageNotFound = pageState === PageState.NotFound;
+    const isPageNotFoundInCache = pageState === PageState.NotFoundOffline;
+    const isPageHasErrors = pageState === PageState.Error;
+
+    if (isPageNotReady)
+        return (
+            <Layout>
+                <NavContainer>
+                    <Navbar />
+                </NavContainer>
+                <Loading />
+            </Layout>
+        );
+    if (isPageNotFound)
+        return (
+            <Layout>
+                <NavContainer>
+                    <Navbar />
+                </NavContainer>
+
+                <NotFound />
+            </Layout>
+        );
+    if (isPageNotFoundInCache)
+        return (
+            <Layout>
+                <NavContainer>
+                    <Navbar />
+                </NavContainer>
+                <NotFoundOffline />
+            </Layout>
+        );
+    if (isPageHasErrors)
+        return (
+            <Layout>
+                <NavContainer>
+                    <Navbar />
+                </NavContainer>
+                <Error />
+            </Layout>
+        );
     return (
         <Layout>
             <NavContainer>

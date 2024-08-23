@@ -1,39 +1,20 @@
 import { NavbarMobile } from '@/widgets/layout/navbar-mobile/ui/ui';
 import { Input, Skeleton, Spacer } from '@nextui-org/react';
 
-import React, {
-    PropsWithChildren,
-    ReactElement,
-    Suspense,
-    useRef,
-} from 'react';
+import React, { PropsWithChildren, Suspense, useRef } from 'react';
 import { IoSearchSharp } from 'react-icons/io5';
-import { RiWifiOffLine } from 'react-icons/ri';
 import { FiSearch } from 'react-icons/fi';
 import { MdOutlineSentimentDissatisfied } from 'react-icons/md';
-import { PageState } from '@/pages/search/searchPage/types';
-import { useList, useUnit } from 'effector-react';
-import { Offline, Online } from '@/entities/viewer';
+import { useUnit } from 'effector-react';
 import { widgetSearchQueryPopupModel } from '@/widgets/search/searchQueryPopup';
-import { SearchResultsText } from '@/pages/search/searchPage/ui/common/locale/SearchResultsText';
-import {
-    $finalSearchState,
-    $searchQuery,
-    $searchResults,
-} from '@/pages/search/searchPage/model';
 import { SearchNotFoundText } from '@/pages/search/searchPage/ui/common/locale/SearchNotFoundText';
+import { widgetSearchResultsModel } from '@/widgets/search/searchResults';
+import { SearchResultsList } from '@/widgets/search/searchResults/ui';
 import { SearchEmptyQueryText } from '../common/locale/SearchEmptyQueryText';
-import {SearchDeliveriesByQueryResults} from "@/widgets/deliveries/searchDeliveries/ui/SearchDeliveriesByQueryResults";
 
 const SearchPopup = React.lazy(() =>
     import('@/widgets/search/searchQueryPopup').then((module) => ({
         default: module.widgetSearchQueryPopupUi.SearchQueryInputModal,
-    })),
-);
-
-const DeliverySearchResultCard = React.lazy(() =>
-    import('@/entities/delivery').then((module) => ({
-        default: module.DeliverySearchResultCard,
     })),
 );
 
@@ -53,10 +34,12 @@ const Header: FunctionComponent<{
     isDisabled?: boolean;
 }> = ({ isDisabled }) => {
     const inputReference = useRef<HTMLInputElement>(null);
-    const query = useUnit($searchQuery);
-    const triggerOpenSearchPopup = useUnit(
-        widgetSearchQueryPopupModel.searchTriggerClicked,
-    );
+
+    const { query, triggerOpenSearchPopup } = useUnit({
+        query: widgetSearchResultsModel.$searchQuery,
+        triggerOpenSearchPopup:
+            widgetSearchQueryPopupModel.searchTriggerClicked,
+    });
 
     const onClickInput = (): void => {
         inputReference?.current?.blur();
@@ -89,16 +72,6 @@ const Header: FunctionComponent<{
     );
 };
 
-const OfflineMessage: FunctionComponent = () => {
-    return (
-        <div className="block p-4 py-16">
-            <div className="flex h-56 w-full flex-col items-center justify-center gap-4 pb-24">
-                <RiWifiOffLine className="text-8xl text-content3" />
-                <div className="text-content3">No internet connection</div>
-            </div>
-        </div>
-    );
-};
 const LoadingMessage: FunctionComponent = () => {
     return (
         <div className="flex w-full flex-col gap-4">
@@ -127,7 +100,7 @@ const NotFound: FunctionComponent = () => {
     );
 };
 
-const SearchResults: FunctionComponent = () => {
+/* const SearchResults: FunctionComponent = () => {
     const query = useUnit($searchQuery);
     const results = useList($searchResults, (result) => (
         <DeliverySearchResultCard
@@ -145,54 +118,24 @@ const SearchResults: FunctionComponent = () => {
             <div className="flex flex-col gap-4">{results}</div>
         </>
     );
-};
+}; */
 
 /**
  * View
  */
 export const MobileSearchPageView: FunctionComponent = () => {
-    const pageState = useUnit($finalSearchState);
-
-    const renderState = (): ReactElement | ReactElement[] => {
-        switch (pageState) {
-            case PageState.EmptyQuery: {
-                return <EmptyQuery />;
-            }
-            case PageState.NotFound: {
-                return <NotFound />;
-            }
-            case PageState.Loading: {
-                return <LoadingMessage />;
-            }
-            default: {
-                return <SearchResults />;
-            }
-        }
-    };
-
     return (
         <>
-            <Offline>
-                <Header isDisabled />
-                <Content>
-                    <Spacer y={2} />
-                    <OfflineMessage />
-                    <Spacer y={4} />
-                    <NavbarMobile />
-                </Content>
-            </Offline>
-            <Online>
-                <Header />
-                <Content>
-                    <Spacer y={2} />
-                    <SearchDeliveriesByQueryResults/>
-                    <Spacer y={4} />
-                    <NavbarMobile />
-                </Content>
-                <Suspense>
-                    <SearchPopup size="full" placement="auto" />
-                </Suspense>
-            </Online>
+            <Header />
+            <Content>
+                <Spacer y={2} />
+                <SearchResultsList />
+                <Spacer y={4} />
+                <NavbarMobile />
+            </Content>
+            <Suspense>
+                <SearchPopup size="full" placement="auto" />
+            </Suspense>
         </>
     );
 };

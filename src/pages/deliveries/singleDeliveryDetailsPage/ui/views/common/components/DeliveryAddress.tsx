@@ -13,7 +13,7 @@ import { generateYandexMapsLink } from '../../../../lib';
 export const DeliveryAddress: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
     const delivery = useUnit($pageDeliveryDetails);
-    const address = getDeliveryAddress(delivery);
+    const address = delivery ? getDeliveryAddress(delivery) : '';
     return (
         <div>
             <p>{address}</p>

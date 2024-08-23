@@ -3,20 +3,22 @@ import { MdOutlineSentimentDissatisfied } from 'react-icons/md';
 import { useList, useUnit } from 'effector-react';
 import { Skeleton, Spacer } from '@nextui-org/react';
 import React, { Suspense } from 'react';
-import {
-    $currentQuery,
-    $isEmptyQuery,
-    $isEmptyResults,
-    $isLoading,
-} from '@/widgets/deliveries/searchDeliveries/model/model';
 import { useTranslation } from 'react-i18next';
+import { RiWifiOffLine } from 'react-icons/ri';
 import {
     translationNS,
     SEARCH_EMPTY_QUERY_KEY,
     SEARCH_RESULTS_KEY,
     SEARCH_NOT_FOUND_KEY,
 } from '../config';
-import { $searchResults } from '../model/stores';
+import { $searchQuery, $searchResults } from '../model/stores';
+import {
+    $isEmptyQuery,
+    $isEmptyResults,
+    $isInitialized,
+    $isOnline,
+    fetchDeliveriesByQueryModel,
+} from '../model/model';
 
 /**
  * Placeholders
@@ -67,10 +69,21 @@ const DeliverySearchResultCard = React.lazy(() =>
     })),
 );
 
+const OfflineMessage: FunctionComponent = () => {
+    return (
+        <div className="block p-4 py-16">
+            <div className="flex h-56 w-full flex-col items-center justify-center gap-4 pb-24">
+                <RiWifiOffLine className="text-8xl text-content3" />
+                <div className="text-content3">No internet connection</div>
+            </div>
+        </div>
+    );
+};
+
 const SearchResults: FunctionComponent<{ wide?: boolean }> = ({ wide }) => {
     const { t } = useTranslation();
 
-    const query = useUnit($currentQuery);
+    const query = useUnit($searchQuery);
     const results = useList($searchResults, (result) =>
         wide ? (
             <DeliverySearchResultCardWide
@@ -98,22 +111,27 @@ const SearchResults: FunctionComponent<{ wide?: boolean }> = ({ wide }) => {
 /**
  * View
  */
-interface SearchDeliveriesByQueryResultsProperties {
+interface SearchResultsListProperties {
     fullWidth?: boolean;
 }
 
-export const SearchDeliveriesByQueryResults: FunctionComponent<
-    SearchDeliveriesByQueryResultsProperties
+export const SearchResultsList: FunctionComponent<
+    SearchResultsListProperties
 > = ({ fullWidth }) => {
-    const { isEmptyResults, isEmptyQuery, isLoading } = useUnit({
-        isEmptyResults: $isEmptyResults,
-        isEmptyQuery: $isEmptyQuery,
-        isLoading: $isLoading,
-    });
+    const { isInit, isOnline, isLoading, isEmptyResults, isEmptyQuery } =
+        useUnit({
+            isInit: $isInitialized,
+            isOnline: $isOnline,
+            isLoading: fetchDeliveriesByQueryModel.$pending,
+            isEmptyResults: $isEmptyResults,
+            isEmptyQuery: $isEmptyQuery,
+        });
 
+    if (!isInit) return <Loading />;
+    if (!isOnline) return <OfflineMessage />;
     if (isLoading) return <Loading />;
+    if (isEmptyQuery) return <EmptyQuery />;
     if (isEmptyResults) return <NotFound />;
-    if (isEmptyQuery && isEmptyResults) return <EmptyQuery />;
 
     return (
         <div className="flex h-full flex-col gap-4">

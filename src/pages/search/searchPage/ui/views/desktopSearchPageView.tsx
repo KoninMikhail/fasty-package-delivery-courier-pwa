@@ -1,21 +1,21 @@
 import { widgetNavbarDesktopUi } from '@/widgets/layout/navbar-desktop';
-import React, { PropsWithChildren, Suspense, useRef } from 'react';
+import { PropsWithChildren, useRef } from 'react';
 import { useUnit } from 'effector-react';
-import { sharedLibTypeGuards } from '@/shared/lib';
+import { UserCardRow } from '@/entities/user';
+import { sessionModel } from '@/entities/viewer';
 import { widgetSearchQueryPopupModel } from '@/widgets/search/searchQueryPopup';
 import { SearchQueryInputModal } from '@/widgets/search/searchQueryPopup/ui';
 import { Input } from '@nextui-org/react';
 import { IoSearchSharp } from 'react-icons/io5';
-import {SearchDeliveriesByQueryResults} from "@/widgets/deliveries/searchDeliveries/ui/SearchDeliveriesByQueryResults";
-import {widgetSearchDeliveriesModel} from "@/widgets/deliveries/searchDeliveries";
-
-const { isEmpty } = sharedLibTypeGuards;
-
+import { widgetSearchResultsModel } from '@/widgets/search/searchResults';
+import { SearchResultsList } from '@/widgets/search/searchResults/ui';
 
 const { Navbar } = widgetNavbarDesktopUi;
 
-const Root: FunctionComponent<PropsWithChildren> = ({ children }) => (
-    <div className="mx-auto w-[1400px] gap-8 pr-6">{children}</div>
+const Layout: FunctionComponent<PropsWithChildren> = ({ children }) => (
+    <div className="grid h-screen w-screen grid-cols-[max-content_auto] gap-8 pr-6">
+        {children}
+    </div>
 );
 
 const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
@@ -24,14 +24,15 @@ const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
 
 const Toolbar: FunctionComponent = () => {
     const reference = useRef<HTMLInputElement>(null);
-    const { query, onClickInput } = useUnit({
-        onClickInput: widgetSearchQueryPopupModel.searchTriggerClicked,
-        query: widgetSearchDeliveriesModel.$currentQuery,
+    const { openSearchModal, user, query } = useUnit({
+        query: widgetSearchResultsModel.$searchQuery,
+        openSearchModal: widgetSearchQueryPopupModel.searchTriggerClicked,
+        user: sessionModel.$viewerProfileData,
     });
 
     const onClickSearchInput = (): void => {
         reference?.current?.blur();
-        onClickInput();
+        openSearchModal();
     };
     return (
         <>
@@ -41,11 +42,14 @@ const Toolbar: FunctionComponent = () => {
                         ref={reference}
                         size="lg"
                         value={query}
-                        className="w-full p-8"
+                        className="w-2/3"
                         type="search"
                         onClick={onClickSearchInput}
                         startContent={<IoSearchSharp className="text-xl" />}
                     />
+                </div>
+                <div>
+                    <UserCardRow user={user} avatarPosition="right" />
                 </div>
             </div>
             <SearchQueryInputModal backdrop="blur" size="2xl" />
@@ -55,12 +59,12 @@ const Toolbar: FunctionComponent = () => {
 
 export const DesktopSearchPageView: FunctionComponent = () => {
     return (
-        <Root>
+        <Layout>
             <Navbar />
-            <Toolbar />
             <MainContainer>
-               <SearchDeliveriesByQueryResults fullWidth/>
+                <Toolbar />
+                <SearchResultsList fullWidth />
             </MainContainer>
-        </Root>
+        </Layout>
     );
 };
