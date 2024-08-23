@@ -4,6 +4,7 @@ import { sharedConfigRoutes } from '@/shared/config';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import React, { useCallback } from 'react';
+import { getDeliverySystemId } from '@/entities/delivery';
 import {
     LABEL_ADDRESS,
     LABEL_COMMENT,
@@ -20,7 +21,6 @@ import { getDeliveryContents } from '../../lib/utils/getDeliveryContents';
 import { getDeliveryComment } from '../../lib/utils/getDeliveryComment';
 import { getDeliveryPickupDateTime } from '../../lib/utils/getDeliveryPickupDateTime';
 import { getDeliveryAddress } from '../../lib/utils/getDeliveryAdress';
-import { getDeliveryId } from '../../lib/utils/getDeliveryId';
 
 const { RouteName } = sharedConfigRoutes;
 const { DELIVERIES } = RouteName;
@@ -116,7 +116,7 @@ export const DeliveryHistoryCard: FunctionComponent<DeliveryHistoryCardPropertie
         const { state } = delivery;
         const navigate = useNavigate();
 
-        const id = getDeliveryId(delivery);
+        const id = getDeliverySystemId(delivery);
         const contents = getDeliveryContents(delivery);
         const comment = getDeliveryComment(delivery);
         const address = getDeliveryAddress(delivery);

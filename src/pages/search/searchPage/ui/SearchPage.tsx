@@ -5,11 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { useDocumentTitle } from 'usehooks-ts';
 import { useGate, useUnit } from 'effector-react';
 import { useSearchParams } from 'react-router-dom';
-import { useEffect } from 'react';
 import { widgetSearchResultsModel } from '@/widgets/search/searchResults';
+import { isEmpty } from '@/shared/lib/type-guards';
 import { DesktopSearchPageView, MobileSearchPageView } from './views';
 import { translationNS } from '../config';
-import { queryChanged, SearchPageGate } from '../model/model';
+import { SearchPageGate } from '../model/model';
 
 const { APP_NAME, APP_DESCRIPTION } = sharedConfigConstants;
 
@@ -25,25 +25,22 @@ export const SearchPage: FunctionComponent = () => {
     // Search
     const [searchParameters] = useSearchParams();
     const urlQuery = searchParameters.get('q') || '';
-    const { query, setQuery } = useUnit({
+    const { query } = useUnit({
         query: widgetSearchResultsModel.$searchQuery,
-        setQuery: queryChanged,
     });
-
-    useEffect(() => {
-        setQuery(urlQuery);
-    }, [urlQuery, setQuery]);
 
     useDocumentTitle(
         t('page.title', {
-            context: query ? 'search' : 'default',
-            query,
+            context: isEmpty(query) ? 'default' : 'search',
+            urlQuery,
             appName: APP_NAME,
             appDescription: APP_DESCRIPTION[appLanguage],
         }),
     );
 
-    useGate(SearchPageGate);
+    useGate(SearchPageGate, {
+        query: urlQuery,
+    });
 
     return isDesktop ? (
         <Authorized>

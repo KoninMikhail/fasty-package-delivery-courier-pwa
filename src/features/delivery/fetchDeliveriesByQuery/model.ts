@@ -1,6 +1,7 @@
 import { modelFactory } from 'effector-factorio';
 import { createEvent, createStore, Effect, sample } from 'effector';
 import { Delivery } from '@/shared/api';
+import { debug } from 'patronum';
 
 interface FactoryOptions {
     debounceTime: number;
@@ -11,6 +12,10 @@ interface FactoryOptions {
 export const factory = modelFactory((options: FactoryOptions) => {
     const queryChanged = createEvent<string>();
     const deliveriesFetched = createEvent<Delivery[]>();
+
+    debug({
+        queryChanged,
+    });
 
     const $query = createStore<string>('').on(
         queryChanged,

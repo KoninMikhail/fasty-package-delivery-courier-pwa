@@ -2,8 +2,15 @@ import { createEvent, sample } from 'effector';
 import { sessionModel } from '@/entities/viewer';
 import { widgetSearchResultsModel } from '@/widgets/search/searchResults';
 import { createGate } from 'effector-react';
+import { and, debug, delay, not } from 'patronum';
 
-export const SearchPageGate = createGate();
+export const SearchPageGate = createGate<{
+    query: string;
+}>();
+
+const $isFirstLoadPage = not(widgetSearchResultsModel.$isInitialized);
+
+debug({ gate: SearchPageGate.state });
 
 /**
  * Events
@@ -15,6 +22,10 @@ export const queryChanged = createEvent<string>();
  */
 
 const { $$isOnline, $isAuthorized } = sessionModel;
+
+/**
+ * Init
+ */
 
 /**
  * Query
@@ -36,6 +47,29 @@ sample({
 });
 
 sample({
-    clock: SearchPageGate.open,
+    clock: delay(SearchPageGate.open, 500),
+    source: and($isFirstLoadPage, $$isOnline, $isAuthorized),
+    filter: (allowed) => allowed,
     target: widgetSearchResultsModel.init,
+});
+
+sample({
+    clock: delay(SearchPageGate.open, 500),
+    source: and($isFirstLoadPage, not($$isOnline), $isAuthorized),
+    filter: (isFirstLoadPage) => isFirstLoadPage,
+    target: widgetSearchResultsModel.initOffline,
+});
+
+sample({
+    clock: widgetSearchResultsModel.$isInitialized,
+    source: SearchPageGate.state,
+    filter: (_, isInitialized) => isInitialized,
+    fn: (state) => state.query,
+    target: widgetSearchResultsModel.queryChanged,
+});
+
+sample({
+    clock: SearchPageGate.state,
+    fn: (state) => state.query,
+    target: queryChanged,
 });

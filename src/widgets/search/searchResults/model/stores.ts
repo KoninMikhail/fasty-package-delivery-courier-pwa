@@ -10,7 +10,6 @@ export const clearQuery = createEvent();
 export const $searchQuery = createStore('')
     .on(setQuery, (_, query) => query)
     .reset(clearQuery);
-
 /**
  * Search results
  */

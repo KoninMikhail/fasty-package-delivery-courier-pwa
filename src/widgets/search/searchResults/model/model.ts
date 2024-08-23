@@ -3,7 +3,7 @@ import { FetchDeliveriesByQuery } from '@/features/delivery/fetchDeliveriesByQue
 import { and, delay } from 'patronum';
 import { sharedLibTypeGuards } from '@/shared/lib';
 import { searchDeliveriesByQueryFx } from './effects';
-import { $searchResults, setResults } from './stores';
+import { $searchResults, setQuery, setResults } from './stores';
 
 const { isEmpty } = sharedLibTypeGuards;
 
@@ -31,7 +31,7 @@ export const $isOnline = createStore<boolean>(true)
 export const fetchDeliveriesByQueryModel =
     FetchDeliveriesByQuery.factory.createModel({
         debounceTime: 300,
-        minQueryLength: 3,
+        minQueryLength: 1,
         provider: searchDeliveriesByQueryFx,
     });
 
@@ -41,6 +41,11 @@ sample({
     filter: (isOnline) => isOnline,
     fn: (_, query) => query,
     target: fetchDeliveriesByQueryModel.queryChanged,
+});
+
+sample({
+    clock: queryChanged,
+    target: setQuery,
 });
 
 sample({
@@ -59,7 +64,14 @@ export const $isInitialized = createStore<boolean>(false)
 
 sample({
     clock: delay(init, 300),
-    target: fetchDeliveriesByQueryModel.queryChanged.prepend(() => ''),
+    target: initCompleted,
+});
+
+sample({
+    clock: fetchDeliveriesByQueryModel.deliveriesFetched,
+    source: $isInitialized,
+    filter: (isInitialized) => !isInitialized,
+    target: initCompleted,
 });
 
 sample({
