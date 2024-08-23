@@ -159,7 +159,7 @@ export const DeliveryMarketCard: FunctionComponent<{
     return (
         <Card
             className={clsx(
-                'max-w-[600px] shadow-md',
+                'max-w-[800px] shadow-md',
                 isExpress && 'border-2 border-danger',
             )}
         >

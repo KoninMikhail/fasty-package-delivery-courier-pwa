@@ -9,11 +9,19 @@ import { generateYandexMapsLink } from '@/pages/deliveries/singleDeliveryDetails
 import { Offline, Online } from '@/entities/viewer';
 import { useUnit } from 'effector-react';
 import { getDeliveryAddress } from '@/entities/delivery';
+import { Delivery } from '@/shared/api';
+import { useTranslation } from 'react-i18next';
 import {
     $pageDeliveryDetails,
     $$deliveryCoordinates,
 } from '../../../../model/stores';
-import { FALLBACK_MAP_CENTER, FALLBACK_MAP_ZOOM } from '../../../../config';
+import {
+    FALLBACK_MAP_CENTER,
+    FALLBACK_MAP_ZOOM,
+    LABEL_MAPS_NOT_AVAILABLE,
+    LABEL_MAPS_OPEN_IN_EXTERNAL_APP,
+    translationNS,
+} from '../../../../config';
 
 interface IYMAPSFallback {
     address: string;
@@ -26,6 +34,7 @@ const YMAPSFallback: FunctionComponent<IYMAPSFallback> = ({
     address,
     classNames,
 }) => {
+    const { t } = useTranslation(translationNS);
     const mapsQueryLink = generateYandexMapsLink(address);
     return (
         <div
@@ -34,10 +43,12 @@ const YMAPSFallback: FunctionComponent<IYMAPSFallback> = ({
                 classNames?.container,
             )}
         >
-            <div className="text-center">
-                <p className="text-2xl">Извините</p>
+            <div className="px-6 text-center">
+                <p className="text-2xl">
+                    {t(LABEL_MAPS_NOT_AVAILABLE).split(',')[0]}
+                </p>
                 <p className="text-xs font-light">
-                    Для этой доставки карта недоступна
+                    {t(LABEL_MAPS_NOT_AVAILABLE).split(',')[1]}
                 </p>
             </div>
             <Button
@@ -48,7 +59,7 @@ const YMAPSFallback: FunctionComponent<IYMAPSFallback> = ({
                 showAnchorIcon
                 size="sm"
             >
-                Открыть Яндекс.Карты
+                {t(LABEL_MAPS_OPEN_IN_EXTERNAL_APP)}
             </Button>
         </div>
     );
@@ -136,7 +147,7 @@ export const OSMMap: FunctionComponent<IOSMMapProperties> = ({
     const [unmountMap, setUnmountMap] = useState<boolean>(false);
 
     const markerLocation = useUnit($$deliveryCoordinates);
-    const markerAddress = getDeliveryAddress(delivery);
+    const markerAddress = getDeliveryAddress(delivery as Delivery);
     const markerZoom = zoom || FALLBACK_MAP_ZOOM;
     const markerIcon = useMemo(
         () =>

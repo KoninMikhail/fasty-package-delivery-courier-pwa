@@ -1,21 +1,15 @@
 import { createGate } from 'effector-react';
-import { combine, createEvent, createStore, sample } from 'effector';
+import { createEvent, createStore, sample } from 'effector';
 import { SetDeliveryStatus } from '@/features/delivery/setDeliveryStatus';
 import {
-    getDeliveryCoordinates,
     setDeliveryStatusFx,
-    isDeliveryAssignedToCourier,
     getDeliveryFromMyDeliverisLocalStorageCache,
 } from '@/entities/delivery';
 import { sessionModel } from '@/entities/viewer';
-
 import { and, condition, delay } from 'patronum';
 import { sharedLibTypeGuards } from '@/shared/lib';
 import { FetchDeliveryById } from '@/features/delivery/fetchDeliveryById';
-import {
-    $pageDeliveryDetails,
-    setDeliveryDetails,
-} from '@/pages/deliveries/singleDeliveryDetailsPage/model/stores';
+import { setDeliveryDetails } from '@/pages/deliveries/singleDeliveryDetailsPage/model/stores';
 import axios from 'axios';
 import httpStatus from 'http-status';
 import { Delivery } from '@/shared/api';
@@ -58,7 +52,8 @@ export const $pageContentState = createStore<PageState>(PageState.INIT)
  * Network state
  */
 
-const { $$isOnline, $isAuthorized } = sessionModel;
+export const $isOnline = sessionModel.$$isOnline;
+export const { $isAuthorized } = sessionModel;
 
 /**
  * Data fetching
@@ -84,7 +79,7 @@ sample({
 
 condition({
     source: delay(readyForFetch, 600),
-    if: and($$isOnline, $isAuthorized),
+    if: and($isOnline, $isAuthorized),
     then: FetchDeliveryById.fetch,
     else: getDeliveryFromMyDeliverisLocalStorageCache,
 });
@@ -111,34 +106,6 @@ sample({
     clock: FetchDeliveryById.fetchSuccess,
     target: setDeliveryDetails,
 });
-
-/**
- * Main delivery store, stores a nullable Delivery object.
- * Updates when any of the effects successfully complete and provide new data.
- */
-
-// Derived stores to decompose the delivery object for easier consumption
-
-export const $$deliveryCoordinates = $pageDeliveryDetails.map((delivery) => {
-    if (!delivery) return null;
-    const coordinates = getDeliveryCoordinates(delivery);
-    return coordinates?.latitude && coordinates?.longitude
-        ? {
-              lat: Number(coordinates.latitude),
-              lng: Number(coordinates.longitude),
-          }
-        : null;
-});
-
-export const $$isViewerDelivery = combine(
-    $pageDeliveryDetails,
-    sessionModel.$viewerProfileData,
-    (delivery, viewer) => {
-        return (
-            delivery && viewer && isDeliveryAssignedToCourier(delivery, viewer)
-        );
-    },
-);
 
 /**
  * Delivery details store

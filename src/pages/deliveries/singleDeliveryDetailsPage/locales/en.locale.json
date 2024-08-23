@@ -14,5 +14,14 @@
   "page.section.label.manager": "Manager",
   "page.section.label.courier": "Courier",
   "page.section.label.courier.chip.my": "My delivery",
-  "page.section.label.deliveryStatus": "Delivery status"
+  "page.section.label.deliveryStatus": "Delivery status",
+  "page.section.label.unavailableoffline": "Not available offline",
+  "page.state.error.title": "Sorry, there was an error",
+  "page.state.error.message": "Please, try again later.",
+  "page.state.error.button.reload": "Try again",
+  "page.state.error.button.gotodeliveries": "Go to deliveries",
+  "page.state.notFound.title": "Sorry, the page you are looking for does not exist",
+  "page.state.notFoundOffline.title": "You are offline and a cached version of your shipping data was not found.",
+  "maps.openInYandexMaps": "Open in Yandex.Maps",
+  "maps.unavailable": "The map is unavailable for this delivery"
 }

@@ -14,5 +14,14 @@
   "page.section.label.manager": "Ответственный",
   "page.section.label.courier": "Курьер",
   "page.section.label.courier.chip.my": "Моя доставка",
-  "page.section.label.deliveryStatus": "Статус доставки"
+  "page.section.label.deliveryStatus": "Статус доставки",
+  "page.state.error.title": "Извините, произошла ошибка",
+  "page.state.error.message": "Попробуйте обновить страницу или вернуться позже.",
+  "page.state.error.button.reload": "Обновить страницу",
+  "page.state.error.button.gotodeliveries": "В мои доставки",
+  "page.state.notFound.title": "Извините, страница, которую вы ищете, не существует",
+  "page.state.notFoundOffline.title": "Вы офлайн, и кэшированная версия данных о доставке не найдена",
+  "page.section.label.unavailableoffline": "Недоступно офлайн",
+  "maps.openInYandexMaps": "Открыть в Яндекс.Картах",
+  "maps.unavailable": "Для этой доставки карта недоступна"
 }
