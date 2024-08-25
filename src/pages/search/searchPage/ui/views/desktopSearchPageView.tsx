@@ -5,7 +5,7 @@ import { UserCardRow } from '@/entities/user';
 import { sessionModel } from '@/entities/viewer';
 import { widgetSearchQueryPopupModel } from '@/widgets/search/searchQueryPopup';
 import { SearchQueryInputModal } from '@/widgets/search/searchQueryPopup/ui';
-import { Input } from '@nextui-org/react';
+import { Input, Spacer } from '@nextui-org/react';
 import { IoSearchSharp } from 'react-icons/io5';
 import { widgetSearchResultsModel } from '@/widgets/search/searchResults';
 import { SearchResultsList } from '@/widgets/search/searchResults/ui';
@@ -63,6 +63,7 @@ export const DesktopSearchPageView: FunctionComponent = () => {
             <Navbar />
             <MainContainer>
                 <Toolbar />
+                <Spacer y={4} />
                 <SearchResultsList fullWidth />
             </MainContainer>
         </Layout>

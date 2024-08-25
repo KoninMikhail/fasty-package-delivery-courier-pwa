@@ -86,10 +86,9 @@ const { tick: makePageExpired } = interval({
 });
 
 const updateContent = createEvent();
-const $pageExpired = createStore<boolean>(false);
-
-$pageExpired.on(makePageExpired, () => true);
-$pageExpired.reset(updateContent);
+const $pageExpired = createStore<boolean>(false)
+    .on(makePageExpired, () => true)
+    .reset(updateContent);
 
 sample({
     clock: once({

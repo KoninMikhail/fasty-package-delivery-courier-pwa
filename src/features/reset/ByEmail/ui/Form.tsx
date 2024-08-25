@@ -95,13 +95,6 @@ const SendResetRequestButton: FunctionComponent<
  */
 export const Form = modelView(factory, () => {
     const { t } = useTranslation(translationNS);
-    const model = factory.useModel();
-    const resetForm = useUnit(model.resetFormState);
-
-    const isDemoMode = model.useUnmount(() => {
-        resetForm();
-    });
-
     return (
         <form className="flex flex-col gap-4">
             <EmailField

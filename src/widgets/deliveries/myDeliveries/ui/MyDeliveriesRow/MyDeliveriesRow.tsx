@@ -132,7 +132,7 @@ export const MyDeliveriesRow: FunctionComponent = () => {
         const deliveryId = getDeliveryNumber(delivery);
 
         if (index >= itemsLimit) return null;
-        console.log(delivery);
+
         return (
             <div className="flex items-end py-1 pl-0.5">
                 <div

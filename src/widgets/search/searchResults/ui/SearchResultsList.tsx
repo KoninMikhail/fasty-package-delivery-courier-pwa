@@ -1,7 +1,7 @@
 import { FiSearch } from 'react-icons/fi';
 import { MdOutlineSentimentDissatisfied } from 'react-icons/md';
 import { useList, useUnit } from 'effector-react';
-import { Skeleton, Spacer } from '@nextui-org/react';
+import { Skeleton } from '@nextui-org/react';
 import React, { Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RiWifiOffLine } from 'react-icons/ri';
@@ -81,7 +81,7 @@ const OfflineMessage: FunctionComponent = () => {
 };
 
 const SearchResults: FunctionComponent<{ wide?: boolean }> = ({ wide }) => {
-    const { t } = useTranslation();
+    const { t } = useTranslation(translationNS);
 
     const query = useUnit($searchQuery);
     const results = useList($searchResults, (result) =>
@@ -102,7 +102,6 @@ const SearchResults: FunctionComponent<{ wide?: boolean }> = ({ wide }) => {
     return (
         <>
             <div className="font-medium">{t(SEARCH_RESULTS_KEY)}</div>
-            <Spacer y={4} />
             <div className="flex flex-col gap-4">{results}</div>
         </>
     );

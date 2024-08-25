@@ -128,7 +128,7 @@ export const MobileSearchPageView: FunctionComponent = () => {
         <>
             <Header />
             <Content>
-                <Spacer y={2} />
+                <Spacer y={4} />
                 <SearchResultsList />
                 <Spacer y={4} />
                 <NavbarMobile />

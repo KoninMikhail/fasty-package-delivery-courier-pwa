@@ -4,7 +4,7 @@ import { assignUserToDeliveryFx } from '@/entities/user';
 import { FetchDeliveriesByParameters } from '@/features/delivery/fetchDeliveriesByParams';
 import { InfiniteScroll } from '@/features/other/infinite-scroll';
 import { isEmpty } from '@/shared/lib/type-guards';
-import { debounce, debug, delay } from 'patronum';
+import { debounce, delay } from 'patronum';
 import { fetchAvailableDeliveriesFx } from './effects';
 import {
     $datesRange,
@@ -157,11 +157,6 @@ sample({
     source: $isInitialized,
     filter: (initialized) => !initialized,
     target: [setOnline.prepend(() => false), initComplete],
-});
-
-debug({
-    init,
-    initOffline,
 });
 
 /**

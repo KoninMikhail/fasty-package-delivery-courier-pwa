@@ -1,5 +1,5 @@
 import type React from 'react';
-import {DeviceDetector, NetworkStateDetector} from '@/entities/viewer';
+import { DeviceDetector, NetworkStateDetector } from '@/entities/viewer';
 import { withProviders } from './providers';
 import { AppRouter } from './routes/router';
 import './app.css';

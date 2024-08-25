@@ -98,10 +98,6 @@ sample({
  * Page
  */
 
-/* export const $pageContentState = createStore<Optional<PageState>>(null)
-    .on(FetchDeliveryById.fetchSuccess, () => PageState.Done)
-    .reset(DeliveryDetailsPageGateway.close); */
-
 sample({
     clock: FetchDeliveryById.fetchSuccess,
     target: setDeliveryDetails,

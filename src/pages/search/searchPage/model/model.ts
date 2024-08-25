@@ -2,15 +2,13 @@ import { createEvent, sample } from 'effector';
 import { sessionModel } from '@/entities/viewer';
 import { widgetSearchResultsModel } from '@/widgets/search/searchResults';
 import { createGate } from 'effector-react';
-import { and, debug, delay, not } from 'patronum';
+import { and, delay, not } from 'patronum';
 
 export const SearchPageGate = createGate<{
     query: string;
 }>();
 
 const $isFirstLoadPage = not(widgetSearchResultsModel.$isInitialized);
-
-debug({ gate: SearchPageGate.state });
 
 /**
  * Events

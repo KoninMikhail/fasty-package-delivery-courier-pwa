@@ -1,5 +1,4 @@
 import { createEvent, sample } from 'effector';
-import { debug } from 'patronum';
 import { getUserSearchQueriesHistoryFx } from './effects';
 
 export const fetch = createEvent({
@@ -7,8 +6,6 @@ export const fetch = createEvent({
 });
 export const queryFetched = createEvent<string[]>();
 export const queryFetchFailed = createEvent<Error>();
-
-debug(fetch);
 
 sample({
     clock: fetch,

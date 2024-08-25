@@ -1,4 +1,4 @@
-export const translationNS = 'widget:search-deliveries';
+export const translationNS = 'widget:search-results';
 
 export const SEARCH_RESULTS_KEY = 'widget.heading.results';
 export const SEARCH_NOT_FOUND_KEY = 'widget.notfound.message';

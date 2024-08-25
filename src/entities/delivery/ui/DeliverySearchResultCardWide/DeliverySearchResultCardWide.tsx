@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import React, { useCallback } from 'react';
 import { LuMail, LuPhone, LuUser } from 'react-icons/lu';
 
+import { getDeliveryId } from '@/entities/delivery';
 import {
     LABEL_ID,
     LABEL_STORAGE,
@@ -223,7 +224,8 @@ export const DeliverySearchResultCardWide: FunctionComponent<DeliverySearchResul
         const navigate = useNavigate();
         const queryWords = query.split(' ');
 
-        const id = getDeliverySystemId(delivery);
+        const systemId = getDeliverySystemId(delivery);
+        const id = getDeliveryId(delivery);
         const state = getDeliveryStatus(delivery);
         const contactPerson = getDeliveryContact(delivery);
         const content = getDeliveryContents(delivery);
@@ -236,8 +238,8 @@ export const DeliverySearchResultCardWide: FunctionComponent<DeliverySearchResul
         );
 
         const onPressButtonMore = useCallback(() => {
-            navigate(`${DELIVERIES}/${id}`);
-        }, [id, navigate]);
+            navigate(`${DELIVERIES}/${systemId}`);
+        }, [systemId, navigate]);
 
         return (
             <Card className="hover: w-full">

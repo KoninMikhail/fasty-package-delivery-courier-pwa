@@ -14,9 +14,6 @@ import { RefreshToken } from '@/features/auth/refreshToken';
 import { POLLING_TIMEOUT_SEC } from '../config';
 
 export const MarketPageGate = createGate<void>();
-/**
- * Events
- */
 
 /**
  * Initialization
