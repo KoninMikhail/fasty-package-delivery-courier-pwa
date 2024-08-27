@@ -1,4 +1,4 @@
-import { Button, Divider, Spacer } from '@nextui-org/react';
+import { Button, Spacer } from '@nextui-org/react';
 import { RiWifiOffFill } from 'react-icons/ri';
 import { useTranslation } from 'react-i18next';
 import { useUnit } from 'effector-react';
@@ -10,15 +10,16 @@ import {
     getDeliveryAddress,
     getDeliveryContents,
     getDeliveryCoordinates,
-    getDeliveryId,
     getDeliveryMetro,
     getDeliveryPickupDateTime,
+    getDeliverySystemId,
 } from '@/entities/delivery';
 import { MdOutlineLocationSearching } from 'react-icons/md';
 import { sharedConfigRoutes } from '@/shared/config';
 import { useNavigate } from 'react-router-dom';
 import { $isOnline } from '@/widgets/deliveries/market/model';
 import { $myDeliveriesStore } from '@/widgets/deliveries/myDeliveries/model/stores';
+import { DeliveryMapBaloonCard } from '@/entities/delivery/ui/DeliveryMapBaloonCard';
 import {
     DEFAULT_MAP_CENTER,
     DEFAULT_MAP_ZOOM,
@@ -115,7 +116,7 @@ const Map: FunctionComponent = () => {
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             {deliveries.map((delivery) => {
                 const address = getDeliveryAddress(delivery);
-                const id = getDeliveryId(delivery);
+                const id = getDeliverySystemId(delivery);
                 const contents = getDeliveryContents(delivery);
                 const station = getDeliveryMetro(delivery);
                 const pickupDateTime = getDeliveryPickupDateTime(
@@ -123,6 +124,8 @@ const Map: FunctionComponent = () => {
                     true,
                     true,
                 );
+
+                console.log(delivery);
 
                 const coordinates = getDeliveryCoordinates(delivery);
 
@@ -133,44 +136,19 @@ const Map: FunctionComponent = () => {
                     <Marker
                         key={delivery.id}
                         position={{
-                            lat: Number.parseInt(coordinates?.lat ?? '0', 10),
-                            lng: Number.parseInt(coordinates?.lng ?? '0', 10),
+                            lat: Number.parseFloat(
+                                coordinates?.latitude ?? '0',
+                            ),
+                            lng: Number.parseFloat(
+                                coordinates?.longitude ?? '0',
+                            ),
                         }}
                     >
                         <Popup autoPan minWidth={300}>
-                            <div className="font-serif font- relative flex w-[300px] flex-col gap-1">
-                                <div className="!font-4xl font-bold">
-                                    Доставка: {id}
-                                </div>
-                                <Divider className="my-1 invert" />
-                                <div>
-                                    <div>Груз:</div>
-                                    <div>{contents}</div>
-                                </div>
-                                <div>
-                                    <div>Метро:</div>
-                                    <div>
-                                        <SubwayStationWithIcon
-                                            value={station}
-                                        />
-                                    </div>
-                                </div>
-                                <div>
-                                    <div>Адрес:</div>
-                                    <div>{address}</div>
-                                </div>
-                                <div>
-                                    <div>Время:</div>
-                                    <div>{pickupDateTime}</div>
-                                </div>
-                                <Divider className="my-1 invert" />
-                                <Button
-                                    onPress={onPressDetailsPageLink}
-                                    size="sm"
-                                >
-                                    Посмотреть
-                                </Button>
-                            </div>
+                            <DeliveryMapBaloonCard
+                                delivery={delivery}
+                                onPressDetailsPageLink={onPressDetailsPageLink}
+                            />
                         </Popup>
                     </Marker>
                 );

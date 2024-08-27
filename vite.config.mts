@@ -136,7 +136,33 @@ export default defineConfig(({ mode }) => ({
             ]
           },
           workbox: {
-            globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+            runtimeCaching: [{
+              urlPattern: /.*\/uploads\/.*/i,
+              handler: "CacheFirst",
+              options: {
+                cacheName: "files-cache",
+                expiration: {
+                  maxEntries: 5,
+                  maxAgeSeconds: 60 * 60 * 24 * 365 // <== 365 days
+                },
+                cacheableResponse: {
+                  statuses: [0, 200]
+                }
+              }
+            }, {
+              urlPattern: /.*\/icons\/subway\/.*.svg/i,
+              handler: "CacheFirst",
+              options: {
+                cacheName: "subway-icons-cache",
+                expiration: {
+                  maxEntries: 50,
+                  maxAgeSeconds: 60 * 60 * 24 * 365 // <== 365 days
+                },
+                cacheableResponse: {
+                  statuses: [0, 200]
+                }
+              }
+            }]
           }
         }),
         vitePluginVersionMark({

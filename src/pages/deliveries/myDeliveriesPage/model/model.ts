@@ -9,6 +9,15 @@ import httpStatus from 'http-status';
 import { RefreshToken } from '@/features/auth/refreshToken';
 import { POLLING_TIMEOUT } from '../config';
 
+/**
+ * Externals
+ */
+const { $isAuthorized, $$isOnline, resourcesLoaded } = sessionModel;
+
+/**
+ * Gate for the page
+ */
+
 export const MyDeliveriesPageGate = createGate<void>();
 
 /**
@@ -25,10 +34,11 @@ const $isPageInitialized = createStore<boolean>(false)
     )
     .reset(Logout.model.userLoggedOut);
 
-/**
- * Current page mode
- */
-const { $isAuthorized, $$isOnline } = sessionModel;
+sample({
+    clock: $isPageInitialized,
+    filter: (isInitialized) => isInitialized,
+    target: resourcesLoaded,
+});
 
 /**
  * Widgets initialization

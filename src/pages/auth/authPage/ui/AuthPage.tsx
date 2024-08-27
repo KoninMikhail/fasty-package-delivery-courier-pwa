@@ -1,15 +1,11 @@
-import {
-    sharedConfigConstants,
-    sharedConfigEnvs,
-    sharedConfigRoutes,
-} from '@/shared/config';
+import { sharedConfigConstants, sharedConfigEnvs } from '@/shared/config';
 
 import { useTranslation } from 'react-i18next';
 import { useDocumentTitle } from 'usehooks-ts';
 import { PropsWithChildren } from 'react';
 import { Button, Chip, Link, Spacer } from '@nextui-org/react';
 import { ImKey } from 'react-icons/im';
-import { useUnit } from 'effector-react';
+import { useGate, useUnit } from 'effector-react';
 import { FaGithub } from 'react-icons/fa6';
 
 import { widgetCookiePolicyModalUi } from '@/widgets/polices/cookiePolicyModal';
@@ -21,7 +17,11 @@ import { sharedUiBranding } from '@/shared/ui/';
 
 import { Guest } from '@/entities/viewer/ui/Guest';
 import { ChangeLanguage } from '@/features/viewer/changeLanguage';
-import { requestAuthModel, requestRecoveryModel } from '../model';
+import {
+    AuthPageGate,
+    pressRecoveryButton,
+    pressSignInButton,
+} from '../model/model';
 import {
     BUTTON_GITHUB,
     BUTTON_RESET_PASSWORD,
@@ -34,9 +34,9 @@ import {
 
 const { Logo } = sharedUiBranding;
 
-const { APP_NAME, GITHUB_PAGE_URL, APP_DESCRIPTION } = sharedConfigConstants;
+const { APP_NAME, GITHUB_PAGE_URL, APP_DESCRIPTION, APP_VERSION } =
+    sharedConfigConstants;
 const { isDevelopmentEnvironment } = sharedConfigEnvs;
-const { RouteName } = sharedConfigRoutes;
 const { SignInModal } = widgetSignInModalUi;
 
 const { ResetPasswordModal } = widgetResetPasswordModalUi;
@@ -88,7 +88,7 @@ const Greetings: FunctionComponent = () => {
 
 const SignInButton: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
-    const onPressSignIn = useUnit(requestAuthModel.pressSignInButton);
+    const onPressSignIn = useUnit(pressSignInButton);
     return (
         <Button
             color="primary"
@@ -104,9 +104,7 @@ const SignInButton: FunctionComponent = () => {
 const ResetPasswordButton: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
 
-    const onPressResetPassword = useUnit(
-        requestRecoveryModel.pressRecoveryButton,
-    );
+    const onPressResetPassword = useUnit(pressRecoveryButton);
 
     return (
         <Button
@@ -143,11 +141,9 @@ const DeveloperModeChip: FunctionComponent = () => (
     </Chip>
 );
 
-const AppVersion: FunctionComponent = () => (
+const AppVersionLabel: FunctionComponent = () => (
     <div className="invisible fixed bottom-8 right-12 text-center lg:visible">
-        <span className="text-foreground">
-            {import.meta.env.PACKAGE_VERSION}
-        </span>
+        <span className="text-foreground">{APP_VERSION}</span>
     </div>
 );
 
@@ -161,6 +157,8 @@ export const AuthPage: FunctionComponent = () => {
             appDescription: APP_DESCRIPTION[currentLanguage],
         }),
     );
+
+    useGate(AuthPageGate);
 
     return (
         <Guest>
@@ -192,7 +190,7 @@ export const AuthPage: FunctionComponent = () => {
             <CookiePolicyModal size="5xl" />
             <PrivacyPolicyModal size="5xl" />
             <TermsOfUseModal size="5xl" />
-            <AppVersion />
+            <AppVersionLabel />
         </Guest>
     );
 };

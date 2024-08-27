@@ -28,6 +28,8 @@
   "delivery.card.weight.kg": "{{weight}}кг",
   "delivery.card.button.more": "Подробнее",
   "delivery.card.chip.expired": "Просрочено",
+  "delivery.card.label.deliveryWithId": "Доставка: #{{id}}",
+  "delivery.card.label.subwayStation": "Станция метро",
   "delivery.card.chip.timeLeft": "{{hours}}ч {{minutes}}м",
   "delivery.card.client.name.notFound": "Клиент не найден"
 }

@@ -2,6 +2,7 @@ import { createEvent, createStore } from 'effector';
 import { AuthByEmail } from '@/features/auth/ByEmail';
 import { authByEmailFx } from '@/entities/viewer';
 
+export const userSuccessAuthorized = createEvent();
 export const pressedOpenPrivacyPolicyLink = createEvent();
 export const pressedOpenTermsOfUseLink = createEvent();
 export const pressedOpenCookiePolicyLink = createEvent();

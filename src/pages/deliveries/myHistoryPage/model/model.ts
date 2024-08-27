@@ -8,22 +8,35 @@ import { RefreshToken } from '@/features/auth/refreshToken';
 import axios from 'axios';
 import httpStatus from 'http-status';
 
-export const MyDeliveriesHistoryPageGate = createGate<void>();
-
-const $isPageInitialized = createStore<boolean>(false)
-    .on(
-        once({
-            source: MyDeliveriesHistoryPageGate.open,
-            reset: Logout.model.userLoggedOut,
-        }),
-        () => true,
-    )
-    .reset(Logout.model.userLoggedOut);
+/**
+ * Externals
+ */
+const { $isAuthorized, $$isOnline, resourcesLoaded, resetResourcesLoaded } =
+    sessionModel;
 
 /**
- * Current page mode
+ * Gate for the page
  */
-const { $isAuthorized, $$isOnline } = sessionModel;
+export const MyDeliveriesHistoryPageGate = createGate<void>();
+
+/**
+ * Page initialization
+ */
+const pageMountedEvent = once({
+    source: MyDeliveriesHistoryPageGate.open,
+    reset: Logout.model.userLoggedOut,
+});
+
+const $isPageLoaded = createStore<boolean>(false)
+    .on(pageMountedEvent, () => true)
+    .reset(Logout.model.userLoggedOut);
+
+sample({
+    clock: pageMountedEvent,
+    target: resourcesLoaded,
+});
+
+export const $isPageInitialized = and($isPageLoaded, $isAuthorized);
 
 /**
  * Widgets initialization
@@ -31,11 +44,9 @@ const { $isAuthorized, $$isOnline } = sessionModel;
 const initWidgetsOnline = createEvent();
 const initWidgetsOffline = createEvent();
 
-const $initWidgetsCompleted = and(widgetsDeliveriesHistoryModel.$isInitialized);
-
 condition({
-    source: delay($isPageInitialized, 500),
-    if: and($$isOnline, $isAuthorized),
+    source: delay($isPageInitialized, 800),
+    if: $$isOnline,
     then: initWidgetsOnline,
     else: initWidgetsOffline,
 });
@@ -64,9 +75,20 @@ sample({
 
 sample({
     clock: $$isOnline,
-    source: widgetsDeliveriesHistoryModel.$isInitialized,
-    filter: (isInitialized) => isInitialized,
-    target: widgetsDeliveriesHistoryModel.setOnline,
+    source: $isPageInitialized,
+    filter: (isPageInit, online) => online && isPageInit,
+    target: widgetsDeliveriesHistoryModel.init,
+});
+
+sample({
+    clock: $$isOnline,
+    source: {
+        widgetInit: widgetsDeliveriesHistoryModel.$isInitialized,
+        pageInit: $isPageInitialized,
+    },
+    filter: ({ widgetInit, pageInit }, online) =>
+        widgetInit && pageInit && !online,
+    target: widgetsDeliveriesHistoryModel.setOnline.prepend(() => false),
 });
 
 /**
@@ -92,12 +114,10 @@ sample({
 
 sample({
     clock: RefreshToken.updateTokenSuccess,
-    source: $initWidgetsCompleted,
-    filter: (isInitialized) => isInitialized,
-    target: widgetsDeliveriesHistoryModel.fetchData,
+    target: widgetsDeliveriesHistoryModel.init,
 });
 
 sample({
     clock: RefreshToken.updateTokenFail,
-    target: Logout.model.logout,
+    target: [Logout.model.logout, widgetsDeliveriesHistoryModel.reset],
 });

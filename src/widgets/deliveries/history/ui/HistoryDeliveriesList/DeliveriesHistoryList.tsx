@@ -4,13 +4,23 @@ import { LuPackage } from 'react-icons/lu';
 import { useUnit } from 'effector-react';
 import { DeliveryHistoryCard } from '@/entities/delivery';
 import { InfiniteScroll } from '@/features/other/infinite-scroll';
+import { sharedLibTypeGuards } from '@/shared/lib';
 import {
     getCanceledDeliveriesCountText,
     getLocaledDate,
     getSuccessDeliveriesCountText,
 } from '../../lib';
-import { $isInitialized, InfiniteScrollModel } from '../../model';
+import {
+    $isInitialized,
+    infiniteScrollModel,
+    $isOnline,
+    $errors,
+} from '../../model';
 import { $$sortedDeliveriesHistory } from '../../model/stores';
+import { Loader } from '../common/Loader';
+import { Offline } from '../common/Offline';
+
+const { isEmpty } = sharedLibTypeGuards;
 
 /**
  * Layout component for displaying a single history item.
@@ -40,8 +50,17 @@ const HistoryItemLayout: FunctionComponent<PropsWithChildren> = ({
  * Component for displaying a list of deliveries history with accordion and infinite scrolling.
  */
 export const DeliveriesHistoryList: FunctionComponent = () => {
-    const isInit = useUnit($isInitialized);
-    const history = useUnit($$sortedDeliveriesHistory);
+    const { isInit, isOnline, history, errors } = useUnit({
+        isInit: $isInitialized,
+        isOnline: $isOnline,
+        history: $$sortedDeliveriesHistory,
+        errors: $errors,
+    });
+
+    if (!isInit) return <Loader />;
+    if (!isOnline) return <Offline />;
+    if (!isEmpty(errors)) return <Loader />;
+
     const renderHistoryItems = history.map(
         ({ count, canceled, date, items }) => {
             const title = getLocaledDate(date);
@@ -107,7 +126,7 @@ export const DeliveriesHistoryList: FunctionComponent = () => {
                 {renderHistoryItems}
             </Accordion>
             <InfiniteScroll.Trigger
-                model={InfiniteScrollModel}
+                model={infiniteScrollModel}
                 allowed={isInit}
             />
         </div>

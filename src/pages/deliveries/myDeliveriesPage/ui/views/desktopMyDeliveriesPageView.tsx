@@ -9,6 +9,13 @@ import {
     MyDeliveriesFilters,
     MyDeliveriesList,
 } from '@/widgets/deliveries/myDeliveries/ui';
+import { useTranslation } from 'react-i18next';
+import {
+    PAGE_HEADER,
+    PAGE_TAB_LIST,
+    PAGE_TAB_MAP,
+    translationNS,
+} from '../../config';
 
 const { MyDeliveriesMap } = widgetMyDeliveriesUi;
 const { Navbar } = widgetNavbarDesktopUi;
@@ -42,6 +49,7 @@ const Toolbar: FunctionComponent<{
     // @ts-expect-error ts-migrate
     onSelectTab: (key) => void;
 }> = ({ heading, onSelectTab }) => {
+    const { t } = useTranslation(translationNS);
     const user = useUnit(sessionModel.$viewerProfileData);
     return (
         <div className="fixed left-64 right-0 top-0 z-[5000] flex items-center justify-between bg-gradient-to-b from-background to-transparent px-8 py-6 pl-16">
@@ -54,8 +62,8 @@ const Toolbar: FunctionComponent<{
                     onSelectionChange={onSelectTab}
                     aria-label="Tabs sizes"
                 >
-                    <Tab key="list" title="Списком" />
-                    <Tab key="map" title="На карте" />
+                    <Tab key="list" title={t(PAGE_TAB_LIST)} />
+                    <Tab key="map" title={t(PAGE_TAB_MAP)} />
                 </Tabs>
             </div>
             <div>
@@ -66,6 +74,7 @@ const Toolbar: FunctionComponent<{
 };
 
 export const DesktopMyDeliveriesPageView: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
     const [selectedTab, setSelectedTab] = useState<string>('list');
 
     const onSelectedTab = (key: string): void => {
@@ -78,7 +87,7 @@ export const DesktopMyDeliveriesPageView: FunctionComponent = () => {
                 <Navbar />
             </Sidebar>
             <MainContainer>
-                <Toolbar heading="Мои доставки" onSelectTab={onSelectedTab} />
+                <Toolbar heading={t(PAGE_HEADER)} onSelectTab={onSelectedTab} />
                 {selectedTab === 'map' ? (
                     <MyDeliveriesMap />
                 ) : (

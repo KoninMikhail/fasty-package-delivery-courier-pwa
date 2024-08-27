@@ -15,7 +15,9 @@ const Layout: FunctionComponent<PropsWithChildren> = ({ children }) => (
 );
 
 const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
-    <main className="h-full w-full flex-col overflow-hidden">{children}</main>
+    <main className="h-full max-h-screen w-full flex-col overflow-hidden pb-24">
+        {children}
+    </main>
 );
 
 const HistoryLayout: FunctionComponent<PropsWithChildren> = ({ children }) => (
@@ -25,7 +27,7 @@ const HistoryLayout: FunctionComponent<PropsWithChildren> = ({ children }) => (
 const Toolbar: FunctionComponent<{ header: string }> = ({ header }) => {
     const user = useUnit(sessionModel.$viewerProfileData);
     return (
-        <div className="flex w-full items-center justify-between py-6 pr-4">
+        <div className="flex w-full items-center justify-between py-6 pr-4 ">
             <div className="w-1/2">
                 <h1 className="text-4xl">{header}</h1>
             </div>

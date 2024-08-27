@@ -10,10 +10,10 @@ import { ChangeColorModeSwitchButton } from '@/features/viewer/changeColorMode';
 import {
     APP_DESCRIPTION,
     APP_NAME,
+    APP_VERSION,
     APP_SUPPORT_EMAIL,
     APP_SUPPORT_PHONE,
 } from '@/shared/config/constants';
-import { AppVersion } from '@/shared/lib/app';
 import { useTranslation } from 'react-i18next';
 import { widgetCookiePolicyModalUi } from '@/widgets/polices/cookiePolicyModal';
 import { widgetPrivacyPolicyModalUi } from '@/widgets/polices/privacyPolicyModal';
@@ -163,9 +163,7 @@ export const DesktopSettingsPageView: FunctionComponent = () => {
                     <Spacer />
                     <div className="flex w-full items-center justify-center gap-1 text-center text-lg">
                         <span className=" font-bold">{APP_NAME}</span>
-                        <Chip size="sm">
-                            <AppVersion />
-                        </Chip>
+                        <Chip size="sm">{APP_VERSION}</Chip>
                     </div>
                     <div className="w-full text-center text-xs">
                         {APP_DESCRIPTION[currentLanguage]}

@@ -1,9 +1,9 @@
 import { HorizontalScroll } from '@/shared/ui/layouts';
-import { Chip } from '@nextui-org/react';
 import { useList, useUnit } from 'effector-react';
 import { modelView } from 'effector-factorio';
 import clsx from 'clsx';
 import { HTMLAttributes } from 'react';
+import { Button } from '@nextui-org/react';
 import { factory } from '../model';
 
 interface HorizontalTimePickerProperties {
@@ -26,13 +26,15 @@ export const HorizontalTimePicker = modelView(
             const isSelected = selected.includes(time);
 
             return (
-                <Chip
+                <Button
                     onClick={onClickChip}
-                    size="lg"
+                    size="md"
+                    variant={isSelected ? 'solid' : 'bordered'}
+                    className="rounded-full"
                     color={isSelected ? 'primary' : 'default'}
                 >
                     {time}
-                </Chip>
+                </Button>
             );
         });
 

@@ -5,5 +5,5 @@ import { $pageDeliveryDetails } from '../../../../model/stores';
 export const DeliveryNumber: FunctionComponent = () => {
     const delivery = useUnit($pageDeliveryDetails);
     if (!delivery) return null;
-    return getDeliveryNumber(delivery);
+    return getDeliveryNumber(delivery).padStart(5, '0');
 };

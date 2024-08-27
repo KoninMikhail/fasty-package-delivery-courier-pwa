@@ -1,8 +1,7 @@
 import { createEvent, createStore, sample } from 'effector';
 import { InfiniteScroll } from 'features/other/infinite-scroll';
 import { FetchDeliveriesByParameters } from '@/features/delivery/fetchDeliveriesByParams';
-import { and, condition, delay } from 'patronum';
-import { sessionModel } from '@/entities/viewer';
+import { debug, delay } from 'patronum';
 import { $fetchedData, setDeliveriesHistory } from './stores';
 import { getDeliveriesHistoryFx } from './effects';
 
@@ -13,37 +12,37 @@ export const init = createEvent();
 export const initOffline = createEvent();
 export const setOnline = createEvent<boolean>();
 export const fetchData = createEvent();
+export const reset = createEvent();
 
 /**
  * Network status
  */
 
-const $isOnline = createStore(false)
+export const $isOnline = createStore(true)
     .on(initOffline, () => false)
     .on(setOnline, (_, isOnline) => isOnline)
-    .reset(init);
+    .on(init, () => true)
+    .reset(reset);
 
 /**
- * Features
+ * Data fetching
  */
-export const InfiniteScrollModel = InfiniteScroll.factory.createModel({
+
+export const infiniteScrollModel = InfiniteScroll.factory.createModel({
     provider: getDeliveriesHistoryFx,
     throttleTimeoutInMs: 500,
     initial: {
         page: 1,
     },
-    onTriggerNewPage: (query) => {
-        return {
-            page: query.page + 1,
-        };
-    },
-    shouldLoadNextPage: (data) => data.length > 0,
+    onTriggerNewPage: (query) => ({
+        page: query.page + 1,
+    }),
 });
 
 const fetchDeliveriesHistoryModel =
     FetchDeliveriesByParameters.factory.createModel({
         provider: getDeliveriesHistoryFx,
-        pagination: InfiniteScrollModel.$pagination,
+        pagination: infiniteScrollModel.$pagination,
     });
 
 sample({
@@ -54,33 +53,36 @@ sample({
 });
 
 sample({
-    clock: delay(InfiniteScrollModel.newPageRequested, 300),
+    clock: delay(infiniteScrollModel.newPageRequested, 300),
     target: fetchDeliveriesHistoryModel.fetch,
+});
+
+debug({
+    pagination: infiniteScrollModel.$pagination,
 });
 
 /**
  * Initialize the model
  */
-const initStarted = createEvent();
 const initCompleted = createEvent();
 
-export const $isInitialized = createStore(false).on(initCompleted, () => true);
-
-condition({
-    source: init,
-    if: and(sessionModel.$isAuthorized, sessionModel.$$isOnline),
-    then: initStarted,
-    else: initCompleted,
-});
+export const $isInitialized = createStore(false)
+    .on(initCompleted, () => true)
+    .reset(reset);
 
 // Online
 sample({
-    clock: initStarted,
+    clock: init,
+    target: infiniteScrollModel.reset,
+});
+
+sample({
+    clock: delay(init, 300),
     target: fetchDeliveriesHistoryModel.fetch,
 });
 
 sample({
-    clock: delay(fetchDeliveriesHistoryModel.deliveriesFetched, 200),
+    clock: delay(fetchDeliveriesHistoryModel.deliveriesFetched, 500),
     source: $isInitialized,
     filter: (initialized) => !initialized,
     target: initCompleted,
@@ -89,7 +91,7 @@ sample({
 // Offline
 sample({
     clock: initOffline,
-    target: initCompleted,
+    target: [initCompleted, setOnline.prepend(() => false)],
 });
 
 export const { $errors } = fetchDeliveriesHistoryModel;

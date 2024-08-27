@@ -4,7 +4,7 @@ import { sharedConfigRoutes } from '@/shared/config';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useCallback } from 'react';
-import { getDeliveryId } from '@/entities/delivery';
+import { getDeliveryId, getDeliverySystemId } from '@/entities/delivery';
 import {
     LABEL_ADDRESS,
     LABEL_COMMENT,
@@ -108,7 +108,10 @@ const ButtonMore: FunctionComponent<{ onPress: () => void }> = ({
 };
 
 interface DeliveryHistoryCardProperties {
-    delivery: Delivery;
+    delivery: Pick<
+        Delivery,
+        'id' | 'deliveryId' | 'contents' | 'comment' | 'state' | 'date'
+    >;
 }
 
 export const DeliveryHistoryCard: FunctionComponent<
@@ -117,6 +120,7 @@ export const DeliveryHistoryCard: FunctionComponent<
     const { state } = delivery;
     const navigate = useNavigate();
 
+    const deliverySystemId = getDeliverySystemId(delivery);
     const id = getDeliveryId(delivery);
     const contents = getDeliveryContents(delivery);
     const comment = getDeliveryComment(delivery);
@@ -124,8 +128,8 @@ export const DeliveryHistoryCard: FunctionComponent<
     const date = getDeliveryPickupDateTime(delivery, true, true);
 
     const onPressButtonMore = useCallback((): void => {
-        navigate(`${DELIVERIES}/${id}`);
-    }, [id, navigate]);
+        navigate(`${DELIVERIES}/${deliverySystemId}`);
+    }, [deliverySystemId, navigate]);
 
     return (
         <div className="min-w-0 flex-1 py-0">

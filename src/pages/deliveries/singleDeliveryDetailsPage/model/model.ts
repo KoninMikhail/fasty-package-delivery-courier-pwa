@@ -6,7 +6,7 @@ import {
     getDeliveryFromMyDeliverisLocalStorageCache,
 } from '@/entities/delivery';
 import { sessionModel } from '@/entities/viewer';
-import { and, condition, delay } from 'patronum';
+import { and, condition, delay, once } from 'patronum';
 import { sharedLibTypeGuards } from '@/shared/lib';
 import { FetchDeliveryById } from '@/features/delivery/fetchDeliveryById';
 import { setDeliveryDetails } from '@/pages/deliveries/singleDeliveryDetailsPage/model/stores';
@@ -28,6 +28,19 @@ const { isEmpty } = sharedLibTypeGuards;
 export const DeliveryDetailsPageGateway = createGate<{
     deliveryId?: string;
 }>();
+
+/**
+ * Page initialization
+ */
+const pageMountedEvent = once({
+    source: DeliveryDetailsPageGateway.open,
+    reset: Logout.model.userLoggedOut,
+});
+
+sample({
+    clock: pageMountedEvent,
+    target: sessionModel.resourcesLoaded,
+});
 
 /**
  * Page State

@@ -4,6 +4,11 @@ import { widgetNavbarDesktopUi } from '@/widgets/layout/navbar-desktop';
 import { Divider, Spacer } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { widgetDeliveryStatusUi } from '@/widgets/deliveries/deliveryStatus';
+import {
+    getDeliveryId,
+    LABEL_DELIVERY_WITH_ID,
+    translationNS as entityDeliveryTranslationNs,
+} from '@/entities/delivery';
 
 import { useUnit } from 'effector-react';
 import { $pageDeliveryDetails } from '@/pages/deliveries/singleDeliveryDetailsPage/model/stores';
@@ -46,7 +51,6 @@ import {
     DeliveryContents,
     DeliveryContactPerson,
     DeliveryCourier,
-    DeliveryNumber,
     BackButton,
 } from './common/components';
 
@@ -164,10 +168,13 @@ const DeliveryWeightLabel: FunctionComponent = () => {
  * @constructor
  */
 export const DesktopDeliveryDetailsPageView: FunctionComponent = () => {
+    const { t } = useTranslation(entityDeliveryTranslationNs);
     const { pageState, delivery } = useUnit({
         delivery: $pageDeliveryDetails,
         pageState: $pageContentState,
     });
+
+    const deliveryId = delivery ? getDeliveryId(delivery).padStart(6, '0') : '';
 
     const isPageNotReady = pageState === PageState.INIT || !delivery;
     const isPageNotFound = pageState === PageState.NotFound;
@@ -228,7 +235,9 @@ export const DesktopDeliveryDetailsPageView: FunctionComponent = () => {
                 <div className="flex items-center gap-2">
                     <BackButton />
                     <h1 className="px-2 py-4 text-xl font-bold">
-                        Доставка #<DeliveryNumber />
+                        {t(LABEL_DELIVERY_WITH_ID, {
+                            id: deliveryId,
+                        })}
                     </h1>
                 </div>
                 <Spacer y={2} />

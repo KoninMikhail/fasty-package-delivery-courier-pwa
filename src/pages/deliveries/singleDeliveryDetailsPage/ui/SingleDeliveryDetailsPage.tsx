@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { useDocumentTitle } from 'usehooks-ts';
 import { useGate, useUnit } from 'effector-react';
 import { useParams } from 'react-router-dom';
+import { $pageDeliveryDetails } from '@/pages/deliveries/singleDeliveryDetailsPage/model/stores';
+import { getDeliveryId } from '@/entities/delivery';
 import { DeliveryDetailsPageGateway } from '../model/model';
 
 import {
@@ -15,8 +17,12 @@ import { PAGE_TITLE, translationNS } from '../config';
 const { APP_NAME, APP_DESCRIPTION } = sharedConfigConstants;
 
 export const SingleDeliveryDetailsPage: FunctionComponent = () => {
-    const isDesktop = useUnit(sessionModel.$$isDesktop);
-    const { deliveryId } = useParams();
+    const { isDesktop, delivery } = useUnit({
+        isDesktop: sessionModel.$$isDesktop,
+        delivery: $pageDeliveryDetails,
+    });
+    const { deliveryId: deliverySystemId } = useParams();
+    const deliveryId = delivery ? getDeliveryId(delivery) : null;
     const { t, i18n } = useTranslation(translationNS);
     const currentLanguage = i18n.language as keyof typeof APP_DESCRIPTION;
 
@@ -27,7 +33,7 @@ export const SingleDeliveryDetailsPage: FunctionComponent = () => {
             appDescription: APP_DESCRIPTION[currentLanguage],
         }),
     );
-    useGate(DeliveryDetailsPageGateway, { deliveryId });
+    useGate(DeliveryDetailsPageGateway, { deliveryId: deliverySystemId });
 
     return isDesktop ? (
         <Authorized>

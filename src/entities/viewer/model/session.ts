@@ -1,10 +1,9 @@
 import { createEvent, createStore } from 'effector';
-import { and } from 'patronum';
+import { and, debug } from 'patronum';
 import { User, userSchema } from '@/shared/api';
 import { Done } from 'effector-storage';
 import { persist } from 'effector-storage/local';
 import { SESSION_USER_PROFILE_LOCAL_STORAGE_KEY } from '../config';
-import { revalidateAuthFx } from './effects/revalidateAuthFx';
 import {
     authByEmailFx,
     changeViewerAvatarFx,
@@ -12,15 +11,27 @@ import {
     logoutFx,
 } from './effects';
 
-export const viewerDataReceived = createEvent<Done<User>>();
-
 /**
  * Session initialization status
  */
-export const $initSessionComplete = createStore(true).on(
+const viewerDataReceived = createEvent<Done<User>>();
+const $viewerDataReceived = createStore(false).on(
     viewerDataReceived,
     () => true,
 );
+
+export const resourcesLoaded = createEvent();
+export const resetResourcesLoaded = createEvent();
+const $resourcesLoaded = createStore(false)
+    .on(resourcesLoaded, () => true)
+    .reset(resetResourcesLoaded);
+
+export const $initSessionComplete = and($viewerDataReceived, $resourcesLoaded);
+debug({
+    $initSessionComplete,
+    $viewerDataReceived,
+    $resourcesLoaded,
+});
 
 /**
  * =================================================
@@ -46,7 +57,6 @@ persist({
     key: SESSION_USER_PROFILE_LOCAL_STORAGE_KEY,
     contract: (raw): raw is User => userSchema.safeParse(raw).success,
     done: viewerDataReceived,
-    fail: revalidateAuthFx,
 });
 
 /**

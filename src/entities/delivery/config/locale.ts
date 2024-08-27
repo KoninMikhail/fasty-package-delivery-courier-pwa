@@ -20,7 +20,9 @@ export const STATUS_CREATED = 'delivery.status.created';
 export const STATUS_DELIVERING = 'delivery.status.delivering';
 export const STATUS_DELIVERING_DESCRIPTION =
     'delivery.status.delivering.description';
+export const LABEL_DELIVERY_WITH_ID = 'delivery.card.label.deliveryWithId';
 export const STATUS_DONE = 'delivery.status.done';
+export const LABEL_SUBWAY = 'delivery.card.label.subwayStation';
 export const STATUS_NO_COMMENT = 'delivery.status.noComment';
 export const STATUS_DONE_COMMENT = 'delivery.status.done.comment';
 export const STATUS_CANCELLED = 'delivery.status.canceled';

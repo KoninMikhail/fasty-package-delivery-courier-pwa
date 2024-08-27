@@ -27,7 +27,9 @@ const sourceList = {
     unknown: '/icons/subway/Moskwa_Metro_Unknown.svg',
 };
 
-export const getSubwayStationIconSourceByName = (lineId?: SubwayLineID) => {
+export const getSubwayStationIconSourceByName = (
+    lineId?: SubwayLineID,
+): string => {
     if (!lineId || !sourceList[lineId]) {
         return sourceList.unknown;
     }

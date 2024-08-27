@@ -18,7 +18,9 @@ const { APP_NAME, APP_DESCRIPTION } = sharedConfigConstants;
  * @constructor
  */
 export const MyDeliveriesHistoryPage: FunctionComponent = () => {
-    const isDesktop = useUnit(sessionModel.$$isDesktop);
+    const { isDesktop } = useUnit({
+        isDesktop: sessionModel.$$isDesktop,
+    });
     const { t, i18n } = useTranslation(translationNS);
     const currentLanguage = i18n.language as keyof typeof APP_DESCRIPTION;
     const heading = t('page.header');

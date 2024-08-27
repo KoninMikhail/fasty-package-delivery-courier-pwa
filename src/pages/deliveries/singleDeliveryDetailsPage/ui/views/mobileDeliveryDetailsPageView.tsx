@@ -5,7 +5,7 @@ import { useUnit } from 'effector-react';
 import { widgetDeliveryStatusUi } from '@/widgets/deliveries/deliveryStatus';
 import { useTranslation } from 'react-i18next';
 import { RiWifiOffLine } from 'react-icons/ri';
-import { getDeliveryNumber } from '@/entities/delivery';
+import { getDeliveryId } from '@/entities/delivery';
 import { $pageDeliveryDetails } from '../../model/stores';
 import { Error, Loading, NotFound, NotFoundOffline } from './common/states';
 import { PageState } from '../../types';
@@ -91,7 +91,9 @@ const Header: FunctionComponent<{
     className?: string;
 }> = ({ backButton, className, deliveryIdVisible = true }) => {
     const delivery = useUnit($pageDeliveryDetails);
-    const deliveryId = delivery ? getDeliveryNumber(delivery) : null;
+    const deliveryId = delivery
+        ? getDeliveryId(delivery).padStart(6, '0')
+        : null;
 
     const titleContent = deliveryIdVisible ? deliveryId || '0' : null;
 

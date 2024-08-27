@@ -28,6 +28,8 @@
   "delivery.card.chip.expired": "Expired",
   "delivery.card.chip.timeLeft": "{{hours}}h {{minutes}}m",
   "delivery.card.client.name.notFound": "Client not found",
+  "delivery.card.label.deliveryWithId": "Delivery: #{{id}}",
+  "delivery.card.label.subwayStation": "Station",
   "delivery.card.label.date": "Date",
   "delivery.card.button.more": "See more"
 }
