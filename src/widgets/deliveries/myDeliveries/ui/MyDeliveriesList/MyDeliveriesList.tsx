@@ -22,8 +22,8 @@ import {
     $$inPending,
     $$hasError,
     $isOnline,
+    filteredDeliveriesByTimeModel,
 } from '../../model/model';
-import { $myDeliveriesStoreSorted } from '../../model/stores';
 
 const Root: FunctionComponent<PropsWithChildren> = ({ children }) => {
     return <div className="grid grid-cols-1 gap-4">{children}</div>;
@@ -109,13 +109,16 @@ export const MyDeliveriesList: FunctionComponent = () => {
         init,
     ]);
 
-    const items = useList($myDeliveriesStoreSorted, (delivery) => {
-        return (
-            <motion.div key={delivery.id} whileTap={{ scale: 0.98 }}>
-                <DeliveryMarketCard delivery={delivery} />
-            </motion.div>
-        );
-    });
+    const items = useList(
+        filteredDeliveriesByTimeModel.$filteredDeliveries,
+        (delivery) => {
+            return (
+                <motion.div key={delivery.id} whileTap={{ scale: 0.98 }}>
+                    <DeliveryMarketCard delivery={delivery} />
+                </motion.div>
+            );
+        },
+    );
 
     const state = useMemo(() => {
         switch (true) {

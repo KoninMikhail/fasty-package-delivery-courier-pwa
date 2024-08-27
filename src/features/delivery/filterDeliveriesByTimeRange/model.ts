@@ -14,6 +14,7 @@ interface FactoryOptions {
 }
 export const factory = modelFactory((options: FactoryOptions) => {
     const timePicked = createEvent<string>();
+
     const timesRange = createStore<string[]>(
         getTimesRange(options.startTime, options.endTime, options.stepMins),
     );

@@ -1,9 +1,14 @@
 import { createEvent, createStore, sample } from 'effector';
 import { FilterDeliveriesByTimeRange } from '@/features/delivery/filterDeliveriesByTimeRange';
 import { sharedLibTypeGuards } from '@/shared/lib';
-import { empty } from 'patronum';
+import { debug, empty } from 'patronum';
 import { FetchDeliveriesByParameters } from '@/features/delivery/fetchDeliveriesByParams';
-import { $myDeliveriesStore, resetDeliveries, setDeliveries } from './stores';
+import {
+    $myDeliveriesStore,
+    $myDeliveriesStoreSorted,
+    resetDeliveries,
+    setDeliveries,
+} from './stores';
 import { getMyDeliveriesFx } from './effects';
 import {
     DELIVERY_END_TIME,
@@ -104,8 +109,10 @@ export const filteredDeliveriesByTimeModel =
         startTime: DELIVERY_START_TIME,
         endTime: DELIVERY_END_TIME,
         stepMins: DELIVERY_TIME_STEP,
-        sourceStore: $myDeliveriesStore,
+        sourceStore: $myDeliveriesStoreSorted,
     });
+
+debug(filteredDeliveriesByTimeModel.$filteredDeliveries);
 
 /**
  * Reset
