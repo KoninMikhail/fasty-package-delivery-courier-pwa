@@ -86,6 +86,7 @@ export const SearchQueryInputModal: FunctionComponent<
             placement={placement}
             isOpen={isOpen}
             hideCloseButton
+            className="z-[9000]"
             onClose={onClose}
             backdrop={backdrop}
         >

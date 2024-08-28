@@ -19,8 +19,6 @@ export const Authorized: FunctionComponent<PropsWithChildren> = ({
     const isSessionReady = useUnit($initSessionComplete);
     const isAuthorized = useUnit($isAuthorized);
 
-    console.log('isSessionReady', isSessionReady);
-
     if (!isSessionReady) {
         return (
             <div className="flex h-dvh w-full flex-col items-center justify-center bg-background">

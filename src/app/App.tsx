@@ -1,5 +1,9 @@
 import type React from 'react';
-import { DeviceDetector, NetworkStateDetector } from '@/entities/viewer';
+import {
+    DeviceDetector,
+    NetworkStateDetector,
+    ScreenBlocker,
+} from '@/entities/viewer';
 import { withProviders } from './providers';
 import { AppRouter } from './routes/router';
 import './app.css';
@@ -11,6 +15,7 @@ import './app.css';
 const App = (): React.ReactNode => {
     return (
         <>
+            <ScreenBlocker />
             <AppRouter />
             <NetworkStateDetector />
             <DeviceDetector />

@@ -13,6 +13,15 @@ import axios from 'axios';
 import { RefreshToken } from '@/features/auth/refreshToken';
 import { POLLING_TIMEOUT_SEC } from '../config';
 
+/**
+ * Externals
+ */
+const { $isAuthorized, $$isOnline, resourcesLoaded } = sessionModel;
+
+/**
+ * Page gate
+ */
+
 export const MarketPageGate = createGate<void>();
 
 /**
@@ -28,10 +37,10 @@ const $isPageInitialized = createStore<boolean>(false)
     )
     .reset(Logout.model.userLoggedOut);
 
-/**
- * Current page mode
- */
-const { $isAuthorized, $$isOnline } = sessionModel;
+sample({
+    clock: MarketPageGate.open,
+    target: resourcesLoaded,
+});
 
 /**
  * Widgets initialization

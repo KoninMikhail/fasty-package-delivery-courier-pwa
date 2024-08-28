@@ -15,6 +15,7 @@ import httpStatus from 'http-status';
 import { Delivery } from '@/shared/api';
 import { Logout } from '@/features/auth/logout';
 import { widgetMyDeliveriesModel } from '@/widgets/deliveries/myDeliveries';
+import { RefreshToken } from '@/features/auth/refreshToken';
 import { PageState } from '../types';
 
 /* eslint-disable unicorn/no-array-method-this-argument */
@@ -131,4 +132,38 @@ sample({
 sample({
     clock: Logout.model.userLoggedOut,
     target: widgetMyDeliveriesModel.reset,
+});
+
+/**
+ * Logout when unauthorized
+ */
+
+/**
+ * Logout when user is not authorized
+ */
+
+const $hasUnauthorizedErrors = FetchDeliveryById.$errors.map((errors) => {
+    return errors.some((error) => {
+        if (axios.isAxiosError(error) && !!error.response) {
+            return error?.response.status === httpStatus.UNAUTHORIZED;
+        }
+        return false;
+    });
+});
+
+sample({
+    clock: $hasUnauthorizedErrors,
+    filter: (hasUnauthorizedError) => !!hasUnauthorizedError,
+    target: RefreshToken.forceRefreshRequested,
+});
+
+sample({
+    clock: RefreshToken.updateTokenSuccess,
+    source: $deliveryId,
+    target: readyForFetch,
+});
+
+sample({
+    clock: RefreshToken.updateTokenFail,
+    target: Logout.model.logout,
 });

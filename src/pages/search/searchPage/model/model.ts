@@ -19,11 +19,18 @@ export const queryChanged = createEvent<string>();
  * Network state
  */
 
-const { $$isOnline, $isAuthorized } = sessionModel;
+const { $$isOnline, $isAuthorized, resourcesLoaded } = sessionModel;
 
 /**
  * Init
  */
+
+sample({
+    clock: SearchPageGate.open,
+    source: $isFirstLoadPage,
+    filter: (isFirstLoadPage) => isFirstLoadPage,
+    target: resourcesLoaded,
+});
 
 /**
  * Query

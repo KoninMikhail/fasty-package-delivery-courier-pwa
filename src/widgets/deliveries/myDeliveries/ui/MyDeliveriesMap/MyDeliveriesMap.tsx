@@ -7,11 +7,7 @@ import clsx from 'clsx';
 import { FaMinus, FaPlus } from 'react-icons/fa6';
 import { sharedServicesSubway } from '@/shared/services';
 import {
-    getDeliveryAddress,
-    getDeliveryContents,
     getDeliveryCoordinates,
-    getDeliveryMetro,
-    getDeliveryPickupDateTime,
     getDeliverySystemId,
 } from '@/entities/delivery';
 import { MdOutlineLocationSearching } from 'react-icons/md';
@@ -115,18 +111,7 @@ const Map: FunctionComponent = () => {
         >
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             {deliveries.map((delivery) => {
-                const address = getDeliveryAddress(delivery);
                 const id = getDeliverySystemId(delivery);
-                const contents = getDeliveryContents(delivery);
-                const station = getDeliveryMetro(delivery);
-                const pickupDateTime = getDeliveryPickupDateTime(
-                    delivery,
-                    true,
-                    true,
-                );
-
-                console.log(delivery);
-
                 const coordinates = getDeliveryCoordinates(delivery);
 
                 const onPressDetailsPageLink = (): void =>

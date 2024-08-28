@@ -13,13 +13,13 @@ import { SearchResultsList } from '@/widgets/search/searchResults/ui';
 const { Navbar } = widgetNavbarDesktopUi;
 
 const Layout: FunctionComponent<PropsWithChildren> = ({ children }) => (
-    <div className="grid h-screen w-screen grid-cols-[max-content_auto] gap-8 pr-6">
+    <div className="grid h-screen w-screen grid-cols-[max-content_auto] gap-4 overflow-hidden">
         {children}
     </div>
 );
 
 const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
-    <main className="relative overflow-hidden">{children}</main>
+    <main className="relative overflow-y-auto px-3 pt-16">{children}</main>
 );
 
 const Toolbar: FunctionComponent = () => {
@@ -36,7 +36,7 @@ const Toolbar: FunctionComponent = () => {
     };
     return (
         <>
-            <div className="flex h-20 items-center justify-between">
+            <div className="absolute left-80 right-0 top-0 z-50 -ml-5 flex h-20 items-center justify-between bg-gradient-to-b from-background from-65% to-transparent pl-5 pr-12">
                 <div className="flex flex-grow gap-2">
                     <Input
                         ref={reference}
@@ -61,8 +61,8 @@ export const DesktopSearchPageView: FunctionComponent = () => {
     return (
         <Layout>
             <Navbar />
+            <Toolbar />
             <MainContainer>
-                <Toolbar />
                 <Spacer y={4} />
                 <SearchResultsList fullWidth />
             </MainContainer>
