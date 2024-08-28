@@ -1,21 +1,21 @@
 import { createGate } from 'effector-react';
 import { createEvent, createStore, sample } from 'effector';
-import { SetDeliveryStatus } from '@/features/delivery/setDeliveryStatus';
-import {
-    setDeliveryStatusFx,
-    getDeliveryFromMyDeliverisLocalStorageCache,
-} from '@/entities/delivery';
+import { getDeliveryFromMyDeliverisLocalStorageCache } from '@/entities/delivery';
 import { sessionModel } from '@/entities/viewer';
 import { and, condition, delay, once } from 'patronum';
 import { sharedLibTypeGuards } from '@/shared/lib';
 import { FetchDeliveryById } from '@/features/delivery/fetchDeliveryById';
-import { setDeliveryDetails } from '@/pages/deliveries/singleDeliveryDetailsPage/model/stores';
+import {
+    $pageDeliveryDetails,
+    setDeliveryDetails,
+} from '@/pages/deliveries/singleDeliveryDetailsPage/model/stores';
 import axios from 'axios';
 import httpStatus from 'http-status';
 import { Delivery } from '@/shared/api';
 import { Logout } from '@/features/auth/logout';
 import { widgetMyDeliveriesModel } from '@/widgets/deliveries/myDeliveries';
 import { RefreshToken } from '@/features/auth/refreshToken';
+import { widgetDeliveryStatusModel } from '@/widgets/deliveries/deliveryStatus';
 import { PageState } from '../types';
 
 /* eslint-disable unicorn/no-array-method-this-argument */
@@ -120,23 +120,27 @@ sample({
 /**
  * Delivery details store
  */
-export const changeDeliveryStatusModel = SetDeliveryStatus.factory.createModel({
-    patchDeliveryStatusFx: setDeliveryStatusFx,
+sample({
+    clock: $pageDeliveryDetails,
+    filter: (delivery) => !!delivery,
+    fn: (delivery) => delivery as Delivery,
+    target: widgetDeliveryStatusModel.loadDelivery,
+});
+
+sample({
+    clock: widgetDeliveryStatusModel.deliveryChanged,
+    target: setDeliveryDetails,
 });
 
 sample({
     clock: DeliveryDetailsPageGateway.close,
-    target: changeDeliveryStatusModel.reset,
+    target: widgetDeliveryStatusModel.reset,
 });
 
 sample({
     clock: Logout.model.userLoggedOut,
     target: widgetMyDeliveriesModel.reset,
 });
-
-/**
- * Logout when unauthorized
- */
 
 /**
  * Logout when user is not authorized

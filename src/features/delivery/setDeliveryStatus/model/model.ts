@@ -1,32 +1,30 @@
 import { modelFactory } from 'effector-factorio';
 import { combine, createEvent, createStore, Effect, sample } from 'effector';
 import { Selection } from '@nextui-org/react';
-import { Delivery, DeliveryStates } from '@/shared/api';
 import {
-    SetDeliveryStatusParameters,
-    SetDeliveryStatusResponse,
-} from '@/entities/delivery';
+    ChangeDeliveryStateRequest,
+    Delivery,
+    DeliveryStates,
+} from '@/shared/api';
+import { sharedLibTypeGuards } from '@/shared/lib';
 import { statuses } from '../data';
+
+const { isEmpty } = sharedLibTypeGuards;
 
 interface FactoryOptions {
     allowedStatuses?: DeliveryStates[];
-    patchDeliveryStatusFx: Effect<
-        SetDeliveryStatusParameters,
-        SetDeliveryStatusResponse,
-        Error
-    >;
+    patchDeliveryStatusFx: Effect<ChangeDeliveryStateRequest, Delivery>;
 }
 
 export const factory = modelFactory((options: FactoryOptions) => {
     const setDeliveryId = createEvent<Delivery['id']>();
     const messageChanged = createEvent<Delivery['comment']>();
     const statusChanged = createEvent<Selection>();
-    const submitPressed = createEvent({
-        name: 'submit',
-    });
+    const statusChangeCompleted = createEvent<Delivery>();
+    const submitPressed = createEvent();
     const reset = createEvent();
 
-    const $deliveryId = createStore<Optional<Delivery['id']>>(null).on(
+    const $deliveryId = createStore<Delivery['id']>('').on(
         setDeliveryId,
         (_, id) => id,
     );
@@ -69,9 +67,14 @@ export const factory = modelFactory((options: FactoryOptions) => {
                 };
             },
         ),
-        filter: ({ id }) => !!id,
-        fn: (data) => data as SetDeliveryStatusParameters,
+        filter: ({ id }) => !isEmpty(id),
+        fn: (data) => data as ChangeDeliveryStateRequest,
         target: options.patchDeliveryStatusFx,
+    });
+
+    sample({
+        clock: options.patchDeliveryStatusFx.doneData,
+        target: statusChangeCompleted,
     });
 
     return {
@@ -80,6 +83,7 @@ export const factory = modelFactory((options: FactoryOptions) => {
         $isRejectStatus,
         $formValid,
         $pending,
+        statusChangeCompleted,
         allowedStatuses,
         messageChanged,
         statusChanged,

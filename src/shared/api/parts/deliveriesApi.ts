@@ -135,7 +135,9 @@ export const deliveriesApi = makeApi([
             {
                 type: 'Body',
                 name: 'Body',
-                schema: changeDeliveryStateSchema,
+                schema: changeDeliveryStateSchema.omit({
+                    id: true,
+                }),
             },
         ],
         response: deliverySchema.transform((delivery) => {

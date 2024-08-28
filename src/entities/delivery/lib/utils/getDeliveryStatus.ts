@@ -1,5 +1,5 @@
 import {Delivery} from "@/shared/api";
 
-export const getDeliveryStatus = (delivery: Delivery): Delivery['states'] =>{
-    return delivery.states;
+export const getDeliveryStatus = (delivery: Delivery): Delivery['state'] =>{
+    return delivery.state;
 }

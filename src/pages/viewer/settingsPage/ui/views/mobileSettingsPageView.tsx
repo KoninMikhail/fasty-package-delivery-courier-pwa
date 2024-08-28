@@ -16,7 +16,7 @@ import { widgetPrivacyPolicyModalUi } from '@/widgets/polices/privacyPolicyModal
 import { widgetTermsOfUseModalUi } from '@/widgets/polices/termsOfUseModal';
 import { useUnit } from 'effector-react';
 import { SetHomeUpcomingCount } from '@/features/viewer/setHomeUpcommingCount';
-import { sharedLibApp, sharedLibHelpers } from '@/shared/lib';
+import { sharedLibHelpers } from '@/shared/lib';
 
 import { BackButton } from '../common/BackButton';
 
@@ -38,14 +38,18 @@ import {
     translationNS,
 } from '../../config';
 
-const { AppVersion } = sharedLibApp;
 const { removeNonNumericChars } = sharedLibHelpers;
 const { TermsOfUseModal } = widgetTermsOfUseModalUi;
 const { CookiePolicyModal } = widgetCookiePolicyModalUi;
 const { PrivacyPolicyModal } = widgetPrivacyPolicyModalUi;
 const { NavbarMobile } = widgetNavbarMobileUi;
-const { APP_NAME, APP_DESCRIPTION, APP_SUPPORT_EMAIL, APP_SUPPORT_PHONE } =
-    sharedConfigConstants;
+const {
+    APP_NAME,
+    APP_DESCRIPTION,
+    APP_SUPPORT_EMAIL,
+    APP_SUPPORT_PHONE,
+    APP_VERSION,
+} = sharedConfigConstants;
 /*
  * Layout
  */
@@ -150,9 +154,7 @@ export const MobileSettingsPageView: FunctionComponent = () => {
                     <Spacer />
                     <div className="flex w-full items-center justify-center gap-1 text-center text-lg">
                         <span className=" font-bold">{APP_NAME}</span>
-                        <Chip size="sm">
-                            <AppVersion />
-                        </Chip>
+                        <Chip size="sm">{APP_VERSION}</Chip>
                     </div>
                     <div className="w-full text-center text-xs">
                         {APP_DESCRIPTION[currentLanguage]}

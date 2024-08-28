@@ -18,17 +18,13 @@ import {
     STATUS_CANCELLED_COMMENT,
     STATUS_NO_COMMENT,
     STATUS_DONE_COMMENT,
+    getDeliveryStatus,
+    getDeliveryComment,
+    getDeliverySystemId,
 } from '@/entities/delivery';
 import { format } from 'date-fns';
-import {
-    $$deliveryComment,
-    $$deliveryCreateDate,
-    $$deliveryStatus,
-    $$deliveryUpdateDate,
-    $delivery,
-    assignToDeliveryModel,
-    setStatusModel,
-} from '../../model';
+import { $delivery } from '../../model/stores';
+import { assignToDeliveryModel, setStatusModel } from '../../model/model';
 import { LAST_UPDATE_TEXT_KEY, translationNS } from '../../config';
 
 const timeLocales = { en: enUS, ru };
@@ -145,7 +141,7 @@ const LastEdited: FunctionComponent<{
     const currentLocale = timeLocales[i18n.language] || enUS;
     const updateDateFormatted = updateDate
         ? format(updateDate, 'PPP', { locale: currentLocale })
-        : 'неизвестно';
+        : 'unknown';
     return (
         <div className="mb-2 block text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
             <div>
@@ -159,10 +155,14 @@ const LastEdited: FunctionComponent<{
 
 export const DeliveryStatusControlWithTimeline: FunctionComponent = () => {
     const delivery = useUnit($delivery);
-    const status = useUnit($$deliveryStatus);
-    const createDate = useUnit($$deliveryCreateDate);
-    const updateDate = useUnit($$deliveryUpdateDate);
-    const comment = useUnit($$deliveryComment);
+
+    if (!delivery) return null;
+
+    const status = getDeliveryStatus(delivery);
+    const deliverySystemId = getDeliverySystemId(delivery);
+    const createDate = delivery.createdAt;
+    const updateDate = delivery.updatedAt ?? null;
+    const comment = getDeliveryComment(delivery);
 
     if (status === 'created') {
         return (
@@ -172,13 +172,14 @@ export const DeliveryStatusControlWithTimeline: FunctionComponent = () => {
                 </StatusList>
                 <AssignDeliveryWithMe.AssignRequestButton
                     model={assignToDeliveryModel}
-                    deliverySystemId={delivery.id}
+                    deliverySystemId={deliverySystemId}
                 />
             </Root>
         );
     }
 
     if (status === 'delivering') {
+        console.log('delivering');
         return (
             <Root>
                 <StatusList>
