@@ -45,6 +45,12 @@ export default defineConfig(({ mode }) => ({
       : [
         eslintPlugin(),
         VitePWA({
+          strategies: "injectManifest",
+          srcDir: "src",
+          filename: "sw.ts",
+          injectManifest: {
+            swDest: "dist/sw.js",
+          },
           registerType: "autoUpdate",
           includeAssets: [
             "favicon.png",
@@ -133,12 +139,15 @@ export default defineConfig(({ mode }) => ({
                 sizes: "512x512",
                 type: "image/png"
               }
-            ]
+            ],
+            display: "standalone",
+            orientation: "portrait",
+            start_url: "/",
           },
           workbox: {
             runtimeCaching: [{
               urlPattern: /.*\/uploads\/.*/i,
-              handler: "CacheFirst",
+              handler: "NetworkFirst",
               options: {
                 cacheName: "files-cache",
                 expiration: {
