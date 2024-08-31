@@ -12,7 +12,7 @@ import version from "vite-plugin-package-version";
 
 export default defineConfig(({ mode }) => ({
   build: {
-    target: "esnext"
+    target: "esnext",
   },
   test: {
     css: false,
@@ -26,16 +26,16 @@ export default defineConfig(({ mode }) => ({
       enabled: true,
       "100": true,
       reporter: ["text", "lcov"],
-      reportsDirectory: "coverage"
-    }
+      reportsDirectory: "coverage",
+    },
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src")
-    }
+      "@": path.resolve(__dirname, "src"),
+    },
   },
   optimizeDeps: {
-    exclude: ["js-big-decimal"]
+    exclude: ["js-big-decimal"],
   },
   plugins: [
     tsconfigPaths(),
@@ -43,146 +43,161 @@ export default defineConfig(({ mode }) => ({
     ...(mode === "test"
       ? []
       : [
-        eslintPlugin(),
-        VitePWA({
-          strategies: "injectManifest",
-          srcDir: "src",
-          filename: "sw.ts",
-          injectManifest: {
-            swDest: "dist/sw.js",
-          },
-          registerType: "autoUpdate",
-          includeAssets: [
-            "favicon.png",
-            "robots.txt",
-            "apple-touch-icon.png",
-            "icons/*.svg",
-            "fonts/*.woff2",
-            "assets/**/*"
-          ],
-          devOptions: {
-            enabled: mode === "development"
-          },
-          manifest: {
-            name: "Fasty - Delivery Exchange For Couriers",
-            short_name: "Fasty",
-            theme_color: "#000000",
-            background_color: "#000000",
-            shortcuts: [
-              {
-                "name": "Market",
-                "icons": [{
-                  "src": "/icons/actions/market-192x192.png",
-                  "sizes": "192x192",
-                  "type": "image/png"
-                }],
-                "url": "/"
-              },
-              {
-                "name": "My deliveries",
-                "icons": [{
-                  "src": "/icons/actions/deliveries-192x192.png",
-                  "sizes": "192x192",
-                  "type": "image/png"
-                }],
-                "url": "/deliveries"
-              },
-              {
-                "name": "History",
-                "icons": [{
-                  "src": "/icons/actions/history-192x192.png",
-                  "sizes": "192x192",
-                  "type": "image/png"
-                }],
-                "url": "/history"
-              }, {
-                "name": "Search",
-                "icons": [{
-                  "src": "/icons/actions/search-192x192.png",
-                  "sizes": "192x192",
-                  "type": "image/png"
-                }],
-                "url": "/search"
-              }],
-            icons: [
-              {
-                src: "/android-chrome-48x48.png",
-                sizes: "48x48",
-                type: "image/png",
-                purpose: "any maskable"
-              },
-              {
-                src: "/android-chrome-72x72.png",
-                sizes: "72x72",
-                type: "image/png",
-                purpose: "any maskable"
-              },
-              {
-                src: "/android-chrome-96x96.png",
-                sizes: "96x96",
-                type: "image/png",
-                purpose: "any maskable"
-              }, {
-                src: "/android-chrome-144x144.png",
-                sizes: "144x144",
-                type: "image/png",
-                purpose: "any maskable"
-              },
-              {
-                src: "/android-chrome-192x192.png",
-                sizes: "192x192",
-                type: "image/png",
-                purpose: "any maskable"
-              },
-              {
-                src: "/android-chrome-512x512.png",
-                sizes: "512x512",
-                type: "image/png"
-              }
+          eslintPlugin(),
+          VitePWA({
+            strategies: "injectManifest",
+            srcDir: "src",
+            filename: "sw.ts",
+            injectManifest: {
+              swDest: "dist/sw.js",
+            },
+            registerType: "autoUpdate",
+            includeAssets: [
+              "favicon.png",
+              "robots.txt",
+              "apple-touch-icon.png",
+              "icons/*.svg",
+              "fonts/*.woff2",
+              "assets/**/*",
             ],
-            display: "standalone",
-            orientation: "portrait",
-            start_url: "/",
-          },
-          workbox: {
-            runtimeCaching: [{
-              urlPattern: /.*\/uploads\/.*/i,
-              handler: "NetworkFirst",
-              options: {
-                cacheName: "files-cache",
-                expiration: {
-                  maxEntries: 5,
-                  maxAgeSeconds: 60 * 60 * 24 * 365 // <== 365 days
+            devOptions: {
+              enabled: mode === "development",
+            },
+            manifest: {
+              name: "Fasty - Delivery Exchange For Couriers",
+              short_name: "Fasty",
+              theme_color: "#000000",
+              background_color: "#000000",
+              shortcuts: [
+                {
+                  name: "Market",
+                  icons: [
+                    {
+                      src: "/icons/actions/market-192x192.png",
+                      sizes: "192x192",
+                      type: "image/png",
+                    },
+                  ],
+                  url: "/",
                 },
-                cacheableResponse: {
-                  statuses: [0, 200]
-                }
-              }
-            }, {
-              urlPattern: /.*\/icons\/subway\/.*.svg/i,
-              handler: "CacheFirst",
-              options: {
-                cacheName: "subway-icons-cache",
-                expiration: {
-                  maxEntries: 50,
-                  maxAgeSeconds: 60 * 60 * 24 * 365 // <== 365 days
+                {
+                  name: "My deliveries",
+                  icons: [
+                    {
+                      src: "/icons/actions/deliveries-192x192.png",
+                      sizes: "192x192",
+                      type: "image/png",
+                    },
+                  ],
+                  url: "/deliveries",
                 },
-                cacheableResponse: {
-                  statuses: [0, 200]
-                }
-              }
-            }]
-          }
-        }),
-        vitePluginVersionMark({
-          ifGitSHA: true,
-          ifShortSHA: true,
-          ifMeta: true,
-          ifLog: true,
-          ifGlobal: true
-        }),
-        svgr(),
-        version()
-      ])
-  ]
+                {
+                  name: "History",
+                  icons: [
+                    {
+                      src: "/icons/actions/history-192x192.png",
+                      sizes: "192x192",
+                      type: "image/png",
+                    },
+                  ],
+                  url: "/history",
+                },
+                {
+                  name: "Search",
+                  icons: [
+                    {
+                      src: "/icons/actions/search-192x192.png",
+                      sizes: "192x192",
+                      type: "image/png",
+                    },
+                  ],
+                  url: "/search",
+                },
+              ],
+              icons: [
+                {
+                  src: "/android-chrome-48x48.png",
+                  sizes: "48x48",
+                  type: "image/png",
+                  purpose: "any maskable",
+                },
+                {
+                  src: "/android-chrome-72x72.png",
+                  sizes: "72x72",
+                  type: "image/png",
+                  purpose: "any maskable",
+                },
+                {
+                  src: "/android-chrome-96x96.png",
+                  sizes: "96x96",
+                  type: "image/png",
+                  purpose: "any maskable",
+                },
+                {
+                  src: "/android-chrome-144x144.png",
+                  sizes: "144x144",
+                  type: "image/png",
+                  purpose: "any maskable",
+                },
+                {
+                  src: "/android-chrome-192x192.png",
+                  sizes: "192x192",
+                  type: "image/png",
+                  purpose: "any maskable",
+                },
+                {
+                  src: "/android-chrome-512x512.png",
+                  sizes: "512x512",
+                  type: "image/png",
+                },
+              ],
+              display: "standalone",
+              orientation: "portrait",
+              start_url: "/",
+            },
+            workbox: {
+              globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
+              runtimeCaching: [
+                {
+                  urlPattern: /.*\/uploads\/.*/i,
+                  handler: "NetworkFirst",
+                  options: {
+                    cacheName: "files-cache",
+                    expiration: {
+                      maxEntries: 5,
+                      maxAgeSeconds: 60 * 60 * 24 * 365, // <== 365 days
+                    },
+                    cacheableResponse: {
+                      statuses: [0, 200],
+                    },
+                  },
+                },
+                {
+                  urlPattern: /.*\/icons\/subway\/.*.svg/i,
+                  handler: "CacheFirst",
+                  options: {
+                    cacheName: "subway-icons-cache",
+                    expiration: {
+                      maxEntries: 50,
+                      maxAgeSeconds: 60 * 60 * 24 * 365, // <== 365 days
+                    },
+                    cacheableResponse: {
+                      statuses: [0, 200],
+                    },
+                  },
+                },
+              ],
+            },
+          }),
+          vitePluginVersionMark({
+            ifGitSHA: true,
+            ifShortSHA: true,
+            ifMeta: true,
+            ifLog: true,
+            ifGlobal: true,
+          }),
+          svgr(),
+          version(),
+        ]),
+  ],
 }));
