@@ -15,6 +15,8 @@ const additionalPrecaches = [
     { url: '/deliveries', revision: null },
     { url: '/history', revision: null },
     { url: '/search', revision: null },
+    { url: '/profile', revision: null },
+    { url: '/settings', revision: null },
 ];
 
 // Retrieve existing manifest from self.__WB_MANIFEST
