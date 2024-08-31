@@ -113,8 +113,14 @@ dependencies:
   workbox-background-sync:
     specifier: ^7.0.0
     version: 7.1.0
+  workbox-cacheable-response:
+    specifier: ^7.1.0
+    version: 7.1.0
   workbox-core:
     specifier: ^7.0.0
+    version: 7.1.0
+  workbox-expiration:
+    specifier: ^7.1.0
     version: 7.1.0
   workbox-precaching:
     specifier: ^7.0.0
@@ -14117,6 +14123,12 @@ packages:
       workbox-core: 7.0.0
     dev: true
 
+  /workbox-cacheable-response@7.1.0:
+    resolution: {integrity: sha512-iwsLBll8Hvua3xCuBB9h92+/e0wdsmSVgR2ZlvcfjepZWwhd3osumQB3x9o7flj+FehtWM2VHbZn8UJeBXXo6Q==}
+    dependencies:
+      workbox-core: 7.1.0
+    dev: false
+
   /workbox-core@7.0.0:
     resolution: {integrity: sha512-81JkAAZtfVP8darBpfRTovHg8DGAVrKFgHpOArZbdFd78VqHr5Iw65f2guwjE2NlCFbPFDoez3D3/6ZvhI/rwQ==}
     dev: true
@@ -14131,6 +14143,13 @@ packages:
       idb: 7.1.1
       workbox-core: 7.0.0
     dev: true
+
+  /workbox-expiration@7.1.0:
+    resolution: {integrity: sha512-m5DcMY+A63rJlPTbbBNtpJ20i3enkyOtSgYfv/l8h+D6YbbNiA0zKEkCUaMsdDlxggla1oOfRkyqTvl5Ni5KQQ==}
+    dependencies:
+      idb: 7.1.1
+      workbox-core: 7.1.0
+    dev: false
 
   /workbox-google-analytics@7.0.0:
     resolution: {integrity: sha512-MEYM1JTn/qiC3DbpvP2BVhyIH+dV/5BjHk756u9VbwuAhu0QHyKscTnisQuz21lfRpOwiS9z4XdqeVAKol0bzg==}

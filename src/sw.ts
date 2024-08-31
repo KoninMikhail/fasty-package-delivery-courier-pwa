@@ -2,7 +2,9 @@
 
 import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching';
 import { NavigationRoute, registerRoute } from 'workbox-routing';
-import { NetworkFirst } from 'workbox-strategies';
+import { CacheFirst, NetworkFirst } from 'workbox-strategies';
+import { ExpirationPlugin } from 'workbox-expiration';
+import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 
 declare let self: ServiceWorkerGlobalScope;
 
@@ -31,3 +33,37 @@ const navigationRoute = new NavigationRoute(
     }),
 );
 registerRoute(navigationRoute);
+
+// Cache uploaded files with NetworkFirst strategy
+registerRoute(
+    /.*\/uploads\/.*/i,
+    new NetworkFirst({
+        cacheName: 'files-cache',
+        plugins: [
+            new ExpirationPlugin({
+                maxEntries: 5,
+                maxAgeSeconds: 60 * 60 * 24 * 365, // 365 days
+            }),
+            new CacheableResponsePlugin({
+                statuses: [0, 200],
+            }),
+        ],
+    }),
+);
+
+// Cache subway icons with CacheFirst strategy
+registerRoute(
+    /.*\/icons\/subway\/.+svg/i,
+    new CacheFirst({
+        cacheName: 'subway-icons-cache',
+        plugins: [
+            new ExpirationPlugin({
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 24 * 365, // 365 days
+            }),
+            new CacheableResponsePlugin({
+                statuses: [0, 200],
+            }),
+        ],
+    }),
+);
