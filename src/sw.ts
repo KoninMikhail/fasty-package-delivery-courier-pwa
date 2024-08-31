@@ -8,7 +8,18 @@ declare let self: ServiceWorkerGlobalScope;
 
 cleanupOutdatedCaches();
 
-precacheAndRoute(self.__WB_MANIFEST);
+// Add specific page URLs to precache list
+const additionalPrecaches = [
+    { url: '/deliveries', revision: null },
+    { url: '/history', revision: null },
+    { url: '/search', revision: null },
+];
+
+// Retrieve existing manifest from self.__WB_MANIFEST
+const manifestToPrecache = [...self.__WB_MANIFEST, ...additionalPrecaches];
+
+// Precache static assets and additional page URLs
+precacheAndRoute(manifestToPrecache);
 
 void self.skipWaiting();
 
