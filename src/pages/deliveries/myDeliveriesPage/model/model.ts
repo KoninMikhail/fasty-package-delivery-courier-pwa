@@ -1,17 +1,17 @@
 import { createGate } from 'effector-react';
 import { createEvent, createStore, sample } from 'effector';
-import { and, condition, delay, interval, once } from 'patronum';
-import { sessionModel } from '@/entities/viewer';
+import { and, condition, delay, interval, not, once } from "patronum";
+import { sessionModel , networkModel} from '@/entities/viewer';
 import { widgetMyDeliveriesModel } from '@/widgets/deliveries/myDeliveries';
 import { Logout } from '@/features/auth/logout';
 import { RefreshToken } from '@/features/auth/refreshToken';
-import { $$hasAuthErrors } from '@/shared/errors';
 import { POLLING_TIMEOUT } from '../config';
 
 /**
  * Externals
  */
-const { $isAuthorized, $$isOnline, resourcesLoaded } = sessionModel;
+const { $isAuthorized, resourcesLoaded } = sessionModel;
+const {$$isOnline} = networkModel
 
 /**
  * Gate for the page
@@ -42,38 +42,16 @@ sample({
 /**
  * Widgets initialization
  */
-const initWidgetsOnline = createEvent();
-const initWidgetsOffline = createEvent();
 
 const $initWidgetsCompleted = and(widgetMyDeliveriesModel.$isInitialized);
 
-condition({
-    source: delay($isPageInitialized, 500),
-    if: and($$isOnline, $isAuthorized),
-    then: initWidgetsOnline,
-    else: initWidgetsOffline,
-});
-
-// Online
 sample({
-    clock: initWidgetsOnline,
-    source: widgetMyDeliveriesModel.$isInitialized,
+    clock: delay($isPageInitialized, 500),
+    source: and(not(widgetMyDeliveriesModel.$isInitialized), $$isOnline),
     filter: (isInitialized) => !isInitialized,
     target: widgetMyDeliveriesModel.init,
 });
 
-sample({
-    clock: initWidgetsOnline,
-    target: RefreshToken.startTokenRefreshWatcher,
-});
-
-// Offline
-sample({
-    clock: initWidgetsOffline,
-    source: widgetMyDeliveriesModel.$isInitialized,
-    filter: (isInitialized) => !isInitialized,
-    target: widgetMyDeliveriesModel.initOffline,
-});
 
 /**
  * Data polling
@@ -128,20 +106,6 @@ sample({
 /**
  * Logout when user is not authorized
  */
-sample({
-    clock: $$hasAuthErrors,
-    source: MyDeliveriesPageGate.status,
-    filter: (isPageOpened, hasUnauthorizedError) =>
-        isPageOpened && hasUnauthorizedError,
-    target: RefreshToken.forceRefreshRequested,
-});
-
-sample({
-    clock: RefreshToken.updateTokenSuccess,
-    source: $initWidgetsCompleted,
-    filter: (isInitialized) => isInitialized,
-    target: widgetMyDeliveriesModel.fetchData,
-});
 
 sample({
     clock: RefreshToken.updateTokenFail,

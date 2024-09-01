@@ -1,7 +1,9 @@
 import { modelFactory } from 'effector-factorio';
 import { createEvent, createStore, Effect, sample } from 'effector';
 import { Delivery } from '@/shared/api';
-import { addError } from '@/shared/errors';
+import { sharedLibEffector } from '@/shared/lib';
+
+const { collectEffectErrors } = sharedLibEffector;
 
 interface FactoryOptions {
     debounceTime: number;
@@ -33,7 +35,15 @@ export const factory = modelFactory((options: FactoryOptions) => {
 
     sample({
         clock: options.provider.failData,
-        target: [deliveriesFetchError, addError],
+        target: deliveriesFetchError,
+    });
+
+    /**
+     * Errors
+     */
+    const { $errors } = collectEffectErrors({
+        effects: options.provider,
+        reset: options.provider.doneData,
     });
 
     return {
@@ -42,5 +52,6 @@ export const factory = modelFactory((options: FactoryOptions) => {
         deliveriesFetchError,
         $query,
         $pending,
+        $errors,
     };
 });

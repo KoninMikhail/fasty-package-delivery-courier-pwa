@@ -1,7 +1,6 @@
 import { createEvent, sample } from 'effector';
 import { Delivery } from '@/shared/api';
 import { getDeliveryByIdFx } from '@/entities/delivery';
-import { addError } from '@/shared/errors';
 
 /**
  * Event to initiate fetching a delivery by its ID.
@@ -36,5 +35,5 @@ sample({
 // Sample to trigger fetchFail and addError events when getDeliveryByIdFx effect fails.
 sample({
     source: getDeliveryByIdFx.failData,
-    target: [fetchFail, addError],
+    target: fetchFail,
 });

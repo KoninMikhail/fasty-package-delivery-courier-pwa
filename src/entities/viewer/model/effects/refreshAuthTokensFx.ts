@@ -11,7 +11,7 @@ export const refreshAuthTokensFx = createEffect<void, void>(async () => {
         const refreshToken = Cookies.get(APP_JWT_REFRESH_TOKEN_KEY);
 
         if (!refreshToken) {
-            throw new Error('No refresh token found');
+            throw new Error('Refresh token is not found');
         }
 
         const { refresh, access } = await apiClient.refreshToken({
@@ -21,7 +21,6 @@ export const refreshAuthTokensFx = createEffect<void, void>(async () => {
         Cookies.set(APP_JWT_REFRESH_TOKEN_KEY, refresh.token, {
             expires: refresh.expires,
         });
-
         Cookies.set(APP_JWT_ACCESS_TOKEN_KEY, access.token, {
             expires: access.expires,
         });

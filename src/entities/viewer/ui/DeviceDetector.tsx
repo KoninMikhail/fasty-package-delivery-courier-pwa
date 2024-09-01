@@ -1,6 +1,6 @@
 import { useLayoutEffect } from 'react';
 import { useUnit } from 'effector-react';
-import { setDeviceScreenSize, setDeviceUA } from '../model/parts/deviceInfo';
+import { setDeviceScreenSize, setDeviceUA } from '../model/device';
 
 export const DeviceDetector: FunctionComponent = () => {
     const [setSize, setUA] = useUnit([setDeviceScreenSize, setDeviceUA]);

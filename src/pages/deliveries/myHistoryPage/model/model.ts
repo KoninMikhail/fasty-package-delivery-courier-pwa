@@ -3,15 +3,15 @@ import { createEvent, createStore, sample } from 'effector';
 import { and, condition, delay, once } from 'patronum';
 import { widgetsDeliveriesHistoryModel } from '@/widgets/deliveries/history';
 import { Logout } from '@/features/auth/logout';
-import { sessionModel } from '@/entities/viewer';
+import { networkModel, sessionModel } from '@/entities/viewer';
 import { RefreshToken } from '@/features/auth/refreshToken';
-import { $$hasAuthErrors } from '@/shared/errors';
 
 /**
  * Externals
  */
-const { $isAuthorized, $$isOnline, resourcesLoaded, resetResourcesLoaded } =
+const { $isAuthorized, resourcesLoaded, resetResourcesLoaded } =
     sessionModel;
+const { $$isOnline } = networkModel;
 
 /**
  * Gate for the page
@@ -93,18 +93,6 @@ sample({
 /**
  * Logout when user is not authorized
  */
-sample({
-    clock: $$hasAuthErrors,
-    source: MyDeliveriesHistoryPageGate.status,
-    filter: (isPageOpened, hasUnauthorizedError) =>
-        isPageOpened && hasUnauthorizedError,
-    target: RefreshToken.forceRefreshRequested,
-});
-
-sample({
-    clock: RefreshToken.updateTokenSuccess,
-    target: widgetsDeliveriesHistoryModel.init,
-});
 
 sample({
     clock: RefreshToken.updateTokenFail,

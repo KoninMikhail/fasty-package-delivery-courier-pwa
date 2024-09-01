@@ -1,7 +1,7 @@
 import { createGate } from 'effector-react';
 import { createEvent, createStore, sample } from 'effector';
 import { getDeliveryFromMyDeliverisLocalStorageCache } from '@/entities/delivery';
-import { sessionModel } from '@/entities/viewer';
+import { networkModel, sessionModel } from "@/entities/viewer";
 import { and, condition, delay, once } from 'patronum';
 import { sharedLibTypeGuards } from '@/shared/lib';
 import { FetchDeliveryById } from '@/features/delivery/fetchDeliveryById';
@@ -16,7 +16,6 @@ import { Logout } from '@/features/auth/logout';
 import { widgetMyDeliveriesModel } from '@/widgets/deliveries/myDeliveries';
 import { RefreshToken } from '@/features/auth/refreshToken';
 import { widgetDeliveryStatusModel } from '@/widgets/deliveries/deliveryStatus';
-import { $$hasAuthErrors } from '@/shared/errors';
 import { PageState } from '../types';
 
 /* eslint-disable unicorn/no-array-method-this-argument */
@@ -67,7 +66,7 @@ export const $pageContentState = createStore<PageState>(PageState.INIT)
  * Network state
  */
 
-export const $isOnline = sessionModel.$$isOnline;
+export const { $$isOnline } = networkModel;
 export const { $isAuthorized } = sessionModel;
 
 /**
@@ -91,7 +90,7 @@ sample({
 
 condition({
     source: delay(readyForFetch, 600),
-    if: and($isOnline, $isAuthorized),
+    if: and($$isOnline, $isAuthorized),
     then: FetchDeliveryById.fetch,
     else: getDeliveryFromMyDeliverisLocalStorageCache,
 });
@@ -144,13 +143,13 @@ sample({
  * Logout when user is not authorized
  */
 
-sample({
+/* sample({
     clock: $$hasAuthErrors,
     source: DeliveryDetailsPageGate.status,
     filter: (isPageOpened, hasUnauthorizedError) =>
         isPageOpened && hasUnauthorizedError,
     target: RefreshToken.forceRefreshRequested,
-});
+}); */
 
 sample({
     clock: RefreshToken.updateTokenSuccess,

@@ -1,4 +1,4 @@
-import { Authorized, sessionModel } from '@/entities/viewer';
+import { Authorized, deviceModel, sessionModel } from '@/entities/viewer';
 import { sharedConfigConstants } from '@/shared/config';
 
 import { useTranslation } from 'react-i18next';
@@ -15,7 +15,7 @@ const { APP_NAME, APP_DESCRIPTION } = sharedConfigConstants;
  * @constructor
  */
 export const ProfileEditPage: FunctionComponent = () => {
-    const isDesktop = useUnit(sessionModel.$$isDesktop);
+    const isDesktop = useUnit(deviceModel.$$isDesktop);
     const { t, i18n } = useTranslation(translationNS);
     const currentLanguage = i18n.language as keyof typeof APP_DESCRIPTION;
 

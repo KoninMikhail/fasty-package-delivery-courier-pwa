@@ -1,9 +1,7 @@
-import { createEvent, createStore, sample } from 'effector';
+import { createEvent, createStore } from 'effector';
 import { persist } from 'effector-storage/local';
 import { Fail } from 'effector-storage';
 import { SubwayStation, subwayStationSchema } from '@/shared/api';
-import { addError, ERROR_CODES } from '@/shared/errors';
-import { ValidationError } from '@/shared/errors/errors';
 import { SUBWAY_LOCAL_STORAGE_KEY } from '../config/storage';
 
 /**
@@ -48,8 +46,8 @@ persist({
  * Sample to trigger ValidationError and addError events when fetching from local storage fails.
  * @sample
  */
-sample({
+/* sample({
     clock: getFromLocalStorageFail,
     fn: () => new ValidationError(ERROR_CODES.SUBWAY_PERSIST_FAILED),
     target: addError,
-});
+}); */

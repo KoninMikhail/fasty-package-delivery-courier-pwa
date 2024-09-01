@@ -3,7 +3,6 @@ import { persist } from 'effector-storage/local';
 import { getSubwayStationsListFx, setSubwayStations } from '@/entities/route';
 import { z } from 'zod';
 import { isAfter, subDays } from 'date-fns';
-import { addError } from '@/shared/errors';
 import { throttle } from 'patronum';
 import { SUBWAY_COOKIE_KEY, SUBWAY_STATIONS_LIST_EXPIRATION } from './config';
 
@@ -60,5 +59,5 @@ sample({
  */
 sample({
     clock: getSubwayStationsListFx.failData,
-    target: [fail, addError],
+    target: fail,
 });

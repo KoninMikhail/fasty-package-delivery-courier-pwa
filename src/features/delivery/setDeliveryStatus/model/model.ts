@@ -6,10 +6,10 @@ import {
     Delivery,
     DeliveryStates,
 } from '@/shared/api';
-import { sharedLibTypeGuards } from '@/shared/lib';
-import { addError } from '@/shared/errors';
+import { sharedLibTypeGuards, sharedLibEffector } from '@/shared/lib';
 import { statuses } from '../data';
 
+const { collectEffectErrors } = sharedLibEffector;
 const { isEmpty } = sharedLibTypeGuards;
 
 interface FactoryOptions {
@@ -78,9 +78,12 @@ export const factory = modelFactory((options: FactoryOptions) => {
         target: statusChangeCompleted,
     });
 
-    sample({
-        clock: options.patchDeliveryStatusFx.failData,
-        target: addError,
+    /**
+     * Errors
+     */
+    const { $errors } = collectEffectErrors({
+        effects: options.patchDeliveryStatusFx,
+        reset: options.patchDeliveryStatusFx.doneData,
     });
 
     return {
@@ -96,5 +99,6 @@ export const factory = modelFactory((options: FactoryOptions) => {
         submitPressed,
         setDeliveryId,
         reset,
+        $errors,
     };
 });

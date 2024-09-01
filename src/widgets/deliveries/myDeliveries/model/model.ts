@@ -1,39 +1,43 @@
 import { createEvent, createStore, sample } from 'effector';
 import { FilterDeliveriesByTimeRange } from '@/features/delivery/filterDeliveriesByTimeRange';
-import { combineEvents, empty } from 'patronum';
+import { combineEvents, condition, empty } from "patronum";
 import { FetchDeliveriesByParameters } from '@/features/delivery/fetchDeliveriesByParams';
 import { RevalidateSubwayStationsList } from '@/features/route/revalidateSubwayStationsList';
+import { getMyDeliveriesFx } from '@/entities/delivery';
+import { sharedLibTypeGuards } from '@/shared/lib';
+import { RefreshToken } from '@/features/auth/refreshToken';
+import { isEmpty } from '@/shared/lib/type-guards';
 import {
     $myDeliveriesStore,
     $myDeliveriesStoreSorted,
     resetDeliveries,
     setDeliveries,
 } from './stores';
-import { getMyDeliveriesFx } from './effects';
 import {
     DELIVERY_END_TIME,
     DELIVERY_START_TIME,
     DELIVERY_TIME_STEP,
-} from '../config';
+} from '../config'
+import { networkModel } from '@/entities/viewer';
+
+const { isUnAuthorizedError } = sharedLibTypeGuards;
+
+/**
+ * Extends
+ */
+
+export const { $$isOnline} = networkModel;
 
 /**
  * Events
  */
 export const init = createEvent();
-export const initOffline = createEvent();
-export const setOnline = createEvent<boolean>();
 export const fetchData = createEvent();
 export const dataUpdated = createEvent();
 export const reset = createEvent();
 
-/**
- * Network
- */
-export const $isOnline = createStore<boolean>(true)
-    .on(initOffline, () => false)
-    .on(setOnline, (_, payload) => payload)
-    .reset(init)
-    .reset(reset);
+
+
 
 /**
  * Data fetching
@@ -59,35 +63,49 @@ sample({
     target: dataUpdated,
 });
 
+sample({
+    clock: fetchMyDeliveriesModel.deliveriesFetchFailed,
+    filter: (error) => isUnAuthorizedError(error),
+    target: RefreshToken.tokenRefreshRequested,
+});
+sample({
+    clock: RefreshToken.updateTokenSuccess,
+    source: fetchMyDeliveriesModel.$errors,
+    filter: (errors) => !isEmpty(errors),
+    target: fetchData,
+});
+
 /**
  * init
  */
-const initComplete = combineEvents({
-    events: [
-        RevalidateSubwayStationsList.done,
-        fetchMyDeliveriesModel.deliveriesFetched,
-    ],
-    reset: init,
-});
+
+const initOnline = createEvent();
+const initOffline = createEvent();
 
 export const $isInitialized = createStore<boolean>(false)
-    .on(initComplete, () => true)
+    .on(
+        combineEvents({
+                events: [
+                    RevalidateSubwayStationsList.done,
+                    fetchMyDeliveriesModel.deliveriesFetched,
+                ],
+            reset: init,
+    }), () => true)
     .on(initOffline, () => true)
     .reset(reset);
 
-// Online
-sample({
-    clock: init,
-    source: $isInitialized,
-    filter: (initialized) => !initialized,
-    target: RevalidateSubwayStationsList.check,
-});
+condition({
+    source: init,
+    if: $$isOnline,
+    then: initOnline,
+    else: initOffline,
+})
 
 sample({
     clock: init,
     source: $isInitialized,
     filter: (initialized) => !initialized,
-    target: fetchMyDeliveriesModel.fetch,
+    target: [RevalidateSubwayStationsList.check, fetchMyDeliveriesModel.fetch],
 });
 
 /**
@@ -107,10 +125,9 @@ export const filteredDeliveriesByTimeModel =
         sourceStore: $myDeliveriesStoreSorted,
     });
 
-/**
+/*
  * Reset
  */
-
 sample({
     clock: reset,
     target: [resetDeliveries, fetchMyDeliveriesModel.reset],

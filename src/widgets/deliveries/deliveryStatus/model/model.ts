@@ -23,7 +23,7 @@ sample({
 });
 
 /**
- * Assign to delivery model
+ * Assign to delivery factory
  */
 export const assignToDeliveryModel = AssignDeliveryWithMe.factory.createModel({
     assignToDeliveryFx: assignUserToDeliveryFx,

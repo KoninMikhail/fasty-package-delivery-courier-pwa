@@ -1,8 +1,8 @@
 import { createEvent, createStore } from 'effector';
-import { calculateCurrentScreenSize } from '../../lib/utils/device-detect/calculateCurrentScreenSize';
-import { assignScreenSizeToDeviceType } from '../../lib/utils/device-detect/assignScreenSizeToDeviceType';
-import { parseUserAgent } from '../../lib/utils/device-detect/parseUserAgent';
-import { DeviceInfo } from '../../types/device';
+import { DeviceInfo } from '../types/device';
+import { calculateCurrentScreenSize } from '../lib/utils/device-detect/calculateCurrentScreenSize';
+import { assignScreenSizeToDeviceType } from '../lib/utils/device-detect/assignScreenSizeToDeviceType';
+import { parseUserAgent } from '../lib/utils/device-detect/parseUserAgent';
 
 /**
  * Events

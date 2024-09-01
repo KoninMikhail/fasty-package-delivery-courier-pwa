@@ -3,8 +3,8 @@ import { AssignDeliveryWithMe } from '@/features/delivery/assignDeliveryToUser';
 import { assignUserToDeliveryFx } from '@/entities/user';
 import { FetchDeliveriesByParameters } from '@/features/delivery/fetchDeliveriesByParams';
 import { InfiniteScroll } from '@/features/other/infinite-scroll';
-import { isEmpty } from '@/shared/lib/type-guards';
-import { debounce, delay } from 'patronum';
+import { isEmpty, isUnAuthorizedError } from "@/shared/lib/type-guards";
+import { and, debounce, delay, not } from "patronum";
 import { fetchAvailableDeliveriesFx } from './effects';
 import {
     $datesRange,
@@ -20,29 +20,27 @@ import {
     setDeliveries,
     weightRangeChanged,
 } from './stores';
+import { networkModel } from '@/entities/viewer';
+import { RefreshToken } from '@/features/auth/refreshToken';
+
+/**
+ * Externals
+ */
+
+const { $$isOnline } = networkModel;
 
 /**
  * Events
  */
 
 export const init = createEvent();
-export const initOffline = createEvent();
 export const fetchData = createEvent();
 export const deliveryAssignCompleted = createEvent();
-export const setOnline = createEvent<boolean>();
+export const reset = createEvent();
 
 /**
- * Network
+ * Data Fetching
  */
-export const $isOnline = createStore<boolean>(true)
-    .on(initOffline, () => false)
-    .on(setOnline, (_, payload) => payload)
-    .reset(init);
-
-/**
- * Fetching
- */
-
 export const InfiniteScrollModel = InfiniteScroll.factory.createModel({
     provider: fetchAvailableDeliveriesFx,
     throttleTimeoutInMs: 500,
@@ -94,10 +92,18 @@ sample({
 });
 
 sample({
-    clock: $isOnline,
-    filter: (isOnline) => !isOnline,
-    target: InfiniteScrollModel.reset,
+    clock: fetchDeliveriesModel.deliveriesFetchFailed,
+    filter: (error) => isUnAuthorizedError(error),
+    target: RefreshToken.tokenRefreshRequested,
 });
+
+sample({
+    clock: RefreshToken.updateTokenSuccess,
+    source: fetchDeliveriesModel.$errors,
+    filter: (errors) => !isEmpty(errors),
+    target: fetchData,
+})
+
 
 /**
  * Assign delivery with current user
@@ -115,6 +121,7 @@ sample({
 /**
  * Widget initialization
  */
+
 const initComplete = createEvent();
 const $firstDataFetched = createStore<boolean>(false);
 
@@ -125,23 +132,23 @@ export const $isInitialized = createStore<boolean>(false)
 // Online
 sample({
     clock: delay(init, 400),
-    source: $isInitialized,
-    filter: (initialized) => !initialized,
+    source: and(not($isInitialized), $$isOnline),
+    filter: (allowed) => !!allowed,
     target: fetchDeliveriesModel.fetch,
 });
 
 sample({
     clock: fetchDeliveriesModel.deliveriesFetched,
-    source: $isInitialized,
-    filter: (initialized) => !initialized,
+    source: and(not($isInitialized), $$isOnline),
+    filter: (allowed) => !!allowed,
     fn: (_, deliveries) => deliveries,
     target: setDeliveries,
 });
 
 sample({
     clock: delay($outputDeliveriesStore, 100),
-    source: $isInitialized,
-    filter: (initialized) => !initialized,
+    source: and(not($isInitialized), $$isOnline),
+    filter: (allowed) => !!allowed,
     fn: () => true,
     target: $firstDataFetched,
 });
@@ -151,23 +158,16 @@ sample({
     target: initComplete,
 });
 
-// Offline
-sample({
-    clock: delay(initOffline, 400),
-    source: $isInitialized,
-    filter: (initialized) => !initialized,
-    target: [setOnline.prepend(() => false), initComplete],
-});
 
 /**
- * Re-fetch Data
+ * Fetch Data
  */
 
 sample({
     clock: fetchData,
     source: {
         isInit: $isInitialized,
-        isOnline: $isOnline,
+        isOnline: $$isOnline,
     },
     filter: ({ isInit, isOnline }) => isInit && isOnline,
     target: fetchDeliveriesModel.fetch,
@@ -196,7 +196,7 @@ sample({
     clock: delay(filtersChanged, 500),
     source: {
         isInit: $isInitialized,
-        isOnline: $isOnline,
+        isOnline: $$isOnline,
     },
     filter: ({ isInit, isOnline }) => isInit && isOnline,
     target: fetchDeliveriesModel.fetch,
@@ -216,3 +216,13 @@ export const $isDeliveriesLoading = fetchDeliveriesModel.$pending;
 export const $isFirstPage = InfiniteScrollModel.$pagination.map(
     (page) => page.page === 1,
 );
+
+
+/**
+ * Handle online/offline
+ */
+sample({
+    clock: $$isOnline,
+    filter: (isOnline) => !isOnline,
+    target: reset
+})

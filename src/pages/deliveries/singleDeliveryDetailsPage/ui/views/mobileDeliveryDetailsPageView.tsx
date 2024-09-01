@@ -9,7 +9,7 @@ import { getDeliveryId } from '@/entities/delivery';
 import { $pageDeliveryDetails } from '../../model/stores';
 import { Error, Loading, NotFound, NotFoundOffline } from './common/states';
 import { PageState } from '../../types';
-import { $isOnline, $pageContentState } from '../../model/model';
+import { $pageContentState } from '../../model/model';
 import {
     ClientType,
     DeliveryTypeTransport,
@@ -47,9 +47,11 @@ import {
     LABEL_WEIGHT,
     translationNS,
 } from '../../config';
+import { networkModel } from '@/entities/viewer';
 
 const { NavbarMobile } = widgetNavbarMobileUi;
 const { DeliveryStatusControlWithTimeline } = widgetDeliveryStatusUi;
+const { $$isOnline } = networkModel;
 
 /**
  * Layout
@@ -115,7 +117,7 @@ const BlockWhenOffline: FunctionComponent<{
     children: ReactNode;
 }> = ({ children }) => {
     const { t } = useTranslation(translationNS);
-    const isOnline = useUnit($isOnline);
+    const isOnline = useUnit($$isOnline);
 
     return isOnline ? (
         children

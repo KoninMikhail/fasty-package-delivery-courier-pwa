@@ -18,9 +18,11 @@ import {
     $$empty,
     init,
     $$inPending,
-    $isOnline,
     filteredDeliveriesByTimeModel,
 } from '../../model/model';
+import { networkModel } from '@/entities/viewer';
+
+const {$$isOnline} = networkModel;
 
 const Root: FunctionComponent<PropsWithChildren> = ({ children }) => {
     return <div className="grid grid-cols-1 gap-4">{children}</div>;
@@ -99,7 +101,7 @@ const RestartButton: FunctionComponent<RestartButtonProperties> = ({
 
 export const MyDeliveriesList: FunctionComponent = () => {
     const [online, isLoading, isEmpty, reInit] = useUnit([
-        $isOnline,
+        $$isOnline,
         $$inPending,
         $$empty,
         init,

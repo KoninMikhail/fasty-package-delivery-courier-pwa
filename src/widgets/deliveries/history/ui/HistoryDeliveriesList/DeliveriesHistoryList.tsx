@@ -10,15 +10,11 @@ import {
     getLocaledDate,
     getSuccessDeliveriesCountText,
 } from '../../lib';
-import {
-    $isInitialized,
-    infiniteScrollModel,
-    $isOnline,
-    $errors,
-} from '../../model';
+import { $isInitialized, infiniteScrollModel, $isOnline } from '../../model';
 import { $$sortedDeliveriesHistory } from '../../model/stores';
 import { Loader } from '../common/Loader';
 import { Offline } from '../common/Offline';
+
 
 const { isEmpty } = sharedLibTypeGuards;
 
@@ -50,16 +46,14 @@ const HistoryItemLayout: FunctionComponent<PropsWithChildren> = ({
  * Component for displaying a list of deliveries history with accordion and infinite scrolling.
  */
 export const DeliveriesHistoryList: FunctionComponent = () => {
-    const { isInit, isOnline, history, errors } = useUnit({
+    const { isInit, isOnline, history } = useUnit({
         isInit: $isInitialized,
         isOnline: $isOnline,
         history: $$sortedDeliveriesHistory,
-        errors: $errors,
     });
 
     if (!isInit) return <Loader />;
     if (!isOnline) return <Offline />;
-    if (!isEmpty(errors)) return <Loader />;
 
     const renderHistoryItems = history.map(
         ({ count, canceled, date, items }) => {

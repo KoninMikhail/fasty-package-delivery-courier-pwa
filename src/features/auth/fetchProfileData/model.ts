@@ -1,6 +1,9 @@
 import { createEvent, createStore, sample } from 'effector';
-import { getViewerProfileFx, sessionModel } from '@/entities/viewer';
+import { getViewerProfileFx, networkModel, sessionModel } from "@/entities/viewer";
 import { condition } from 'patronum';
+
+export const {$$isOnline} = networkModel;
+
 
 export const profileDataRequested = createEvent();
 export const profileDataReceived = createEvent();
@@ -15,7 +18,7 @@ const $waitsForUpdateProfileDate = createStore<number>(0)
 
 condition({
     source: profileDataRequested,
-    if: sessionModel.$$isOnline,
+    if: $$isOnline,
     then: profileDataRequestedAllowProcessing,
     else: profileDataAddedToWaitlist,
 });
@@ -23,7 +26,7 @@ condition({
 sample({
     clock: profileDataRequestedAllowProcessing,
     source: {
-        isOnline: sessionModel.$$isOnline,
+        isOnline: $$isOnline,
         isAuthorized: sessionModel.$isAuthorized,
     },
     filter: ({ isOnline, isAuthorized }) => isOnline && isAuthorized,
@@ -31,7 +34,7 @@ sample({
 });
 
 sample({
-    clock: sessionModel.$$isOnline,
+    clock: $$isOnline,
     source: {
         waitsForUpdateProfileDate: $waitsForUpdateProfileDate,
         isAuthorized: sessionModel.$isAuthorized,

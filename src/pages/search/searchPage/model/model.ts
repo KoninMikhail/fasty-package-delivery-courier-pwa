@@ -1,5 +1,5 @@
 import { createEvent, sample } from 'effector';
-import { sessionModel } from '@/entities/viewer';
+import { networkModel, sessionModel } from "@/entities/viewer";
 import { widgetSearchResultsModel } from '@/widgets/search/searchResults';
 import { createGate } from 'effector-react';
 import { and, delay, not } from 'patronum';
@@ -19,7 +19,9 @@ export const queryChanged = createEvent<string>();
  * Network state
  */
 
-const { $$isOnline, $isAuthorized, resourcesLoaded } = sessionModel;
+const { $isAuthorized, resourcesLoaded } = sessionModel;
+export const {$$isOnline} = networkModel;
+
 
 /**
  * Init

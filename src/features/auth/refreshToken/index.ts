@@ -1,13 +1,11 @@
 import {
-    forceRefreshRequested,
-    startTokenRefreshWatcher,
+    tokenRefreshRequested,
     updateTokenFail,
     updateTokenSuccess,
 } from './model';
 
 export const RefreshToken = {
-    startTokenRefreshWatcher,
-    forceRefreshRequested,
+    tokenRefreshRequested,
     updateTokenSuccess,
     updateTokenFail,
 };

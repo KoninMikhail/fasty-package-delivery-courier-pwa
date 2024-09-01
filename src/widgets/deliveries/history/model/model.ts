@@ -2,6 +2,8 @@ import { createEvent, createStore, sample } from 'effector';
 import { InfiniteScroll } from 'features/other/infinite-scroll';
 import { FetchDeliveriesByParameters } from '@/features/delivery/fetchDeliveriesByParams';
 import { debug, delay } from 'patronum';
+import { RefreshToken } from '@/features/auth/refreshToken';
+import { isEmpty, isUnAuthorizedError } from '@/shared/lib/type-guards';
 import { $fetchedData, setDeliveriesHistory } from './stores';
 import { getDeliveriesHistoryFx } from './effects';
 
@@ -26,8 +28,8 @@ export const $isOnline = createStore(true)
 
 /**
  * Data fetching
+ * @description Includes infinite scroll, jwt token refresh and error handling
  */
-
 export const infiniteScrollModel = InfiniteScroll.factory.createModel({
     provider: getDeliveriesHistoryFx,
     throttleTimeoutInMs: 500,
@@ -57,12 +59,24 @@ sample({
     target: fetchDeliveriesHistoryModel.fetch,
 });
 
+sample({
+    clock: fetchDeliveriesHistoryModel.deliveriesFetchFailed,
+    filter: (error) => isUnAuthorizedError(error),
+    target: RefreshToken.tokenRefreshRequested,
+});
+sample({
+    clock: RefreshToken.updateTokenSuccess,
+    source: fetchDeliveriesHistoryModel.$errors,
+    filter: (errors) => !isEmpty(errors),
+    target: fetchDeliveriesHistoryModel.fetch,
+});
+
 debug({
-    pagination: infiniteScrollModel.$pagination,
+    err: fetchDeliveriesHistoryModel.$errors,
 });
 
 /**
- * Initialize the model
+ * Initialize the factory
  */
 const initCompleted = createEvent();
 
@@ -93,5 +107,3 @@ sample({
     clock: initOffline,
     target: [initCompleted, setOnline.prepend(() => false)],
 });
-
-export const { $errors } = fetchDeliveriesHistoryModel;

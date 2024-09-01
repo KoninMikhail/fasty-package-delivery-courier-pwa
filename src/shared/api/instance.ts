@@ -1,5 +1,4 @@
 import axios from 'axios';
-import axiosRetry from 'axios-retry';
 import { sharedConfigConstants } from '@/shared/config';
 
 /**
@@ -19,5 +18,3 @@ export const instance = axios.create({
         'x-app-identifier': `${APP_IDENTIFIER}/${PACKAGE_VERSION}`,
     },
 });
-
-axiosRetry(instance, { retries: 1 });

@@ -1,24 +1,21 @@
+import { getViewerSearchQueriesHistoryFx } from '@/entities/viewer';
 import { createEvent, sample } from 'effector';
-import { addError } from '@/shared/errors';
-import { getUserSearchQueriesHistoryFx } from './effects';
 
-export const fetch = createEvent({
-    name: 'fetchUserSearchQueriesHistory',
-});
+export const fetch = createEvent();
 export const queryFetched = createEvent<string[]>();
 export const queryFetchFailed = createEvent<Error>();
 
 sample({
     clock: fetch,
-    target: getUserSearchQueriesHistoryFx,
+    target: getViewerSearchQueriesHistoryFx,
 });
 
 sample({
-    clock: getUserSearchQueriesHistoryFx.doneData,
+    clock: getViewerSearchQueriesHistoryFx.doneData,
     target: queryFetched,
 });
 
 sample({
-    clock: getUserSearchQueriesHistoryFx.failData,
-    target: [queryFetchFailed, addError],
+    clock: getViewerSearchQueriesHistoryFx.failData,
+    target: queryFetchFailed,
 });

@@ -17,10 +17,12 @@ import {
     $isInitialized,
     $hasNoDeliveries,
     $isFirstPage,
-    $isOnline,
 } from '../model';
+import { networkModel } from '@/entities/viewer';
 
 /* eslint-disable unicorn/consistent-function-scoping */
+
+const {$$isOnline} = networkModel;
 
 /**
  * Layout
@@ -105,7 +107,7 @@ const Empty: FunctionComponent = () => {
 export const MarketContent: FunctionComponent = () => {
     const { isInit, isOnline, isPending, isEmpty, isFirstPage } = useUnit({
         isInit: $isInitialized,
-        isOnline: $isOnline,
+        isOnline: $$isOnline,
         isPending: $isDeliveriesLoading,
         isEmpty: $hasNoDeliveries,
         isFirstPage: $isFirstPage,

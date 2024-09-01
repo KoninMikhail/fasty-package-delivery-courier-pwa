@@ -1,21 +1,22 @@
 import { createEvent, createStore, sample } from 'effector';
 import { widgetMyDeliveriesModel } from '@/widgets/deliveries/myDeliveries';
-import { and, condition, debug, delay, interval, once } from 'patronum';
+import { and, condition, delay, interval, not, once } from "patronum";
 import { widgetMarketModel } from '@/widgets/deliveries/market';
 import { createGate } from 'effector-react';
 import { widgetTopbarModel } from '@/widgets/viewer/welcome-topbar';
-import { sessionModel } from '@/entities/viewer';
+import { networkModel, sessionModel } from '@/entities/viewer';
 import { widgetSearchQueryPopupModel } from '@/widgets/search/searchQueryPopup';
 import { deliveryAssignCompleted } from '@/widgets/deliveries/market/model';
 import { Logout } from '@/features/auth/logout';
 import { RefreshToken } from '@/features/auth/refreshToken';
-import { $$hasAuthErrors } from '@/shared/errors';
 import { POLLING_TIMEOUT_SEC } from '../config';
 
 /**
  * Externals
  */
-const { $isAuthorized, $$isOnline, resourcesLoaded } = sessionModel;
+const { $isAuthorized, resourcesLoaded } = sessionModel;
+export const {$$isOnline} = networkModel;
+
 
 /**
  * Page gate
@@ -23,34 +24,33 @@ const { $isAuthorized, $$isOnline, resourcesLoaded } = sessionModel;
 
 export const MarketPageGate = createGate<void>();
 
-debug({
-    state: MarketPageGate.status,
-});
-
 /**
  * Initialization
  */
-
-const $isPageInitialized = createStore<boolean>(false)
-    .on(
-        once({
-            source: MarketPageGate.open,
-            reset: Logout.model.userLoggedOut,
-        }),
-        () => true,
-    )
-    .reset(Logout.model.userLoggedOut);
+const $isPageVisible = MarketPageGate.status;
+const $isFirstPageLoad = createStore<boolean>(false).reset(
+    Logout.model.userLoggedOut,
+);
 
 sample({
-    clock: MarketPageGate.open,
+    clock: once({
+        source: MarketPageGate.open,
+        reset: Logout.model.userLoggedOut,
+    }),
+    fn: () => true,
+    target: $isFirstPageLoad,
+});
+
+sample({
+    clock: $isPageVisible,
+    source: $isFirstPageLoad,
+    filter: (isFirstLoad, isVisible) => isVisible && isFirstLoad,
     target: resourcesLoaded,
 });
 
 /**
  * Widgets initialization
  */
-const initWidgetsOnline = createEvent();
-const initWidgetsOffline = createEvent();
 
 const $initWidgetsCompleted = and(
     widgetTopbarModel.$isInitialized,
@@ -59,77 +59,42 @@ const $initWidgetsCompleted = and(
     widgetSearchQueryPopupModel.$isInitialized,
 );
 
-condition({
-    source: delay($isPageInitialized, 500),
-    if: and($$isOnline, $isAuthorized),
-    then: initWidgetsOnline,
-    else: initWidgetsOffline,
-});
 
 // Online
 sample({
-    clock: initWidgetsOnline,
+    clock: delay($isFirstPageLoad, 500),
+    source: $isAuthorized,
+    filter: (allowed) => !!allowed,
     target: widgetTopbarModel.init,
 });
 
 sample({
-    clock: initWidgetsOnline,
-    source: widgetMarketModel.$isInitialized,
-    filter: (isInitialized) => !isInitialized,
+    clock: delay($isFirstPageLoad, 500),
+    source: and(
+        $isAuthorized,
+        not(widgetMarketModel.$isInitialized),
+    ),
+    filter: (allowed) => !!allowed,
     target: widgetMarketModel.init,
 });
 
 sample({
-    clock: initWidgetsOnline,
+    clock: delay($isFirstPageLoad, 500),
     target: widgetMyDeliveriesModel.init,
 });
 
 sample({
-    clock: initWidgetsOnline,
-    source: widgetSearchQueryPopupModel.$isInitialized,
-    filter: (isInitialized) => !isInitialized,
+    clock: delay($isFirstPageLoad, 500),
+    source: and($isPageVisible, not(widgetSearchQueryPopupModel.$isInitialized)),
+    filter: (isAllow) => isAllow,
     target: widgetSearchQueryPopupModel.init,
 });
 
 sample({
-    clock: initWidgetsOnline,
-    target: RefreshToken.startTokenRefreshWatcher,
-});
-
-// Offline
-sample({
-    clock: initWidgetsOffline,
-    target: widgetTopbarModel.initOffline,
-});
-
-sample({
-    clock: initWidgetsOffline,
-    source: widgetMarketModel.$isInitialized,
-    filter: (isInitialized) => !isInitialized,
-    target: widgetMarketModel.initOffline,
-});
-
-sample({
-    clock: initWidgetsOffline,
-    target: widgetMyDeliveriesModel.init,
-});
-
-sample({
-    clock: initWidgetsOffline,
+    clock: delay($isFirstPageLoad, 500),
     source: widgetSearchQueryPopupModel.$isInitialized,
     filter: (isInitialized) => !isInitialized,
     target: widgetSearchQueryPopupModel.init,
-});
-
-/**
- * ============================
- * Change network status
- * ============================
- */
-
-sample({
-    clock: $$isOnline,
-    target: [widgetMarketModel.init, widgetMyDeliveriesModel.init],
 });
 
 /**
@@ -188,24 +153,12 @@ sample({
 });
 
 /**
- * Logout when user is not authorized
+ * Logout when user is not authorized and user is online
  */
-
-sample({
-    clock: $$hasAuthErrors,
-    source: MarketPageGate.status,
-    filter: (isPageOpened, hasUnauthorizedError) =>
-        isPageOpened && hasUnauthorizedError,
-    target: RefreshToken.forceRefreshRequested,
-});
-
-sample({
-    clock: RefreshToken.updateTokenSuccess,
-    target: [widgetMyDeliveriesModel.fetchData, widgetMarketModel.fetchData],
-});
-
 sample({
     clock: RefreshToken.updateTokenFail,
+    source: $$isOnline,
+    filter: (isOnline) => isOnline,
     target: Logout.model.logout,
 });
 

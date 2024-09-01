@@ -3,13 +3,14 @@ import { useUnit } from 'effector-react';
 import { useTranslation } from 'react-i18next';
 import { IoReloadSharp } from 'react-icons/io5';
 import clsx from 'clsx';
-import { $$isDesktop, $initSessionComplete } from '../model/session';
+import { $initSessionComplete } from '../model/session';
 import {
     ERROR_SCREEN_RELOAD_BUTTON_TEXT,
     ERROR_SCREEN_HEADING,
     translationNS,
     ERROR_SCREEN_DESCRIPTION,
 } from '../config';
+import { $$isDesktop } from '../model/device';
 
 const ReloadButton: FunctionComponent<{
     onClick: () => void;

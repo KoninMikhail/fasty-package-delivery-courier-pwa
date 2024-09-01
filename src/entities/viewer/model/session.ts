@@ -8,7 +8,6 @@ import {
     authByEmailFx,
     changeViewerAvatarFx,
     getViewerProfileFx,
-    logoutFx,
 } from './effects';
 
 /**
@@ -33,11 +32,12 @@ export const $initSessionComplete = and($viewerDataReceived, $resourcesLoaded);
  * Viewer profile data
  * =================================================
  */
+export const clearViewerProfileData = createEvent();
 export const $viewerProfileData = createStore<Optional<User>>(null)
     .on(authByEmailFx.doneData, (_, payload) => payload.user)
     .on(getViewerProfileFx.doneData, (_, payload) => payload)
     .on(changeViewerAvatarFx.doneData, (_, payload) => payload)
-    .reset([logoutFx.done, logoutFx.fail]);
+    .reset(clearViewerProfileData);
 
 export const $$hasProfileData = $viewerProfileData.map((data) => !!data);
 
@@ -59,13 +59,6 @@ persist({
  */
 export const $isAuthorized = and($initSessionComplete, $$hasProfileData);
 
-export { $$isOnline } from './parts/networkState';
-export {
-    $$isMobile,
-    $$isTablet,
-    $$isDesktop,
-    $$deviceScreen,
-} from './parts/deviceInfo';
 export {
     getViewerProfileFx,
     authByEmailFx,

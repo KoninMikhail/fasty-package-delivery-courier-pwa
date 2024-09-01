@@ -13,11 +13,12 @@ import {
 import { widgetMyDeliveriesUi } from '@/widgets/deliveries/myDeliveries';
 import { IoSearchSharp } from 'react-icons/io5';
 import { useTranslation } from 'react-i18next';
-import { SEARCH_PLACEHOLDER, translationNS } from '../../config';
 import {
-    MarketHeadingText,
-    UpcomingDeliveriesHeadingText,
-} from '../common/data';
+    MARKET_LABEL,
+    SEARCH_PLACEHOLDER,
+    translationNS,
+    UPCOMING_DELIVERIES_LABEL,
+} from '../../config';
 
 const { SearchQueryInputModal } = widgetSearchQueryPopupUi;
 const { UpcomingDeliveriesHorizontalSlider } = widgetMyDeliveriesUi;
@@ -79,10 +80,11 @@ const Toolbar: FunctionComponent = () => {
 };
 
 const UpcomingDeliveries: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
     return (
         <div className="px-8">
             <h2 className="text-2xl font-bold capitalize">
-                <UpcomingDeliveriesHeadingText />
+                {t(UPCOMING_DELIVERIES_LABEL)}
             </h2>
             <Spacer y={8} />
             <UpcomingDeliveriesHorizontalSlider />
@@ -91,11 +93,10 @@ const UpcomingDeliveries: FunctionComponent = () => {
 };
 
 const MarketDeliveries: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
     return (
         <div className="px-8">
-            <h2 className="text-2xl font-bold capitalize">
-                <MarketHeadingText />
-            </h2>
+            <h2 className="text-2xl font-bold capitalize">{t(MARKET_LABEL)}</h2>
             <Spacer y={8} />
             <div>
                 <MarketDateSelector typePicker="scroll" />

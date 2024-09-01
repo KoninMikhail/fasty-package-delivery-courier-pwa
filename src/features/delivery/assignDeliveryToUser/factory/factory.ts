@@ -1,7 +1,10 @@
 import { modelFactory } from 'effector-factorio';
 import { createEvent, createStore, Effect, sample } from 'effector';
 import { Delivery } from '@/shared/api';
-import { addError } from '@/shared/errors';
+import { pending } from 'patronum';
+import { sharedLibEffector } from '@/shared/lib';
+
+const { collectEffectErrors } = sharedLibEffector;
 
 type FactoryOptions = {
     assignToDeliveryFx: Effect<Delivery['id'], Delivery>;
@@ -12,22 +15,19 @@ export const factory = modelFactory((options: FactoryOptions) => {
     const assignConfirmed = createEvent();
     const assignCompleted = createEvent<Delivery>();
     const assignRejected = createEvent();
+    const reset = createEvent();
 
-    const $deliveryIdForAssign = createStore<Optional<Delivery['id']>>(null);
-    const $assignedItems = createStore<Delivery['id'][]>([]);
-
-    $deliveryIdForAssign
+    const $deliveryIdForAssign = createStore<Optional<Delivery['id']>>(null)
         .on(assignPressed, (_, payload) => payload)
-        .on(assignRejected, () => null);
-    $assignedItems.on(assignCompleted, (state, delivery) => [
-        ...state,
-        delivery.id,
-    ]);
+        .reset([assignRejected, reset]);
+    const $assignedItemsToUsers = createStore<Delivery['id'][]>([])
+        .on(assignCompleted, (state, delivery) => [...state, delivery.id])
+        .reset(reset);
 
     /**
      * State
      */
-    const $processing = options.assignToDeliveryFx.pending;
+    const $processing = pending({ effects: [options.assignToDeliveryFx] });
     const assignToDelivery = options.assignToDeliveryFx;
 
     sample({
@@ -45,7 +45,15 @@ export const factory = modelFactory((options: FactoryOptions) => {
 
     sample({
         clock: options.assignToDeliveryFx.failData,
-        target: [assignRejected, addError],
+        target: assignRejected,
+    });
+
+    /**
+     * Errors
+     */
+    const { $errors } = collectEffectErrors({
+        effects: options.assignToDeliveryFx,
+        reset: options.assignToDeliveryFx.doneData,
     });
 
     return {
@@ -54,8 +62,9 @@ export const factory = modelFactory((options: FactoryOptions) => {
         assignConfirmed,
         assignToDelivery,
         assignCompleted,
-        $assignedItems,
+        $assignedItems: $assignedItemsToUsers,
         $processing,
         $delivery: $deliveryIdForAssign,
+        $errors,
     };
 });

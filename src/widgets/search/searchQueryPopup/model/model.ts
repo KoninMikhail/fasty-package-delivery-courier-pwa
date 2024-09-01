@@ -10,13 +10,17 @@ import {
     setQuery,
     setRelatedQueries,
 } from './stores';
+import { networkModel } from '@/entities/viewer';
+
+/**
+ * Externals
+ */
+const {$$isOnline} = networkModel
 
 /**
  * Events
  */
 export const init = createEvent();
-export const initOffline = createEvent();
-export const setOnline = createEvent<boolean>();
 export const queryChanged = createEvent<string>();
 export const queryAddedToHistory = createEvent<string>();
 export const queryItemRemoved = createEvent<string>();
@@ -25,47 +29,24 @@ export const searchCloseArrowClicked = createEvent();
 export const searchButtonClicked = createEvent();
 export const searchPopupCloseClicked = createEvent();
 
-/**
- * Network
- */
-export const $isOnline = createStore<boolean>(true)
-    .on(setOnline, (_, payload) => payload)
-    .on(initOffline, () => false)
-    .reset(init);
+
 
 /**
  * Initialization
  */
-const initCompleted = createEvent();
 
 export const $isInitialized = createStore<boolean>(false).on(
-    initCompleted,
+  FetchUserSearchQueriesHistory.model.queryFetched,
     () => true,
 );
 
-// Online
 sample({
     clock: delay(init, 300),
+    source: $$isOnline,
+    filter: (isOnline) => isOnline,
     target: FetchUserSearchQueriesHistory.model.fetch,
 });
 
-sample({
-    clock: init,
-    target: FetchUserSearchQueriesHistory.model.fetch,
-});
-
-sample({
-    clock: FetchUserSearchQueriesHistory.model.queryFetched,
-    source: $isInitialized,
-    filter: (isInitialized) => !isInitialized,
-    target: initCompleted,
-});
-
-// Offline
-sample({
-    clock: delay(initOffline, 300),
-    target: initCompleted,
-});
 
 /**
  * Related queries

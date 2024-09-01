@@ -1,4 +1,4 @@
-import { Authorized, sessionModel } from '@/entities/viewer';
+import { Authorized, deviceModel, sessionModel } from '@/entities/viewer';
 import { sharedConfigConstants } from '@/shared/config';
 import { useTranslation } from 'react-i18next';
 import { useDocumentTitle } from 'usehooks-ts';
@@ -19,7 +19,7 @@ const { APP_NAME, APP_DESCRIPTION } = sharedConfigConstants;
  */
 export const MyDeliveriesHistoryPage: FunctionComponent = () => {
     const { isDesktop } = useUnit({
-        isDesktop: sessionModel.$$isDesktop,
+        isDesktop: deviceModel.$$isDesktop,
     });
     const { t, i18n } = useTranslation(translationNS);
     const currentLanguage = i18n.language as keyof typeof APP_DESCRIPTION;

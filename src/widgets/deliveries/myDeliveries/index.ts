@@ -5,18 +5,13 @@ import {
     fetchData,
     dataUpdated,
     $isInitialized,
-    $isOnline,
-    initOffline,
-    $errors,
     reset,
 } from './model/model';
 
 export const widgetMyDeliveriesModel = {
     init,
-    initOffline,
     $myDeliveriesStore,
     fetchData,
-    $isOnline,
     reset,
     dataUpdated,
     $isInitialized,

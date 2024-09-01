@@ -1,4 +1,4 @@
-import { Authorized, sessionModel } from '@/entities/viewer';
+import { Authorized, deviceModel, sessionModel } from '@/entities/viewer';
 import { sharedConfigConstants } from '@/shared/config';
 import { useTranslation } from 'react-i18next';
 import { useDocumentTitle } from 'usehooks-ts';
@@ -18,7 +18,7 @@ const { APP_NAME, APP_DESCRIPTION } = sharedConfigConstants;
 
 export const SingleDeliveryDetailsPage: FunctionComponent = () => {
     const { isDesktop, delivery } = useUnit({
-        isDesktop: sessionModel.$$isDesktop,
+        isDesktop: deviceModel.$$isDesktop,
         delivery: $pageDeliveryDetails,
     });
     const { deliveryId: deliverySystemId } = useParams();

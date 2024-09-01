@@ -3,7 +3,7 @@ import { widgetSignInModalModel } from '@/widgets/viewer/sign-in-modal';
 import { widgetCookiePolicyModalModel } from '@/widgets/polices/cookiePolicyModal';
 import { widgetPrivacyPolicyModalModel } from '@/widgets/polices/privacyPolicyModal';
 import { widgetTermsOfUseModalModel } from '@/widgets/polices/termsOfUseModal';
-import { authByEmailFx, sessionModel } from '@/entities/viewer';
+import { sessionModel } from '@/entities/viewer';
 import { widgetResetPasswordModalModel } from '@/widgets/viewer/reset-password-modal';
 import { createGate } from 'effector-react';
 import { debounce } from 'patronum';
@@ -32,11 +32,6 @@ export const pressSignInButton = createEvent();
 sample({
     clock: pressSignInButton,
     target: widgetSignInModalModel.setVisible,
-});
-
-sample({
-    clock: authByEmailFx.doneData,
-    target: [widgetSignInModalModel.setHidden, resourcesLoaded],
 });
 
 /**

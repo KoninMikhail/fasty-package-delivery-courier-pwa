@@ -1,7 +1,7 @@
 import type React from 'react';
 import {
     DeviceDetector,
-    NetworkStateDetector,
+    NetworkDetector,
     ScreenBlocker,
 } from '@/entities/viewer';
 import { withProviders } from './providers';
@@ -17,7 +17,7 @@ const App = (): React.ReactNode => {
         <>
             <ScreenBlocker />
             <AppRouter />
-            <NetworkStateDetector />
+            <NetworkDetector />
             <DeviceDetector />
         </>
     );

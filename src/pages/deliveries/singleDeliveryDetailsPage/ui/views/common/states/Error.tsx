@@ -5,7 +5,6 @@ import { sharedConfigRoutes } from '@/shared/config';
 import { TbAlertSquare, TbReload } from 'react-icons/tb';
 import { useUnit } from 'effector-react/compat';
 import { useTranslation } from 'react-i18next';
-import { $isOnline } from '../../../../model/model';
 import {
     PAGE_ERROR_BUTTON_BACK,
     PAGE_ERROR_BUTTON_RELOAD,
@@ -13,14 +12,16 @@ import {
     PAGE_ERROR_TITLE,
     translationNS,
 } from '../../../../config';
+import { networkModel } from '@/entities/viewer';
 
 const { RouteName } = sharedConfigRoutes;
 const { DELIVERIES } = RouteName;
+const { $$isOnline } = networkModel;
 
 export const Error: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
     const navigate = useNavigate();
-    const isOnline = useUnit($isOnline);
+    const isOnline = useUnit($$isOnline);
 
     // eslint-disable-next-line unicorn/consistent-function-scoping
     const onPressRetryButton = (): void => window.location.reload();

@@ -21,6 +21,7 @@ export {
 export { getDeliveryByIdFx } from './effects/getDeliveryByIdFx';
 export { getDeliveryFromMyDeliverisLocalStorageCache } from './effects/getDeliveryFromMyDeliverisLocalStorageCache';
 export { setDeliveryStatusFx } from './effects/setDeliveryStatusFx';
+export { getMyDeliveriesFx } from './effects/getMyDeliveriesFx';
 
 /**
  * Utils

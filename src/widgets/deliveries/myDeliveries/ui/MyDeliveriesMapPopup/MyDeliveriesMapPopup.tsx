@@ -14,7 +14,6 @@ import {
     getDeliveryCoordinates,
     getDeliverySystemId,
 } from '@/entities/delivery';
-import { $isOnline } from '@/widgets/deliveries/myDeliveries/model/model';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import { MdOutlineLocationSearching } from 'react-icons/md';
@@ -29,9 +28,12 @@ import {
     translationNS,
     WIDGET_MAP_TITLE_KEY,
 } from '../../config';
+import { networkModel } from '@/entities/viewer';
 
 const { RouteName } = sharedConfigRoutes;
 const { DELIVERIES } = RouteName;
+
+const {$$isOnline} = networkModel;
 
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -150,7 +152,7 @@ const Map: FunctionComponent = () => {
 };
 
 export const MyDeliveriesMapPopup: FunctionComponent = () => {
-    const online = useUnit($isOnline);
+    const online = useUnit($$isOnline);
     const { t } = useTranslation(translationNS);
     const { isOpen, onOpen: onMapClick, onClose } = useDisclosure();
 

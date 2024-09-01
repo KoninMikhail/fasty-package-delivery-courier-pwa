@@ -1,7 +1,9 @@
-import { Model, modelFactory } from 'effector-factorio';
+import { modelFactory } from 'effector-factorio';
 import { createEvent, createStore, Effect, sample, Store } from 'effector';
 import { pending } from 'patronum';
-import { addError } from '@/shared/errors';
+import { sharedLibEffector } from '@/shared/lib';
+
+const { collectEffectErrors } = sharedLibEffector;
 
 interface FactoryOptions<T extends Pagination, Pagination, Payload> {
     provider: Effect<T, Payload>;
@@ -50,7 +52,15 @@ export const factory = modelFactory(
 
         sample({
             clock: options.provider.failData,
-            target: [deliveriesFetchFailed, addError],
+            target: deliveriesFetchFailed,
+        });
+
+        /**
+         * Errors
+         */
+        const { $errors } = collectEffectErrors({
+            effects: options.provider,
+            reset: [reset, options.provider.doneData],
         });
 
         return {
@@ -59,8 +69,7 @@ export const factory = modelFactory(
             deliveriesFetchFailed,
             $pending,
             reset,
+            $errors,
         };
     },
 );
-
-export type FilterDeliveriesByParametersModel = Model<typeof factory>;

@@ -2,7 +2,6 @@ import { modelFactory } from 'effector-factorio';
 import { createEvent, createStore, Effect, sample } from 'effector';
 import { User } from '@/shared/api';
 import { sharedConfigLocale } from '@/shared/config';
-import { addError } from '@/shared/errors';
 import { convertBase64ToFileFx, resizeImageFx } from './effects';
 import { ERROR_MIN_SIZE, translationNS } from '../config';
 
@@ -102,11 +101,6 @@ export const factory = modelFactory((options: FactoryOptions) => {
     sample({
         clock: convertBase64ToFileFx.doneData,
         target: options.changeAvatarFx,
-    });
-
-    sample({
-        clock: options.changeAvatarFx.failData,
-        target: addError,
     });
 
     return {

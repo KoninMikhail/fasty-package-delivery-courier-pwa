@@ -1,6 +1,5 @@
 import { createEvent, sample } from 'effector';
 import { removeViewerSearchQueryItemFx } from '@/entities/viewer';
-import { addError } from '@/shared/errors';
 
 export const removeQueryItem = createEvent<string>();
 export const queryItemRemoved = createEvent<string>();
@@ -19,5 +18,5 @@ sample({
 
 sample({
     clock: removeViewerSearchQueryItemFx.failData,
-    target: [queryItemRemoveFailed, addError],
+    target: queryItemRemoveFailed,
 });
