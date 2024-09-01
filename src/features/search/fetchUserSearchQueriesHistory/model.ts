@@ -1,4 +1,5 @@
 import { createEvent, sample } from 'effector';
+import { addError } from '@/shared/errors';
 import { getUserSearchQueriesHistoryFx } from './effects';
 
 export const fetch = createEvent({
@@ -19,5 +20,5 @@ sample({
 
 sample({
     clock: getUserSearchQueriesHistoryFx.failData,
-    target: queryFetchFailed,
+    target: [queryFetchFailed, addError],
 });

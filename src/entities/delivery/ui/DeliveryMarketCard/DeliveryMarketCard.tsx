@@ -14,7 +14,8 @@ import { useTranslation } from 'react-i18next';
 import { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { sharedConfigRoutes } from '@/shared/config';
-import { sharedServicesSubway } from '@/shared/services';
+// eslint-disable-next-line boundaries/element-types
+import { SubwayStationWithIcon } from '@/entities/route/@subway';
 
 import {
     BUTTON_MORE,
@@ -38,7 +39,6 @@ import { getDeliveryExpressState } from '../../lib/utils/getDeliveryExpressState
 import { getDeliveryPickupDateTime } from '../../lib/utils/getDeliveryPickupDateTime';
 import { getDeliveryWeight } from '../../lib/utils/getDeliveryWeight';
 
-const { SubwayStationWithIcon } = sharedServicesSubway;
 const { RouteName } = sharedConfigRoutes;
 const { DELIVERIES } = RouteName;
 

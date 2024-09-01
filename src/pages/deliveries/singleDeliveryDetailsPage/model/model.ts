@@ -16,6 +16,7 @@ import { Logout } from '@/features/auth/logout';
 import { widgetMyDeliveriesModel } from '@/widgets/deliveries/myDeliveries';
 import { RefreshToken } from '@/features/auth/refreshToken';
 import { widgetDeliveryStatusModel } from '@/widgets/deliveries/deliveryStatus';
+import { $$hasAuthErrors } from '@/shared/errors';
 import { PageState } from '../types';
 
 /* eslint-disable unicorn/no-array-method-this-argument */
@@ -26,7 +27,7 @@ const { isEmpty } = sharedLibTypeGuards;
 /**
  * Gateway for the delivery details page
  */
-export const DeliveryDetailsPageGateway = createGate<{
+export const DeliveryDetailsPageGate = createGate<{
     deliveryId?: string;
 }>();
 
@@ -34,7 +35,7 @@ export const DeliveryDetailsPageGateway = createGate<{
  * Page initialization
  */
 const pageMountedEvent = once({
-    source: DeliveryDetailsPageGateway.open,
+    source: DeliveryDetailsPageGate.open,
     reset: Logout.model.userLoggedOut,
 });
 
@@ -60,7 +61,7 @@ export const $pageContentState = createStore<PageState>(PageState.INIT)
             payload.response?.status === httpStatus.NOT_FOUND;
         return isNotFound ? PageState.NotFound : PageState.Error;
     })
-    .reset(DeliveryDetailsPageGateway.close);
+    .reset(DeliveryDetailsPageGate.close);
 
 /**
  * Network state
@@ -76,11 +77,8 @@ export const { $isAuthorized } = sessionModel;
 const readyForFetch = createEvent<Delivery['id']>();
 
 const $deliveryId = createStore<string>('')
-    .on(
-        DeliveryDetailsPageGateway.open,
-        (_, { deliveryId }) => deliveryId ?? '',
-    )
-    .reset(DeliveryDetailsPageGateway.close);
+    .on(DeliveryDetailsPageGate.open, (_, { deliveryId }) => deliveryId ?? '')
+    .reset(DeliveryDetailsPageGate.close);
 const $isDeliveryIdEmpty = $deliveryId.map((deliveryId) => isEmpty(deliveryId));
 
 sample({
@@ -133,7 +131,7 @@ sample({
 });
 
 sample({
-    clock: DeliveryDetailsPageGateway.close,
+    clock: DeliveryDetailsPageGate.close,
     target: widgetDeliveryStatusModel.reset,
 });
 
@@ -146,18 +144,11 @@ sample({
  * Logout when user is not authorized
  */
 
-const $hasUnauthorizedErrors = FetchDeliveryById.$errors.map((errors) => {
-    return errors.some((error) => {
-        if (axios.isAxiosError(error) && !!error.response) {
-            return error?.response.status === httpStatus.UNAUTHORIZED;
-        }
-        return false;
-    });
-});
-
 sample({
-    clock: $hasUnauthorizedErrors,
-    filter: (hasUnauthorizedError) => !!hasUnauthorizedError,
+    clock: $$hasAuthErrors,
+    source: DeliveryDetailsPageGate.status,
+    filter: (isPageOpened, hasUnauthorizedError) =>
+        isPageOpened && hasUnauthorizedError,
     target: RefreshToken.forceRefreshRequested,
 });
 

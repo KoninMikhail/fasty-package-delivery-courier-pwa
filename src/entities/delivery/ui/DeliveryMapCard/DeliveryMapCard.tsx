@@ -9,7 +9,8 @@ import {
 import { Delivery } from '@/shared/api';
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SubwayStationWithIcon } from '@/shared/services/subway';
+// eslint-disable-next-line boundaries/element-types
+import { SubwayStationWithIcon } from '@/entities/route/@subway';
 import { useEstimatedTime } from '../../lib/hooks/useEstimatedTime';
 import { translationNS, EXPIRED, TIME_LEFT, ADDRESS } from '../../config';
 import { getDeliverySystemId } from '../../lib/utils/getDeliverySystemId';

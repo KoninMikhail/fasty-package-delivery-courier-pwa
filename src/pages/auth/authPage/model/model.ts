@@ -1,4 +1,4 @@
-import { createEvent, createStore, sample } from 'effector';
+import { createEvent, sample } from 'effector';
 import { widgetSignInModalModel } from '@/widgets/viewer/sign-in-modal';
 import { widgetCookiePolicyModalModel } from '@/widgets/polices/cookiePolicyModal';
 import { widgetPrivacyPolicyModalModel } from '@/widgets/polices/privacyPolicyModal';
@@ -6,8 +6,7 @@ import { widgetTermsOfUseModalModel } from '@/widgets/polices/termsOfUseModal';
 import { authByEmailFx, sessionModel } from '@/entities/viewer';
 import { widgetResetPasswordModalModel } from '@/widgets/viewer/reset-password-modal';
 import { createGate } from 'effector-react';
-import { once } from 'patronum';
-import { Logout } from '@/features/auth/logout';
+import { debounce } from 'patronum';
 
 const { resourcesLoaded } = sessionModel;
 
@@ -19,17 +18,9 @@ export const AuthPageGate = createGate<void>();
 /**
  * Page initialization
  */
-const pageMountedEvent = once({
-    source: AuthPageGate.open,
-    reset: Logout.model.userLoggedOut,
-});
-
-const $isPageLoaded = createStore<boolean>(false)
-    .on(pageMountedEvent, () => true)
-    .reset(Logout.model.userLoggedOut);
-
 sample({
-    clock: pageMountedEvent,
+    clock: debounce(AuthPageGate.status, 500),
+    filter: (isOpen) => isOpen,
     target: resourcesLoaded,
 });
 
@@ -40,8 +31,6 @@ export const pressSignInButton = createEvent();
 
 sample({
     clock: pressSignInButton,
-    source: $isPageLoaded,
-    filter: (isPageLoaded) => isPageLoaded,
     target: widgetSignInModalModel.setVisible,
 });
 
@@ -103,7 +92,5 @@ export const pressRecoveryButton = createEvent();
 
 sample({
     clock: pressRecoveryButton,
-    source: $isPageLoaded,
-    filter: (isPageLoaded) => isPageLoaded,
     target: widgetResetPasswordModalModel.setVisible,
 });

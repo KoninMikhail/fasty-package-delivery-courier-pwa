@@ -5,7 +5,6 @@ import { useUnit } from 'effector-react';
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
 import clsx from 'clsx';
 import { FaMinus, FaPlus } from 'react-icons/fa6';
-import { sharedServicesSubway } from '@/shared/services';
 import {
     getDeliveryCoordinates,
     getDeliverySystemId,
@@ -25,8 +24,6 @@ import {
 
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-
-const { SubwayStationWithIcon } = sharedServicesSubway;
 const { RouteName } = sharedConfigRoutes;
 const { DELIVERIES } = RouteName;
 

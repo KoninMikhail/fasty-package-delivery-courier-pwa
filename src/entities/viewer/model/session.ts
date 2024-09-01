@@ -1,5 +1,5 @@
 import { createEvent, createStore } from 'effector';
-import { and, debug } from 'patronum';
+import { and } from 'patronum';
 import { User, userSchema } from '@/shared/api';
 import { Done } from 'effector-storage';
 import { persist } from 'effector-storage/local';
@@ -27,11 +27,6 @@ const $resourcesLoaded = createStore(false)
     .reset(resetResourcesLoaded);
 
 export const $initSessionComplete = and($viewerDataReceived, $resourcesLoaded);
-debug({
-    $initSessionComplete,
-    $viewerDataReceived,
-    $resourcesLoaded,
-});
 
 /**
  * =================================================

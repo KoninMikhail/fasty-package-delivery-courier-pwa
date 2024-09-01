@@ -3,7 +3,6 @@ import { useList, useUnit } from 'effector-react';
 import { Button, Link, Spinner } from '@nextui-org/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { LuAlertTriangle } from 'react-icons/lu';
 import { BsBoxSeam } from 'react-icons/bs';
 import { RiWifiOffLine } from 'react-icons/ri';
 import React, { PropsWithChildren, ReactElement, useMemo } from 'react';
@@ -13,14 +12,12 @@ import {
     DATA_EMPTY_TEXT_KEY,
     DATA_PENDING_TEXT_KEY,
     ERROR_NO_INTERNET_TEXT_KEY,
-    ERROR_TEXT_KEY,
     translationNS,
 } from '../../config';
 import {
     $$empty,
     init,
     $$inPending,
-    $$hasError,
     $isOnline,
     filteredDeliveriesByTimeModel,
 } from '../../model/model';
@@ -101,10 +98,9 @@ const RestartButton: FunctionComponent<RestartButtonProperties> = ({
 };
 
 export const MyDeliveriesList: FunctionComponent = () => {
-    const [online, isLoading, hasError, isEmpty, reInit] = useUnit([
+    const [online, isLoading, isEmpty, reInit] = useUnit([
         $isOnline,
         $$inPending,
-        $$hasError,
         $$empty,
         init,
     ]);
@@ -131,19 +127,6 @@ export const MyDeliveriesList: FunctionComponent = () => {
                     />
                 );
             }
-            case hasError: {
-                const onPressReloadButton = (): void => reInit();
-                return (
-                    <StatusMessage
-                        icon={<LuAlertTriangle />}
-                        messageKey={ERROR_TEXT_KEY}
-                        className="text-warning"
-                        endElement={
-                            <RestartButton onPress={onPressReloadButton} />
-                        }
-                    />
-                );
-            }
             case !online: {
                 return (
                     <StatusMessage
@@ -157,7 +140,7 @@ export const MyDeliveriesList: FunctionComponent = () => {
                 return null;
             }
         }
-    }, [isLoading, hasError, online, reInit]);
+    }, [isLoading, online, reInit]);
 
     if (isEmpty) {
         return (

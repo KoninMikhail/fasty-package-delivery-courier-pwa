@@ -1,12 +1,11 @@
 import { createGate } from 'effector-react';
-import { combine, createEvent, createStore, sample } from 'effector';
+import { createEvent, createStore, sample } from 'effector';
 import { and, condition, delay, once } from 'patronum';
 import { widgetsDeliveriesHistoryModel } from '@/widgets/deliveries/history';
 import { Logout } from '@/features/auth/logout';
 import { sessionModel } from '@/entities/viewer';
 import { RefreshToken } from '@/features/auth/refreshToken';
-import axios from 'axios';
-import httpStatus from 'http-status';
+import { $$hasAuthErrors } from '@/shared/errors';
 
 /**
  * Externals
@@ -94,21 +93,11 @@ sample({
 /**
  * Logout when user is not authorized
  */
-const $hasUnauthorizedError = combine(
-    widgetsDeliveriesHistoryModel.$errors,
-    (myDeliveriesErrors) => {
-        return [...myDeliveriesErrors].some((error) => {
-            if (axios.isAxiosError(error) && !!error.response) {
-                return error?.response.status === httpStatus.UNAUTHORIZED;
-            }
-            return false;
-        });
-    },
-);
-
 sample({
-    clock: $hasUnauthorizedError,
-    filter: (hasUnauthorizedError) => !!hasUnauthorizedError,
+    clock: $$hasAuthErrors,
+    source: MyDeliveriesHistoryPageGate.status,
+    filter: (isPageOpened, hasUnauthorizedError) =>
+        isPageOpened && hasUnauthorizedError,
     target: RefreshToken.forceRefreshRequested,
 });
 

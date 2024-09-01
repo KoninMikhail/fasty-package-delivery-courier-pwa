@@ -17,12 +17,7 @@ import {
     DATA_EMPTY_TEXT_KEY,
     translationNS,
 } from '../../config';
-import {
-    $$empty,
-    $$hasError,
-    $$inPending,
-    $isInitialized,
-} from '../../model/model';
+import { $$empty, $$inPending, $isInitialized } from '../../model/model';
 import { $myDeliveriesStoreSorted } from '../../model/stores';
 
 const { HorizontalScroll } = sharedUiLayouts;
@@ -121,11 +116,10 @@ export const MyDeliveriesRow: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
     const itemsLimit = useUnit(settingsModel.$homeUpcomingDeliveriesCount);
 
-    const { isInit, isEmpty, isUpdating, hasError } = useUnit({
+    const { isInit, isEmpty, isUpdating } = useUnit({
         isInit: $isInitialized,
         isEmpty: $$empty,
         isUpdating: $$inPending,
-        hasError: $$hasError,
     });
 
     const items = useList($myDeliveriesStoreSorted, (delivery, index) => {
@@ -150,8 +144,8 @@ export const MyDeliveriesRow: FunctionComponent = () => {
 
     if (!isInit) return <Loading />;
 
-    if (hasError) return <ErrorInitPlaceholder />;
-
+    /* if (hasError) return <ErrorInitPlaceholder />;
+     */
     if (isEmpty) {
         if (isUpdating) return <Loading />;
         return <EmptyItemsPlaceholder />;

@@ -7,6 +7,7 @@ import {
     DeliveryStates,
 } from '@/shared/api';
 import { sharedLibTypeGuards } from '@/shared/lib';
+import { addError } from '@/shared/errors';
 import { statuses } from '../data';
 
 const { isEmpty } = sharedLibTypeGuards;
@@ -75,6 +76,11 @@ export const factory = modelFactory((options: FactoryOptions) => {
     sample({
         clock: options.patchDeliveryStatusFx.doneData,
         target: statusChangeCompleted,
+    });
+
+    sample({
+        clock: options.patchDeliveryStatusFx.failData,
+        target: addError,
     });
 
     return {

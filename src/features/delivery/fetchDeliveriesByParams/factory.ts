@@ -1,8 +1,7 @@
 import { Model, modelFactory } from 'effector-factorio';
 import { createEvent, createStore, Effect, sample, Store } from 'effector';
 import { pending } from 'patronum';
-import httpStatus from 'http-status';
-import axios from 'axios';
+import { addError } from '@/shared/errors';
 
 interface FactoryOptions<T extends Pagination, Pagination, Payload> {
     provider: Effect<T, Payload>;
@@ -25,27 +24,6 @@ export const factory = modelFactory(
             createStore<Omit<T, keyof PaginationData>>(
                 {} as Omit<T, keyof PaginationData>,
             );
-
-        const $errors = createStore<Error[]>([])
-            .on(options.provider.failData, (state, payload) => [
-                ...state,
-                payload,
-            ])
-            .reset([reset, options.provider.done]);
-
-        const $$hasCriticalErrors = $errors.map((errors) => {
-            const criticalErrorCodes = new Set([
-                httpStatus.INTERNAL_SERVER_ERROR,
-                httpStatus.BAD_REQUEST,
-                httpStatus.BAD_GATEWAY,
-            ]) as Set<number>;
-            return errors.some((error) => {
-                if (axios.isAxiosError(error)) {
-                    return criticalErrorCodes.has(error.response?.status ?? 0);
-                }
-                return false;
-            });
-        });
 
         /**
          * Handlers
@@ -72,7 +50,7 @@ export const factory = modelFactory(
 
         sample({
             clock: options.provider.failData,
-            target: deliveriesFetchFailed,
+            target: [deliveriesFetchFailed, addError],
         });
 
         return {
@@ -80,9 +58,7 @@ export const factory = modelFactory(
             deliveriesFetched,
             deliveriesFetchFailed,
             $pending,
-            $errors,
             reset,
-            $$hasCriticalErrors,
         };
     },
 );

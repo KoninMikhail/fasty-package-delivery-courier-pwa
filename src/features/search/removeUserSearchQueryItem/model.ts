@@ -1,5 +1,6 @@
 import { createEvent, sample } from 'effector';
-import { removeUserSearchQueryItemFx } from '@/features/search/removeUserSearchQueryItem/effects';
+import { removeViewerSearchQueryItemFx } from '@/entities/viewer';
+import { addError } from '@/shared/errors';
 
 export const removeQueryItem = createEvent<string>();
 export const queryItemRemoved = createEvent<string>();
@@ -7,16 +8,16 @@ export const queryItemRemoveFailed = createEvent<Error>();
 
 sample({
     clock: removeQueryItem,
-    target: removeUserSearchQueryItemFx,
+    target: removeViewerSearchQueryItemFx,
 });
 
 sample({
-    clock: removeUserSearchQueryItemFx.done,
+    clock: removeViewerSearchQueryItemFx.done,
     fn: ({ params }) => params,
     target: queryItemRemoved,
 });
 
 sample({
-    clock: removeUserSearchQueryItemFx.failData,
-    target: queryItemRemoveFailed,
+    clock: removeViewerSearchQueryItemFx.failData,
+    target: [queryItemRemoveFailed, addError],
 });

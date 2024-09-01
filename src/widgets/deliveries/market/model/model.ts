@@ -216,26 +216,3 @@ export const $isDeliveriesLoading = fetchDeliveriesModel.$pending;
 export const $isFirstPage = InfiniteScrollModel.$pagination.map(
     (page) => page.page === 1,
 );
-
-/**
- * ------------------------------------------------
- * Erorrs
- */
-
-export const $errors = combine(
-    fetchDeliveriesModel.$errors,
-    (fetchDeliveriesByParametersErrors) => {
-        return [...fetchDeliveriesByParametersErrors];
-    },
-);
-
-/**
- * Reset
- */
-/*
-
-sample({
-    clock: reset,
-    target: [resetDeliveries, fetchMyDeliveriesModel.reset],
-});
-*/

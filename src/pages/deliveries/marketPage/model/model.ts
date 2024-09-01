@@ -1,6 +1,6 @@
-import { combine, createEvent, createStore, sample } from 'effector';
+import { createEvent, createStore, sample } from 'effector';
 import { widgetMyDeliveriesModel } from '@/widgets/deliveries/myDeliveries';
-import { and, condition, delay, interval, once } from 'patronum';
+import { and, condition, debug, delay, interval, once } from 'patronum';
 import { widgetMarketModel } from '@/widgets/deliveries/market';
 import { createGate } from 'effector-react';
 import { widgetTopbarModel } from '@/widgets/viewer/welcome-topbar';
@@ -8,9 +8,8 @@ import { sessionModel } from '@/entities/viewer';
 import { widgetSearchQueryPopupModel } from '@/widgets/search/searchQueryPopup';
 import { deliveryAssignCompleted } from '@/widgets/deliveries/market/model';
 import { Logout } from '@/features/auth/logout';
-import httpStatus from 'http-status';
-import axios from 'axios';
 import { RefreshToken } from '@/features/auth/refreshToken';
+import { $$hasAuthErrors } from '@/shared/errors';
 import { POLLING_TIMEOUT_SEC } from '../config';
 
 /**
@@ -24,9 +23,14 @@ const { $isAuthorized, $$isOnline, resourcesLoaded } = sessionModel;
 
 export const MarketPageGate = createGate<void>();
 
+debug({
+    state: MarketPageGate.status,
+});
+
 /**
  * Initialization
  */
+
 const $isPageInitialized = createStore<boolean>(false)
     .on(
         once({
@@ -125,7 +129,7 @@ sample({
 
 sample({
     clock: $$isOnline,
-    target: [widgetMarketModel.setOnline],
+    target: [widgetMarketModel.init, widgetMyDeliveriesModel.init],
 });
 
 /**
@@ -187,22 +191,11 @@ sample({
  * Logout when user is not authorized
  */
 
-const $hasUnauthorizedErrors = combine(
-    widgetMarketModel.$errors,
-    widgetMyDeliveriesModel.$errors,
-    (marketErrors, myDeliveriesErrors) => {
-        return [...marketErrors, ...myDeliveriesErrors].some((error) => {
-            if (axios.isAxiosError(error) && !!error.response) {
-                return error?.response.status === httpStatus.UNAUTHORIZED;
-            }
-            return false;
-        });
-    },
-);
-
 sample({
-    clock: $hasUnauthorizedErrors,
-    filter: (hasUnauthorizedError) => !!hasUnauthorizedError,
+    clock: $$hasAuthErrors,
+    source: MarketPageGate.status,
+    filter: (isPageOpened, hasUnauthorizedError) =>
+        isPageOpened && hasUnauthorizedError,
     target: RefreshToken.forceRefreshRequested,
 });
 

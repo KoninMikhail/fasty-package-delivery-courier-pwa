@@ -1,4 +1,3 @@
-import { ReactElement, ValidationMap, WeakValidationMap } from "react";
 
 declare module '*.svg' {
     import type React from 'react';

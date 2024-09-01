@@ -1,6 +1,4 @@
-export type SubwayLineID = keyof typeof sourceList;
-
-const sourceList = {
+export const ICONS_SOURCE_LIST = {
     '1': '/icons/subway/Moskwa_Metro_Line_1.svg',
     '2': '/icons/subway/Moskwa_Metro_Line_2.svg',
     '3': '/icons/subway/Moskwa_Metro_Line_3.svg',
@@ -25,13 +23,4 @@ const sourceList = {
     D4: '/icons/subway/Moskwa_Metro_Line_D4.svg',
     D5: '/icons/subway/Moskwa_Metro_Line_D5.svg',
     unknown: '/icons/subway/Moskwa_Metro_Unknown.svg',
-};
-
-export const getSubwayStationIconSourceByName = (
-    lineId?: SubwayLineID,
-): string => {
-    if (!lineId || !sourceList[lineId]) {
-        return sourceList.unknown;
-    }
-    return sourceList[lineId];
 };

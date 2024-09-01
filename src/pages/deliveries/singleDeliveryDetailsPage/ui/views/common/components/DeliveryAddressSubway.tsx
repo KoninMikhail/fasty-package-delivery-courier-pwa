@@ -1,5 +1,5 @@
 import { useUnit } from 'effector-react';
-import { SubwayStationWithIcon } from '@/shared/services/subway';
+import { SubwayStationWithIcon } from '@/entities/route';
 import { getDeliveryMetro } from '@/entities/delivery';
 import { $pageDeliveryDetails } from '../../../../model/stores';
 

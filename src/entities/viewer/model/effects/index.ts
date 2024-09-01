@@ -5,3 +5,4 @@ export * from './getViewerProfileFx';
 export * from './setViewerAccountPasswordFx';
 export * from './changeViewerAvatarFx';
 export * from './refreshAuthTokensFx';
+export * from './removeViewerSearchQueryItemFx';

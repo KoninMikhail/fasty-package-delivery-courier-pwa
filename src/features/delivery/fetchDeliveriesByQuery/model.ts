@@ -1,6 +1,7 @@
 import { modelFactory } from 'effector-factorio';
 import { createEvent, createStore, Effect, sample } from 'effector';
 import { Delivery } from '@/shared/api';
+import { addError } from '@/shared/errors';
 
 interface FactoryOptions {
     debounceTime: number;
@@ -11,15 +12,13 @@ interface FactoryOptions {
 export const factory = modelFactory((options: FactoryOptions) => {
     const queryChanged = createEvent<string>();
     const deliveriesFetched = createEvent<Delivery[]>();
+    const deliveriesFetchError = createEvent<Error>();
 
     const $query = createStore<string>('').on(
         queryChanged,
         (_, query) => query,
     );
     const $pending = options.provider.pending;
-    const $errors = createStore<Error[]>([])
-        .on(options.provider.failData, (state, error) => [...state, error])
-        .reset(options.provider.doneData);
 
     sample({
         source: $query,
@@ -32,11 +31,16 @@ export const factory = modelFactory((options: FactoryOptions) => {
         target: deliveriesFetched,
     });
 
+    sample({
+        clock: options.provider.failData,
+        target: [deliveriesFetchError, addError],
+    });
+
     return {
         queryChanged,
         deliveriesFetched,
+        deliveriesFetchError,
         $query,
-        $errors,
         $pending,
     };
 });

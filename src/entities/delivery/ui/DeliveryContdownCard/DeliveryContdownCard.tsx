@@ -10,12 +10,13 @@ import {
 } from '@nextui-org/react';
 import { Delivery } from '@/shared/api';
 import { IoCall } from 'react-icons/io5';
-import { sharedServicesSubway } from '@/shared/services';
 import { useTranslation } from 'react-i18next';
 import { forwardRef, ReactNode } from 'react';
 import { Link as ReactRouterLink } from 'react-router-dom';
 import { sharedConfigRoutes } from '@/shared/config';
 import { sharedLibHelpers } from '@/shared/lib';
+// eslint-disable-next-line boundaries/element-types
+import { SubwayStationWithIcon } from '@/entities/route/@subway';
 import { getDeliveryContact } from '../../lib/utils/getDeliveryContact';
 import { useEstimatedTime } from '../../lib/hooks/useEstimatedTime';
 import {
@@ -29,7 +30,6 @@ import { getDeliverySystemId } from '../../lib/utils/getDeliverySystemId';
 import { getDeliveryAddress } from '../../lib/utils/getDeliveryAdress';
 import { getDeliveryMetro } from '../../lib/utils/getDeliveryMetro';
 
-const { SubwayStationWithIcon } = sharedServicesSubway;
 const { RouteName } = sharedConfigRoutes;
 const { getMaskedPhone } = sharedLibHelpers;
 const { DELIVERIES } = RouteName;

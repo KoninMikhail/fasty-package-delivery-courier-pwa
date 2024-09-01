@@ -23,7 +23,6 @@
       "vite-plugin-svgr/client",
       "vite-plugin-pwa/info",
       "vite-plugin-pwa/react",
-      "webworker",
     ],
   },
   "include": ["src", "src/**/*.d.ts"],

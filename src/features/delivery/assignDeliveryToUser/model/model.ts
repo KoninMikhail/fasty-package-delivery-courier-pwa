@@ -1,6 +1,7 @@
 import { modelFactory } from 'effector-factorio';
 import { createEvent, createStore, Effect, sample } from 'effector';
 import { Delivery } from '@/shared/api';
+import { addError } from '@/shared/errors';
 
 type FactoryOptions = {
     assignToDeliveryFx: Effect<Delivery['id'], Delivery>;
@@ -40,6 +41,11 @@ export const factory = modelFactory((options: FactoryOptions) => {
     sample({
         clock: options.assignToDeliveryFx.doneData,
         target: assignCompleted,
+    });
+
+    sample({
+        clock: options.assignToDeliveryFx.failData,
+        target: [assignRejected, addError],
     });
 
     return {

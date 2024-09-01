@@ -1,12 +1,11 @@
 import { createGate } from 'effector-react';
-import { combine, createEvent, createStore, sample } from 'effector';
+import { createEvent, createStore, sample } from 'effector';
 import { and, condition, delay, interval, once } from 'patronum';
 import { sessionModel } from '@/entities/viewer';
 import { widgetMyDeliveriesModel } from '@/widgets/deliveries/myDeliveries';
 import { Logout } from '@/features/auth/logout';
-import axios from 'axios';
-import httpStatus from 'http-status';
 import { RefreshToken } from '@/features/auth/refreshToken';
+import { $$hasAuthErrors } from '@/shared/errors';
 import { POLLING_TIMEOUT } from '../config';
 
 /**
@@ -129,21 +128,11 @@ sample({
 /**
  * Logout when user is not authorized
  */
-const $hasUnauthorizedError = combine(
-    widgetMyDeliveriesModel.$errors,
-    (myDeliveriesErrors) => {
-        return [...myDeliveriesErrors].some((error) => {
-            if (axios.isAxiosError(error) && !!error.response) {
-                return error?.response.status === httpStatus.UNAUTHORIZED;
-            }
-            return false;
-        });
-    },
-);
-
 sample({
-    clock: $hasUnauthorizedError,
-    filter: (hasUnauthorizedError) => !!hasUnauthorizedError,
+    clock: $$hasAuthErrors,
+    source: MyDeliveriesPageGate.status,
+    filter: (isPageOpened, hasUnauthorizedError) =>
+        isPageOpened && hasUnauthorizedError,
     target: RefreshToken.forceRefreshRequested,
 });
 

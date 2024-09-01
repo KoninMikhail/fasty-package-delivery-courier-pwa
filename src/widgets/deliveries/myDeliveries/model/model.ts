@@ -1,8 +1,8 @@
 import { createEvent, createStore, sample } from 'effector';
 import { FilterDeliveriesByTimeRange } from '@/features/delivery/filterDeliveriesByTimeRange';
-import { sharedLibTypeGuards } from '@/shared/lib';
-import { debug, empty } from 'patronum';
+import { combineEvents, empty } from 'patronum';
 import { FetchDeliveriesByParameters } from '@/features/delivery/fetchDeliveriesByParams';
+import { RevalidateSubwayStationsList } from '@/features/route/revalidateSubwayStationsList';
 import {
     $myDeliveriesStore,
     $myDeliveriesStoreSorted,
@@ -15,8 +15,6 @@ import {
     DELIVERY_START_TIME,
     DELIVERY_TIME_STEP,
 } from '../config';
-
-const { isEmpty } = sharedLibTypeGuards;
 
 /**
  * Events
@@ -64,10 +62,17 @@ sample({
 /**
  * init
  */
-const initCompleted = createEvent();
+const initComplete = combineEvents({
+    events: [
+        RevalidateSubwayStationsList.done,
+        fetchMyDeliveriesModel.deliveriesFetched,
+    ],
+    reset: init,
+});
 
 export const $isInitialized = createStore<boolean>(false)
-    .on(initCompleted, () => true)
+    .on(initComplete, () => true)
+    .on(initOffline, () => true)
     .reset(reset);
 
 // Online
@@ -75,18 +80,14 @@ sample({
     clock: init,
     source: $isInitialized,
     filter: (initialized) => !initialized,
+    target: RevalidateSubwayStationsList.check,
+});
+
+sample({
+    clock: init,
+    source: $isInitialized,
+    filter: (initialized) => !initialized,
     target: fetchMyDeliveriesModel.fetch,
-});
-
-sample({
-    clock: fetchMyDeliveriesModel.deliveriesFetched,
-    target: initCompleted,
-});
-
-// Offline
-sample({
-    clock: initOffline,
-    target: initCompleted,
 });
 
 /**
@@ -94,12 +95,6 @@ sample({
  */
 export const $$empty = empty($myDeliveriesStore);
 export const $$inPending = fetchMyDeliveriesModel.$pending;
-
-/**
- * Errors
- */
-export const { $errors } = fetchMyDeliveriesModel;
-export const $$hasError = $errors.map((errors) => !isEmpty(errors));
 
 /**
  * Filters
@@ -111,8 +106,6 @@ export const filteredDeliveriesByTimeModel =
         stepMins: DELIVERY_TIME_STEP,
         sourceStore: $myDeliveriesStoreSorted,
     });
-
-debug(filteredDeliveriesByTimeModel.$filteredDeliveries);
 
 /**
  * Reset

@@ -6,7 +6,7 @@ import { useGate, useUnit } from 'effector-react';
 import { useParams } from 'react-router-dom';
 import { $pageDeliveryDetails } from '@/pages/deliveries/singleDeliveryDetailsPage/model/stores';
 import { getDeliveryId } from '@/entities/delivery';
-import { DeliveryDetailsPageGateway } from '../model/model';
+import { DeliveryDetailsPageGate } from '../model/model';
 
 import {
     DesktopDeliveryDetailsPageView,
@@ -33,7 +33,7 @@ export const SingleDeliveryDetailsPage: FunctionComponent = () => {
             appDescription: APP_DESCRIPTION[currentLanguage],
         }),
     );
-    useGate(DeliveryDetailsPageGateway, { deliveryId: deliverySystemId });
+    useGate(DeliveryDetailsPageGate, { deliveryId: deliverySystemId });
 
     return isDesktop ? (
         <Authorized>

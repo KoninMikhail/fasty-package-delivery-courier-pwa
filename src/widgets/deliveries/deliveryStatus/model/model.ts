@@ -4,7 +4,6 @@ import { AssignDeliveryWithMe } from '@/features/delivery/assignDeliveryToUser';
 import { setDeliveryStatusFx } from '@/entities/delivery';
 import { Delivery } from '@/shared/api';
 import { assignUserToDeliveryFx } from '@/entities/user';
-import { debug } from 'patronum';
 import { clearDelivery, setDelivery } from './stores';
 
 /**
@@ -49,17 +48,9 @@ sample({
     target: setStatusModel.setDeliveryId,
 });
 
-debug({
-    deliveryId: setStatusModel.setDeliveryId,
-});
-
 sample({
     clock: setStatusModel.statusChangeCompleted,
     target: [deliveryChanged, setDelivery],
-});
-
-debug({
-    complete: setStatusModel.statusChangeCompleted,
 });
 
 /**

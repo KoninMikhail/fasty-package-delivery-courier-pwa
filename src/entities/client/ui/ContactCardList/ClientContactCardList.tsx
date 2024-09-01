@@ -4,14 +4,13 @@ import { PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
 import { sharedLibHelpers } from '@/shared/lib';
 import { convertPhoneToTelLink, convertStringToEmailLink } from '../../lib';
-import { translationNS } from '../../config';
-
-const TRANSLATION = {
-    LABEL_NAME: 'client.card.label.name',
-    LABEL_JOB: 'client.card.label.job',
-    LABEL_PHONE: 'client.card.label.phone',
-    LABEL_EMAIL: 'client.card.label.email',
-};
+import {
+    LABEL_EMAIL,
+    LABEL_JOB,
+    LABEL_NAME,
+    LABEL_PHONE,
+    translationNS,
+} from '../../config';
 
 const { getMaskedPhone } = sharedLibHelpers;
 
@@ -23,7 +22,7 @@ const Name: FunctionComponent<{ value: string }> = ({ value }) => {
     const { t } = useTranslation(translationNS);
     return (
         <div className="flex gap-2">
-            <div className="flex-grow">{t(TRANSLATION.LABEL_NAME)}</div>
+            <div className="flex-grow">{t(LABEL_NAME)}</div>
             <div className="text-right">{value}</div>
         </div>
     );
@@ -33,7 +32,7 @@ const Job: FunctionComponent<{ value: string }> = ({ value }) => {
     const { t } = useTranslation(translationNS);
     return (
         <div className="flex gap-2">
-            <div className="flex-grow">{t(TRANSLATION.LABEL_JOB)}</div>
+            <div className="flex-grow">{t(LABEL_JOB)}</div>
             <div>{value}</div>
         </div>
     );
@@ -46,7 +45,7 @@ const Phone: FunctionComponent<{ value: string }> = ({ value }) => {
 
     return (
         <div className="flex gap-2">
-            <div className="flex-grow">{t(TRANSLATION.LABEL_PHONE)}</div>
+            <div className="flex-grow">{t(LABEL_PHONE)}</div>
             <div>
                 <Link isExternal href={link}>
                     {phoneLabel}
@@ -61,7 +60,7 @@ const Email: FunctionComponent<{ value: string }> = ({ value }) => {
     const link = convertStringToEmailLink(value);
     return (
         <div className="flex gap-2">
-            <div className="flex-grow">{t(TRANSLATION.LABEL_EMAIL)}</div>
+            <div className="flex-grow">{t(LABEL_EMAIL)}</div>
             <div>
                 <Link isExternal href={link} className="break-all text-right">
                     {value}

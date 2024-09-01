@@ -14,7 +14,6 @@ import {
 export const widgetMyDeliveriesModel = {
     init,
     initOffline,
-    $errors,
     $myDeliveriesStore,
     fetchData,
     $isOnline,

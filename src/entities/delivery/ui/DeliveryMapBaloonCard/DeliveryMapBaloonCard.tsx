@@ -1,6 +1,7 @@
 import { Button, Divider } from '@nextui-org/react';
 import { Delivery } from '@/shared/api';
-import { SubwayStationWithIcon } from '@/shared/services/subway';
+// eslint-disable-next-line boundaries/element-types
+import { SubwayStationWithIcon } from '@/entities/route/@subway';
 import { useTranslation } from 'react-i18next';
 import { getDeliveryContents } from '../../lib/utils/getDeliveryContents';
 import { getDeliveryPickupDateTime } from '../../lib/utils/getDeliveryPickupDateTime';
