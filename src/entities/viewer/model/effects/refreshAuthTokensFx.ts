@@ -1,12 +1,12 @@
 import { createEffect } from 'effector';
-import { apiClient } from '@/shared/api';
+import { apiClient, AuthTokens, AuthTokensSchema } from '@/shared/api';
 import Cookies from 'js-cookie';
 import { sharedConfigConstants } from '@/shared/config';
 
 const { APP_JWT_REFRESH_TOKEN_KEY, APP_JWT_ACCESS_TOKEN_KEY } =
     sharedConfigConstants;
 
-export const refreshAuthTokensFx = createEffect<void, void>(async () => {
+export const refreshAuthTokensFx = createEffect<void, AuthTokens>(async () => {
     try {
         const refreshToken = Cookies.get(APP_JWT_REFRESH_TOKEN_KEY);
 
@@ -14,9 +14,10 @@ export const refreshAuthTokensFx = createEffect<void, void>(async () => {
             throw new Error('Refresh token is not found');
         }
 
-        const { refresh, access } = await apiClient.refreshToken({
+        const response = await apiClient.refreshToken({
             refreshToken,
         });
+        const { refresh, access } = AuthTokensSchema.parse(response);
 
         Cookies.set(APP_JWT_REFRESH_TOKEN_KEY, refresh.token, {
             expires: refresh.expires,
@@ -24,6 +25,7 @@ export const refreshAuthTokensFx = createEffect<void, void>(async () => {
         Cookies.set(APP_JWT_ACCESS_TOKEN_KEY, access.token, {
             expires: access.expires,
         });
+        return response;
     } catch {
         throw new Error('Failed to refresh tokens');
     }

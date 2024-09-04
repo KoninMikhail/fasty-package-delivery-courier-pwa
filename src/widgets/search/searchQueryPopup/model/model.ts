@@ -2,6 +2,7 @@ import { createEvent, createStore, sample } from 'effector';
 import { FetchUserSearchQueriesHistory } from '@/features/search/fetchUserSearchQueriesHistory';
 import { RemoveUserSearchQueryItem } from '@/features/search/removeUserSearchQueryItem';
 import { delay } from 'patronum';
+import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
 import {
     addRelatedQuery,
     closePopup,
@@ -10,12 +11,13 @@ import {
     setQuery,
     setRelatedQueries,
 } from './stores';
-import { networkModel } from '@/entities/viewer';
 
 /**
  * Externals
  */
-const {$$isOnline} = networkModel
+export const {
+    model: { $$isOnline },
+} = DetectNetworkConnectionState;
 
 /**
  * Events
@@ -29,14 +31,12 @@ export const searchCloseArrowClicked = createEvent();
 export const searchButtonClicked = createEvent();
 export const searchPopupCloseClicked = createEvent();
 
-
-
 /**
  * Initialization
  */
 
 export const $isInitialized = createStore<boolean>(false).on(
-  FetchUserSearchQueriesHistory.model.queryFetched,
+    FetchUserSearchQueriesHistory.model.queryFetched,
     () => true,
 );
 
@@ -46,7 +46,6 @@ sample({
     filter: (isOnline) => isOnline,
     target: FetchUserSearchQueriesHistory.model.fetch,
 });
-
 
 /**
  * Related queries

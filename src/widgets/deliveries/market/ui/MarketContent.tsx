@@ -8,6 +8,7 @@ import { AssignDeliveryWithMe } from '@/features/delivery/assignDeliveryToUser';
 import { BsBoxSeam } from 'react-icons/bs';
 import { InfiniteScroll } from '@/features/other/infinite-scroll';
 import { useTranslation } from 'react-i18next';
+import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
 import { LABEL_NO_DELIVERIES, LABEL_OFFLINE, translationNS } from '../config';
 import { $outputDeliveriesStore } from '../model/stores';
 import {
@@ -17,12 +18,14 @@ import {
     $isInitialized,
     $hasNoDeliveries,
     $isFirstPage,
+    $isOffline,
 } from '../model';
-import { networkModel } from '@/entities/viewer';
 
 /* eslint-disable unicorn/consistent-function-scoping */
 
-const {$$isOnline} = networkModel;
+export const {
+    model: { $$isOnline },
+} = DetectNetworkConnectionState;
 
 /**
  * Layout
@@ -105,9 +108,9 @@ const Empty: FunctionComponent = () => {
  * @constructor
  */
 export const MarketContent: FunctionComponent = () => {
-    const { isInit, isOnline, isPending, isEmpty, isFirstPage } = useUnit({
+    const { isInit, isOffline, isPending, isEmpty, isFirstPage } = useUnit({
         isInit: $isInitialized,
-        isOnline: $$isOnline,
+        isOffline: $isOffline,
         isPending: $isDeliveriesLoading,
         isEmpty: $hasNoDeliveries,
         isFirstPage: $isFirstPage,
@@ -129,7 +132,7 @@ export const MarketContent: FunctionComponent = () => {
     ));
 
     if (!isInit) return <Loading />;
-    if (!isOnline) return <Offline />;
+    if (isOffline) return <Offline />;
     if (isPending && isFirstPage) return <Loading />;
     if (isEmpty) return <Empty />;
 

@@ -2,7 +2,7 @@ import { createEvent, sample } from 'effector';
 import { logoutFx, sessionModel } from '@/entities/viewer';
 import { pending, throttle } from 'patronum';
 
-export const logout = createEvent<void>();
+export const logout = createEvent();
 export const $pending = pending({ effects: [logoutFx] });
 export const userLoggedOut = createEvent();
 

@@ -1,9 +1,11 @@
 import { createEvent, createStore, sample } from 'effector';
-import { getViewerProfileFx, networkModel, sessionModel } from "@/entities/viewer";
+import { getViewerProfileFx, sessionModel } from '@/entities/viewer';
 import { condition } from 'patronum';
+import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
 
-export const {$$isOnline} = networkModel;
-
+export const {
+    model: { $$isOnline },
+} = DetectNetworkConnectionState;
 
 export const profileDataRequested = createEvent();
 export const profileDataReceived = createEvent();

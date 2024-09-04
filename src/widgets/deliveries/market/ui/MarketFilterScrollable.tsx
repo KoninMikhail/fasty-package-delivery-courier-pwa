@@ -18,6 +18,7 @@ import { Key, useMemo, useState } from 'react';
 import { GiGymBag } from 'react-icons/gi';
 
 import { DeliveryType } from '@/shared/api';
+import { OfflineBlock } from '@/widgets/deliveries/market/ui/common/OfflineBlocker';
 import {
     EXPRESS_LABEL_KEY,
     LABEL_ONCAR_KEY,
@@ -241,19 +242,21 @@ export const MarketFilterScrollable: FunctionComponent<
     MarketFilterScrollableProperties
 > = ({ withOutPadding }) => {
     return (
-        <div className="flex gap-4">
-            <HorizontalScroll>
-                <div
-                    className={clsx(
-                        'flex flex-nowrap gap-2',
-                        withOutPadding && 'px-4',
-                    )}
-                >
-                    <ExpressSelector />
-                    <DeliveryTypeSelector />
-                    <WeightSelector />
-                </div>
-            </HorizontalScroll>
-        </div>
+        <OfflineBlock>
+            <div className="flex gap-4">
+                <HorizontalScroll>
+                    <div
+                        className={clsx(
+                            'flex flex-nowrap gap-2',
+                            withOutPadding && 'px-4',
+                        )}
+                    >
+                        <ExpressSelector />
+                        <DeliveryTypeSelector />
+                        <WeightSelector />
+                    </div>
+                </HorizontalScroll>
+            </div>
+        </OfflineBlock>
     );
 };

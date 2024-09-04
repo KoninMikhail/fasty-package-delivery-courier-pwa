@@ -1,11 +1,12 @@
 import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
 import { DetectDeviceType } from '@/features/device/detecDeviceType';
 
-export const AppDeviceStateDetector: FunctionComponent = () => {
+export const AppDeviceStateManager: FunctionComponent = () => {
     return (
         <>
             <DetectNetworkConnectionState.Watcher />
             <DetectDeviceType.Watcher />
+            <DetectDeviceType.GuardAppVersion />
         </>
     );
 };

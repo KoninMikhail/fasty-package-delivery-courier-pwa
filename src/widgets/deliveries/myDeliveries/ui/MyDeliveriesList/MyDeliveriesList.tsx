@@ -7,6 +7,7 @@ import { BsBoxSeam } from 'react-icons/bs';
 import { RiWifiOffLine } from 'react-icons/ri';
 import React, { PropsWithChildren, ReactElement, useMemo } from 'react';
 import clsx from 'clsx';
+import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
 import {
     BUTTON_RETRY_TEXT_KEY,
     DATA_EMPTY_TEXT_KEY,
@@ -20,9 +21,10 @@ import {
     $$inPending,
     filteredDeliveriesByTimeModel,
 } from '../../model/model';
-import { networkModel } from '@/entities/viewer';
 
-const {$$isOnline} = networkModel;
+export const {
+    model: { $$isOnline },
+} = DetectNetworkConnectionState;
 
 const Root: FunctionComponent<PropsWithChildren> = ({ children }) => {
     return <div className="grid grid-cols-1 gap-4">{children}</div>;

@@ -10,7 +10,6 @@ import {
     MyDeliveriesList,
 } from '@/widgets/deliveries/myDeliveries/ui';
 import { useTranslation } from 'react-i18next';
-import { DetectDeviceType } from '@/features/device/detecDeviceType';
 import {
     PAGE_HEADER,
     PAGE_TAB_LIST,
@@ -83,29 +82,23 @@ export const DesktopMyDeliveriesPageView: FunctionComponent = () => {
     };
 
     return (
-        <>
-            <Layout>
-                <Sidebar>
-                    <Navbar />
-                </Sidebar>
-                <MainContainer>
-                    <Toolbar
-                        heading={t(PAGE_HEADER)}
-                        onSelectTab={onSelectedTab}
-                    />
-                    {selectedTab === 'map' ? (
-                        <MyDeliveriesMap />
-                    ) : (
-                        <ListSection>
-                            <Spacer y={24} />
-                            <MyDeliveriesFilters />
-                            <Spacer y={6} />
-                            <MyDeliveriesList />
-                        </ListSection>
-                    )}
-                </MainContainer>
-            </Layout>
-            <DetectDeviceType.GuardAppVersion />
-        </>
+        <Layout>
+            <Sidebar>
+                <Navbar />
+            </Sidebar>
+            <MainContainer>
+                <Toolbar heading={t(PAGE_HEADER)} onSelectTab={onSelectedTab} />
+                {selectedTab === 'map' ? (
+                    <MyDeliveriesMap />
+                ) : (
+                    <ListSection>
+                        <Spacer y={24} />
+                        <MyDeliveriesFilters />
+                        <Spacer y={6} />
+                        <MyDeliveriesList />
+                    </ListSection>
+                )}
+            </MainContainer>
+        </Layout>
     );
 };

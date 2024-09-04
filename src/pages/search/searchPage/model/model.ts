@@ -1,26 +1,25 @@
 import { createEvent, sample } from 'effector';
-import { networkModel, sessionModel } from '@/entities/viewer';
 import { widgetSearchResultsModel } from '@/widgets/search/searchResults';
 import { createGate } from 'effector-react';
-import { and, delay, not } from 'patronum';
+import { and, debug, delay, not } from 'patronum';
+import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
+
+export const {
+    model: { $$isOnline },
+} = DetectNetworkConnectionState;
 
 export const SearchPageGate = createGate<{
     query: string;
 }>();
-
-const $isFirstLoadPage = not(widgetSearchResultsModel.$isInitialized);
 
 /**
  * Events
  */
 export const queryChanged = createEvent<string>();
 
-/**
- * Network state
- */
-
-const { $isAuthorized } = sessionModel;
-export const { $$isOnline } = networkModel;
+debug({
+    $$isOnline,
+});
 
 /**
  * Query
@@ -31,26 +30,21 @@ sample({
 });
 
 /**
- * Network state
+ * Init
  */
-sample({
-    clock: $$isOnline,
-    source: $isAuthorized,
-    filter: (isAuthorized) => isAuthorized,
-    fn: (_, networkState) => networkState,
-    target: widgetSearchResultsModel.setOnline,
-});
+
+const $isFirstLoadPage = not(widgetSearchResultsModel.$isInitialized);
 
 sample({
     clock: delay(SearchPageGate.open, 500),
-    source: and($isFirstLoadPage, $$isOnline, $isAuthorized),
+    source: and($isFirstLoadPage, $$isOnline),
     filter: (allowed) => allowed,
     target: widgetSearchResultsModel.init,
 });
 
 sample({
     clock: delay(SearchPageGate.open, 500),
-    source: and($isFirstLoadPage, not($$isOnline), $isAuthorized),
+    source: and($isFirstLoadPage, not($$isOnline)),
     filter: (isFirstLoadPage) => isFirstLoadPage,
     target: widgetSearchResultsModel.initOffline,
 });
@@ -67,4 +61,16 @@ sample({
     clock: SearchPageGate.state,
     fn: (state) => state.query,
     target: queryChanged,
+});
+
+/**
+ * Change network state
+ */
+
+sample({
+    clock: $$isOnline,
+    source: widgetSearchResultsModel.$isInitialized,
+    filter: (isInit) => isInit,
+    fn: (isOnline) => !isOnline,
+    target: widgetSearchResultsModel.setOffline,
 });

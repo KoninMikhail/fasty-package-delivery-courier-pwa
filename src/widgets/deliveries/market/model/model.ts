@@ -3,8 +3,9 @@ import { AssignDeliveryWithMe } from '@/features/delivery/assignDeliveryToUser';
 import { assignUserToDeliveryFx } from '@/entities/user';
 import { FetchDeliveriesByParameters } from '@/features/delivery/fetchDeliveriesByParams';
 import { InfiniteScroll } from '@/features/other/infinite-scroll';
-import { isEmpty, isUnAuthorizedError } from "@/shared/lib/type-guards";
-import { and, debounce, delay, not } from "patronum";
+import { isEmpty, isUnAuthorizedError } from '@/shared/lib/type-guards';
+import { and, debounce, debug, delay, not } from 'patronum';
+import { RefreshToken } from '@/features/auth/refreshToken';
 import { fetchAvailableDeliveriesFx } from './effects';
 import {
     $datesRange,
@@ -17,26 +18,30 @@ import {
     deliveryTypeChanged,
     expressChanged,
     filtersChanged,
+    resetFilters,
     setDeliveries,
     weightRangeChanged,
 } from './stores';
-import { networkModel } from '@/entities/viewer';
-import { RefreshToken } from '@/features/auth/refreshToken';
-
-/**
- * Externals
- */
-
-const { $$isOnline } = networkModel;
 
 /**
  * Events
  */
 
 export const init = createEvent();
+export const initOffline = createEvent();
+export const setOffline = createEvent<boolean>();
 export const fetchData = createEvent();
 export const deliveryAssignCompleted = createEvent();
 export const reset = createEvent();
+
+/**
+ * Network state
+ */
+
+export const $isOffline = createStore<Optional<boolean>>(null)
+    .on(initOffline, () => true)
+    .on(setOffline, (_, payload) => payload)
+    .reset(reset);
 
 /**
  * Data Fetching
@@ -91,20 +96,6 @@ sample({
     target: fetchDeliveriesModel.fetch,
 });
 
-sample({
-    clock: fetchDeliveriesModel.deliveriesFetchFailed,
-    filter: (error) => isUnAuthorizedError(error),
-    target: RefreshToken.tokenRefreshRequested,
-});
-
-sample({
-    clock: RefreshToken.updateTokenSuccess,
-    source: fetchDeliveriesModel.$errors,
-    filter: (errors) => !isEmpty(errors),
-    target: fetchData,
-})
-
-
 /**
  * Assign delivery with current user
  */
@@ -123,6 +114,7 @@ sample({
  */
 
 const initComplete = createEvent();
+
 const $firstDataFetched = createStore<boolean>(false);
 
 export const $isInitialized = createStore<boolean>(false)
@@ -132,14 +124,14 @@ export const $isInitialized = createStore<boolean>(false)
 // Online
 sample({
     clock: delay(init, 400),
-    source: and(not($isInitialized), $$isOnline),
+    source: and(not($isInitialized), not($isOffline)),
     filter: (allowed) => !!allowed,
     target: fetchDeliveriesModel.fetch,
 });
 
 sample({
     clock: fetchDeliveriesModel.deliveriesFetched,
-    source: and(not($isInitialized), $$isOnline),
+    source: and(not($isInitialized), not($isOffline)),
     filter: (allowed) => !!allowed,
     fn: (_, deliveries) => deliveries,
     target: setDeliveries,
@@ -147,7 +139,7 @@ sample({
 
 sample({
     clock: delay($outputDeliveriesStore, 100),
-    source: and(not($isInitialized), $$isOnline),
+    source: and(not($isInitialized), not($isOffline)),
     filter: (allowed) => !!allowed,
     fn: () => true,
     target: $firstDataFetched,
@@ -158,6 +150,9 @@ sample({
     target: initComplete,
 });
 
+debug({
+    $isInitialized,
+});
 
 /**
  * Fetch Data
@@ -165,11 +160,8 @@ sample({
 
 sample({
     clock: fetchData,
-    source: {
-        isInit: $isInitialized,
-        isOnline: $$isOnline,
-    },
-    filter: ({ isInit, isOnline }) => isInit && isOnline,
+    source: and($isInitialized, not($isOffline)),
+    filter: (allowed) => allowed,
     target: fetchDeliveriesModel.fetch,
 });
 
@@ -194,16 +186,13 @@ sample({
 
 sample({
     clock: delay(filtersChanged, 500),
-    source: {
-        isInit: $isInitialized,
-        isOnline: $$isOnline,
-    },
-    filter: ({ isInit, isOnline }) => isInit && isOnline,
+    source: and($isInitialized, not($isOffline)),
+    filter: (allowed) => allowed,
     target: fetchDeliveriesModel.fetch,
 });
 
 /**
- * Handle states
+ * States
  */
 
 export const $hasNoDeliveries = createStore<boolean>(false)
@@ -217,12 +206,56 @@ export const $isFirstPage = InfiniteScrollModel.$pagination.map(
     (page) => page.page === 1,
 );
 
+/**
+ * Change network state
+ */
+
+sample({
+    clock: $isOffline,
+    source: $isInitialized,
+    filter: (isInit, isOnline) => isInit && isOnline === false,
+    fn: (isOnline) => !isOnline,
+    target: [fetchDeliveriesModel.reset, clearDeliveries],
+});
+
+sample({
+    clock: delay($isOffline, 300),
+    source: $isInitialized,
+    filter: (isInit, isOnline) => isInit && isOnline === false,
+    fn: (isOnline) => !isOnline,
+    target: fetchDeliveriesModel.fetch,
+});
 
 /**
- * Handle online/offline
+ * Refresh token on error
+ */
+
+sample({
+    clock: fetchDeliveriesModel.deliveriesFetchFailed,
+    filter: (error) => isUnAuthorizedError(error),
+    target: RefreshToken.tokenRefreshRequested,
+});
+
+sample({
+    clock: RefreshToken.updateTokenSuccess,
+    source: fetchDeliveriesModel.$errors,
+    filter: (errors) => !isEmpty(errors),
+    target: fetchDeliveriesModel.fetch,
+});
+
+sample({
+    clock: RefreshToken.updateTokenSuccess,
+    source: $isInitialized,
+    filter: (isInit) => !isInit,
+    target: fetchDeliveriesModel.fetch,
+});
+
+/**
+ * Reset
  */
 sample({
-    clock: $$isOnline,
-    filter: (isOnline) => !isOnline,
-    target: reset
-})
+    clock: delay(reset, 300),
+    source: $isInitialized,
+    filter: (isInit) => isInit,
+    target: [clearDeliveries, resetFilters],
+});

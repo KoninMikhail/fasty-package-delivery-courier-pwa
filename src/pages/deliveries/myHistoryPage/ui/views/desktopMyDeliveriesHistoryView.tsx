@@ -4,7 +4,6 @@ import { widgetNavbarDesktopUi } from '@/widgets/layout/navbar-desktop';
 import { useUnit } from 'effector-react';
 import { UserCardRow } from '@/entities/user';
 import { sessionModel } from '@/entities/viewer';
-import { DetectDeviceType } from '@/features/device/detecDeviceType';
 
 const { Navbar } = widgetNavbarDesktopUi;
 const { DeliveriesHistoryList } = widgetsDeliveriesHistoryUi;
@@ -43,17 +42,14 @@ export const DesktopMyDeliveriesHistoryView: FunctionComponent<{
     header: string;
 }> = ({ header }) => {
     return (
-        <>
-            <Layout>
-                <Navbar />
-                <MainContainer>
-                    <Toolbar header={header} />
-                    <HistoryLayout>
-                        <DeliveriesHistoryList />
-                    </HistoryLayout>
-                </MainContainer>
-            </Layout>
-            <DetectDeviceType.GuardAppVersion />
-        </>
+        <Layout>
+            <Navbar />
+            <MainContainer>
+                <Toolbar header={header} />
+                <HistoryLayout>
+                    <DeliveriesHistoryList />
+                </HistoryLayout>
+            </MainContainer>
+        </Layout>
     );
 };

@@ -6,10 +6,14 @@ import {
     dataUpdated,
     $isInitialized,
     reset,
+    setOffline,
+    initOffline,
 } from './model/model';
 
 export const widgetMyDeliveriesModel = {
     init,
+    initOffline,
+    setOffline,
     $myDeliveriesStore,
     fetchData,
     reset,

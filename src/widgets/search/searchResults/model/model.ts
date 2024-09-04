@@ -1,6 +1,6 @@
 import { createEvent, createStore, sample } from 'effector';
 import { FetchDeliveriesByQuery } from '@/features/delivery/fetchDeliveriesByQuery';
-import { and, delay } from 'patronum';
+import { and, debug, delay, not } from 'patronum';
 import { sharedLibTypeGuards } from '@/shared/lib';
 import { searchDeliveriesByQueryFx } from './effects';
 import { $searchResults, setQuery, setResults } from './stores';
@@ -12,18 +12,21 @@ const { isEmpty } = sharedLibTypeGuards;
  */
 export const init = createEvent();
 export const initOffline = createEvent();
-export const setOnline = createEvent<boolean>();
+export const setOffline = createEvent<boolean>();
 export const queryChanged = createEvent<string>();
 
 /**
  * Network
  */
 
-export const $isOnline = createStore<boolean>(true)
-    .on(initOffline, () => false)
-    .on(setOnline, (_, isOnline) => isOnline)
+export const $isOffline = createStore<boolean>(false)
+    .on(initOffline, () => true)
+    .on(setOffline, (_, isOffline) => isOffline)
     .reset(init);
 
+debug({
+    setOffline,
+});
 /**
  * Data
  */
@@ -37,8 +40,8 @@ export const fetchDeliveriesByQueryModel =
 
 sample({
     clock: delay(queryChanged, 300),
-    source: $isOnline,
-    filter: (isOnline) => isOnline,
+    source: not($isOffline),
+    filter: (allowed) => allowed,
     fn: (_, query) => query,
     target: fetchDeliveriesByQueryModel.queryChanged,
 });

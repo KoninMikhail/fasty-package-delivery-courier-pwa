@@ -1,7 +1,7 @@
 import { createGate } from 'effector-react';
 import { createEvent, createStore, sample } from 'effector';
 import { getDeliveryFromMyDeliverisLocalStorageCache } from '@/entities/delivery';
-import { networkModel, sessionModel } from '@/entities/viewer';
+import { sessionModel } from '@/entities/viewer';
 import { and, condition, delay, once } from 'patronum';
 import { sharedLibTypeGuards } from '@/shared/lib';
 import { FetchDeliveryById } from '@/features/delivery/fetchDeliveryById';
@@ -16,6 +16,7 @@ import { Logout } from '@/features/auth/logout';
 import { widgetMyDeliveriesModel } from '@/widgets/deliveries/myDeliveries';
 import { RefreshToken } from '@/features/auth/refreshToken';
 import { widgetDeliveryStatusModel } from '@/widgets/deliveries/deliveryStatus';
+import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
 import { PageState } from '../types';
 
 /* eslint-disable unicorn/no-array-method-this-argument */
@@ -61,7 +62,9 @@ export const $pageContentState = createStore<PageState>(PageState.INIT)
  * Network state
  */
 
-export const { $$isOnline } = networkModel;
+export const {
+    model: { $$isOnline },
+} = DetectNetworkConnectionState;
 export const { $isAuthorized } = sessionModel;
 
 /**

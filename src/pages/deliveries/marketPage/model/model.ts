@@ -4,18 +4,19 @@ import { and, condition, debug, delay, interval, not, once } from 'patronum';
 import { widgetMarketModel } from '@/widgets/deliveries/market';
 import { createGate } from 'effector-react';
 import { widgetTopbarModel } from '@/widgets/viewer/welcome-topbar';
-import { networkModel, sessionModel } from '@/entities/viewer';
 import { widgetSearchQueryPopupModel } from '@/widgets/search/searchQueryPopup';
 
 import { Logout } from '@/features/auth/logout';
 import { RefreshToken } from '@/features/auth/refreshToken';
-import { POLLING_TIMEOUT_SEC } from '../config';
+import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
+import { POLLING_TIMEOUT_SEC, TIMEOUT_BEFORE_INIT_WIDGETS } from '../config';
 
 /**
  * Externals
  */
-const { $isAuthorized } = sessionModel;
-export const { $$isOnline } = networkModel;
+const {
+    model: { $$isOnline },
+} = DetectNetworkConnectionState;
 
 /**
  * Page gate
@@ -52,34 +53,56 @@ const $allWidgetsInitCompleted = and(
 // Topbar
 sample({
     clock: delay(MarketPageGate.open, 500),
-    source: and($isFirstPageLoad, $isAuthorized),
+    source: $isFirstPageLoad,
     filter: (allowed) => allowed,
     target: widgetTopbarModel.init,
 });
 
 // Market
 sample({
-    clock: delay(MarketPageGate.open, 500),
-    source: and(
-        $isFirstPageLoad,
-        $isAuthorized,
-        not(widgetMarketModel.$isInitialized),
-    ),
+    clock: delay(MarketPageGate.open, TIMEOUT_BEFORE_INIT_WIDGETS),
+    source: and($$isOnline, not(widgetMarketModel.$isInitialized)),
     filter: (allowed) => !!allowed,
     target: widgetMarketModel.init,
 });
 
+sample({
+    clock: delay(MarketPageGate.open, TIMEOUT_BEFORE_INIT_WIDGETS),
+    source: and(
+        $isFirstPageLoad,
+        not($$isOnline),
+        not(widgetMarketModel.$isInitialized),
+    ),
+    filter: (allowed) => !!allowed,
+    target: widgetMarketModel.initOffline,
+});
+
 // My deliveries
 sample({
-    clock: delay(MarketPageGate.open, 500),
-    source: and($isFirstPageLoad, not(widgetMyDeliveriesModel.$isInitialized)),
+    clock: delay(MarketPageGate.open, TIMEOUT_BEFORE_INIT_WIDGETS),
+    source: and(
+        $isFirstPageLoad,
+        not(widgetMyDeliveriesModel.$isInitialized),
+        $$isOnline,
+    ),
     filter: (allowed) => allowed,
     target: widgetMyDeliveriesModel.init,
 });
 
+sample({
+    clock: delay(MarketPageGate.open, TIMEOUT_BEFORE_INIT_WIDGETS),
+    source: and(
+        $isFirstPageLoad,
+        not(widgetMyDeliveriesModel.$isInitialized),
+        not($$isOnline),
+    ),
+    filter: (allowed) => allowed,
+    target: widgetMyDeliveriesModel.initOffline,
+});
+
 // Search query popup
 sample({
-    clock: delay(MarketPageGate.open, 500),
+    clock: delay(MarketPageGate.open, TIMEOUT_BEFORE_INIT_WIDGETS),
     source: and(
         $isFirstPageLoad,
         $isPageVisible,
@@ -87,6 +110,19 @@ sample({
     ),
     filter: (isAllow) => isAllow,
     target: widgetSearchQueryPopupModel.init,
+});
+
+/**
+ * ============================
+ * Change network state
+ * ============================
+ */
+
+sample({
+    clock: $$isOnline,
+    filter: (isOnline) => isOnline === false || isOnline === true,
+    fn: (isOnline) => !isOnline,
+    target: [widgetMyDeliveriesModel.setOffline, widgetMarketModel.setOffline],
 });
 
 /**
@@ -117,7 +153,7 @@ const { tick: marketContentObsolete } = interval({
 
 condition({
     source: $allWidgetsInitCompleted,
-    if: and($$isOnline, $isAuthorized),
+    if: $$isOnline,
     then: dataPollingAllowed,
     else: dataPollingForbidden,
 });
@@ -135,7 +171,7 @@ sample({
         isExpired: $isContentObsolete,
         isOnline: $$isOnline,
     },
-    filter: ({ isExpired, isOnline }) => isExpired && isOnline,
+    filter: ({ isExpired, isOnline }) => !!isExpired && !!isOnline,
     target: newContentRequested,
 });
 
@@ -150,7 +186,7 @@ sample({
 sample({
     clock: RefreshToken.updateTokenFail,
     source: $$isOnline,
-    filter: (isOnline) => isOnline,
+    filter: (isOnline) => !!isOnline,
     target: Logout.model.logout,
 });
 

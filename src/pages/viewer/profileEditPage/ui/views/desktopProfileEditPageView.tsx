@@ -1,7 +1,6 @@
 import type { PropsWithChildren } from 'react';
 import { Spacer } from '@nextui-org/react';
 import { widgetNavbarDesktopUi } from '@/widgets/layout/navbar-desktop';
-import { DetectDeviceType } from '@/features/device/detecDeviceType';
 import { AvatarTool, PageTitle, PasswordTool, PersonalInfo } from '../common';
 
 const { Navbar } = widgetNavbarDesktopUi;
@@ -42,21 +41,18 @@ const Toolbar: FunctionComponent = () => {
  */
 export const DesktopProfileEditPageView: FunctionComponent = () => {
     return (
-        <>
-            <Layout>
-                <Navbar />
-                <MainContainer>
-                    <Toolbar />
-                    <Spacer y={5} />
-                    <AvatarTool />
-                    <Spacer y={8} />
-                    <PersonalInfo />
-                    <Spacer y={8} />
-                    <PasswordTool />
-                    <Spacer y={24} />
-                </MainContainer>
-            </Layout>
-            <DetectDeviceType.GuardAppVersion />
-        </>
+        <Layout>
+            <Navbar />
+            <MainContainer>
+                <Toolbar />
+                <Spacer y={5} />
+                <AvatarTool />
+                <Spacer y={8} />
+                <PersonalInfo />
+                <Spacer y={8} />
+                <PasswordTool />
+                <Spacer y={24} />
+            </MainContainer>
+        </Layout>
     );
 };

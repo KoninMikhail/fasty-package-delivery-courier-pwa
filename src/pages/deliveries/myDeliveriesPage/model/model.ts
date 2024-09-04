@@ -1,26 +1,34 @@
 import { createGate } from 'effector-react';
 import { createEvent, createStore, sample } from 'effector';
 import { and, condition, delay, interval, not, once } from 'patronum';
-import { sessionModel, networkModel } from '@/entities/viewer';
+import { sessionModel } from '@/entities/viewer';
 import { widgetMyDeliveriesModel } from '@/widgets/deliveries/myDeliveries';
 import { Logout } from '@/features/auth/logout';
 import { RefreshToken } from '@/features/auth/refreshToken';
+import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
+import { TIMEOUT_BEFORE_INIT_WIDGETS } from '../../marketPage/config';
 import { POLLING_TIMEOUT } from '../config';
 
 /**
  * Externals
  */
-const { $isAuthorized, resourcesLoaded } = sessionModel;
-const { $$isOnline } = networkModel;
+const { $isAuthorized } = sessionModel;
+const {
+    model: { $$isOnline },
+} = DetectNetworkConnectionState;
 
 /**
+ * =================================
  * Gate for the page
+ * =================================
  */
 
 export const MyDeliveriesPageGate = createGate<void>();
 
 /**
+ * =================================
  * Initial data fetching
+ * =================================
  */
 
 const $isPageInitialized = createStore<boolean>(false)
@@ -34,20 +42,31 @@ const $isPageInitialized = createStore<boolean>(false)
     .reset(Logout.model.userLoggedOut);
 
 /**
+ * =================================
  * Widgets initialization
+ * =================================
  */
 
 const $initWidgetsCompleted = and(widgetMyDeliveriesModel.$isInitialized);
 
 sample({
-    clock: delay($isPageInitialized, 500),
+    clock: delay($isPageInitialized, TIMEOUT_BEFORE_INIT_WIDGETS),
     source: and(not(widgetMyDeliveriesModel.$isInitialized), $$isOnline),
-    filter: (isInitialized) => !isInitialized,
+    filter: (allowed) => allowed,
     target: widgetMyDeliveriesModel.init,
 });
 
+sample({
+    clock: delay($isPageInitialized, TIMEOUT_BEFORE_INIT_WIDGETS),
+    source: and(not(widgetMyDeliveriesModel.$isInitialized), not($$isOnline)),
+    filter: (allowed) => allowed,
+    target: widgetMyDeliveriesModel.initOffline,
+});
+
 /**
+ * =================================
  * Data polling
+ * =================================
  */
 const pollingDataAllowed = createEvent();
 const pollingDataForbidden = createEvent();
@@ -81,7 +100,22 @@ sample({
 });
 
 /**
+ * =================================
+ * Change network state
+ * =================================
+ */
+
+sample({
+    clock: $$isOnline,
+    filter: (isOnline) => isOnline === false || isOnline === true,
+    fn: (isOnline) => !isOnline,
+    target: widgetMyDeliveriesModel.setOffline,
+});
+
+/**
+ * =================================
  * Update my deliveries page content
+ * =================================
  */
 const $lastUpdateContentTimestamp = createStore<number>(0).on(
     widgetMyDeliveriesModel.dataUpdated,
@@ -97,10 +131,17 @@ sample({
 });
 
 /**
+ * =================================
  * Logout when user is not authorized
+ * =================================
  */
 
 sample({
     clock: RefreshToken.updateTokenFail,
     target: Logout.model.logout,
+});
+
+sample({
+    clock: Logout.model.userLoggedOut,
+    target: widgetMyDeliveriesModel.reset,
 });

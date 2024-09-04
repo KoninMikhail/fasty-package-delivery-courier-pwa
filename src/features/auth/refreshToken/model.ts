@@ -19,11 +19,11 @@ sample({
 });
 
 sample({
-    clock: refreshAuthTokensFx.done,
+    clock: refreshAuthTokensFx.doneData,
     target: updateTokenSuccess,
 });
 
 sample({
-    clock: refreshAuthTokensFx.fail,
+    clock: refreshAuthTokensFx.failData,
     target: updateTokenFail,
 });

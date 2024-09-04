@@ -4,14 +4,14 @@ import {
     init,
     initOffline,
     queryChanged,
-    setOnline,
+    setOffline,
 } from './model/model';
 import { $searchQuery } from './model/stores';
 
 export const widgetSearchResultsModel = {
     $searchQuery,
     queryChanged,
-    setOnline,
+    setOffline,
     init,
     initOffline,
     $isInitialized,

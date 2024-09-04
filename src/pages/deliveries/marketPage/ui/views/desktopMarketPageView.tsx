@@ -13,7 +13,6 @@ import {
 import { widgetMyDeliveriesUi } from '@/widgets/deliveries/myDeliveries';
 import { IoSearchSharp } from 'react-icons/io5';
 import { useTranslation } from 'react-i18next';
-import { DetectDeviceType } from '@/features/device/detecDeviceType';
 import {
     MARKET_LABEL,
     SEARCH_PLACEHOLDER,
@@ -111,20 +110,17 @@ const MarketDeliveries: FunctionComponent = () => {
 
 export const DesktopMarketPageView: FunctionComponent = () => {
     return (
-        <>
-            <Root>
-                <Sidebar>
-                    <Navbar />
-                </Sidebar>
-                <MainContainer>
-                    <Toolbar />
-                    <Spacer y={8} />
-                    <UpcomingDeliveries />
-                    <Spacer y={8} />
-                    <MarketDeliveries />
-                </MainContainer>
-            </Root>
-            <DetectDeviceType.GuardAppVersion />
-        </>
+        <Root>
+            <Sidebar>
+                <Navbar />
+            </Sidebar>
+            <MainContainer>
+                <Toolbar />
+                <Spacer y={8} />
+                <UpcomingDeliveries />
+                <Spacer y={8} />
+                <MarketDeliveries />
+            </MainContainer>
+        </Root>
     );
 };

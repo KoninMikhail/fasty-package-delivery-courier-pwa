@@ -5,6 +5,7 @@ import { sharedConfigRoutes } from '@/shared/config';
 import { TbAlertSquare, TbReload } from 'react-icons/tb';
 import { useUnit } from 'effector-react/compat';
 import { useTranslation } from 'react-i18next';
+import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
 import {
     PAGE_ERROR_BUTTON_BACK,
     PAGE_ERROR_BUTTON_RELOAD,
@@ -12,11 +13,12 @@ import {
     PAGE_ERROR_TITLE,
     translationNS,
 } from '../../../../config';
-import { networkModel } from '@/entities/viewer';
 
 const { RouteName } = sharedConfigRoutes;
 const { DELIVERIES } = RouteName;
-const { $$isOnline } = networkModel;
+export const {
+    model: { $$isOnline },
+} = DetectNetworkConnectionState;
 
 export const Error: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);

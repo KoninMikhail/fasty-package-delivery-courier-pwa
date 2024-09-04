@@ -6,6 +6,7 @@ import { widgetDeliveryStatusUi } from '@/widgets/deliveries/deliveryStatus';
 import { useTranslation } from 'react-i18next';
 import { RiWifiOffLine } from 'react-icons/ri';
 import { getDeliveryId } from '@/entities/delivery';
+import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
 import { $pageDeliveryDetails } from '../../model/stores';
 import { Error, Loading, NotFound, NotFoundOffline } from './common/states';
 import { PageState } from '../../types';
@@ -47,11 +48,12 @@ import {
     LABEL_WEIGHT,
     translationNS,
 } from '../../config';
-import { networkModel } from '@/entities/viewer';
 
 const { NavbarMobile } = widgetNavbarMobileUi;
 const { DeliveryStatusControlWithTimeline } = widgetDeliveryStatusUi;
-const { $$isOnline } = networkModel;
+export const {
+    model: { $$isOnline },
+} = DetectNetworkConnectionState;
 
 /**
  * Layout

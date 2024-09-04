@@ -1,4 +1,4 @@
-import { Authorized, deviceModel, sessionModel } from '@/entities/viewer';
+import { Authorized } from '@/entities/viewer';
 import { sharedConfigConstants } from '@/shared/config';
 import { useTranslation } from 'react-i18next';
 import { useDocumentTitle } from 'usehooks-ts';
@@ -6,6 +6,7 @@ import { useGate, useUnit } from 'effector-react';
 import { useParams } from 'react-router-dom';
 import { $pageDeliveryDetails } from '@/pages/deliveries/singleDeliveryDetailsPage/model/stores';
 import { getDeliveryId } from '@/entities/delivery';
+import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
 import { DeliveryDetailsPageGate } from '../model/model';
 
 import {
@@ -18,7 +19,7 @@ const { APP_NAME, APP_DESCRIPTION } = sharedConfigConstants;
 
 export const SingleDeliveryDetailsPage: FunctionComponent = () => {
     const { isDesktop, delivery } = useUnit({
-        isDesktop: deviceModel.$$isDesktop,
+        isDesktop: DetectNetworkConnectionState.model.$$isDesktop,
         delivery: $pageDeliveryDetails,
     });
     const { deliveryId: deliverySystemId } = useParams();

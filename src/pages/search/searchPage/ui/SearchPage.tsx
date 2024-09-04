@@ -1,4 +1,4 @@
-import { Authorized, deviceModel } from '@/entities/viewer';
+import { Authorized } from '@/entities/viewer';
 import { sharedConfigConstants } from '@/shared/config';
 
 import { useTranslation } from 'react-i18next';
@@ -7,6 +7,8 @@ import { useGate, useUnit } from 'effector-react';
 import { useSearchParams } from 'react-router-dom';
 import { widgetSearchResultsModel } from '@/widgets/search/searchResults';
 import { isEmpty } from '@/shared/lib/type-guards';
+import { DetectDeviceType } from '@/features/device/detecDeviceType';
+import { useEffect } from 'react';
 import { DesktopSearchPageView, MobileSearchPageView } from './views';
 import { translationNS } from '../config';
 import { SearchPageGate } from '../model/model';
@@ -18,7 +20,7 @@ const { APP_NAME, APP_DESCRIPTION } = sharedConfigConstants;
  * It performs a search based on the query parameters from the URL or user input.
  */
 export const SearchPage: FunctionComponent = () => {
-    const isDesktop = useUnit(deviceModel.$$isDesktop);
+    const isDesktop = useUnit(DetectDeviceType.$$isDesktop);
     const { t, i18n } = useTranslation(translationNS);
     const appLanguage = i18n.language as keyof typeof APP_DESCRIPTION;
 
@@ -41,6 +43,12 @@ export const SearchPage: FunctionComponent = () => {
     useGate(SearchPageGate, {
         query: urlQuery,
     });
+
+    useEffect(() => {
+        if (!isEmpty(urlQuery)) {
+            localStorage.setItem('searchQuery', urlQuery);
+        }
+    }, [urlQuery]);
 
     return isDesktop ? (
         <Authorized>

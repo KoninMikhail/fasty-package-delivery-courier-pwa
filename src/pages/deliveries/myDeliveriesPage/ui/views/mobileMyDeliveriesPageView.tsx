@@ -4,7 +4,6 @@ import { widgetMyDeliveriesUi } from '@/widgets/deliveries/myDeliveries';
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { Spacer } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
-import { DetectDeviceType } from '@/features/device/detecDeviceType';
 import { PAGE_HEADER, PAGE_SUBHEADER, translationNS } from '../../config';
 
 const { MyDeliveriesList, MyDeliveriesFilters, MyDeliveriesMapPopup } =
@@ -53,7 +52,6 @@ export const MobileMyDeliveriesPageView: FunctionComponent = () => {
                 </ListSection>
             </Wrapper>
             <NavbarMobile />
-            <DetectDeviceType.GuardAppVersion />
         </>
     );
 };

@@ -46,6 +46,13 @@ sample({
     target: getSubwayStationsListFx,
 });
 
+sample({
+    clock: check,
+    source: $$isRequireUpdate,
+    filter: (isRequire) => !isRequire,
+    target: done,
+});
+
 /**
  * When update complete
  */

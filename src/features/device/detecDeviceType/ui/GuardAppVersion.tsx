@@ -43,6 +43,7 @@ export const GuardAppVersion: FunctionComponent = () => {
         isDesktop: $$isDesktop,
         hasViewerData: $viewerDataReceived,
     });
+
     const { t } = useTranslation(translationNS);
 
     const onClickReload = (): void => window.location.reload();

@@ -19,6 +19,7 @@ import clsx from 'clsx';
 import { MdOutlineLocationSearching } from 'react-icons/md';
 import { FaMinus, FaPlus } from 'react-icons/fa6';
 import { sharedConfigRoutes } from '@/shared/config';
+import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
 import { $myDeliveriesStore } from '../../model/stores';
 import {
     DEFAULT_MAP_CENTER,
@@ -28,12 +29,13 @@ import {
     translationNS,
     WIDGET_MAP_TITLE_KEY,
 } from '../../config';
-import { networkModel } from '@/entities/viewer';
 
 const { RouteName } = sharedConfigRoutes;
 const { DELIVERIES } = RouteName;
 
-const {$$isOnline} = networkModel;
+export const {
+    model: { $$isOnline },
+} = DetectNetworkConnectionState;
 
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */

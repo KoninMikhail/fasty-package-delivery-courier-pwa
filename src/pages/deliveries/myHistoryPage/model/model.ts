@@ -3,14 +3,15 @@ import { createEvent, createStore, sample } from 'effector';
 import { and, condition, delay, once } from 'patronum';
 import { widgetsDeliveriesHistoryModel } from '@/widgets/deliveries/history';
 import { Logout } from '@/features/auth/logout';
-import { networkModel, sessionModel } from '@/entities/viewer';
 import { RefreshToken } from '@/features/auth/refreshToken';
+import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
 
 /**
  * Externals
  */
-const { $isAuthorized } = sessionModel;
-const { $$isOnline } = networkModel;
+export const {
+    model: { $$isOnline },
+} = DetectNetworkConnectionState;
 
 /**
  * Gate for the page
@@ -29,7 +30,7 @@ const $isPageLoaded = createStore<boolean>(false)
     .on(pageMountedEvent, () => true)
     .reset(Logout.model.userLoggedOut);
 
-export const $isPageInitialized = and($isPageLoaded, $isAuthorized);
+export const $isPageInitialized = and($isPageLoaded);
 
 /**
  * Widgets initialization

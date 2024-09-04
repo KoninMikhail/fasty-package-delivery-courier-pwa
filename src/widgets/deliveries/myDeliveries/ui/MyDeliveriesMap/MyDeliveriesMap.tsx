@@ -14,19 +14,21 @@ import { sharedConfigRoutes } from '@/shared/config';
 import { useNavigate } from 'react-router-dom';
 import { $myDeliveriesStore } from '@/widgets/deliveries/myDeliveries/model/stores';
 import { DeliveryMapBaloonCard } from '@/entities/delivery/ui/DeliveryMapBaloonCard';
+import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
 import {
     DEFAULT_MAP_CENTER,
     DEFAULT_MAP_ZOOM,
     ERROR_NO_INTERNET_TEXT_KEY,
     translationNS,
 } from '../../config';
-import { networkModel } from '@/entities/viewer';
 
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 const { RouteName } = sharedConfigRoutes;
 const { DELIVERIES } = RouteName;
-const { $$isOnline } = networkModel;
+export const {
+    model: { $$isOnline },
+} = DetectNetworkConnectionState;
 
 const OfflinePlaceholder: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);

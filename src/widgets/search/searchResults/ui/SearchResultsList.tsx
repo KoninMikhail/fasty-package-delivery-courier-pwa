@@ -16,7 +16,7 @@ import {
     $isEmptyQuery,
     $isEmptyResults,
     $isInitialized,
-    $isOnline,
+    $isOffline,
     fetchDeliveriesByQueryModel,
 } from '../model/model';
 
@@ -117,17 +117,17 @@ interface SearchResultsListProperties {
 export const SearchResultsList: FunctionComponent<
     SearchResultsListProperties
 > = ({ fullWidth }) => {
-    const { isInit, isOnline, isLoading, isEmptyResults, isEmptyQuery } =
+    const { isInit, iOffline, isLoading, isEmptyResults, isEmptyQuery } =
         useUnit({
             isInit: $isInitialized,
-            isOnline: $isOnline,
+            iOffline: $isOffline,
             isLoading: fetchDeliveriesByQueryModel.$pending,
             isEmptyResults: $isEmptyResults,
             isEmptyQuery: $isEmptyQuery,
         });
 
     if (!isInit) return <EmptyQuery />;
-    if (!isOnline) return <OfflineMessage />;
+    if (iOffline) return <OfflineMessage />;
     if (isLoading) return <Loading />;
     if (isEmptyQuery) return <EmptyQuery />;
     if (isEmptyResults) return <NotFound />;

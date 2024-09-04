@@ -1,5 +1,5 @@
 {
   "effects.auth.error.unauthorized": "Проверьте введённые данные",
-  "effects.auth.error.server": "Извините, сервер недоступен",
+  "effects.auth.error.server": "Извините, сервер недоступен"
 
 }

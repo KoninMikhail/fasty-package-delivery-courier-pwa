@@ -6,11 +6,14 @@ import { FaMinus, FaPlus } from 'react-icons/fa6';
 import clsx from 'clsx';
 import { useLayoutEffect, useMemo, useState } from 'react';
 import { generateYandexMapsLink } from '@/pages/deliveries/singleDeliveryDetailsPage/lib';
-import { Offline, Online } from '@/entities/viewer';
 import { useUnit } from 'effector-react';
 import { getDeliveryAddress } from '@/entities/delivery';
 import { Delivery } from '@/shared/api';
 import { useTranslation } from 'react-i18next';
+import {
+    Offline,
+    Online,
+} from '@/features/device/detectNetworkConnectionState/ui';
 import {
     $pageDeliveryDetails,
     $$deliveryCoordinates,
