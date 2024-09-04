@@ -1,7 +1,4 @@
 {
   "effects.auth.error.unauthorized": "Please check your credentials",
-  "effects.auth.error.server": "Sorry, server unavailable",
-  "error.screen.heading": "Your device doesn't support this version of the app",
-  "error.screen.description": "Please refresh the page to activate a compatible version",
-  "error.screen.buttonReload.text": "Reload now"
+  "effects.auth.error.server": "Sorry, server unavailable"
 }

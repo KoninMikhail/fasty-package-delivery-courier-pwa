@@ -3,26 +3,13 @@ import { widgetSignInModalModel } from '@/widgets/viewer/sign-in-modal';
 import { widgetCookiePolicyModalModel } from '@/widgets/polices/cookiePolicyModal';
 import { widgetPrivacyPolicyModalModel } from '@/widgets/polices/privacyPolicyModal';
 import { widgetTermsOfUseModalModel } from '@/widgets/polices/termsOfUseModal';
-import { sessionModel } from '@/entities/viewer';
 import { widgetResetPasswordModalModel } from '@/widgets/viewer/reset-password-modal';
 import { createGate } from 'effector-react';
-import { debounce } from 'patronum';
-
-const { resourcesLoaded } = sessionModel;
 
 /**
  * Gate for the page
  */
 export const AuthPageGate = createGate<void>();
-
-/**
- * Page initialization
- */
-sample({
-    clock: debounce(AuthPageGate.status, 500),
-    filter: (isOpen) => isOpen,
-    target: resourcesLoaded,
-});
 
 /**
  * Auth

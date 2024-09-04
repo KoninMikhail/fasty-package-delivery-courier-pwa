@@ -20,6 +20,7 @@ import {
     NotFound,
     NotFoundOffline,
 } from '@/pages/deliveries/singleDeliveryDetailsPage/ui/views/common';
+import { DetectDeviceType } from '@/features/device/detecDeviceType';
 import {
     LABEL_ADDRESS,
     LABEL_CLIENT,
@@ -183,154 +184,170 @@ export const DesktopDeliveryDetailsPageView: FunctionComponent = () => {
 
     if (isPageNotReady)
         return (
-            <Layout>
-                <NavContainer>
-                    <Navbar />
-                </NavContainer>
-                <Loading />
-            </Layout>
+            <>
+                <Layout>
+                    <NavContainer>
+                        <Navbar />
+                    </NavContainer>
+                    <Loading />
+                </Layout>
+                <DetectDeviceType.GuardAppVersion />
+            </>
         );
     if (isPageNotFound)
         return (
-            <Layout>
-                <NavContainer>
-                    <Navbar />
-                </NavContainer>
+            <>
+                <Layout>
+                    <NavContainer>
+                        <Navbar />
+                    </NavContainer>
 
-                <NotFound />
-            </Layout>
+                    <NotFound />
+                </Layout>
+                <DetectDeviceType.GuardAppVersion />
+            </>
         );
     if (isPageNotFoundInCache)
         return (
-            <Layout>
-                <NavContainer>
-                    <Navbar />
-                </NavContainer>
-                <NotFoundOffline />
-            </Layout>
+            <>
+                <Layout>
+                    <NavContainer>
+                        <Navbar />
+                    </NavContainer>
+                    <NotFoundOffline />
+                </Layout>
+                <DetectDeviceType.GuardAppVersion />
+            </>
         );
     if (isPageHasErrors)
         return (
+            <>
+                <Layout>
+                    <NavContainer>
+                        <Navbar />
+                    </NavContainer>
+                    <Error />
+                </Layout>
+
+                <DetectDeviceType.GuardAppVersion />
+            </>
+        );
+    return (
+        <>
             <Layout>
                 <NavContainer>
                     <Navbar />
                 </NavContainer>
-                <Error />
-            </Layout>
-        );
-    return (
-        <Layout>
-            <NavContainer>
-                <Navbar />
-            </NavContainer>
-            <Map>
-                <OSMMap
-                    classNames={{
-                        controlsPanel: 'right-[60px] bottom-6',
-                        container: 'h-screen w-full',
-                    }}
-                />
-            </Map>
-            <DeliveryDetailsContainer>
-                <div className="flex items-center gap-2">
-                    <BackButton />
-                    <h1 className="px-2 py-4 text-xl font-bold">
-                        {t(LABEL_DELIVERY_WITH_ID, {
-                            id: deliveryId,
-                        })}
-                    </h1>
-                </div>
-                <Spacer y={2} />
-                <Divider />
-                <Spacer y={2} />
-                <div className="grid grid-cols-2 p-2">
-                    <div>
-                        <ClientLabel />
-                        <Client />
+                <Map>
+                    <OSMMap
+                        classNames={{
+                            controlsPanel: 'right-[60px] bottom-6',
+                            container: 'h-screen w-full',
+                        }}
+                    />
+                </Map>
+                <DeliveryDetailsContainer>
+                    <div className="flex items-center gap-2">
+                        <BackButton />
+                        <h1 className="px-2 py-4 text-xl font-bold">
+                            {t(LABEL_DELIVERY_WITH_ID, {
+                                id: deliveryId,
+                            })}
+                        </h1>
                     </div>
-                    <div>
-                        <ClientTypeLabel />
-                        <ClientType />
-                    </div>
-                </div>
-                <Spacer y={2} />
-                <Section>
-                    <DeliveryPickupLabel />
-                    <DeliveryPickup />
-                </Section>
-                <Spacer y={2} />
-                <Section>
-                    <div className="flex gap-4">
-                        <div className="flex-grow">
-                            <DeliveryTypeTransportLabel />
-                            <DeliveryTypeTransport />
-                        </div>
-                        <div className="flex-grow">
-                            <DeliveryTypeExpressLabel />
-                            <DeliveryTypeExpress />
-                        </div>
-                    </div>
-                </Section>
-                <Spacer y={2} />
-                <Section>
-                    <DeliveryAddressLabel />
-                    <DeliveryAddress />
-                </Section>
-                <Spacer y={2} />
-                <Section>
-                    <DeliveryAddressSubwayLabel />
-                    <DeliveryAddressSubway />
-                </Section>
-                <Spacer y={2} />
-                <Section>
-                    <DeliveryContentsLabel />
-                    <DeliveryContents />
-                </Section>
-                <Spacer y={2} />
-                <Section>
-                    <DeliveryWeightLabel />
-                    <DeliveryWeight />
-                </Section>
-                <Spacer y={2} />
-                <Divider className="px-2" />
-                <Spacer y={2} />
-                <Section>
-                    <DeliveryContactPersonLabel />
-                    <Spacer y={0.5} />
-                    <DeliveryContactPerson />
-                </Section>
-                <Spacer y={2} />
-                <Divider className="px-2" />
-                <Spacer y={2} />
-                <Section>
-                    <div className="flex items-center">
-                        <div className="flex-grow">
-                            <DeliveryCourierLabel />
+                    <Spacer y={2} />
+                    <Divider />
+                    <Spacer y={2} />
+                    <div className="grid grid-cols-2 p-2">
+                        <div>
+                            <ClientLabel />
+                            <Client />
                         </div>
                         <div>
-                            <MyDeliveryChip />
+                            <ClientTypeLabel />
+                            <ClientType />
                         </div>
                     </div>
-                    <Spacer y={0.5} />
-                    <DeliveryCourier />
-                </Section>
-                <Spacer y={2} />
-                <Divider className="px-2" />
-                <Spacer y={2} />
-                <Section>
-                    <DeliveryStatusLabel />
-                    <Spacer y={0.5} />
-                    <DeliveryStatusControlWithTimeline />
-                </Section>
-                <Spacer y={2} />
-                <Divider className="px-2" />
-                <Spacer y={2} />
-                <Section>
-                    <DeliveryManagerLabel />
-                    <Spacer y={0.5} />
-                    <DeliveryManager />
-                </Section>
-            </DeliveryDetailsContainer>
-        </Layout>
+                    <Spacer y={2} />
+                    <Section>
+                        <DeliveryPickupLabel />
+                        <DeliveryPickup />
+                    </Section>
+                    <Spacer y={2} />
+                    <Section>
+                        <div className="flex gap-4">
+                            <div className="flex-grow">
+                                <DeliveryTypeTransportLabel />
+                                <DeliveryTypeTransport />
+                            </div>
+                            <div className="flex-grow">
+                                <DeliveryTypeExpressLabel />
+                                <DeliveryTypeExpress />
+                            </div>
+                        </div>
+                    </Section>
+                    <Spacer y={2} />
+                    <Section>
+                        <DeliveryAddressLabel />
+                        <DeliveryAddress />
+                    </Section>
+                    <Spacer y={2} />
+                    <Section>
+                        <DeliveryAddressSubwayLabel />
+                        <DeliveryAddressSubway />
+                    </Section>
+                    <Spacer y={2} />
+                    <Section>
+                        <DeliveryContentsLabel />
+                        <DeliveryContents />
+                    </Section>
+                    <Spacer y={2} />
+                    <Section>
+                        <DeliveryWeightLabel />
+                        <DeliveryWeight />
+                    </Section>
+                    <Spacer y={2} />
+                    <Divider className="px-2" />
+                    <Spacer y={2} />
+                    <Section>
+                        <DeliveryContactPersonLabel />
+                        <Spacer y={0.5} />
+                        <DeliveryContactPerson />
+                    </Section>
+                    <Spacer y={2} />
+                    <Divider className="px-2" />
+                    <Spacer y={2} />
+                    <Section>
+                        <div className="flex items-center">
+                            <div className="flex-grow">
+                                <DeliveryCourierLabel />
+                            </div>
+                            <div>
+                                <MyDeliveryChip />
+                            </div>
+                        </div>
+                        <Spacer y={0.5} />
+                        <DeliveryCourier />
+                    </Section>
+                    <Spacer y={2} />
+                    <Divider className="px-2" />
+                    <Spacer y={2} />
+                    <Section>
+                        <DeliveryStatusLabel />
+                        <Spacer y={0.5} />
+                        <DeliveryStatusControlWithTimeline />
+                    </Section>
+                    <Spacer y={2} />
+                    <Divider className="px-2" />
+                    <Spacer y={2} />
+                    <Section>
+                        <DeliveryManagerLabel />
+                        <Spacer y={0.5} />
+                        <DeliveryManager />
+                    </Section>
+                </DeliveryDetailsContainer>
+            </Layout>
+            <DetectDeviceType.GuardAppVersion />
+        </>
     );
 };

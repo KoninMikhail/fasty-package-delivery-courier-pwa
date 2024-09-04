@@ -1,7 +1,5 @@
 {
   "effects.auth.error.unauthorized": "Проверьте введённые данные",
   "effects.auth.error.server": "Извините, сервер недоступен",
-  "error.screen.heading": "Ваше устройство не поддерживает данную версию приложения",
-  "error.screen.description": "Перезагрузите страницу для активации подходящей версии.",
-  "error.screen.buttonReload.text": "Перезагрузить"
+
 }

@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useLayoutEffect } from 'react';
 import { useUnit } from 'effector-react';
-import { getNetworkState } from '../lib/utils/network/getNetworkState';
-import { setNetworkState } from '../model/network';
+import { useCallback, useEffect, useLayoutEffect } from 'react';
+import { updateNetworkState } from '../model';
+import { getNetworkState } from '../lib';
 
-export const NetworkDetector: FunctionComponent = () => {
-    const setNetworkInfo = useUnit(setNetworkState);
+export const Watcher: FunctionComponent = () => {
+    const setNetworkInfo = useUnit(updateNetworkState);
 
     const updateNetworkInfo = useCallback(() => {
         setNetworkInfo(getNetworkState());

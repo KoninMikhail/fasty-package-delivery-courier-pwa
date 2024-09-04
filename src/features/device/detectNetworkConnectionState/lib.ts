@@ -1,8 +1,7 @@
-import { NetworkState } from '../../../model/parts/networkState';
+import { NetworkState } from './types';
 
 /* eslint @typescript-eslint/no-unsafe-assignment: off */
 /* eslint @typescript-eslint/no-unsafe-member-access: off */
-
 
 export const getNetworkState = (): NetworkState => {
     const { onLine, connection } = navigator;

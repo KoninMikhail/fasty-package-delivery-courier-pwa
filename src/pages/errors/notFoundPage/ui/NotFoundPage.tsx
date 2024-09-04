@@ -4,7 +4,6 @@ import { GoArrowLeft } from 'react-icons/go';
 import { useNavigate } from 'react-router-dom';
 import { sharedConfigConstants, sharedConfigRoutes } from '@/shared/config';
 import { useTranslation } from 'react-i18next';
-import { useGate } from 'effector-react';
 import { useDocumentTitle } from 'usehooks-ts';
 import { TbError404 } from 'react-icons/tb';
 import {
@@ -13,7 +12,6 @@ import {
     PAGE_TITLE,
     translationNS,
 } from '../config';
-import { NotFoundGate } from '../model/model';
 
 const { APP_NAME, APP_DESCRIPTION } = sharedConfigConstants;
 
@@ -35,8 +33,6 @@ export const NotFoundPage: FunctionComponent = () => {
             appDescription: APP_DESCRIPTION[appLanguage],
         }),
     );
-
-    useGate(NotFoundGate);
 
     return (
         <Authorized>

@@ -1,9 +1,9 @@
-import { DeviceType, ScreenCode } from "../../../types/device";
+import { DeviceType, ScreenCode } from "../types";
 import {
   DESKTOP_SCREEN_CODES,
   MOBILE_SCREEN_CODES,
   TABLET_SCREEN_CODES,
-} from "../../../config";
+} from "../config";
 
 // Add all the screen codes to a set to check for duplicates.
 const allScreenCodes = new Set<ScreenCode>([

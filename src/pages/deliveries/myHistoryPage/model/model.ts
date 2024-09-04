@@ -9,8 +9,7 @@ import { RefreshToken } from '@/features/auth/refreshToken';
 /**
  * Externals
  */
-const { $isAuthorized, resourcesLoaded, resetResourcesLoaded } =
-    sessionModel;
+const { $isAuthorized } = sessionModel;
 const { $$isOnline } = networkModel;
 
 /**
@@ -29,11 +28,6 @@ const pageMountedEvent = once({
 const $isPageLoaded = createStore<boolean>(false)
     .on(pageMountedEvent, () => true)
     .reset(Logout.model.userLoggedOut);
-
-sample({
-    clock: pageMountedEvent,
-    target: resourcesLoaded,
-});
 
 export const $isPageInitialized = and($isPageLoaded, $isAuthorized);
 

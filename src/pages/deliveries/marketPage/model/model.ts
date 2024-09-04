@@ -1,12 +1,12 @@
 import { createEvent, createStore, sample } from 'effector';
 import { widgetMyDeliveriesModel } from '@/widgets/deliveries/myDeliveries';
-import { and, condition, delay, interval, not, once } from "patronum";
+import { and, condition, debug, delay, interval, not, once } from 'patronum';
 import { widgetMarketModel } from '@/widgets/deliveries/market';
 import { createGate } from 'effector-react';
 import { widgetTopbarModel } from '@/widgets/viewer/welcome-topbar';
 import { networkModel, sessionModel } from '@/entities/viewer';
 import { widgetSearchQueryPopupModel } from '@/widgets/search/searchQueryPopup';
-import { deliveryAssignCompleted } from '@/widgets/deliveries/market/model';
+
 import { Logout } from '@/features/auth/logout';
 import { RefreshToken } from '@/features/auth/refreshToken';
 import { POLLING_TIMEOUT_SEC } from '../config';
@@ -14,9 +14,8 @@ import { POLLING_TIMEOUT_SEC } from '../config';
 /**
  * Externals
  */
-const { $isAuthorized, resourcesLoaded } = sessionModel;
-export const {$$isOnline} = networkModel;
-
+const { $isAuthorized } = sessionModel;
+export const { $$isOnline } = networkModel;
 
 /**
  * Page gate
@@ -25,52 +24,44 @@ export const {$$isOnline} = networkModel;
 export const MarketPageGate = createGate<void>();
 
 /**
- * Initialization
+ * Page initialization
  */
 const $isPageVisible = MarketPageGate.status;
-const $isFirstPageLoad = createStore<boolean>(false).reset(
-    Logout.model.userLoggedOut,
-);
+const $isFirstPageLoad = createStore<boolean>(false)
+    .on(MarketPageGate.open, () => true)
+    .reset(Logout.model.userLoggedOut);
 
-sample({
-    clock: once({
-        source: MarketPageGate.open,
-        reset: Logout.model.userLoggedOut,
-    }),
-    fn: () => true,
-    target: $isFirstPageLoad,
-});
-
-sample({
-    clock: $isPageVisible,
-    source: $isFirstPageLoad,
-    filter: (isFirstLoad, isVisible) => isVisible && isFirstLoad,
-    target: resourcesLoaded,
+debug({
+    pageVisible: $isPageVisible,
+    isFirstPageLoad: $isFirstPageLoad,
 });
 
 /**
+ * ==========================================
  * Widgets initialization
+ * ==========================================
  */
 
-const $initWidgetsCompleted = and(
+const $allWidgetsInitCompleted = and(
     widgetTopbarModel.$isInitialized,
     widgetMarketModel.$isInitialized,
     widgetMyDeliveriesModel.$isInitialized,
     widgetSearchQueryPopupModel.$isInitialized,
 );
 
-
-// Online
+// Topbar
 sample({
-    clock: delay($isFirstPageLoad, 500),
-    source: $isAuthorized,
-    filter: (allowed) => !!allowed,
+    clock: delay(MarketPageGate.open, 500),
+    source: and($isFirstPageLoad, $isAuthorized),
+    filter: (allowed) => allowed,
     target: widgetTopbarModel.init,
 });
 
+// Market
 sample({
-    clock: delay($isFirstPageLoad, 500),
+    clock: delay(MarketPageGate.open, 500),
     source: and(
+        $isFirstPageLoad,
         $isAuthorized,
         not(widgetMarketModel.$isInitialized),
     ),
@@ -78,33 +69,34 @@ sample({
     target: widgetMarketModel.init,
 });
 
+// My deliveries
 sample({
-    clock: delay($isFirstPageLoad, 500),
+    clock: delay(MarketPageGate.open, 500),
+    source: and($isFirstPageLoad, not(widgetMyDeliveriesModel.$isInitialized)),
+    filter: (allowed) => allowed,
     target: widgetMyDeliveriesModel.init,
 });
 
+// Search query popup
 sample({
-    clock: delay($isFirstPageLoad, 500),
-    source: and($isPageVisible, not(widgetSearchQueryPopupModel.$isInitialized)),
+    clock: delay(MarketPageGate.open, 500),
+    source: and(
+        $isFirstPageLoad,
+        $isPageVisible,
+        not(widgetSearchQueryPopupModel.$isInitialized),
+    ),
     filter: (isAllow) => isAllow,
-    target: widgetSearchQueryPopupModel.init,
-});
-
-sample({
-    clock: delay($isFirstPageLoad, 500),
-    source: widgetSearchQueryPopupModel.$isInitialized,
-    filter: (isInitialized) => !isInitialized,
     target: widgetSearchQueryPopupModel.init,
 });
 
 /**
  * ============================
- * Update my deliveries when delivery is assigned
+ * Re-fetch my deliveries when delivery is assigned
  * ============================
  */
 
 sample({
-    clock: deliveryAssignCompleted,
+    clock: widgetMarketModel.deliveryAssignCompleted,
     target: widgetMyDeliveriesModel.fetchData,
 });
 
@@ -124,7 +116,7 @@ const { tick: marketContentObsolete } = interval({
 });
 
 condition({
-    source: $initWidgetsCompleted,
+    source: $allWidgetsInitCompleted,
     if: and($$isOnline, $isAuthorized),
     then: dataPollingAllowed,
     else: dataPollingForbidden,
@@ -164,5 +156,5 @@ sample({
 
 sample({
     clock: Logout.model.userLoggedOut,
-    target: widgetMyDeliveriesModel.reset,
+    target: [widgetMyDeliveriesModel.reset, widgetMarketModel.reset],
 });

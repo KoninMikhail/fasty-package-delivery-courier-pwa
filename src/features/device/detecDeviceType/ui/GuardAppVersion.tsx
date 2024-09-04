@@ -3,14 +3,16 @@ import { useUnit } from 'effector-react';
 import { useTranslation } from 'react-i18next';
 import { IoReloadSharp } from 'react-icons/io5';
 import clsx from 'clsx';
-import { $initSessionComplete } from '../model/session';
+import { sessionModel } from '@/entities/viewer';
 import {
     ERROR_SCREEN_RELOAD_BUTTON_TEXT,
     ERROR_SCREEN_HEADING,
     translationNS,
     ERROR_SCREEN_DESCRIPTION,
 } from '../config';
-import { $$isDesktop } from '../model/device';
+import { $$isDesktop } from '../model';
+
+const { $viewerDataReceived } = sessionModel;
 
 const ReloadButton: FunctionComponent<{
     onClick: () => void;
@@ -36,21 +38,21 @@ const ErrorContent: FunctionComponent<{
     </div>
 );
 
-export const ScreenBlocker: FunctionComponent = () => {
-    const { isDesktop, isInit } = useUnit({
+export const GuardAppVersion: FunctionComponent = () => {
+    const { isDesktop, hasViewerData } = useUnit({
         isDesktop: $$isDesktop,
-        isInit: $initSessionComplete,
+        hasViewerData: $viewerDataReceived,
     });
     const { t } = useTranslation(translationNS);
 
-    const onClick = () => window.location.reload();
+    const onClickReload = (): void => window.location.reload();
 
-    if (!isInit) return null;
+    if (!hasViewerData) return null;
 
     return (
         <div
             className={clsx(
-                'fixed z-[9999] h-screen w-screen items-center justify-center bg-background',
+                'fixed z-[9996] h-screen w-screen items-center justify-center bg-background',
                 {
                     'flex lg:hidden': isDesktop,
                     'hidden xl:flex': !isDesktop,
@@ -66,7 +68,7 @@ export const ScreenBlocker: FunctionComponent = () => {
                 <ErrorContent
                     heading={t(ERROR_SCREEN_HEADING)}
                     description={t(ERROR_SCREEN_DESCRIPTION)}
-                    onClick={onClick}
+                    onClick={onClickReload}
                     buttonText={t(ERROR_SCREEN_RELOAD_BUTTON_TEXT)}
                 />
             </div>

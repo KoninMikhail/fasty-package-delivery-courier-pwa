@@ -18,6 +18,7 @@ import { useUnit } from 'effector-react';
 import { SetHomeUpcomingCount } from '@/features/viewer/setHomeUpcommingCount';
 import { sharedLibHelpers } from '@/shared/lib';
 
+import { DetectDeviceType } from '@/features/device/detecDeviceType';
 import { BackButton } from '../common/BackButton';
 
 import {
@@ -217,6 +218,7 @@ export const MobileSettingsPageView: FunctionComponent = () => {
             <CookiePolicyModal size="5xl" />
             <PrivacyPolicyModal size="5xl" />
             <TermsOfUseModal size="5xl" />
+            <DetectDeviceType.GuardAppVersion />
         </>
     );
 };

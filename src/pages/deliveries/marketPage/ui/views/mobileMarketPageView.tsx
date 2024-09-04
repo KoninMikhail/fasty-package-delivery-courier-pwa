@@ -13,6 +13,7 @@ import {
 } from '@/widgets/search/searchQueryPopup';
 import { widgetMyDeliveriesUi } from '@/widgets/deliveries/myDeliveries';
 import { useNavigate } from 'react-router-dom';
+import { DetectDeviceType } from '@/features/device/detecDeviceType';
 import {
     UPCOMING_DELIVERIES_LABEL,
     translationNS,
@@ -157,6 +158,7 @@ export const MobileMarketPageView: FunctionComponent = () => {
 
             <NavbarMobile />
             <SearchQueryInputModal size="full" />
+            <DetectDeviceType.GuardAppVersion />
         </>
     );
 };

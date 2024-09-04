@@ -1,12 +1,13 @@
 import { createEvent, createStore, sample } from 'effector';
 import { FilterDeliveriesByTimeRange } from '@/features/delivery/filterDeliveriesByTimeRange';
-import { combineEvents, condition, empty } from "patronum";
+import { combineEvents, condition, empty } from 'patronum';
 import { FetchDeliveriesByParameters } from '@/features/delivery/fetchDeliveriesByParams';
 import { RevalidateSubwayStationsList } from '@/features/route/revalidateSubwayStationsList';
 import { getMyDeliveriesFx } from '@/entities/delivery';
 import { sharedLibTypeGuards } from '@/shared/lib';
 import { RefreshToken } from '@/features/auth/refreshToken';
 import { isEmpty } from '@/shared/lib/type-guards';
+import { networkModel } from '@/entities/viewer';
 import {
     $myDeliveriesStore,
     $myDeliveriesStoreSorted,
@@ -17,8 +18,7 @@ import {
     DELIVERY_END_TIME,
     DELIVERY_START_TIME,
     DELIVERY_TIME_STEP,
-} from '../config'
-import { networkModel } from '@/entities/viewer';
+} from '../config';
 
 const { isUnAuthorizedError } = sharedLibTypeGuards;
 
@@ -26,18 +26,21 @@ const { isUnAuthorizedError } = sharedLibTypeGuards;
  * Extends
  */
 
-export const { $$isOnline} = networkModel;
+export const { $$isOnline } = networkModel;
 
 /**
  * Events
  */
 export const init = createEvent();
+export const initOffline = createEvent();
+export const setOffline = createEvent<boolean>();
 export const fetchData = createEvent();
 export const dataUpdated = createEvent();
 export const reset = createEvent();
 
-
-
+export const $isOffline = createStore<boolean>(false)
+    .on(setOffline, (_, payload) => payload)
+    .reset(init, reset);
 
 /**
  * Data fetching
@@ -80,17 +83,18 @@ sample({
  */
 
 const initOnline = createEvent();
-const initOffline = createEvent();
 
 export const $isInitialized = createStore<boolean>(false)
     .on(
         combineEvents({
-                events: [
-                    RevalidateSubwayStationsList.done,
-                    fetchMyDeliveriesModel.deliveriesFetched,
-                ],
+            events: [
+                RevalidateSubwayStationsList.done,
+                fetchMyDeliveriesModel.deliveriesFetched,
+            ],
             reset: init,
-    }), () => true)
+        }),
+        () => true,
+    )
     .on(initOffline, () => true)
     .reset(reset);
 
@@ -99,7 +103,7 @@ condition({
     if: $$isOnline,
     then: initOnline,
     else: initOffline,
-})
+});
 
 sample({
     clock: init,

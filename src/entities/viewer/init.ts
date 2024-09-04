@@ -6,7 +6,7 @@ import { translationNS } from './config';
 const { locale } = sharedConfigLocale;
 
 /**
- * locale
+ * locales
  */
 locale.addResourceBundle('en', translationNS, locale_en);
 locale.addResourceBundle('ru', translationNS, locale_ru);

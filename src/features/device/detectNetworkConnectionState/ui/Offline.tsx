@@ -1,6 +1,6 @@
 import { useUnit } from 'effector-react';
 import { PropsWithChildren } from 'react';
-import { $$isOnline } from '../model/network';
+import { $$isOnline } from '../model';
 
 export const Offline: FunctionComponent<PropsWithChildren> = ({ children }) => {
     const isOnline = useUnit($$isOnline);

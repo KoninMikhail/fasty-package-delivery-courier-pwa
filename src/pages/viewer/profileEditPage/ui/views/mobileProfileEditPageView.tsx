@@ -2,6 +2,7 @@ import type { PropsWithChildren } from 'react';
 
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { Divider, Spacer } from '@nextui-org/react';
+import { DetectDeviceType } from '@/features/device/detecDeviceType';
 import {
     AvatarTool,
     BackButton,
@@ -60,6 +61,7 @@ export const MobileProfileEditPageView: FunctionComponent = () => {
                 <Spacer y={24} />
             </Content>
             <NavbarMobile />
+            <DetectDeviceType.GuardAppVersion />
         </>
     );
 };

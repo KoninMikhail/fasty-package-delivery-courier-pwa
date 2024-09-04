@@ -1,6 +1,6 @@
 import resolveConfig from "tailwindcss/resolveConfig";
-import { ScreenCode } from "../../../types/device";
-import tailwindConfig from "../../../../../../tailwind.config";
+import { ScreenCode } from "../types";
+import tailwindConfig from "../../../../../tailwind.config";
 
 const fullConfig = resolveConfig(tailwindConfig);
 

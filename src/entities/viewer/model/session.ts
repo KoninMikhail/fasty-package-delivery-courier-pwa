@@ -1,5 +1,4 @@
 import { createEvent, createStore } from 'effector';
-import { and } from 'patronum';
 import { User, userSchema } from '@/shared/api';
 import { Done } from 'effector-storage';
 import { persist } from 'effector-storage/local';
@@ -14,18 +13,12 @@ import {
  * Session initialization status
  */
 const viewerDataReceived = createEvent<Done<User>>();
-const $viewerDataReceived = createStore(false).on(
+export const $viewerDataReceived = createStore(false).on(
     viewerDataReceived,
     () => true,
 );
 
-export const resourcesLoaded = createEvent();
-export const resetResourcesLoaded = createEvent();
-const $resourcesLoaded = createStore(false)
-    .on(resourcesLoaded, () => true)
-    .reset(resetResourcesLoaded);
-
-export const $initSessionComplete = and($viewerDataReceived, $resourcesLoaded);
+export const $initSessionComplete = $viewerDataReceived;
 
 /**
  * =================================================
@@ -38,8 +31,6 @@ export const $viewerProfileData = createStore<Optional<User>>(null)
     .on(getViewerProfileFx.doneData, (_, payload) => payload)
     .on(changeViewerAvatarFx.doneData, (_, payload) => payload)
     .reset(clearViewerProfileData);
-
-export const $$hasProfileData = $viewerProfileData.map((data) => !!data);
 
 /*
  * Persist viewer profile data from local storage for correctly work offline mode
@@ -57,7 +48,7 @@ persist({
 /**
  * Authorization status
  */
-export const $isAuthorized = and($initSessionComplete, $$hasProfileData);
+export const $isAuthorized = $viewerProfileData.map((data) => data ?? null);
 
 export {
     getViewerProfileFx,

@@ -4,6 +4,7 @@ import { Divider, Spacer } from '@nextui-org/react';
 import { PropsWithChildren } from 'react';
 import { HistoryPageHeaderText } from '@/pages/deliveries/myHistoryPage/ui/common/locale/HistoryPageHeaderText';
 import { HistoryPageSubHeaderText } from '@/pages/deliveries/myHistoryPage/ui/common/locale/HistorySubHeaderText';
+import { DetectDeviceType } from '@/features/device/detecDeviceType';
 
 const { NavbarMobile } = widgetNavbarMobileUi;
 const { DeliveriesHistoryList } = widgetsDeliveriesHistoryUi;
@@ -31,12 +32,15 @@ const Header: FunctionComponent = () => {
 
 export const MobileMyDeliveriesHistoryView: FunctionComponent = () => {
     return (
-        <Wrapper>
-            <Header />
-            <Spacer y={4} />
-            <Divider />
-            <DeliveriesHistoryList />
-            <NavbarMobile />
-        </Wrapper>
+        <>
+            <Wrapper>
+                <Header />
+                <Spacer y={4} />
+                <Divider />
+                <DeliveriesHistoryList />
+                <NavbarMobile />
+            </Wrapper>
+            <DetectDeviceType.GuardAppVersion />
+        </>
     );
 };

@@ -1,7 +1,7 @@
 import { createGate } from 'effector-react';
 import { createEvent, createStore, sample } from 'effector';
 import { getDeliveryFromMyDeliverisLocalStorageCache } from '@/entities/delivery';
-import { networkModel, sessionModel } from "@/entities/viewer";
+import { networkModel, sessionModel } from '@/entities/viewer';
 import { and, condition, delay, once } from 'patronum';
 import { sharedLibTypeGuards } from '@/shared/lib';
 import { FetchDeliveryById } from '@/features/delivery/fetchDeliveryById';
@@ -36,11 +36,6 @@ export const DeliveryDetailsPageGate = createGate<{
 const pageMountedEvent = once({
     source: DeliveryDetailsPageGate.open,
     reset: Logout.model.userLoggedOut,
-});
-
-sample({
-    clock: pageMountedEvent,
-    target: sessionModel.resourcesLoaded,
 });
 
 /**

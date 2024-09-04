@@ -1,4 +1,4 @@
-import { ScreenCode } from '../types/device';
+import { ScreenCode } from '../types';
 
 /**
  * Default screen codes for mobile devices.

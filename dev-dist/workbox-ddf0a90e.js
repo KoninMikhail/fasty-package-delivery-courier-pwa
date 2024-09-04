@@ -1560,7 +1560,7 @@ define(['exports'], (function (exports) { 'use strict';
       return url.href;
     };
     /**
-     * Returns the timestamp model.
+     * Returns the timestamp factory.
      *
      * @private
      */

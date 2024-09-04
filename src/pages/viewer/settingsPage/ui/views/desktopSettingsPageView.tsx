@@ -26,6 +26,7 @@ import {
 } from '@/pages/viewer/settingsPage/model';
 import { SetHomeUpcomingCount } from '@/features/viewer/setHomeUpcommingCount';
 import { ChangeLanguage } from '@/features/viewer/changeLanguage';
+import { DetectDeviceType } from '@/features/device/detecDeviceType';
 import {
     NOTIFICATION_CONTENT,
     PAGE_HEADING,
@@ -152,82 +153,87 @@ export const DesktopSettingsPageView: FunctionComponent = () => {
     const { t, i18n } = useTranslation(translationNS);
     const currentLanguage = i18n.language as keyof typeof APP_DESCRIPTION;
     return (
-        <Layout>
-            <Navbar />
-            <MainContainer>
-                <Toolbar />
-                <div className="flex w-full flex-col justify-center gap-1 py-4">
-                    <div className="flex w-full justify-center">
-                        <CompanyLogoIcon className="py-4 text-9xl" />
+        <>
+            <Layout>
+                <Navbar />
+                <MainContainer>
+                    <Toolbar />
+                    <div className="flex w-full flex-col justify-center gap-1 py-4">
+                        <div className="flex w-full justify-center">
+                            <CompanyLogoIcon className="py-4 text-9xl" />
+                        </div>
+                        <Spacer />
+                        <div className="flex w-full items-center justify-center gap-1 text-center text-lg">
+                            <span className=" font-bold">{APP_NAME}</span>
+                            <Chip size="sm">{APP_VERSION}</Chip>
+                        </div>
+                        <div className="w-full text-center text-xs">
+                            {APP_DESCRIPTION[currentLanguage]}
+                        </div>
                     </div>
                     <Spacer />
-                    <div className="flex w-full items-center justify-center gap-1 text-center text-lg">
-                        <span className=" font-bold">{APP_NAME}</span>
-                        <Chip size="sm">{APP_VERSION}</Chip>
-                    </div>
-                    <div className="w-full text-center text-xs">
-                        {APP_DESCRIPTION[currentLanguage]}
-                    </div>
-                </div>
-                <Spacer />
-                <Divider />
-                <Spacer />
-                <Section>
-                    <div className="flex items-center gap-2">
-                        <div className="flex-grow">{t('language.title')}</div>
-                        <div>
-                            <ChangeLanguage.Button />
+                    <Divider />
+                    <Spacer />
+                    <Section>
+                        <div className="flex items-center gap-2">
+                            <div className="flex-grow">
+                                {t('language.title')}
+                            </div>
+                            <div>
+                                <ChangeLanguage.Button />
+                            </div>
                         </div>
-                    </div>
-                </Section>
-                <Section>
-                    <div className="flex items-center gap-2">
-                        <div className="flex-grow">{t('theme.title')}</div>
-                        <div>
-                            <ChangeColorModeSwitchButton />
+                    </Section>
+                    <Section>
+                        <div className="flex items-center gap-2">
+                            <div className="flex-grow">{t('theme.title')}</div>
+                            <div>
+                                <ChangeColorModeSwitchButton />
+                            </div>
                         </div>
-                    </div>
-                </Section>
-                <Section>
-                    <div className="flex items-center gap-2">
-                        <div className="flex-grow">
-                            {t('setting.upcoming.items.count')}
+                    </Section>
+                    <Section>
+                        <div className="flex items-center gap-2">
+                            <div className="flex-grow">
+                                {t('setting.upcoming.items.count')}
+                            </div>
+                            <div>
+                                <SetHomeUpcomingCount.Dropdown />
+                            </div>
                         </div>
-                        <div>
-                            <SetHomeUpcomingCount.Dropdown />
+                    </Section>
+                    <Spacer />
+                    <Section>
+                        <p className="text-xs text-danger-400">
+                            {t(NOTIFICATION_CONTENT)}
+                        </p>
+                    </Section>
+                    <Spacer y={2} />
+                    <Divider />
+                    <Spacer y={2} />
+                    <Section>
+                        <div className="w-full font-bold">
+                            {t(SECTION_HELP_SUPPORT_TITLE)}
                         </div>
-                    </div>
-                </Section>
-                <Spacer />
-                <Section>
-                    <p className="text-xs text-danger-400">
-                        {t(NOTIFICATION_CONTENT)}
-                    </p>
-                </Section>
-                <Spacer y={2} />
-                <Divider />
-                <Spacer y={2} />
-                <Section>
-                    <div className="w-full font-bold">
-                        {t(SECTION_HELP_SUPPORT_TITLE)}
-                    </div>
-                    <ContactLinks />
-                </Section>
-                <Spacer y={2} />
-                <Divider />
-                <Spacer y={2} />
-                <Section>
-                    <div className="flex flex-col gap-2">
-                        <div className="mb-2 w-full font-bold">
-                            {t(SECTION_LEGAL_TITLE)}
+                        <ContactLinks />
+                    </Section>
+                    <Spacer y={2} />
+                    <Divider />
+                    <Spacer y={2} />
+                    <Section>
+                        <div className="flex flex-col gap-2">
+                            <div className="mb-2 w-full font-bold">
+                                {t(SECTION_LEGAL_TITLE)}
+                            </div>
                         </div>
-                    </div>
-                    <LegalLinks />
-                </Section>
-            </MainContainer>
-            <CookiePolicyModal size="5xl" />
-            <PrivacyPolicyModal size="5xl" />
-            <TermsOfUseModal size="5xl" />
-        </Layout>
+                        <LegalLinks />
+                    </Section>
+                </MainContainer>
+                <CookiePolicyModal size="5xl" />
+                <PrivacyPolicyModal size="5xl" />
+                <TermsOfUseModal size="5xl" />
+            </Layout>
+            <DetectDeviceType.GuardAppVersion />
+        </>
     );
 };

@@ -1,7 +1,7 @@
 import { createGate } from 'effector-react';
 import { createEvent, createStore, sample } from 'effector';
-import { and, condition, delay, interval, not, once } from "patronum";
-import { sessionModel , networkModel} from '@/entities/viewer';
+import { and, condition, delay, interval, not, once } from 'patronum';
+import { sessionModel, networkModel } from '@/entities/viewer';
 import { widgetMyDeliveriesModel } from '@/widgets/deliveries/myDeliveries';
 import { Logout } from '@/features/auth/logout';
 import { RefreshToken } from '@/features/auth/refreshToken';
@@ -11,7 +11,7 @@ import { POLLING_TIMEOUT } from '../config';
  * Externals
  */
 const { $isAuthorized, resourcesLoaded } = sessionModel;
-const {$$isOnline} = networkModel
+const { $$isOnline } = networkModel;
 
 /**
  * Gate for the page
@@ -33,12 +33,6 @@ const $isPageInitialized = createStore<boolean>(false)
     )
     .reset(Logout.model.userLoggedOut);
 
-sample({
-    clock: $isPageInitialized,
-    filter: (isInitialized) => isInitialized,
-    target: resourcesLoaded,
-});
-
 /**
  * Widgets initialization
  */
@@ -51,7 +45,6 @@ sample({
     filter: (isInitialized) => !isInitialized,
     target: widgetMyDeliveriesModel.init,
 });
-
 
 /**
  * Data polling

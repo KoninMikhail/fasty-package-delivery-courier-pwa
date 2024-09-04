@@ -126,7 +126,7 @@ export const SearchResultsList: FunctionComponent<
             isEmptyQuery: $isEmptyQuery,
         });
 
-    if (!isInit) return <Loading />;
+    if (!isInit) return <EmptyQuery />;
     if (!isOnline) return <OfflineMessage />;
     if (isLoading) return <Loading />;
     if (isEmptyQuery) return <EmptyQuery />;
