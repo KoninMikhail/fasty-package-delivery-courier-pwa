@@ -2,7 +2,6 @@ import { createEvent, createStore, sample } from 'effector';
 import { FetchUserSearchQueriesHistory } from '@/features/search/fetchUserSearchQueriesHistory';
 import { RemoveUserSearchQueryItem } from '@/features/search/removeUserSearchQueryItem';
 import { delay } from 'patronum';
-import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
 import {
     addRelatedQuery,
     closePopup,
@@ -11,13 +10,6 @@ import {
     setQuery,
     setRelatedQueries,
 } from './stores';
-
-/**
- * Externals
- */
-export const {
-    model: { $$isOnline },
-} = DetectNetworkConnectionState;
 
 /**
  * Events
@@ -42,8 +34,6 @@ export const $isInitialized = createStore<boolean>(false).on(
 
 sample({
     clock: delay(init, 300),
-    source: $$isOnline,
-    filter: (isOnline) => isOnline,
     target: FetchUserSearchQueriesHistory.model.fetch,
 });
 

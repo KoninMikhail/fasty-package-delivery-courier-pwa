@@ -4,7 +4,7 @@ import {
     profileDataReceived,
 } from './model';
 
-export const FetchProfileData = {
+export const UpdateProfileData = {
     model: {
         profileDataRequested,
         profileDataReceived,

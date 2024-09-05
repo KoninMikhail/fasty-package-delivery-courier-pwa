@@ -1,12 +1,13 @@
 import { createEvent, createStore, sample } from 'effector';
 import { FilterDeliveriesByTimeRange } from '@/features/delivery/filterDeliveriesByTimeRange';
-import { and, combineEvents, delay, empty, not } from 'patronum';
+import { and, combineEvents, delay, not } from 'patronum';
 import { FetchDeliveriesByParameters } from '@/features/delivery/fetchDeliveriesByParams';
 import { RevalidateSubwayStationsList } from '@/features/route/revalidateSubwayStationsList';
 import { getMyDeliveriesFx } from '@/entities/delivery';
 import { sharedLibTypeGuards } from '@/shared/lib';
 import { RefreshToken } from '@/features/auth/refreshToken';
 import { isEmpty } from '@/shared/lib/type-guards';
+import { Delivery } from '@/shared/api';
 import {
     $myDeliveriesStore,
     $myDeliveriesStoreSorted,
@@ -33,6 +34,7 @@ export const initOffline = createEvent();
 export const setOffline = createEvent<boolean>();
 export const fetchData = createEvent();
 export const dataUpdated = createEvent();
+export const removeDelivery = createEvent<Delivery['id']>();
 export const reset = createEvent();
 
 export const $isOffline = createStore<boolean>(false)
@@ -110,7 +112,7 @@ sample({
 /**
  * State
  */
-export const $$empty = empty($myDeliveriesStore);
+export const $$empty = $myDeliveriesStore.map((items) => isEmpty(items));
 export const $$inPending = fetchMyDeliveriesModel.$pending;
 
 /**
@@ -134,6 +136,16 @@ sample({
     filter: (isInit, isOffline) => isInit && isOffline === false,
     fn: (isOnline) => !isOnline,
     target: fetchMyDeliveriesModel.fetch,
+});
+
+/**
+ * Remove delivery
+ */
+sample({
+    clock: removeDelivery,
+    source: $myDeliveriesStore,
+    fn: (deliveries, id) => deliveries.filter((delivery) => delivery.id !== id),
+    target: setDeliveries,
 });
 
 /*

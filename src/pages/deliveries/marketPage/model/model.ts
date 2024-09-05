@@ -3,12 +3,15 @@ import { widgetMyDeliveriesModel } from '@/widgets/deliveries/myDeliveries';
 import { and, condition, delay, interval, not, once } from 'patronum';
 import { widgetMarketModel } from '@/widgets/deliveries/market';
 import { createGate } from 'effector-react';
-import { widgetTopbarModel } from '@/widgets/viewer/welcome-topbar';
 import { widgetSearchQueryPopupModel } from '@/widgets/search/searchQueryPopup';
 
 import { Logout } from '@/features/auth/logout';
 import { RefreshToken } from '@/features/auth/refreshToken';
 import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
+import { UpdateProfileData } from '@/features/auth/updateProfileData';
+import { isUnAuthorizedError } from '@/shared/lib/type-guards';
+import { persist } from 'effector-storage/local';
+import { isAfter, subDays } from 'date-fns';
 import { POLLING_TIMEOUT_SEC, TIMEOUT_BEFORE_INIT_WIDGETS } from '../config';
 
 /**
@@ -39,19 +42,10 @@ const $isFirstPageLoad = createStore<boolean>(false)
  */
 
 const $allWidgetsInitCompleted = and(
-    widgetTopbarModel.$isInitialized,
     widgetMarketModel.$isInitialized,
     widgetMyDeliveriesModel.$isInitialized,
     widgetSearchQueryPopupModel.$isInitialized,
 );
-
-// Topbar
-sample({
-    clock: delay(MarketPageGate.open, 500),
-    source: $isFirstPageLoad,
-    filter: (allowed) => allowed,
-    target: widgetTopbarModel.init,
-});
 
 // Market
 sample({
@@ -173,6 +167,48 @@ sample({
 sample({
     clock: newContentRequested,
     target: widgetMarketModel.fetchData,
+});
+
+/**
+ * ============================
+ * Update profile data
+ * ============================
+ */
+
+const $lastProfileDataUpdate = createStore<Optional<Date>>(null).reset(
+    Logout.model.userLoggedOut,
+);
+
+persist({
+    store: $lastProfileDataUpdate,
+    key: 'lastProfileDataUpdate',
+});
+
+sample({
+    clock: MarketPageGate.open,
+    source: $lastProfileDataUpdate,
+    filter: (lastUpdate) =>
+        !lastUpdate || isAfter(subDays(new Date(), 1), lastUpdate),
+    target: UpdateProfileData.model.profileDataRequested,
+});
+
+sample({
+    clock: UpdateProfileData.model.profileDataFailed,
+    filter: (error) => isUnAuthorizedError(error),
+    target: RefreshToken.tokenRefreshRequested,
+});
+
+sample({
+    clock: RefreshToken.updateTokenSuccess,
+    source: $isPageVisible,
+    filter: (isPageVisible) => !!isPageVisible,
+    target: UpdateProfileData.model.profileDataRequested,
+});
+
+sample({
+    clock: UpdateProfileData.model.profileDataReceived,
+    fn: () => new Date(),
+    target: $lastProfileDataUpdate,
 });
 
 /**

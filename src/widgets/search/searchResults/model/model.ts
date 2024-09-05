@@ -93,7 +93,3 @@ export const $isEmptyQuery = and(
     fetchDeliveriesByQueryModel.$query.map((query) => isEmpty(query)),
     $isInitialized,
 );
-
-export const $isLoading = fetchDeliveriesByQueryModel.$pending;
-
-export const { $errors } = fetchDeliveriesByQueryModel;

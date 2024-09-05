@@ -31,8 +31,8 @@ const Toolbar: FunctionComponent = () => {
     });
 
     const onClickSearchInput = (): void => {
-        reference?.current?.blur();
         openSearchModal();
+        reference?.current?.blur();
     };
     return (
         <>

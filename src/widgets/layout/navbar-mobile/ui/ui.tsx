@@ -2,8 +2,10 @@ import React, { PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
 import { sharedUiComponents } from '@/shared/ui';
 import { sharedLibTypeGuards } from '@/shared/lib';
+import { useUnit } from 'effector-react';
 import { translationNS } from '../config';
 import { navbarItems } from '../data';
+import { $searchQuery } from '../model/stores';
 
 const { Menu, MenuItem } = sharedUiComponents;
 const { isEmpty } = sharedLibTypeGuards;
@@ -26,13 +28,13 @@ const NavbarContainer: FunctionComponent<PropsWithChildren> = ({
  */
 export const NavbarMobile: FunctionComponent = React.memo(() => {
     const { t } = useTranslation(translationNS);
-    const savedQuery = localStorage.getItem('searchQuery');
-    console.log('search', savedQuery);
+    const savedQuery = useUnit($searchQuery);
+
     const items = navbarItems.map((item) => {
         if (item.id === 'search' && !isEmpty(savedQuery)) {
             return {
                 ...item,
-                href: `${item.href}/?q=${savedQuery}`,
+                href: `${item.href}?q=${savedQuery}`,
             };
         }
         return item;

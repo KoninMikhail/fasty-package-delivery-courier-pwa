@@ -17,6 +17,7 @@ import { RefreshToken } from '@/features/auth/refreshToken';
 import { widgetDeliveryStatusModel } from '@/widgets/deliveries/deliveryStatus';
 import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
 import { isUnAuthorizedError } from '@/shared/lib/type-guards';
+import { widgetMyDeliveriesModel } from '@/widgets/deliveries/myDeliveries';
 import { PageGateState, PageState } from '../types';
 
 /* eslint-disable unicorn/no-array-method-this-argument */
@@ -115,6 +116,19 @@ sample({
 sample({
     clock: DeliveryDetailsPageGate.close,
     target: widgetDeliveryStatusModel.reset,
+});
+
+/**
+ * Remove completed delivery from the store when the page is closed
+ */
+sample({
+    clock: DeliveryDetailsPageGate.close,
+    source: $pageDeliveryDetails,
+    filter: (delivery) =>
+        !!delivery &&
+        (delivery.state === 'done' || delivery.state === 'canceled'),
+    fn: (delivery) => (delivery as Delivery).id,
+    target: widgetMyDeliveriesModel.removeDelivery,
 });
 
 /**

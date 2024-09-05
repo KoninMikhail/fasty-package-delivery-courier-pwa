@@ -8,6 +8,7 @@ import {
     reset,
     setOffline,
     initOffline,
+    removeDelivery,
 } from './model/model';
 
 export const widgetMyDeliveriesModel = {
@@ -16,6 +17,7 @@ export const widgetMyDeliveriesModel = {
     setOffline,
     $myDeliveriesStore,
     fetchData,
+    removeDelivery,
     reset,
     dataUpdated,
     $isInitialized,

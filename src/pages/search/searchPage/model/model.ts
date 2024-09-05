@@ -1,8 +1,10 @@
 import { createEvent, sample } from 'effector';
 import { widgetSearchResultsModel } from '@/widgets/search/searchResults';
 import { createGate } from 'effector-react';
-import { and, delay, not } from 'patronum';
+import { and, debug, delay, not } from 'patronum';
 import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
+import { widgetNavbarDesktopModel } from '@/widgets/layout/navbar-desktop';
+import { widgetNavbarMobileModel } from '@/widgets/layout/navbar-mobile';
 
 export const {
     model: { $$isOnline },
@@ -60,9 +62,23 @@ sample({
 });
 
 /**
+ * Set query for nav item
+ */
+sample({
+    clock: queryChanged,
+    target: [
+        widgetNavbarDesktopModel.setQuery,
+        widgetNavbarMobileModel.setQuery,
+    ],
+});
+
+debug({
+    queryChanged,
+});
+
+/**
  * Change network state
  */
-
 sample({
     clock: $$isOnline,
     source: widgetSearchResultsModel.$isInitialized,

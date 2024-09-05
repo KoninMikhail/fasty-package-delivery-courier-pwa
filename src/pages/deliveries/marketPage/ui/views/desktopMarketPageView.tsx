@@ -51,12 +51,12 @@ const Toolbar: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
     const reference = useRef<HTMLInputElement>(null);
     const user = useUnit(sessionModel.$viewerProfileData);
-    const [openSearchModal] = useUnit([
+    const openSearchModal = useUnit(
         widgetSearchQueryPopupModel.searchTriggerClicked,
-    ]);
+    );
     const onClickSearchInput = (): void => {
-        reference?.current?.blur();
         openSearchModal();
+        reference?.current?.blur();
     };
     return (
         <>
@@ -82,7 +82,7 @@ const Toolbar: FunctionComponent = () => {
 const UpcomingDeliveries: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
     return (
-        <div className="px-8">
+        <div className="min-h-52 px-8">
             <h2 className="text-2xl font-bold capitalize">
                 {t(UPCOMING_DELIVERIES_LABEL)}
             </h2>

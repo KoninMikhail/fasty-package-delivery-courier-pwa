@@ -117,17 +117,17 @@ interface SearchResultsListProperties {
 export const SearchResultsList: FunctionComponent<
     SearchResultsListProperties
 > = ({ fullWidth }) => {
-    const { isInit, iOffline, isLoading, isEmptyResults, isEmptyQuery } =
+    const { isInit, isOffline, isLoading, isEmptyResults, isEmptyQuery } =
         useUnit({
             isInit: $isInitialized,
-            iOffline: $isOffline,
+            isOffline: $isOffline,
             isLoading: fetchDeliveriesByQueryModel.$pending,
             isEmptyResults: $isEmptyResults,
             isEmptyQuery: $isEmptyQuery,
         });
 
     if (!isInit) return <EmptyQuery />;
-    if (iOffline) return <OfflineMessage />;
+    if (isOffline) return <OfflineMessage />;
     if (isLoading) return <Loading />;
     if (isEmptyQuery) return <EmptyQuery />;
     if (isEmptyResults) return <NotFound />;

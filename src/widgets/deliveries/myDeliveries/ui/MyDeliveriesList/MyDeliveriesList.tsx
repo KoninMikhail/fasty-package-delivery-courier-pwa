@@ -3,14 +3,13 @@ import { useList, useUnit } from 'effector-react';
 import { Button, Link, Spinner } from '@nextui-org/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { BsBoxSeam } from 'react-icons/bs';
 import { RiWifiOffLine } from 'react-icons/ri';
 import React, { PropsWithChildren, ReactElement, useMemo } from 'react';
 import clsx from 'clsx';
 import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
+import { NoDeliveries } from '@/widgets/deliveries/myDeliveries/ui/common/NoDeliveries';
 import {
     BUTTON_RETRY_TEXT_KEY,
-    DATA_EMPTY_TEXT_KEY,
     DATA_PENDING_TEXT_KEY,
     ERROR_NO_INTERNET_TEXT_KEY,
     translationNS,
@@ -148,17 +147,9 @@ export const MyDeliveriesList: FunctionComponent = () => {
 
     if (isEmpty) {
         return (
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 py-6 lg:py-12">
                 {state}
-                <StatusMessage
-                    icon={<BsBoxSeam className="text-4xl" />}
-                    messageKey={DATA_EMPTY_TEXT_KEY}
-                    template="column"
-                    className="!h-64 text-content3"
-                    classNames={{
-                        icon: 'text-5xl',
-                    }}
-                />
+                <NoDeliveries />
             </div>
         );
     }

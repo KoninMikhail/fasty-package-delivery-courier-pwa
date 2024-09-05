@@ -34,7 +34,7 @@ export const SearchPage: FunctionComponent = () => {
     useDocumentTitle(
         t('page.title', {
             context: isEmpty(query) ? 'default' : 'search',
-            urlQuery,
+            query: urlQuery,
             appName: APP_NAME,
             appDescription: APP_DESCRIPTION[appLanguage],
         }),

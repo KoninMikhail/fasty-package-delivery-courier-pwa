@@ -4,6 +4,9 @@ import { sharedUiComponents, sharedUiBranding } from '@/shared/ui';
 import { sharedConfigRoutes } from '@/shared/config';
 import { Logout } from '@/features/auth/logout';
 import { Spacer } from '@nextui-org/react';
+import { useUnit } from 'effector-react';
+import { isEmpty } from '@/shared/lib/type-guards';
+import { $searchQuery } from '../model/stores';
 import { bottomToolItems, navbarItems } from '../data';
 import { translationNS } from '../config';
 
@@ -18,6 +21,18 @@ const { ROOT_PAGE } = RouteName;
  */
 export const Navbar: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
+    const savedQuery = useUnit($searchQuery);
+
+    const items = navbarItems.map((item) => {
+        if (item.id === 'search' && !isEmpty(savedQuery)) {
+            return {
+                ...item,
+                href: `${item.href}?q=${savedQuery}`,
+            };
+        }
+        return item;
+    });
+
     return (
         <header className="flex h-full min-w-72 flex-col rounded-r-3xl border-r-2 border-gray-100 bg-background p-6 pt-8 shadow-xl dark:border-default-50 ">
             <Link to={ROOT_PAGE}>
@@ -25,7 +40,7 @@ export const Navbar: FunctionComponent = () => {
             </Link>
             <div className="flex flex-grow items-center">
                 <Menu
-                    items={navbarItems}
+                    items={items}
                     orientation="vertical"
                     renderItem={(item) => {
                         return (

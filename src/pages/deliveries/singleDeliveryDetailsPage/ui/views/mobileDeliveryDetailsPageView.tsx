@@ -142,12 +142,11 @@ const BlockWhenOffline: FunctionComponent<{
 
 export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
-    const { pageState, delivery } = useUnit({
-        delivery: $pageDeliveryDetails,
+    const { pageState } = useUnit({
         pageState: $pageContentState,
     });
 
-    const isPageNotReady = pageState === PageState.INIT || !delivery;
+    const isPageNotReady = pageState === PageState.INIT;
     const isPageNotFound = pageState === PageState.NotFound;
     const isPageNotFoundInCache = pageState === PageState.NotFoundOffline;
     const isPageHasErrors = pageState === PageState.Error;

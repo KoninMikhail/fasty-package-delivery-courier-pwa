@@ -27,7 +27,9 @@ export const $initSessionComplete = $viewerDataReceived;
  * =================================================
  */
 export const clearViewerProfileData = createEvent();
+export const setViewerAccount = createEvent<User>();
 export const $viewerProfileData = createStore<Optional<User>>(null)
+    .on(setViewerAccount, (_, payload) => payload)
     .on(authByEmailFx.doneData, (_, payload) => payload.user)
     .on(getViewerProfileFx.doneData, (_, payload) => payload)
     .on(delay(changeViewerAvatarFx.doneData, 1000), (_, payload) => payload)

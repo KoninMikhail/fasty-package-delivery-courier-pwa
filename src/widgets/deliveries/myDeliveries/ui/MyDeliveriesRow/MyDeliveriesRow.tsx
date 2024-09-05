@@ -1,20 +1,17 @@
 import { DeliveryCountdownCard, getDeliveryNumber } from '@/entities/delivery';
 import { useList, useUnit } from 'effector-react';
 import { sharedUiLayouts } from '@/shared/ui';
-import { Skeleton, Spacer, Spinner } from '@nextui-org/react';
-import { BsBoxSeam } from 'react-icons/bs';
+import { Spinner } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
 import { PropsWithChildren } from 'react';
 import { settingsModel } from '@/entities/viewer';
 
-import {
-    DELIVERY_PREFIX,
-    DATA_EMPTY_TEXT_KEY,
-    translationNS,
-} from '../../config';
+import { NoDeliveries } from '@/widgets/deliveries/myDeliveries/ui/common/NoDeliveries';
+import { DELIVERY_PREFIX, translationNS } from '../../config';
 import { $$empty, $$inPending, $isInitialized } from '../../model/model';
 import { $myDeliveriesStoreSorted } from '../../model/stores';
+import { Loading } from '../common/Loading';
 
 const { HorizontalScroll } = sharedUiLayouts;
 
@@ -25,47 +22,6 @@ const ScrollableContent: FunctionComponent<PropsWithChildren> = ({
     children,
 }) => (
     <div className="flex flex-nowrap justify-start gap-4 py-4">{children}</div>
-);
-
-/**
- * Component rendering a placeholder to indicate no items are available.
- */
-const EmptyItemsPlaceholder: FunctionComponent = () => {
-    const { t } = useTranslation(translationNS);
-    return (
-        <div className="block p-4">
-            <div className="flex h-44 w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-content3 p-4">
-                <BsBoxSeam className="text-4xl text-content3" />
-                <Spacer y={3} />
-                <div>
-                    <span className="text-center text-lg text-content3">
-                        {t(DATA_EMPTY_TEXT_KEY)}
-                    </span>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-/**
- * Renders skeletons as placeholders during Loading states.
- */
-const Loading: FunctionComponent = () => (
-    <div className="block py-4">
-        <HorizontalScroll>
-            <div className="flex flex-nowrap justify-start gap-4 px-4">
-                <Skeleton className="rounded-lg">
-                    <div className="h-[175px] w-[300px]" />
-                </Skeleton>
-                <Skeleton className="rounded-lg">
-                    <div className="h-[175px] w-[300px]" />
-                </Skeleton>
-                <Skeleton className="rounded-lg">
-                    <div className="h-[175px] w-[300px]" />
-                </Skeleton>
-            </div>
-        </HorizontalScroll>
-    </div>
 );
 
 /**
@@ -122,7 +78,13 @@ export const MyDeliveriesRow: FunctionComponent = () => {
      */
     if (isEmpty) {
         if (isUpdating) return <Loading />;
-        return <EmptyItemsPlaceholder />;
+        return (
+            <NoDeliveries
+                classNames={{
+                    container: 'block px-4',
+                }}
+            />
+        );
     }
 
     return (

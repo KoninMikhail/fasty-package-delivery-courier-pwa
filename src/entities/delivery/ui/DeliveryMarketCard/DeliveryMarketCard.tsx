@@ -160,7 +160,9 @@ export const DeliveryMarketCard: FunctionComponent<{
         <Card
             className={clsx(
                 'max-w-[800px] shadow-md',
-                isExpress && 'border-2 border-danger',
+                isExpress
+                    ? 'border-2 border-danger'
+                    : 'border-2 border-background',
             )}
         >
             <CardHeader className="flex justify-between gap-3">
