@@ -20,6 +20,8 @@ import { MdOutlineLocationSearching } from 'react-icons/md';
 import { FaMinus, FaPlus } from 'react-icons/fa6';
 import { sharedConfigRoutes } from '@/shared/config';
 import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
+import { useMemo } from 'react';
+import L from 'leaflet';
 import { $myDeliveriesStore } from '../../model/stores';
 import {
     DEFAULT_MAP_CENTER,
@@ -110,6 +112,18 @@ const MapControls: FunctionComponent = () => {
 const Map: FunctionComponent = () => {
     const deliveries = useUnit($myDeliveriesStore);
     const navigate = useNavigate();
+
+    const markerIcon = useMemo(
+        () =>
+            new L.Icon({
+                iconUrl: '/icons/map/marker-icon-2x.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [0, -41],
+            }),
+        [],
+    );
+
     return (
         <MapContainer
             center={DEFAULT_MAP_CENTER}
@@ -130,6 +144,7 @@ const Map: FunctionComponent = () => {
                 return (
                     <Marker
                         key={delivery.id}
+                        icon={markerIcon}
                         position={{
                             lat: Number.parseFloat(
                                 coordinates?.latitude ?? '0',
