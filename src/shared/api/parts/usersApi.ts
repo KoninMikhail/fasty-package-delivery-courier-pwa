@@ -30,7 +30,15 @@ export const usersApi = makeApi([
                 schema: z.any(),
             },
         ],
-        response: userSchema,
+        response: userSchema.transform((user) => {
+            const avatarUrl = user.avatar_src;
+            if (avatarUrl)
+                return {
+                    ...user,
+                    avatar_src: transformPathToUrl(avatarUrl),
+                };
+            return user;
+        }),
     },
     {
         method: 'get',

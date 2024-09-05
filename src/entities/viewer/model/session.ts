@@ -2,6 +2,7 @@ import { createEvent, createStore } from 'effector';
 import { User, userSchema } from '@/shared/api';
 import { Done } from 'effector-storage';
 import { persist } from 'effector-storage/local';
+import { delay } from 'patronum';
 import { SESSION_USER_PROFILE_LOCAL_STORAGE_KEY } from '../config';
 import {
     authByEmailFx,
@@ -29,7 +30,7 @@ export const clearViewerProfileData = createEvent();
 export const $viewerProfileData = createStore<Optional<User>>(null)
     .on(authByEmailFx.doneData, (_, payload) => payload.user)
     .on(getViewerProfileFx.doneData, (_, payload) => payload)
-    .on(changeViewerAvatarFx.doneData, (_, payload) => payload)
+    .on(delay(changeViewerAvatarFx.doneData, 1000), (_, payload) => payload)
     .reset(clearViewerProfileData);
 
 /*
