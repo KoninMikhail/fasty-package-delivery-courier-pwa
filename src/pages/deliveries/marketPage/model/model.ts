@@ -1,6 +1,6 @@
 import { createEvent, createStore, sample } from 'effector';
 import { widgetMyDeliveriesModel } from '@/widgets/deliveries/myDeliveries';
-import { and, condition, debug, delay, interval, not, once } from 'patronum';
+import { and, condition, delay, interval, not, once } from 'patronum';
 import { widgetMarketModel } from '@/widgets/deliveries/market';
 import { createGate } from 'effector-react';
 import { widgetTopbarModel } from '@/widgets/viewer/welcome-topbar';
@@ -31,11 +31,6 @@ const $isPageVisible = MarketPageGate.status;
 const $isFirstPageLoad = createStore<boolean>(false)
     .on(MarketPageGate.open, () => true)
     .reset(Logout.model.userLoggedOut);
-
-debug({
-    pageVisible: $isPageVisible,
-    isFirstPageLoad: $isFirstPageLoad,
-});
 
 /**
  * ==========================================

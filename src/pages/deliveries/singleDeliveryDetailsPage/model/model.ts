@@ -1,48 +1,49 @@
 import { createGate } from 'effector-react';
-import { createEvent, createStore, sample } from 'effector';
+import { createStore, sample } from 'effector';
 import { getDeliveryFromMyDeliverisLocalStorageCache } from '@/entities/delivery';
-import { sessionModel } from '@/entities/viewer';
-import { and, condition, delay, once } from 'patronum';
+import { and, debug, delay, not } from 'patronum';
 import { sharedLibTypeGuards } from '@/shared/lib';
 import { FetchDeliveryById } from '@/features/delivery/fetchDeliveryById';
 import {
     $pageDeliveryDetails,
+    resetDeliveryDetails,
     setDeliveryDetails,
 } from '@/pages/deliveries/singleDeliveryDetailsPage/model/stores';
 import axios from 'axios';
 import httpStatus from 'http-status';
 import { Delivery } from '@/shared/api';
 import { Logout } from '@/features/auth/logout';
-import { widgetMyDeliveriesModel } from '@/widgets/deliveries/myDeliveries';
 import { RefreshToken } from '@/features/auth/refreshToken';
 import { widgetDeliveryStatusModel } from '@/widgets/deliveries/deliveryStatus';
 import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
-import { PageState } from '../types';
+import { isUnAuthorizedError } from '@/shared/lib/type-guards';
+import { PageGateState, PageState } from '../types';
 
 /* eslint-disable unicorn/no-array-method-this-argument */
 /* eslint-disable unicorn/no-thenable */
 
 const { isEmpty } = sharedLibTypeGuards;
+const {
+    model: { $$isOnline },
+} = DetectNetworkConnectionState;
 
 /**
  * Gateway for the delivery details page
  */
-export const DeliveryDetailsPageGate = createGate<{
-    deliveryId?: string;
-}>();
+export const DeliveryDetailsPageGate = createGate<PageGateState>();
 
-/**
- * Page initialization
- */
-const pageMountedEvent = once({
-    source: DeliveryDetailsPageGate.open,
-    reset: Logout.model.userLoggedOut,
-});
+const $deliveryId = createStore<Optional<string>>(null)
+    .on(DeliveryDetailsPageGate.open, (_, { deliveryId }) => deliveryId)
+    .reset(DeliveryDetailsPageGate.close);
+
+const $$hasDeliveryId = $deliveryId.map((deliveryId) => !isEmpty(deliveryId));
+const $$isPageVisible = DeliveryDetailsPageGate.status;
+const $$readyForFetch = and($$isPageVisible, $$hasDeliveryId);
+const $$pageOnline = $$isOnline.map((isOnline) => !!isOnline);
 
 /**
  * Page State
  */
-
 export const $pageContentState = createStore<PageState>(PageState.INIT)
     .on(FetchDeliveryById.fetchSuccess, () => PageState.Done)
     .on(getDeliveryFromMyDeliverisLocalStorageCache.done, () => PageState.Done)
@@ -59,61 +60,45 @@ export const $pageContentState = createStore<PageState>(PageState.INIT)
     .reset(DeliveryDetailsPageGate.close);
 
 /**
- * Network state
- */
-
-export const {
-    model: { $$isOnline },
-} = DetectNetworkConnectionState;
-export const { $isAuthorized } = sessionModel;
-
-/**
  * Data fetching
  */
-
-const readyForFetch = createEvent<Delivery['id']>();
-
-const $deliveryId = createStore<string>('')
-    .on(DeliveryDetailsPageGate.open, (_, { deliveryId }) => deliveryId ?? '')
-    .reset(DeliveryDetailsPageGate.close);
-const $isDeliveryIdEmpty = $deliveryId.map((deliveryId) => isEmpty(deliveryId));
-
 sample({
-    clock: $isDeliveryIdEmpty,
+    clock: delay(and($$pageOnline, $$readyForFetch), 500),
     source: $deliveryId,
-    filter: (_, itNotHaveDeliveryId) => !itNotHaveDeliveryId,
-    fn: (deliveryId) => deliveryId,
-    target: readyForFetch,
+    filter: (_, allow) => allow,
+    fn: (id) => id as Delivery['id'],
+    target: FetchDeliveryById.fetch,
 });
 
-condition({
-    source: delay(readyForFetch, 600),
-    if: and($$isOnline, $isAuthorized),
-    then: FetchDeliveryById.fetch,
-    else: getDeliveryFromMyDeliverisLocalStorageCache,
+debug({
+    online: delay(and($$pageOnline, $$readyForFetch), 500),
+    offline: delay(and(not($$isOnline), $$readyForFetch), 500),
 });
 
 sample({
-    clock: getDeliveryFromMyDeliverisLocalStorageCache.doneData,
+    clock: delay(and(not($$pageOnline), $$readyForFetch), 500),
+    source: $deliveryId,
+    filter: (_, allow) => allow,
+    fn: (id) => id as Delivery['id'],
+    target: getDeliveryFromMyDeliverisLocalStorageCache,
+});
+
+sample({
+    clock: [
+        getDeliveryFromMyDeliverisLocalStorageCache.doneData,
+        FetchDeliveryById.fetchSuccess,
+    ],
     target: setDeliveryDetails,
 });
 
 sample({
-    clock: FetchDeliveryById.fetchSuccess,
-    target: setDeliveryDetails,
+    clock: FetchDeliveryById.fetchFail,
+    filter: (error) => isUnAuthorizedError(error),
+    target: RefreshToken.tokenRefreshRequested,
 });
 
 /**
- * Page
- */
-
-sample({
-    clock: FetchDeliveryById.fetchSuccess,
-    target: setDeliveryDetails,
-});
-
-/**
- * Delivery details store
+ * Delivery state store
  */
 sample({
     clock: $pageDeliveryDetails,
@@ -132,30 +117,19 @@ sample({
     target: widgetDeliveryStatusModel.reset,
 });
 
-sample({
-    clock: Logout.model.userLoggedOut,
-    target: widgetMyDeliveriesModel.reset,
-});
-
 /**
  * Logout when user is not authorized
  */
 
-/* sample({
-    clock: $$hasAuthErrors,
-    source: DeliveryDetailsPageGate.status,
-    filter: (isPageOpened, hasUnauthorizedError) =>
-        isPageOpened && hasUnauthorizedError,
-    target: RefreshToken.forceRefreshRequested,
-}); */
-
 sample({
     clock: RefreshToken.updateTokenSuccess,
     source: $deliveryId,
-    target: readyForFetch,
+    filter: (deliveryId) => !!deliveryId,
+    fn: (deliveryId) => deliveryId as Delivery['id'],
+    target: FetchDeliveryById.fetch,
 });
 
 sample({
     clock: RefreshToken.updateTokenFail,
-    target: Logout.model.logout,
+    target: [Logout.model.logout, resetDeliveryDetails],
 });

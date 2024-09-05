@@ -6,7 +6,7 @@ import { useGate, useUnit } from 'effector-react';
 import { useParams } from 'react-router-dom';
 import { $pageDeliveryDetails } from '@/pages/deliveries/singleDeliveryDetailsPage/model/stores';
 import { getDeliveryId } from '@/entities/delivery';
-import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
+import { DetectDeviceType } from '@/features/device/detecDeviceType';
 import { DeliveryDetailsPageGate } from '../model/model';
 
 import {
@@ -19,7 +19,7 @@ const { APP_NAME, APP_DESCRIPTION } = sharedConfigConstants;
 
 export const SingleDeliveryDetailsPage: FunctionComponent = () => {
     const { isDesktop, delivery } = useUnit({
-        isDesktop: DetectNetworkConnectionState.model.$$isDesktop,
+        isDesktop: DetectDeviceType.$$isDesktop,
         delivery: $pageDeliveryDetails,
     });
     const { deliveryId: deliverySystemId } = useParams();

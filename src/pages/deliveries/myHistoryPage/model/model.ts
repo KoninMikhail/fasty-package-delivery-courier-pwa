@@ -70,7 +70,7 @@ sample({
 sample({
     clock: $$isOnline,
     source: $isPageInitialized,
-    filter: (isPageInit, online) => online && isPageInit,
+    filter: (isPageInit) => isPageInit,
     target: widgetsDeliveriesHistoryModel.init,
 });
 

@@ -1,7 +1,7 @@
 import { createEvent, sample } from 'effector';
 import { widgetSearchResultsModel } from '@/widgets/search/searchResults';
 import { createGate } from 'effector-react';
-import { and, debug, delay, not } from 'patronum';
+import { and, delay, not } from 'patronum';
 import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
 
 export const {
@@ -16,10 +16,6 @@ export const SearchPageGate = createGate<{
  * Events
  */
 export const queryChanged = createEvent<string>();
-
-debug({
-    $$isOnline,
-});
 
 /**
  * Query

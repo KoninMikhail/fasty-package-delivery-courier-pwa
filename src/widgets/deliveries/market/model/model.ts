@@ -4,7 +4,7 @@ import { assignUserToDeliveryFx } from '@/entities/user';
 import { FetchDeliveriesByParameters } from '@/features/delivery/fetchDeliveriesByParams';
 import { InfiniteScroll } from '@/features/other/infinite-scroll';
 import { isEmpty, isUnAuthorizedError } from '@/shared/lib/type-guards';
-import { and, debounce, debug, delay, not } from 'patronum';
+import { and, debounce, delay, not } from 'patronum';
 import { RefreshToken } from '@/features/auth/refreshToken';
 import { fetchAvailableDeliveriesFx } from './effects';
 import {
@@ -148,10 +148,6 @@ sample({
 sample({
     clock: $firstDataFetched,
     target: initComplete,
-});
-
-debug({
-    $isInitialized,
 });
 
 /**
