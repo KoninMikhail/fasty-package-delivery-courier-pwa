@@ -1,7 +1,13 @@
 import { App } from 'app';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { registerSW } from 'virtual:pwa-register';
 import './index.css';
+
+registerSW({
+    onOfflineReady: () => console.log('sw_offline_ready'),
+    immediate: true,
+});
 
 const container = document.querySelector('#root');
 
