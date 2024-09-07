@@ -1,21 +1,38 @@
-import { useTranslation } from 'react-i18next';
+import { Spacer } from '@nextui-org/react';
 import { useUnit } from 'effector-react';
+import { useTranslation } from 'react-i18next';
+import { PropsWithChildren } from 'react';
+
 import { UserAvatar } from '@/entities/user';
 import { ChangeAvatar } from '@/features/viewer/changeAvatar';
-import { Spacer } from '@nextui-org/react';
 import { sessionModel } from '@/entities/viewer';
-import { changeAvatarModel } from '../../../model';
 import {
     AVATAR_FORMAT_DESCRIPTION,
     AVATAR_SIZE_DESCRIPTION,
     translationNS,
-} from '../../../config';
+} from '../config';
+import { $isOffline, changeAvatarModel } from '../model/model';
 
-export const AvatarTool: FunctionComponent = () => {
+/**
+ * Layouts
+ */
+const Message: FunctionComponent<PropsWithChildren> = ({ children }) => (
+    <p className="border-l-large border-primary-300 pl-3 text-sm">{children}</p>
+);
+
+/**
+ * ResetPasswordModal
+ * @constructor
+ */
+export const SelectAvatarRow: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
-    const user = useUnit(sessionModel.$viewerProfileData);
-    const errors = useUnit(changeAvatarModel.$error);
+    const { user, isOffline, errors } = useUnit({
+        user: sessionModel.$viewerProfileData,
+        isOffline: $isOffline,
+        errors: changeAvatarModel.$error,
+    });
     const hasErrors = errors.length > 0;
+
     return (
         <div className="flex w-full items-center gap-4 overflow-hidden lg:gap-6">
             <div>
@@ -25,11 +42,15 @@ export const AvatarTool: FunctionComponent = () => {
                 />
             </div>
             <div className="block">
-                <ChangeAvatar.CropModal model={changeAvatarModel} />
-                <ChangeAvatar.UploadButton model={changeAvatarModel} />
+                <ChangeAvatar.UploadButton
+                    model={changeAvatarModel}
+                    isDisabled={!!isOffline}
+                />
                 <Spacer y={2.5} />
                 {hasErrors ? (
-                    <p className="text-xs text-danger">{errors}</p>
+                    <p className="text-xs text-danger">
+                        {errors[0].message ?? null}
+                    </p>
                 ) : (
                     <>
                         <p className="truncate text-xs">

@@ -13,7 +13,7 @@ import {
     PHONE_LABEL,
     translationNS,
     UNKNOWN_LABEL,
-} from '../../../config';
+} from '../config';
 
 const { getMaskedPhone } = sharedLibHelpers;
 
@@ -47,6 +47,7 @@ const InformationSection: FunctionComponent<InformationSectionProperties> =
  * such as full name, email, and phone number. It utilizes internationalization for
  * labels and gracefully handles unknown values.
  */
+
 export const PersonalInfo: FunctionComponent = () => {
     const user = useUnit(sessionModel.$viewerProfileData); // Fetches the user's profile data.
     const { t } = useTranslation(translationNS); // Hook for translation functionalities.

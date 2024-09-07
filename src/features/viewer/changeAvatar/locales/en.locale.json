@@ -3,6 +3,6 @@
   "popup.cancelButton.text": "Cancel",
   "popup.confirmButton.text": "Save",
   "popup.title": "Change avatar",
-  "error.minSize": "Image must be at least {{size}} x {{size}} pixels."
-
+  "error.minSize": "Image must be at least {{size}} x {{size}} pixels.",
+  "error.unknown": "An error occurred while uploading the image."
 }

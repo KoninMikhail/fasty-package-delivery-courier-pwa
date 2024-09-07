@@ -1,4 +1,3 @@
-import { modelView } from 'effector-factorio';
 import {
     Button,
     Modal,
@@ -18,8 +17,8 @@ import {
 } from 'react-image-crop';
 import { useTranslation } from 'react-i18next';
 import { useUnit } from 'effector-react';
-import { setCanvasPreview } from '../lib';
-import { factory } from '../model';
+import { setCanvasPreview } from '../../lib';
+import { factory } from '../../model';
 import {
     ASPECT_RATIO,
     MIN_DIMENSION,
@@ -27,7 +26,7 @@ import {
     MODAL_BUTTON_CONFIRM,
     MODAL_TITLE,
     translationNS,
-} from '../config';
+} from '../../config';
 
 const ModalActions: FunctionComponent<{
     waitComplete: boolean;
@@ -57,7 +56,7 @@ const ModalActions: FunctionComponent<{
     );
 };
 
-export const CropModal = modelView(factory, () => {
+export const CropModal: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
     const model = factory.useModel();
     const imgReference = useRef<HTMLImageElement>(null);
@@ -175,4 +174,4 @@ export const CropModal = modelView(factory, () => {
             </ModalContent>
         </Modal>
     );
-});
+};

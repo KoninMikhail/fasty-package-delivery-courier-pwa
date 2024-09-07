@@ -8,8 +8,8 @@
   "validation.label.lowercase": "Lowercase and uppercase letters",
   "validation.label.number": "Digits or other characters",
   "validation.label.specialChars": "Other characters",
-  "validation.label.success": "Надёжный пароль",
-  "validation.label.error.easy": "Пароль легко подобрать",
-  "validation.label.match": "Пароли не совпадают",
+  "validation.label.success": "Secure password",
+  "validation.label.error.easy": "Password is easy to guess",
+  "validation.label.match": "Passwords do not match",
   "notification.demo": "You are in demo mode. Your changes will not be saved."
 }

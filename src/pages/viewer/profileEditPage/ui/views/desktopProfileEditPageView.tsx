@@ -1,9 +1,22 @@
 import type { PropsWithChildren } from 'react';
 import { Spacer } from '@nextui-org/react';
 import { widgetNavbarDesktopUi } from '@/widgets/layout/navbar-desktop';
-import { AvatarTool, PageTitle, PasswordTool, PersonalInfo } from '../common';
+import { widgetSelectAvatarUi } from '@/widgets/viewer/select-avatar';
+import { widgetPersonalInfoUi } from '@/widgets/viewer/personal-info';
+import { useTranslation } from 'react-i18next';
+import {
+    CHANGE_PASSWORD_DESCRIPTION,
+    CHANGE_PASSWORD_LABEL,
+    PAGE_HEADING,
+    translationNS,
+} from '@/pages/viewer/profileEditPage/config';
+import { widgetSelectPasswordUi } from '@/widgets/viewer/select-password';
 
 const { Navbar } = widgetNavbarDesktopUi;
+const { SelectAvatarRow } = widgetSelectAvatarUi;
+const { PersonalInfo } = widgetPersonalInfoUi;
+const { SelectPassword } = widgetSelectPasswordUi;
+
 /**
  * ===================
  * Layout
@@ -25,12 +38,27 @@ const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
  * Components
  * ===================
  */
+
 const Toolbar: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
     return (
         <div className="flex w-full items-center justify-between py-6 pr-4">
-            <h1 className="text-4xl">
-                <PageTitle />
-            </h1>
+            <h1 className="text-4xl">{t(PAGE_HEADING)}</h1>
+        </div>
+    );
+};
+
+const PasswordTool: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
+    return (
+        <div>
+            <h2 className="text-xl font-bold">{t(CHANGE_PASSWORD_LABEL)}</h2>
+            <Spacer y={2} />
+            <p className="text-sm">{t(CHANGE_PASSWORD_DESCRIPTION)}</p>
+            <Spacer y={4} />
+            <div className="flex flex-col gap-4">
+                <SelectPassword />
+            </div>
         </div>
     );
 };
@@ -46,7 +74,7 @@ export const DesktopProfileEditPageView: FunctionComponent = () => {
             <MainContainer>
                 <Toolbar />
                 <Spacer y={5} />
-                <AvatarTool />
+                <SelectAvatarRow />
                 <Spacer y={8} />
                 <PersonalInfo />
                 <Spacer y={8} />
