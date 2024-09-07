@@ -1,38 +1,34 @@
-import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching';
+import {
+    cleanupOutdatedCaches,
+    createHandlerBoundToURL,
+    precacheAndRoute,
+} from 'workbox-precaching';
 import { NavigationRoute, registerRoute } from 'workbox-routing';
 import { CacheFirst, NetworkFirst } from 'workbox-strategies';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
+import { clientsClaim } from 'workbox-core';
 
 declare let self: ServiceWorkerGlobalScope;
 
+// self.__WB_MANIFEST is default injection point
+// eslint-disable-next-line no-underscore-dangle
+precacheAndRoute(self.__WB_MANIFEST);
+
+// clean old assets
 cleanupOutdatedCaches();
 
-// Add specific page URLs to precache list
-const additionalPrecaches = [
-    { url: '/deliveries', revision: null },
-    { url: '/history', revision: null },
-    { url: '/search', revision: null },
-    { url: '/profile', revision: null },
-    { url: '/settings', revision: null },
-];
-
-// Retrieve existing manifest from self.__WB_MANIFEST
-const manifestToPrecache = [...self.__WB_MANIFEST, ...additionalPrecaches];
-
-// Precache static assets and additional page URLs
-precacheAndRoute(manifestToPrecache);
-
-void self.skipWaiting();
+let allowlist: undefined | RegExp[];
+if (import.meta.env.DEV) allowlist = [/^\/$/];
 
 // cache navigations
-const navigationRoute = new NavigationRoute(
-    new NetworkFirst({
-        cacheName: 'navigation',
-        networkTimeoutSeconds: 3,
-    }),
+// to allow work offline
+registerRoute(
+    new NavigationRoute(createHandlerBoundToURL('index.html'), { allowlist }),
 );
-registerRoute(navigationRoute);
+
+void self.skipWaiting();
+clientsClaim();
 
 // Cache uploaded files with NetworkFirst strategy
 registerRoute(
