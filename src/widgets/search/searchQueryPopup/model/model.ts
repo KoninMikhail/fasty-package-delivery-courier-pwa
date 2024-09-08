@@ -1,7 +1,7 @@
 import { createEvent, createStore, sample } from 'effector';
 import { FetchUserSearchQueriesHistory } from '@/features/search/fetchUserSearchQueriesHistory';
 import { RemoveUserSearchQueryItem } from '@/features/search/removeUserSearchQueryItem';
-import { delay } from 'patronum';
+import { debug, delay } from 'patronum';
 import {
     addRelatedQuery,
     closePopup,
@@ -15,6 +15,7 @@ import {
  * Events
  */
 export const init = createEvent();
+export const initOffline = createEvent();
 export const queryChanged = createEvent<string>();
 export const queryAddedToHistory = createEvent<string>();
 export const queryItemRemoved = createEvent<string>();
@@ -23,14 +24,16 @@ export const searchCloseArrowClicked = createEvent();
 export const searchButtonClicked = createEvent();
 export const searchPopupCloseClicked = createEvent();
 
+debug({ searchTriggerClicked });
+
 /**
  * Initialization
  */
 
-export const $isInitialized = createStore<boolean>(false).on(
-    FetchUserSearchQueriesHistory.model.queryFetched,
-    () => true,
-);
+export const $isInitialized = createStore<boolean>(false)
+    .on(FetchUserSearchQueriesHistory.model.queryFetched, () => true)
+    .on(initOffline, () => true)
+    .reset(init);
 
 sample({
     clock: delay(init, 300),

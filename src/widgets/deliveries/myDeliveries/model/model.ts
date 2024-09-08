@@ -110,12 +110,6 @@ sample({
 });
 
 /**
- * State
- */
-export const $$empty = $myDeliveriesStore.map((items) => isEmpty(items));
-export const $$inPending = fetchMyDeliveriesModel.$pending;
-
-/**
  * Filters
  */
 export const filteredDeliveriesByTimeModel =
@@ -125,6 +119,12 @@ export const filteredDeliveriesByTimeModel =
         stepMins: DELIVERY_TIME_STEP,
         sourceStore: $myDeliveriesStoreSorted,
     });
+
+/**
+ * State
+ */
+export const $$empty = $myDeliveriesStore.map((items) => isEmpty(items));
+export const $$inPending = fetchMyDeliveriesModel.$pending;
 
 /**
  * Refetch when online

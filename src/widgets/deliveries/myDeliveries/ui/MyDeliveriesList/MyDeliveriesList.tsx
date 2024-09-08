@@ -1,6 +1,6 @@
 import { DeliveryMarketCard } from '@/entities/delivery';
 import { useList, useUnit } from 'effector-react';
-import { Button, Link, Spinner } from '@nextui-org/react';
+import { Spinner } from '@nextui-org/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { RiWifiOffLine } from 'react-icons/ri';
@@ -9,7 +9,6 @@ import clsx from 'clsx';
 import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
 import { NoDeliveries } from '@/widgets/deliveries/myDeliveries/ui/common/NoDeliveries';
 import {
-    BUTTON_RETRY_TEXT_KEY,
     DATA_PENDING_TEXT_KEY,
     ERROR_NO_INTERNET_TEXT_KEY,
     translationNS,
@@ -83,20 +82,6 @@ const StatusMessage: FunctionComponent<StatusMessageProperties> = ({
             <span className={classNames?.text}>{t(messageKey)}</span>
             {endElement}
         </div>
-    );
-};
-
-interface RestartButtonProperties {
-    onPress: () => void;
-}
-const RestartButton: FunctionComponent<RestartButtonProperties> = ({
-    onPress,
-}) => {
-    const { t } = useTranslation(translationNS);
-    return (
-        <Link as={Button} variant="light" size="sm" onPress={onPress}>
-            {t(BUTTON_RETRY_TEXT_KEY)}
-        </Link>
     );
 };
 

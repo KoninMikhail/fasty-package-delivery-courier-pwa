@@ -1,10 +1,10 @@
 import { createEvent, createStore, sample } from 'effector';
 import { InfiniteScroll } from 'features/other/infinite-scroll';
 import { FetchDeliveriesByParameters } from '@/features/delivery/fetchDeliveriesByParams';
-import { debug, delay } from 'patronum';
+import { delay } from 'patronum';
 import { RefreshToken } from '@/features/auth/refreshToken';
 import { isEmpty, isUnAuthorizedError } from '@/shared/lib/type-guards';
-import { $fetchedData, setDeliveriesHistory } from './stores';
+import { updateDeliveriesHistory } from './stores';
 import { getDeliveriesHistoryFx } from './effects';
 
 /**
@@ -49,9 +49,7 @@ const fetchDeliveriesHistoryModel =
 
 sample({
     clock: fetchDeliveriesHistoryModel.deliveriesFetched,
-    source: $fetchedData,
-    fn: (previous, next) => [...previous, ...next],
-    target: setDeliveriesHistory,
+    target: updateDeliveriesHistory,
 });
 
 sample({
@@ -69,10 +67,6 @@ sample({
     source: fetchDeliveriesHistoryModel.$errors,
     filter: (errors) => !isEmpty(errors),
     target: fetchDeliveriesHistoryModel.fetch,
-});
-
-debug({
-    err: fetchDeliveriesHistoryModel.$errors,
 });
 
 /**

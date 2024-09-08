@@ -6,10 +6,29 @@ import { compareDesc, format, parseISO } from 'date-fns';
  * All deliveries history
  */
 export const setDeliveriesHistory = createEvent();
+export const updateDeliveriesHistory = createEvent<HistoryDelivery[]>();
 export const clearDeliveriesHistory = createEvent();
 
 export const $fetchedData = createStore<HistoryDelivery[]>([])
-    .on(setDeliveriesHistory, (_, data) => data)
+    .on(setDeliveriesHistory, (_, payload) => payload)
+    .on(updateDeliveriesHistory, (state, payload) => {
+        const result = [...state];
+
+        for (const payloadItem of payload) {
+            const index = result.findIndex(
+                (item1) => item1.id === payloadItem.id,
+            );
+            if (index === -1) {
+                // Push the new object if no matching id is found
+                result.push(payloadItem);
+            } else {
+                // Update the existing object if an item with the same id is found
+                result[index] = { ...result[index], ...payloadItem };
+            }
+        }
+
+        return result;
+    })
     .reset(clearDeliveriesHistory);
 
 /**

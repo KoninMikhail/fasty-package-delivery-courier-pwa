@@ -1,4 +1,4 @@
-import { memo, PropsWithChildren, useRef } from 'react';
+import { memo, PropsWithChildren } from 'react';
 
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { widgetMarketUi } from '@/widgets/deliveries/market';
@@ -137,16 +137,13 @@ const UserTool: FunctionComponent = () => {
 
 const Header: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
-    const reference = useRef<HTMLInputElement>(null);
     const { openSearchModal } = useUnit({
         openSearchModal: widgetSearchQueryPopupModel.searchTriggerClicked,
     });
 
     const onClickSearchInput = (): void => {
         openSearchModal();
-        reference?.current?.blur();
     };
-
     return (
         <header className="w-full rounded-b-3xl bg-black p-6 dark:bg-content1">
             <div className="w-full">
@@ -156,19 +153,25 @@ const Header: FunctionComponent = () => {
                 </div>
             </div>
             <Spacer y={4} />
-            <Input
-                ref={reference}
-                autoFocus={false}
-                placeholder={t(SEARCH_PLACEHOLDER)}
-                labelPlacement="outside"
-                className="mx-auto lg:w-[750px]"
-                onClick={onClickSearchInput}
-                startContent={
-                    <div className="pointer-events-none flex items-center">
-                        <span className="text-small text-default-400">#</span>
-                    </div>
-                }
-            />
+            <div className="relative w-full cursor-pointer">
+                <div
+                    className="absolute inset-0 z-50 w-full"
+                    onClick={onClickSearchInput}
+                />
+                <Input
+                    autoFocus={false}
+                    placeholder={t(SEARCH_PLACEHOLDER)}
+                    labelPlacement="outside"
+                    className="mx-auto lg:w-[750px]"
+                    startContent={
+                        <div className="pointer-events-none flex items-center">
+                            <span className="text-small text-default-400">
+                                #
+                            </span>
+                        </div>
+                    }
+                />
+            </div>
         </header>
     );
 };

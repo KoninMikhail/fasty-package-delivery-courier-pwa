@@ -2,6 +2,7 @@ import { createEvent, createStore } from 'effector';
 import { DeliveryType, UpcomingDelivery } from '@/shared/api';
 import { DatePeriod } from '@/shared/ui/components/forms/horizontal-date-picker/types';
 import { isAfter } from 'date-fns';
+import { debug } from 'patronum';
 import { MAX_WEIGHT_KG } from '../config';
 
 /**
@@ -38,7 +39,7 @@ export const resetFilters = createEvent();
 
 export const $datesRange = createStore<Optional<DatePeriod>>(null)
     .on(datesRangePicked, (state, payload) => {
-        if (!payload) return { ...state, dateFrom: '', toDate: '' };
+        if (!payload) return null;
         return {
             ...state,
             ...payload,
@@ -68,3 +69,10 @@ export const $deliveryType = createStore<Set<DeliveryType>>(new Set(['unset']))
         return newState;
     })
     .reset(resetFilters);
+
+debug({
+    dates: $datesRange,
+    weight: $weight,
+    express: $express,
+    deliveryType: $deliveryType,
+});

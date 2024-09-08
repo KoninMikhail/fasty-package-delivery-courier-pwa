@@ -1,6 +1,6 @@
 import { createGate } from 'effector-react';
 import { createEvent, createStore, sample } from 'effector';
-import { and, condition, delay, once } from 'patronum';
+import { and, combineEvents, delay, once } from 'patronum';
 import { widgetsDeliveriesHistoryModel } from '@/widgets/deliveries/history';
 import { Logout } from '@/features/auth/logout';
 import { RefreshToken } from '@/features/auth/refreshToken';
@@ -10,7 +10,7 @@ import { DetectNetworkConnectionState } from '@/features/device/detectNetworkCon
  * Externals
  */
 export const {
-    model: { $$isOnline },
+    model: { $$isOnline, willGoOnline, willGoOffline },
 } = DetectNetworkConnectionState;
 
 /**
@@ -38,11 +38,18 @@ export const $isPageInitialized = and($isPageLoaded);
 const initWidgetsOnline = createEvent();
 const initWidgetsOffline = createEvent();
 
-condition({
-    source: delay($isPageInitialized, 800),
-    if: $$isOnline,
-    then: initWidgetsOnline,
-    else: initWidgetsOffline,
+sample({
+    clock: delay($isPageInitialized, 800),
+    source: $$isOnline,
+    filter: (isOnline) => !!isOnline,
+    target: initWidgetsOnline,
+});
+
+sample({
+    clock: delay($isPageInitialized, 800),
+    source: $$isOnline,
+    filter: (isOnline) => !isOnline,
+    target: initWidgetsOffline,
 });
 
 // Online
@@ -68,20 +75,26 @@ sample({
  */
 
 sample({
-    clock: $$isOnline,
-    source: $isPageInitialized,
-    filter: (isPageInit) => isPageInit,
+    clock: combineEvents({
+        events: [willGoOnline, MyDeliveriesHistoryPageGate.open],
+        reset: willGoOffline,
+    }),
+    source: and(
+        widgetsDeliveriesHistoryModel.$isInitialized,
+        $isPageInitialized,
+        $$isOnline,
+    ),
+    filter: (allowed) => allowed,
     target: widgetsDeliveriesHistoryModel.init,
 });
 
 sample({
-    clock: $$isOnline,
-    source: {
-        widgetInit: widgetsDeliveriesHistoryModel.$isInitialized,
-        pageInit: $isPageInitialized,
-    },
-    filter: ({ widgetInit, pageInit }, online) =>
-        widgetInit && pageInit && !online,
+    clock: willGoOffline,
+    source: and(
+        widgetsDeliveriesHistoryModel.$isInitialized,
+        $isPageInitialized,
+    ),
+    filter: (allowed) => allowed,
     target: widgetsDeliveriesHistoryModel.setOnline.prepend(() => false),
 });
 

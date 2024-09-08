@@ -32,7 +32,7 @@ export const MarketDateSelector: FunctionComponent<
             selectedDates?.toDate === work.toDate
         ) {
             setSelectedDates(() => null);
-            setDatesRange(null);
+            setDatesRange(null as unknown as DatePeriod);
         }
 
         if (

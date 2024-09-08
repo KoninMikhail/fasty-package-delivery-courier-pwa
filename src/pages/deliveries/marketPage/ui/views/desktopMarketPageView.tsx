@@ -56,17 +56,20 @@ const Toolbar: FunctionComponent = () => {
     );
     const onClickSearchInput = (): void => {
         openSearchModal();
-        reference?.current?.blur();
     };
+
     return (
         <>
             <div className="fixed left-64 right-0 top-0 z-[20] flex items-center justify-between bg-gradient-to-b from-background to-transparent px-8 py-6 pl-16">
-                <div className="w-1/2">
+                <div className="relative w-1/2 cursor-pointer">
+                    <div
+                        className="absolute inset-0 z-50 w-full"
+                        onClick={onClickSearchInput}
+                    />
                     <Input
                         ref={reference}
                         size="lg"
                         placeholder={t(SEARCH_PLACEHOLDER)}
-                        onClick={onClickSearchInput}
                         startContent={<IoSearchSharp className="text-xl" />}
                     />
                 </div>

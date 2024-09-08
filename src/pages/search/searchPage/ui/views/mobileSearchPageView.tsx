@@ -1,12 +1,13 @@
 import { NavbarMobile } from '@/widgets/layout/navbar-mobile/ui/ui';
 import { Input, Spacer } from '@nextui-org/react';
 
-import React, { PropsWithChildren, Suspense, useRef } from 'react';
+import React, { PropsWithChildren, Suspense } from 'react';
 import { IoSearchSharp } from 'react-icons/io5';
 import { useUnit } from 'effector-react';
 import { widgetSearchQueryPopupModel } from '@/widgets/search/searchQueryPopup';
 import { widgetSearchResultsModel } from '@/widgets/search/searchResults';
 import { SearchResultsList } from '@/widgets/search/searchResults/ui';
+import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
 
 const SearchPopup = React.lazy(() =>
     import('@/widgets/search/searchQueryPopup').then((module) => ({
@@ -29,8 +30,6 @@ const Content: FunctionComponent<PropsWithChildren> = ({ children }) => (
 const Header: FunctionComponent<{
     isDisabled?: boolean;
 }> = ({ isDisabled }) => {
-    const inputReference = useRef<HTMLInputElement>(null);
-
     const { query, triggerOpenSearchPopup } = useUnit({
         query: widgetSearchResultsModel.$searchQuery,
         triggerOpenSearchPopup:
@@ -38,14 +37,17 @@ const Header: FunctionComponent<{
     });
 
     const onClickInput = (): void => {
-        inputReference?.current?.blur();
+        if (isDisabled) return;
         triggerOpenSearchPopup();
     };
 
     return (
-        <div className="flex w-full items-center justify-between bg-background p-4">
+        <div
+            className="relative flex w-full cursor-pointer items-center justify-between bg-background p-4"
+            onClick={onClickInput}
+        >
+            <div className="absolute inset-0 z-50 w-full" />
             <Input
-                ref={inputReference}
                 value={query}
                 className="mx-auto max-w-3xl"
                 variant="bordered"
@@ -60,7 +62,6 @@ const Header: FunctionComponent<{
                     <IoSearchSharp className="text-xl" onClick={onClickInput} />
                 }
                 fullWidth
-                onClick={onClickInput}
                 isDisabled={isDisabled}
                 isReadOnly
             />
@@ -72,9 +73,10 @@ const Header: FunctionComponent<{
  * View
  */
 export const MobileSearchPageView: FunctionComponent = () => {
+    const isOnline = useUnit(DetectNetworkConnectionState.model.$$isOnline);
     return (
         <>
-            <Header />
+            <Header isDisabled={!isOnline} />
             <Content>
                 <Spacer y={4} />
                 <SearchResultsList />
