@@ -1,6 +1,5 @@
 import { modelFactory } from 'effector-factorio';
 import { combine, createEvent, createStore, Effect, sample } from 'effector';
-import { Selection } from '@nextui-org/react';
 import {
     ChangeDeliveryStateRequest,
     Delivery,
@@ -14,13 +13,14 @@ const { isEmpty } = sharedLibTypeGuards;
 
 interface FactoryOptions {
     allowedStatuses?: DeliveryStates[];
+    defaultSelectedStatus?: DeliveryStates;
     patchDeliveryStatusFx: Effect<ChangeDeliveryStateRequest, Delivery>;
 }
 
 export const factory = modelFactory((options: FactoryOptions) => {
     const setDeliveryId = createEvent<Delivery['id']>();
     const messageChanged = createEvent<Delivery['comment']>();
-    const statusChanged = createEvent<Selection>();
+    const statusChanged = createEvent<DeliveryStates>();
     const statusChangeCompleted = createEvent<Delivery>();
     const submitPressed = createEvent();
     const reset = createEvent();
@@ -29,24 +29,28 @@ export const factory = modelFactory((options: FactoryOptions) => {
         setDeliveryId,
         (_, id) => id,
     );
-    const $status = createStore<Selection>(new Set())
+    const $status = createStore<DeliveryStates>(
+        options.defaultSelectedStatus ?? options.allowedStatuses?.[0] ?? 'done',
+    )
         .on(statusChanged, (_, payload) => payload)
         .reset(reset);
+
     const $isRejectStatus = combine($status, (status) => {
-        return status instanceof Set && status.has('cancelled');
+        return status === 'canceled';
     });
     const $message = createStore<Delivery['comment']>('')
         .on(messageChanged, (_, payload) => payload)
         .reset(reset);
 
-    const $formValid = combine($status, $message, (status, message) => {
-        if (status instanceof Set && status.size === 0) return false;
-        return !(
-            status instanceof Set &&
-            status.has('canceled') &&
-            message.length < 3
-        );
-    });
+    const $formValid = combine(
+        $status,
+        $message,
+        $isRejectStatus,
+        (status, message, isRejectStatus) => {
+            if (isEmpty(status)) return false;
+            return !(isRejectStatus && message.length < 3);
+        },
+    );
     const $pending = options?.patchDeliveryStatusFx.pending;
 
     const allowedStatuses = statuses.filter((status) => {

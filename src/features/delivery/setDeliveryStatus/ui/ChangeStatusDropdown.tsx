@@ -2,8 +2,9 @@ import { modelView } from 'effector-factorio';
 import { Button, Spacer, Tab, Tabs, Textarea } from '@nextui-org/react';
 import { useUnit } from 'effector-react';
 import { motion } from 'framer-motion';
-import { PropsWithChildren, useState } from 'react';
+import { PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
+import { DeliveryStates } from '@/shared/api';
 import { factory } from '../model/model';
 import { translationNS } from '../config';
 
@@ -103,16 +104,12 @@ const Selector: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
     const { allowedStatuses, $status, statusChanged } = model;
 
-    const [selected, setSelected] = useState('login');
-
     const status = useUnit($status);
     const onChangeValue = useUnit(statusChanged);
 
     const hydratedStatus = (key: string): string => {
         return t(key);
     };
-
-    console.log(status, typeof status);
 
     return (
         <>
@@ -141,8 +138,8 @@ const Selector: FunctionComponent = () => {
                     fullWidth
                     size="md"
                     aria-label="Set state form"
-                    selectedKey={selected}
-                    onSelectionChange={onChangeValue}
+                    selectedKey={status}
+                    onSelectionChange={onChangeValue as DeliveryStates}
                 >
                     {allowedStatuses.map((statusDeclaration) => {
                         return (
