@@ -3,6 +3,8 @@ import { DeliveryStates } from '@/shared/api';
 type Statuses = {
     id: DeliveryStates;
     label: string;
+    message?: boolean;
+    requireMessage?: boolean;
 }[];
 
 export const statuses: Statuses = [
@@ -15,11 +17,14 @@ export const statuses: Statuses = [
         label: 'label.status.delivering',
     },
     {
-        id: 'canceled',
-        label: 'label.status.canceled',
-    },
-    {
         id: 'done',
         label: 'label.status.done',
+        message: true,
+    },
+    {
+        id: 'canceled',
+        label: 'label.status.canceled',
+        message: true,
+        requireMessage: true,
     },
 ];

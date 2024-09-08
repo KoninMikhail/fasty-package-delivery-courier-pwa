@@ -2,7 +2,6 @@
   "page.title": "Биржа заказов | {{appName}} - {{appDescription}}",
   "section.label.upcoming": "Ближайшие доставки",
   "section.label.market": "Могу взять",
-  "section.link.myDeliveries": "Все",
   "search.input.placeholder": "Поиск по заказам",
   "greetings.name": "Здравствуйте, {{name}}",
   "greetings.withoutName": "Здравствуйте",

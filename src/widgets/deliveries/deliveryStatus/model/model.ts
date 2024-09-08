@@ -38,7 +38,7 @@ sample({
  * Set delivery state
  */
 export const setStatusModel = SetDeliveryStatus.factory.createModel({
-    allowedStatuses: ['canceled', 'done'],
+    allowedStatuses: ['done', 'canceled'],
     patchDeliveryStatusFx: setDeliveryStatusFx,
 });
 

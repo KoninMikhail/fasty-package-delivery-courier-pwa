@@ -4,7 +4,6 @@ import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { widgetMarketUi } from '@/widgets/deliveries/market';
 import { sharedConfigRoutes } from '@/shared/config';
 import {
-    Button,
     Dropdown,
     DropdownItem,
     DropdownMenu,
@@ -26,7 +25,6 @@ import { Logout } from '@/features/auth/logout';
 import {
     UPCOMING_DELIVERIES_LABEL,
     translationNS,
-    GOTO_MY_DELIVERIES_LINK_LABEL,
     MARKET_LABEL,
     SEARCH_PLACEHOLDER,
     HELLO_TEXT,
@@ -181,21 +179,10 @@ const UpcomingDeliveriesSection: FunctionComponent<PropsWithChildren> = memo(
         const navigate = useNavigate();
         const { t } = useTranslation(translationNS);
 
-        const onPressAllDeliveries = (): void => {
-            navigate(DELIVERIES);
-        };
-
         return (
             <Section>
                 <SectionHead>
                     <Heading>{t(UPCOMING_DELIVERIES_LABEL)}</Heading>
-                    <Button
-                        size="sm"
-                        radius="full"
-                        onPress={onPressAllDeliveries}
-                    >
-                        {t(GOTO_MY_DELIVERIES_LINK_LABEL)}
-                    </Button>
                 </SectionHead>
                 {children}
             </Section>

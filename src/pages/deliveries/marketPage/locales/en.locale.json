@@ -2,7 +2,6 @@
   "page.title": "Deliveries Exchange | {{appName}} - {{appDescription}}",
   "section.label.upcoming": "Upcoming deliveries",
   "section.label.market": "Market",
-  "section.link.myDeliveries": "All",
   "search.input.placeholder": "Search for deliveries",
   "greetings.name": "Hey, {{name}}",
   "greetings.withoutName": "Hello, there!",

@@ -50,7 +50,7 @@ export const factory = modelFactory((options: FactoryOptions) => {
     const $pending = options?.patchDeliveryStatusFx.pending;
 
     const allowedStatuses = statuses.filter((status) => {
-        const statusList = options.allowedStatuses || ['canceled', 'done'];
+        const statusList = options.allowedStatuses || ['done', 'canceled'];
         return statusList.includes(status.id);
     });
 
