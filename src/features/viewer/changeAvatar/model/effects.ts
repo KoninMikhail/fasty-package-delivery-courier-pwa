@@ -1,4 +1,5 @@
 import { createEffect } from 'effector';
+import { debug } from 'patronum';
 import { base64ToFile } from '../lib';
 
 type ResizeImageParameters = {
@@ -49,3 +50,7 @@ export const convertBase64ToFileFx = createEffect<
     { base64: string; filename: string },
     File
 >(({ base64, filename }) => base64ToFile(base64, filename));
+
+debug({
+    img: convertBase64ToFileFx.doneData,
+});
