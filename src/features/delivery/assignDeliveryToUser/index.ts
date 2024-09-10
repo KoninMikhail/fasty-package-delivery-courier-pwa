@@ -1,5 +1,5 @@
 import { AssignRequestButton, FastAssignRequestButton } from './ui';
-import { factory } from './model/model';
+import { factory } from "./factory/factory";
 import './init';
 
 export const AssignDeliveryWithMe = {

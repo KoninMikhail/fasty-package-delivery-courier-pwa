@@ -3,7 +3,7 @@ import { createEvent, createStore, Effect, sample } from 'effector';
 import { User } from '@/shared/api';
 import { sharedConfigLocale } from '@/shared/config';
 import { convertBase64ToFileFx, resizeImageFx } from './effects';
-import { ERROR_MIN_SIZE, translationNS } from '../config';
+import { ERROR_MIN_SIZE, ERROR_UNKNOWN, translationNS } from '../config';
 
 const { locale } = sharedConfigLocale;
 
@@ -19,17 +19,23 @@ export const factory = modelFactory((options: FactoryOptions) => {
     const fileSelected = createEvent<File>();
     const cancelPressed = createEvent();
     const confirmPressed = createEvent();
-    const setError = createEvent<string>();
+    const setError = createEvent<Error>();
     const imgSourceChanged = createEvent<string>();
     const imgDistributionChanged = createEvent<string>();
+    const UploadError = createEvent<Error>();
+    const retry = createEvent();
+    const reset = createEvent();
 
     const $isPending = options.changeAvatarFx.pending;
 
-    const $error = createStore<string>('')
-        .on(setError, (_, payload) => payload)
-        .on(resizeImageFx.failData, (_, error) => error.message)
-        .on(options.changeAvatarFx.failData, (_, error) => error.message)
-        .reset([options.changeAvatarFx.done]);
+    const $error = createStore<Error[]>([])
+        .on(setError, (state, payload) => [...state, payload])
+        .on(resizeImageFx.failData, (state, payload) => [...state, payload])
+        .on(options.changeAvatarFx.failData, (state, payload) => [
+            ...state,
+            payload,
+        ])
+        .reset([options.changeAvatarFx.done, reset]);
 
     fileSelected.watch((file) => {
         const reader = new FileReader();
@@ -47,13 +53,16 @@ export const factory = modelFactory((options: FactoryOptions) => {
                     naturalHeight < options.minHeight;
                 if (isSmallerThanMin) {
                     setError(
-                        locale.t(ERROR_MIN_SIZE, {
-                            replace: {
-                                size: options.minHeight,
-                            },
-                            ns: translationNS,
-                        }),
+                        new Error(
+                            locale.t(ERROR_MIN_SIZE, {
+                                replace: {
+                                    size: options.minHeight,
+                                },
+                                ns: translationNS,
+                            }),
+                        ),
                     );
+
                     imgSourceChanged('');
                 } else {
                     imgSourceChanged(imageUrl);
@@ -66,17 +75,15 @@ export const factory = modelFactory((options: FactoryOptions) => {
 
     const $imgSource = createStore<string>('', { name: 'imgSource' })
         .on(imgSourceChanged, (_, dataUrl) => dataUrl)
-        .reset([options.changeAvatarFx.doneData, cancelPressed]);
+        .reset([options.changeAvatarFx.doneData, cancelPressed, reset]);
 
-    const $imgSourceResized = createStore<string>('', {
-        name: 'imgSourceResized',
-    })
+    const $imgSourceResized = createStore<string>('')
         .on(resizeImageFx.doneData, (_, payload) => payload)
-        .reset([options.changeAvatarFx.doneData, cancelPressed]);
+        .reset([options.changeAvatarFx.doneData, cancelPressed, reset]);
 
     const $imgDistribution = createStore<string>('')
         .on(imgDistributionChanged, (_, dataUrl) => dataUrl)
-        .reset([options.changeAvatarFx.doneData, cancelPressed]);
+        .reset([options.changeAvatarFx.doneData, cancelPressed, reset]);
 
     sample({
         clock: $imgSource,
@@ -90,7 +97,7 @@ export const factory = modelFactory((options: FactoryOptions) => {
     });
 
     sample({
-        clock: confirmPressed,
+        clock: [confirmPressed, retry],
         source: $imgDistribution,
         filter: (data) => !!data && data.length > 0,
         fn: (upload) => ({
@@ -105,9 +112,28 @@ export const factory = modelFactory((options: FactoryOptions) => {
         target: options.changeAvatarFx,
     });
 
+    sample({
+        clock: options.changeAvatarFx.failData,
+        target: UploadError,
+    });
+
+    sample({
+        clock: options.changeAvatarFx.failData,
+        fn: () =>
+            new Error(
+                locale.t(ERROR_UNKNOWN, {
+                    ns: translationNS,
+                }),
+            ),
+        target: setError,
+    });
+
     return {
         $isPending,
         $error,
+        retry,
+        reset,
+        UploadError,
         cancelPressed,
         confirmPressed,
         imgSourceChanged,

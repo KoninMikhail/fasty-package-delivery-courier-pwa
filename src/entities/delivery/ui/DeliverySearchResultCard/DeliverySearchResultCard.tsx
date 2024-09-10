@@ -29,7 +29,7 @@ import {
     STATUS_CREATED,
     LABEL_DATE,
 } from '../../config';
-import { getDeliveryId } from '../../lib/utils/getDeliveryId';
+import { getDeliverySystemId } from '../../lib/utils/getDeliverySystemId';
 import { getDeliveryStatus } from '../../lib/utils/getDeliveryStatus';
 import { getDeliveryContents } from '../../lib/utils/getDeliveryContents';
 import { getDeliveryClientName } from '../../lib/utils/getDeliveryClientName';
@@ -216,7 +216,8 @@ export const DeliverySearchResultCard: FunctionComponent<DeliverySearchResultCar
         const navigate = useNavigate();
         const queryWords = query.split(' ');
 
-        const id = getDeliveryId(delivery);
+        const id = getDeliverySystemId(delivery);
+        const deliveryId = delivery.deliveryId.toString();
         const state = getDeliveryStatus(delivery);
         const contactPerson = delivery.contact;
         const content = getDeliveryContents(delivery);
@@ -236,7 +237,7 @@ export const DeliverySearchResultCard: FunctionComponent<DeliverySearchResultCar
             <Card className="">
                 <CardHeader className="justify-between">
                     <div className="grid w-full grid-cols-[max-content_auto] gap-5">
-                        <ID id={id} query={queryWords} />
+                        <ID id={deliveryId} query={queryWords} />
                         <div>
                             <Status state={state} />
                             <Spacer y={0.5} />

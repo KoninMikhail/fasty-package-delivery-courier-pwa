@@ -24,18 +24,19 @@ export const deliveriesApi = makeApi([
         alias: 'fetchAvailableAssignDeliveries',
         description: 'Fetch upcoming deliveries',
         parameters: [
+            { name: 'page', type: 'Query', schema: z.number().optional() },
             {
                 name: 'limit',
                 type: 'Query',
                 schema: z.number().optional(),
             },
             {
-                name: 'from',
+                name: 'dateFrom',
                 type: 'Query',
                 schema: z.string().optional(),
             },
             {
-                name: 'to',
+                name: 'dateTo',
                 type: 'Query',
                 schema: z.string().optional(),
             },
@@ -134,7 +135,9 @@ export const deliveriesApi = makeApi([
             {
                 type: 'Body',
                 name: 'Body',
-                schema: changeDeliveryStateSchema,
+                schema: changeDeliveryStateSchema.omit({
+                    id: true,
+                }),
             },
         ],
         response: deliverySchema.transform((delivery) => {
@@ -168,6 +171,13 @@ export const deliveriesApi = makeApi([
         path: '/my',
         alias: 'getMyDeliveries',
         description: 'Fetch active deliveries',
+        parameters: [
+            {
+                name: 'limit',
+                type: 'Query',
+                schema: z.number().optional(),
+            },
+        ],
         response: z.array(deliverySchema).transform((deliveries) => {
             return deliveries.map((delivery) => {
                 const managerAvatarUrl = delivery.manager.avatar_src;
@@ -230,6 +240,29 @@ export const deliveriesApi = makeApi([
                 schema: z.string(),
             },
         ],
+        errors: deliveriesErrors,
+    },
+    {
+        method: 'get',
+        path: '/search/queries',
+        alias: 'getUserSearchQueriesHistory',
+        description: 'Fetch user search queries history',
+        response: z.array(z.string()),
+        errors: deliveriesErrors,
+    },
+    {
+        method: 'delete',
+        path: '/search/queries/:query',
+        alias: 'removeUserSearchQueryItem',
+        description: 'Remove user search query item',
+        parameters: [
+            {
+                name: 'query',
+                type: 'Path',
+                schema: z.string(),
+            },
+        ],
+        response: z.unknown(),
         errors: deliveriesErrors,
     },
 ]);

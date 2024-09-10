@@ -4,10 +4,23 @@ import { FunctionComponent, useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring, useInView } from 'framer-motion';
 import { Button } from '@nextui-org/react';
 import { MdArrowLeft, MdArrowRight } from 'react-icons/md';
-import { useList } from 'effector-react';
-import { $$upcomingDeliveries } from '../../model/deliveriesStore';
+import { useList, useUnit } from 'effector-react';
+import { NoDeliveries } from '@/widgets/deliveries/myDeliveries/ui/common/NoDeliveries';
+import {
+    $$empty,
+    $$inPending,
+    $isInitialized,
+} from '@/widgets/deliveries/myDeliveries/model/model';
+import { Loading } from '@/widgets/deliveries/myDeliveries/ui/common/Loading';
+import { $$upcomingPickups } from '../../model/stores';
 
 export const UpcomingDeliveriesHorizontalSlider: FunctionComponent = () => {
+    const { isInit, isEmpty, isUpdating } = useUnit({
+        isInit: $isInitialized,
+        isEmpty: $$empty,
+        isUpdating: $$inPending,
+    });
+
     const [activeItemIndex, setActiveItemIndex] = useState<number>(0);
     const itemWidth = 230;
     const rootReference = useRef<HTMLDivElement>(null);
@@ -32,9 +45,16 @@ export const UpcomingDeliveriesHorizontalSlider: FunctionComponent = () => {
         setActiveItemIndex(activeItemIndex + 1);
     };
 
-    const deliveries = useList($$upcomingDeliveries, (delivery) => {
+    const deliveries = useList($$upcomingPickups, (delivery) => {
         return <DeliveryCountdownCard delivery={delivery} />;
     });
+
+    if (!isInit) return <Loading skeletonCount={4} />;
+
+    if (isEmpty) {
+        if (isUpdating) return <Loading skeletonCount={4} />;
+        return <NoDeliveries bordered />;
+    }
 
     return (
         <div className="relative w-full">

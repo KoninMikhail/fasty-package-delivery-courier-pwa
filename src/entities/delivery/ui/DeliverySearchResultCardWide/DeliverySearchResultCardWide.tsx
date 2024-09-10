@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import React, { useCallback } from 'react';
 import { LuMail, LuPhone, LuUser } from 'react-icons/lu';
 
+import { getDeliveryId } from '@/entities/delivery';
 import {
     LABEL_ID,
     LABEL_STORAGE,
@@ -29,7 +30,7 @@ import {
     LABEL_DATE,
     LABEL_CLIENT,
 } from '../../config';
-import { getDeliveryId } from '../../lib/utils/getDeliveryId';
+import { getDeliverySystemId } from '../../lib/utils/getDeliverySystemId';
 import { getDeliveryContents } from '../../lib/utils/getDeliveryContents';
 import { getDeliveryAddress } from '../../lib/utils/getDeliveryAdress';
 import { getDeliveryClientName } from '../../lib/utils/getDeliveryClientName';
@@ -223,6 +224,7 @@ export const DeliverySearchResultCardWide: FunctionComponent<DeliverySearchResul
         const navigate = useNavigate();
         const queryWords = query.split(' ');
 
+        const systemId = getDeliverySystemId(delivery);
         const id = getDeliveryId(delivery);
         const state = getDeliveryStatus(delivery);
         const contactPerson = getDeliveryContact(delivery);
@@ -236,8 +238,8 @@ export const DeliverySearchResultCardWide: FunctionComponent<DeliverySearchResul
         );
 
         const onPressButtonMore = useCallback(() => {
-            navigate(`${DELIVERIES}/${id}`);
-        }, [id, navigate]);
+            navigate(`${DELIVERIES}/${systemId}`);
+        }, [systemId, navigate]);
 
         return (
             <Card className="hover: w-full">

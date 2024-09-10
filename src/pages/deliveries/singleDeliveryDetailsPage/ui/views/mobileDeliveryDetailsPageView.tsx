@@ -1,17 +1,16 @@
 import { PropsWithChildren, ReactNode } from 'react';
-
 import { widgetNavbarMobileUi } from '@/widgets/layout/navbar-mobile';
 import { Divider, Spacer } from '@nextui-org/react';
 import { useUnit } from 'effector-react';
-import clsx from 'clsx';
 import { widgetDeliveryStatusUi } from '@/widgets/deliveries/deliveryStatus';
 import { useTranslation } from 'react-i18next';
 import { RiWifiOffLine } from 'react-icons/ri';
-import { sessionModel } from '@/entities/viewer';
-
-import { DeliveryPickup } from '@/pages/deliveries/singleDeliveryDetailsPage/ui/views/common/components/DeliveryPickup';
+import { getDeliveryId } from '@/entities/delivery';
+import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
+import { $pageDeliveryDetails } from '../../model/stores';
+import { Error, Loading, NotFound, NotFoundOffline } from './common/states';
 import { PageState } from '../../types';
-
+import { $pageContentState } from '../../model/model';
 import {
     ClientType,
     DeliveryTypeTransport,
@@ -23,6 +22,7 @@ import {
     DeliveryContactPerson,
     DeliveryNumber,
     DeliveryAddressSubway,
+    DeliveryPickup,
     DeliveryContents,
     DeliveryWeight,
     DeliveryCourier,
@@ -30,7 +30,6 @@ import {
     BackButton,
 } from './common/components';
 
-import { $$deliveryNumber, $pageContentState } from '../../model';
 import {
     LABEL_ADDRESS,
     LABEL_CLIENT,
@@ -43,15 +42,18 @@ import {
     LABEL_ID,
     LABEL_MANAGER,
     LABEL_METRO,
+    LABEL_NOT_AVAILABLE_OFFLINE,
     LABEL_PICKUP,
     LABEL_TYPE,
     LABEL_WEIGHT,
     translationNS,
 } from '../../config';
-import { Loading, NotFound } from './common/states';
 
 const { NavbarMobile } = widgetNavbarMobileUi;
 const { DeliveryStatusControlWithTimeline } = widgetDeliveryStatusUi;
+export const {
+    model: { $$isOnline },
+} = DetectNetworkConnectionState;
 
 /**
  * Layout
@@ -92,22 +94,22 @@ const Header: FunctionComponent<{
     deliveryIdVisible?: boolean;
     className?: string;
 }> = ({ backButton, className, deliveryIdVisible = true }) => {
-    const deliveryId = useUnit($$deliveryNumber);
+    const delivery = useUnit($pageDeliveryDetails);
+    const deliveryId = delivery
+        ? getDeliveryId(delivery).padStart(6, '0')
+        : null;
+
+    const titleContent = deliveryIdVisible ? deliveryId || '0' : null;
+
+    const headerClassName =
+        'absolute top-4 z-[1100] flex w-full items-center justify-between px-4';
+    const titleClassName =
+        'text-xl font-semibold text-content1-foreground dark:text-content1';
+
     return (
-        <header
-            className={clsx(
-                'absolute top-4 z-[1100] flex w-full items-center justify-between px-4',
-                className,
-            )}
-        >
+        <header className={headerClassName}>
             {backButton}
-            <h1
-                className={clsx(
-                    'text-xl font-semibold text-content1-foreground dark:text-content1',
-                )}
-            >
-                {deliveryIdVisible ? deliveryId || '0' : null}
-            </h1>
+            <h1 className={titleClassName}>{titleContent}</h1>
             <div className="w-8" />
         </header>
     );
@@ -116,7 +118,8 @@ const Header: FunctionComponent<{
 const BlockWhenOffline: FunctionComponent<{
     children: ReactNode;
 }> = ({ children }) => {
-    const isOnline = useUnit(sessionModel.$$isOnline);
+    const { t } = useTranslation(translationNS);
+    const isOnline = useUnit($$isOnline);
 
     return isOnline ? (
         children
@@ -128,7 +131,7 @@ const BlockWhenOffline: FunctionComponent<{
                     <RiWifiOffLine className="mx-auto text-5xl text-danger" />
                     <Spacer y={4} />
                     <span className="text-content3 text-danger">
-                        Недоступно офлайн
+                        {t(LABEL_NOT_AVAILABLE_OFFLINE)}
                     </span>
                 </div>
             </div>
@@ -139,27 +142,17 @@ const BlockWhenOffline: FunctionComponent<{
 
 export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
-    const [pageState] = useUnit([$pageContentState]);
+    const { pageState } = useUnit({
+        pageState: $pageContentState,
+    });
 
-    if (!pageState)
-        return (
-            <>
-                <Header backButton={<BackButton />} deliveryIdVisible={false} />
-                <Loading />
-                <NavbarMobile />
-            </>
-        );
+    const isPageNotReady = pageState === PageState.INIT;
+    const isPageNotFound = pageState === PageState.NotFound;
+    const isPageNotFoundInCache = pageState === PageState.NotFoundOffline;
+    const isPageHasErrors = pageState === PageState.Error;
 
-    if (pageState === PageState.NOT_LOADED)
-        return (
-            <div className="flex h-full w-full items-center justify-center">
-                <MainContainer>
-                    not loaded
-                    <NavbarMobile />
-                </MainContainer>
-            </div>
-        );
-    if (pageState === PageState.NotFound) {
+    if (isPageNotReady) return <Loading />;
+    if (isPageNotFound)
         return (
             <div className="flex h-full w-full items-center justify-center">
                 <MainContainer>
@@ -168,17 +161,24 @@ export const MobileDeliveryDetailsPageView: FunctionComponent = () => {
                 </MainContainer>
             </div>
         );
-    }
-    if (pageState === PageState.Error) {
+    if (isPageNotFoundInCache)
         return (
             <div className="flex h-full w-full items-center justify-center">
                 <MainContainer>
-                    err
+                    <NotFoundOffline />
                     <NavbarMobile />
                 </MainContainer>
             </div>
         );
-    }
+    if (isPageHasErrors)
+        return (
+            <div className="flex h-full w-full items-center justify-center">
+                <MainContainer>
+                    <Error />
+                    <NavbarMobile />
+                </MainContainer>
+            </div>
+        );
     return (
         <>
             <Header className="z-[2000]" backButton={<BackButton />} />

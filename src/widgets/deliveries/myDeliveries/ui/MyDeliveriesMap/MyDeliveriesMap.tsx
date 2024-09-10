@@ -1,21 +1,36 @@
-import { Spacer } from '@nextui-org/react';
+import { Button, Spacer } from '@nextui-org/react';
 import { RiWifiOffFill } from 'react-icons/ri';
 import { useTranslation } from 'react-i18next';
-import { useList, useUnit } from 'effector-react';
-import { MapContainer, Marker, TileLayer } from 'react-leaflet';
-import { DeliveryMapCard } from '@/entities/delivery';
-import { sessionModel } from '@/entities/viewer';
+import { useUnit } from 'effector-react';
+import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
+import clsx from 'clsx';
+import { FaMinus, FaPlus } from 'react-icons/fa6';
+import {
+    getDeliveryCoordinates,
+    getDeliverySystemId,
+} from '@/entities/delivery';
+import { MdOutlineLocationSearching } from 'react-icons/md';
+import { sharedConfigRoutes } from '@/shared/config';
+import { useNavigate } from 'react-router-dom';
+import { $myDeliveriesStore } from '@/widgets/deliveries/myDeliveries/model/stores';
+import { DeliveryMapBaloonCard } from '@/entities/delivery/ui/DeliveryMapBaloonCard';
+import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
+import { useMemo } from 'react';
+import L from 'leaflet';
 import {
     DEFAULT_MAP_CENTER,
     DEFAULT_MAP_ZOOM,
     ERROR_NO_INTERNET_TEXT_KEY,
     translationNS,
 } from '../../config';
-import { $$deliveriesMarkers } from '../../model/deliveriesMapMarkers';
-import { $deliveriesStore } from '../../model/deliveriesStore';
 
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
+const { RouteName } = sharedConfigRoutes;
+const { DELIVERIES } = RouteName;
+export const {
+    model: { $$isOnline },
+} = DetectNetworkConnectionState;
 
 const OfflinePlaceholder: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
@@ -34,8 +49,71 @@ const OfflinePlaceholder: FunctionComponent = () => {
     );
 };
 
+const MapControls: FunctionComponent = () => {
+    const map = useMap();
+    const onClickReturnToTarget = (): void => {
+        map.flyTo(DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM);
+    };
+
+    const onClickZoomIn = (): void => {
+        map.zoomIn();
+    };
+
+    const onClickZoomOut = (): void => {
+        map.zoomOut();
+    };
+
+    return (
+        <div
+            className={clsx(
+                'absolute right-0 top-1/2 z-[5000] flex -translate-x-1/2 -translate-y-1/2 transform flex-col gap-2',
+                'rounded-2xl bg-background p-2 shadow-md',
+            )}
+        >
+            <Button
+                className="z-[6000] rounded-xl"
+                onPress={onClickReturnToTarget}
+                isIconOnly
+            >
+                <MdOutlineLocationSearching />
+            </Button>
+            <Button
+                color="primary"
+                variant="flat"
+                className="z-[6000] rounded-xl"
+                onPress={onClickZoomIn}
+                isIconOnly
+            >
+                <FaPlus />
+            </Button>
+            <Button
+                color="primary"
+                variant="flat"
+                className="z-[6000] rounded-xl"
+                onPress={onClickZoomOut}
+                isIconOnly
+            >
+                <FaMinus />
+            </Button>
+        </div>
+    );
+};
+
 const Map: FunctionComponent = () => {
-    const markers = useUnit($$deliveriesMarkers);
+    const deliveries = useUnit($myDeliveriesStore);
+    const navigate = useNavigate();
+
+    const markerIcon = useMemo(
+        () =>
+            new L.Icon({
+                iconUrl: '/icons/map/marker-icon-2x.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [0, -41],
+            }),
+        [],
+    );
+
     return (
         <MapContainer
             center={DEFAULT_MAP_CENTER}
@@ -46,24 +124,37 @@ const Map: FunctionComponent = () => {
             zoomControl={false}
         >
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            {markers.map((marker, index) => (
-                <Marker key={index} position={marker} />
-            ))}
+            {deliveries.map((delivery) => {
+                const id = getDeliverySystemId(delivery);
+                const coordinates = getDeliveryCoordinates(delivery);
+
+                const onPressDetailsPageLink = (): void =>
+                    navigate(`${DELIVERIES}/${id}`);
+
+                return (
+                    <Marker
+                        key={delivery.id}
+                        icon={markerIcon}
+                        position={{
+                            lat: Number.parseFloat(
+                                coordinates?.latitude ?? '0',
+                            ),
+                            lng: Number.parseFloat(
+                                coordinates?.longitude ?? '0',
+                            ),
+                        }}
+                    >
+                        <Popup autoPan minWidth={300}>
+                            <DeliveryMapBaloonCard
+                                delivery={delivery}
+                                onPressDetailsPageLink={onPressDetailsPageLink}
+                            />
+                        </Popup>
+                    </Marker>
+                );
+            })}
+            <MapControls />
         </MapContainer>
-    );
-};
-
-const CardsRow: FunctionComponent = () => {
-    const deliveries = useList($deliveriesStore, (delivery) => (
-        <DeliveryMapCard delivery={delivery} />
-    ));
-
-    return (
-        <div className="overflow-x-auto">
-            <div className="flex h-[200px] flex-nowrap gap-2 px-4 pl-16">
-                {deliveries}
-            </div>
-        </div>
     );
 };
 
@@ -75,15 +166,6 @@ interface MyDeliveriesMapProperties {
 export const MyDeliveriesMap: FunctionComponent<MyDeliveriesMapProperties> = ({
     classNames,
 }) => {
-    const online = useUnit(sessionModel.$$isOnline);
-    return online ? (
-        <div className="relative h-full w-full">
-            <div className="absolute bottom-0 z-[6000]  w-full py-4 text-red-600">
-                <CardsRow />
-            </div>
-            <Map />
-        </div>
-    ) : (
-        <OfflinePlaceholder />
-    );
+    const online = useUnit($$isOnline);
+    return online ? <Map /> : <OfflinePlaceholder />;
 };

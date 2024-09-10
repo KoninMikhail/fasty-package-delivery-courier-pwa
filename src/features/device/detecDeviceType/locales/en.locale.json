@@ -1,0 +1,5 @@
+{
+  "error.screen.heading": "Your device doesn't support this version of the app",
+  "error.screen.description": "Please refresh the page to activate a compatible version",
+  "error.screen.buttonReload.text": "Reload now"
+}

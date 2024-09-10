@@ -16,3 +16,13 @@ export const LABEL_COURIER = 'page.section.label.courier';
 export const LABEL_DELIVERY_STATUS = 'page.section.label.deliveryStatus';
 export const LABEL_MY_DELIVERY = 'page.section.label.courier.chip.my';
 export const LABEL_ID = 'page.section.label.id';
+export const LABEL_NOT_AVAILABLE_OFFLINE =
+    'page.section.label.unavailableoffline';
+export const LABEL_MAPS_NOT_AVAILABLE = 'maps.unavailable';
+export const LABEL_MAPS_OPEN_IN_EXTERNAL_APP = 'maps.openInYandexMaps';
+export const PAGE_ERROR_TITLE = 'page.state.error.title';
+export const PAGE_ERROR_MESSAGE = 'page.state.error.message';
+export const PAGE_ERROR_BUTTON_RELOAD = 'page.state.error.button.reload';
+export const PAGE_ERROR_BUTTON_BACK = 'page.state.error.button.gotodeliveries';
+export const PAGE_NOT_FOUND_TITLE = 'page.state.notFound.title';
+export const PAGE_NOT_FOUND_IN_CACHE_TITLE = 'page.state.notFoundOffline.title';

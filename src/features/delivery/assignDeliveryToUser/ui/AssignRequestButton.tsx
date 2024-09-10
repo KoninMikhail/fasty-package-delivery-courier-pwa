@@ -10,7 +10,7 @@ import {
     BUTTON_LABEL_ASSIGN_WITH_ME,
     translationNS,
 } from '../config';
-import { factory } from '../model/model';
+import { factory } from '@/features/delivery/assignDeliveryToUser/factory/factory';
 
 interface RequestButtonProperties {
     deliverySystemId: Delivery['id'];

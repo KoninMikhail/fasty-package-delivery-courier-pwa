@@ -7,7 +7,7 @@ import 'leaflet/dist/leaflet.css';
 const { locale } = sharedConfigLocale;
 
 /**
- * locale
+ * locales
  */
 locale.addResourceBundle('en', translationNS, locale_en);
 locale.addResourceBundle('ru', translationNS, locale_ru);

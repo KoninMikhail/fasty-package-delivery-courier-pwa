@@ -1,5 +1,5 @@
 {
-  "page.title": "Войти | {{appName}} - {{appDescription}}",
+  "page.title": "Такой страницы нет | {{appName}} - {{appDescription}}",
   "error.message": "Извините,\n такой страницы нет!",
   "button.go-to-main-page": "На главную страницу"
 }

@@ -4,5 +4,6 @@
   "popup.confirmButton.text": "Сохранить",
   "uploadButton.pending": "загрузка",
   "popup.title": "Выберите аватар",
-  "error.minSize": "Изображение должно быть не менее {{size}} x {{size}} пикселей"
+  "error.minSize": "Изображение должно быть не менее {{size}} x {{size}} пикселей",
+  "error.unknown": "Произошла ошибка при загрузке изображения."
 }

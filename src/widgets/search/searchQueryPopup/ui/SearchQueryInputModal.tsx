@@ -13,7 +13,11 @@ import { PropsWithChildren } from 'react';
 import { FaArrowLeft } from 'react-icons/fa6';
 import { useKeyPress } from '@/shared/lib/browser';
 import { useUnmount } from 'usehooks-ts';
-import { modal as modalModel } from '../model';
+import {
+    searchCloseArrowClicked,
+    searchPopupCloseClicked,
+} from '@/widgets/search/searchQueryPopup/model/model';
+import { $isPopupOpened } from '@/widgets/search/searchQueryPopup/model/stores';
 import {
     SetQueryField,
     PerformSearchButton,
@@ -40,7 +44,9 @@ const ModalHeader: FunctionComponent<PropsWithChildren> = ({ children }) => {
  */
 
 const CloseButton: FunctionComponent = () => {
-    const onClickCloseButton = useUnit(modalModel.clickCloseArrow);
+    const { onClickCloseButton } = useUnit({
+        onClickCloseButton: searchCloseArrowClicked,
+    });
 
     useKeyPress(['Escape'], onClickCloseButton);
 
@@ -65,10 +71,10 @@ interface SearchQueryInputModalProperties
 export const SearchQueryInputModal: FunctionComponent<
     SearchQueryInputModalProperties
 > = ({ size = 'lg', placement = 'top', backdrop = 'opaque' }) => {
-    const [isOpen, onClose] = useUnit([
-        modalModel.$isOpened,
-        modalModel.closePopup,
-    ]);
+    const { isOpen, onClose } = useUnit({
+        isOpen: $isPopupOpened,
+        onClose: searchPopupCloseClicked,
+    });
 
     useUnmount(() => {
         onClose();
@@ -80,6 +86,7 @@ export const SearchQueryInputModal: FunctionComponent<
             placement={placement}
             isOpen={isOpen}
             hideCloseButton
+            className="z-[9000]"
             onClose={onClose}
             backdrop={backdrop}
         >

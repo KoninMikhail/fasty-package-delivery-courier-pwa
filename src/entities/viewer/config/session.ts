@@ -1,0 +1,1 @@
+export const LOADING_PLACEHOLDER_TIMEOUT_BEFORE_LOGOUT = 5; // Seconds

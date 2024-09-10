@@ -1,82 +1,155 @@
 import { createEvent, createStore, sample } from 'effector';
 import { widgetMyDeliveriesModel } from '@/widgets/deliveries/myDeliveries';
-import { and, interval, once } from 'patronum';
+import { and, condition, delay, interval, not, once } from 'patronum';
 import { widgetMarketModel } from '@/widgets/deliveries/market';
-import { getMyDeliveriesFx } from '@/entities/delivery';
 import { createGate } from 'effector-react';
-import { widgetTopbarModel } from '@/widgets/viewer/welcome-topbar';
-import { sessionModel } from '@/entities/viewer';
-import { POLLING_TIMEOUT_SEC } from '../config';
+import { widgetSearchQueryPopupModel } from '@/widgets/search/searchQueryPopup';
+
+import { Logout } from '@/features/auth/logout';
+import { RefreshToken } from '@/features/auth/refreshToken';
+import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
+import { UpdateProfileData } from '@/features/auth/updateProfileData';
+import { isUnAuthorizedError } from '@/shared/lib/type-guards';
+import { persist } from 'effector-storage/local';
+import { isAfter, subDays } from 'date-fns';
+import { POLLING_TIMEOUT_SEC, TIMEOUT_BEFORE_INIT_WIDGETS } from '../config';
+
+/**
+ * Externals
+ */
+const {
+    model: { $$isOnline },
+} = DetectNetworkConnectionState;
+
+/**
+ * Page gate
+ */
 
 export const MarketPageGate = createGate<void>();
-/**
- * Events
- */
-const dataPollingAllowed = createEvent();
 
 /**
- * First load
+ * Page initialization
  */
-const $isPageInitialized = createStore<boolean>(false).on(
-    MarketPageGate.open,
-    () => true,
+const $isPageVisible = MarketPageGate.status;
+const $isFirstPageLoad = createStore<boolean>(false)
+    .on(MarketPageGate.open, () => true)
+    .reset(Logout.model.userLoggedOut);
+
+/**
+ * ==========================================
+ * Widgets initialization
+ * ==========================================
+ */
+
+const $allWidgetsInitCompleted = and(
+    widgetMarketModel.$isInitialized,
+    widgetMyDeliveriesModel.$isInitialized,
+    widgetSearchQueryPopupModel.$isInitialized,
 );
 
-const $$initWidgetsAllowed = and(
-    sessionModel.$isAuthorized,
-    $isPageInitialized,
-);
-
+// Market
 sample({
-    clock: $$initWidgetsAllowed,
-    target: widgetTopbarModel.init,
-});
-
-sample({
-    clock: $$initWidgetsAllowed,
-    source: widgetMarketModel.$isInitialized,
-    filter: (isInitialized, initAllowed) => initAllowed && !isInitialized,
+    clock: delay(MarketPageGate.open, TIMEOUT_BEFORE_INIT_WIDGETS),
+    source: and($$isOnline, not(widgetMarketModel.$isInitialized)),
+    filter: (allowed) => !!allowed,
     target: widgetMarketModel.init,
 });
 
 sample({
-    clock: $$initWidgetsAllowed,
-    filter: () => !widgetMyDeliveriesModel.$isInitialized,
+    clock: delay(MarketPageGate.open, TIMEOUT_BEFORE_INIT_WIDGETS),
+    source: and(
+        $isFirstPageLoad,
+        not($$isOnline),
+        not(widgetMarketModel.$isInitialized),
+    ),
+    filter: (allowed) => !!allowed,
+    target: widgetMarketModel.initOffline,
+});
+
+// My deliveries
+sample({
+    clock: delay(MarketPageGate.open, TIMEOUT_BEFORE_INIT_WIDGETS),
+    source: and(
+        $isFirstPageLoad,
+        not(widgetMyDeliveriesModel.$isInitialized),
+        $$isOnline,
+    ),
+    filter: (allowed) => allowed,
     target: widgetMyDeliveriesModel.init,
 });
 
-const $$allWidgetsInitialized = and(
-    widgetTopbarModel.$isInitialized,
-    widgetMarketModel.$isInitialized,
-    widgetMyDeliveriesModel.$isInitialized,
-);
-
 sample({
-    clock: $$allWidgetsInitialized,
-    filter: (isInitialized) => isInitialized,
-    target: dataPollingAllowed,
+    clock: delay(MarketPageGate.open, TIMEOUT_BEFORE_INIT_WIDGETS),
+    source: and(
+        $isFirstPageLoad,
+        not(widgetMyDeliveriesModel.$isInitialized),
+        not($$isOnline),
+    ),
+    filter: (allowed) => allowed,
+    target: widgetMyDeliveriesModel.initOffline,
+});
+
+// Search query popup
+sample({
+    clock: delay(MarketPageGate.open, TIMEOUT_BEFORE_INIT_WIDGETS),
+    source: and(
+        $isFirstPageLoad,
+        $isPageVisible,
+        not(widgetSearchQueryPopupModel.$isInitialized),
+    ),
+    filter: (isAllow) => isAllow,
+    target: widgetSearchQueryPopupModel.init,
 });
 
 /**
  * ============================
- * Data polling
+ * Change network state
+ * ============================
+ */
+
+sample({
+    clock: $$isOnline,
+    filter: (isOnline) => isOnline === false || isOnline === true,
+    fn: (isOnline) => !isOnline,
+    target: [widgetMyDeliveriesModel.setOffline, widgetMarketModel.setOffline],
+});
+
+/**
+ * ============================
+ * Re-fetch my deliveries when delivery is assigned
+ * ============================
+ */
+
+sample({
+    clock: widgetMarketModel.deliveryAssignCompleted,
+    target: widgetMyDeliveriesModel.fetchData,
+});
+
+/**
+ * ============================
+ * Periodic data polling for market
  * ============================
  */
 const newContentRequested = createEvent();
+const dataPollingAllowed = createEvent();
+const dataPollingForbidden = createEvent();
 
-const { tick: pageContentMarkObsolete } = interval({
+const { tick: marketContentObsolete } = interval({
     timeout: POLLING_TIMEOUT_SEC * 1000,
     start: dataPollingAllowed,
+    stop: dataPollingForbidden,
+});
+
+condition({
+    source: $allWidgetsInitCompleted,
+    if: $$isOnline,
+    then: dataPollingAllowed,
+    else: dataPollingForbidden,
 });
 
 const $isContentObsolete = createStore<boolean>(false)
-    .on(pageContentMarkObsolete, () => true)
+    .on(marketContentObsolete, () => true)
     .reset(newContentRequested);
-
-const $lastUpdateContentTimestamp = createStore<number>(0).on(
-    getMyDeliveriesFx.done,
-    () => Date.now(),
-);
 
 sample({
     clock: once({
@@ -85,27 +158,70 @@ sample({
     }),
     source: {
         isExpired: $isContentObsolete,
-        isOnline: sessionModel.$$isOnline,
+        isOnline: $$isOnline,
     },
-    filter: ({ isExpired, isOnline }) => isExpired && isOnline,
+    filter: ({ isExpired, isOnline }) => !!isExpired && !!isOnline,
     target: newContentRequested,
 });
 
-/**
- * Update my deliveries
- */
-sample({
-    clock: newContentRequested,
-    source: $lastUpdateContentTimestamp,
-    filter: (lastUpdateTimestamp) =>
-        Date.now() - lastUpdateTimestamp > POLLING_TIMEOUT_SEC * 60 * 1000,
-    target: widgetMyDeliveriesModel.fetchData,
-});
-
-/**
- * Update market page content
- */
 sample({
     clock: newContentRequested,
     target: widgetMarketModel.fetchData,
+});
+
+/**
+ * ============================
+ * Update profile data
+ * ============================
+ */
+
+const $lastProfileDataUpdate = createStore<Optional<Date>>(null).reset(
+    Logout.model.userLoggedOut,
+);
+
+persist({
+    store: $lastProfileDataUpdate,
+    key: 'lastProfileDataUpdate',
+});
+
+sample({
+    clock: MarketPageGate.open,
+    source: $lastProfileDataUpdate,
+    filter: (lastUpdate) =>
+        !lastUpdate || isAfter(subDays(new Date(), 1), lastUpdate),
+    target: UpdateProfileData.model.profileDataRequested,
+});
+
+sample({
+    clock: UpdateProfileData.model.profileDataFailed,
+    filter: (error) => isUnAuthorizedError(error),
+    target: RefreshToken.tokenRefreshRequested,
+});
+
+sample({
+    clock: RefreshToken.updateTokenSuccess,
+    source: $isPageVisible,
+    filter: (isPageVisible) => !!isPageVisible,
+    target: UpdateProfileData.model.profileDataRequested,
+});
+
+sample({
+    clock: UpdateProfileData.model.profileDataReceived,
+    fn: () => new Date(),
+    target: $lastProfileDataUpdate,
+});
+
+/**
+ * Logout when user is not authorized and user is online
+ */
+sample({
+    clock: RefreshToken.updateTokenFail,
+    source: $$isOnline,
+    filter: (isOnline) => !!isOnline,
+    target: Logout.model.logout,
+});
+
+sample({
+    clock: Logout.model.userLoggedOut,
+    target: [widgetMyDeliveriesModel.reset, widgetMarketModel.reset],
 });

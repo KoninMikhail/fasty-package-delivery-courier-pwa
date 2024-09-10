@@ -1,11 +1,9 @@
-import { Model, modelFactory } from 'effector-factorio';
+import { modelFactory } from 'effector-factorio';
 import { createEvent, createStore, Effect, sample, Store } from 'effector';
 import { pending } from 'patronum';
-import { sharedLibTypeGuards } from '@/shared/lib';
-import httpStatus from 'http-status';
-import axios from 'axios';
+import { sharedLibEffector } from '@/shared/lib';
 
-const { isEmpty } = sharedLibTypeGuards;
+const { collectEffectErrors } = sharedLibEffector;
 
 interface FactoryOptions<T extends Pagination, Pagination, Payload> {
     provider: Effect<T, Payload>;
@@ -28,27 +26,6 @@ export const factory = modelFactory(
             createStore<Omit<T, keyof PaginationData>>(
                 {} as Omit<T, keyof PaginationData>,
             );
-
-        const $errors = createStore<Error[]>([])
-            .on(options.provider.failData, (state, payload) => [
-                ...state,
-                payload,
-            ])
-            .reset([reset, options.provider.done]);
-
-        const $$hasCriticalErrors = $errors.map((errors) => {
-            const criticalErrorCodes = new Set([
-                httpStatus.INTERNAL_SERVER_ERROR,
-                httpStatus.BAD_REQUEST,
-                httpStatus.BAD_GATEWAY,
-            ]) as Set<number>;
-            return errors.some((error) => {
-                if (axios.isAxiosError(error)) {
-                    return criticalErrorCodes.has(error.response?.status ?? 0);
-                }
-                return false;
-            });
-        });
 
         /**
          * Handlers
@@ -78,15 +55,21 @@ export const factory = modelFactory(
             target: deliveriesFetchFailed,
         });
 
+        /**
+         * Errors
+         */
+        const { $errors } = collectEffectErrors({
+            effects: options.provider,
+            reset: [reset, options.provider.doneData],
+        });
+
         return {
             fetch,
             deliveriesFetched,
             deliveriesFetchFailed,
             $pending,
+            reset,
             $errors,
-            $$hasCriticalErrors,
         };
     },
 );
-
-export type FilterDeliveriesByParametersModel = Model<typeof factory>;

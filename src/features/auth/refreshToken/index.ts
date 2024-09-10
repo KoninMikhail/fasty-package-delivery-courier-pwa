@@ -1,5 +1,11 @@
-import { InitGate } from './model';
+import {
+    tokenRefreshRequested,
+    updateTokenFail,
+    updateTokenSuccess,
+} from './model';
 
 export const RefreshToken = {
-    InitGate,
+    tokenRefreshRequested,
+    updateTokenSuccess,
+    updateTokenFail,
 };

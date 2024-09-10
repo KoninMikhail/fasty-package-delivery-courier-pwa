@@ -4,25 +4,22 @@ import { widgetNavbarDesktopUi } from '@/widgets/layout/navbar-desktop';
 import { Divider, Spacer } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { widgetDeliveryStatusUi } from '@/widgets/deliveries/deliveryStatus';
-
 import {
-    Client,
-    ClientType,
-    DeliveryTypeExpress,
-    DeliveryTypeTransport,
-    DeliveryWeight,
-    DeliveryPickup,
-    OSMMap,
-    DeliveryManager,
-    MyDeliveryChip,
-    DeliveryAddress,
-    DeliveryAddressSubway,
-    DeliveryContents,
-    DeliveryContactPerson,
-    DeliveryCourier,
-    DeliveryNumber,
-    BackButton,
-} from './common/components';
+    getDeliveryId,
+    LABEL_DELIVERY_WITH_ID,
+    translationNS as entityDeliveryTranslationNs,
+} from '@/entities/delivery';
+
+import { useUnit } from 'effector-react';
+import { $pageDeliveryDetails } from '@/pages/deliveries/singleDeliveryDetailsPage/model/stores';
+import { $pageContentState } from '@/pages/deliveries/singleDeliveryDetailsPage/model/model';
+import { PageState } from '@/pages/deliveries/singleDeliveryDetailsPage/types';
+import {
+    Error,
+    Loading,
+    NotFound,
+    NotFoundOffline,
+} from '@/pages/deliveries/singleDeliveryDetailsPage/ui/views/common';
 import {
     LABEL_ADDRESS,
     LABEL_CLIENT,
@@ -39,6 +36,23 @@ import {
     LABEL_WEIGHT,
     translationNS,
 } from '../../config';
+import {
+    Client,
+    ClientType,
+    DeliveryTypeExpress,
+    DeliveryTypeTransport,
+    DeliveryWeight,
+    DeliveryPickup,
+    OSMMap,
+    DeliveryManager,
+    MyDeliveryChip,
+    DeliveryAddress,
+    DeliveryAddressSubway,
+    DeliveryContents,
+    DeliveryContactPerson,
+    DeliveryCourier,
+    BackButton,
+} from './common/components';
 
 const { Navbar } = widgetNavbarDesktopUi;
 const { DeliveryStatusControlWithTimeline } = widgetDeliveryStatusUi;
@@ -154,6 +168,56 @@ const DeliveryWeightLabel: FunctionComponent = () => {
  * @constructor
  */
 export const DesktopDeliveryDetailsPageView: FunctionComponent = () => {
+    const { t } = useTranslation(entityDeliveryTranslationNs);
+    const { pageState, delivery } = useUnit({
+        delivery: $pageDeliveryDetails,
+        pageState: $pageContentState,
+    });
+
+    const deliveryId = delivery ? getDeliveryId(delivery).padStart(6, '0') : '';
+
+    const isPageNotReady = pageState === PageState.INIT || !delivery;
+    const isPageNotFound = pageState === PageState.NotFound;
+    const isPageNotFoundInCache = pageState === PageState.NotFoundOffline;
+    const isPageHasErrors = pageState === PageState.Error;
+
+    if (isPageNotReady)
+        return (
+            <Layout>
+                <NavContainer>
+                    <Navbar />
+                </NavContainer>
+                <Loading />
+            </Layout>
+        );
+    if (isPageNotFound)
+        return (
+            <Layout>
+                <NavContainer>
+                    <Navbar />
+                </NavContainer>
+
+                <NotFound />
+            </Layout>
+        );
+    if (isPageNotFoundInCache)
+        return (
+            <Layout>
+                <NavContainer>
+                    <Navbar />
+                </NavContainer>
+                <NotFoundOffline />
+            </Layout>
+        );
+    if (isPageHasErrors)
+        return (
+            <Layout>
+                <NavContainer>
+                    <Navbar />
+                </NavContainer>
+                <Error />
+            </Layout>
+        );
     return (
         <Layout>
             <NavContainer>
@@ -171,7 +235,9 @@ export const DesktopDeliveryDetailsPageView: FunctionComponent = () => {
                 <div className="flex items-center gap-2">
                     <BackButton />
                     <h1 className="px-2 py-4 text-xl font-bold">
-                        Доставка #<DeliveryNumber />
+                        {t(LABEL_DELIVERY_WITH_ID, {
+                            id: deliveryId,
+                        })}
                     </h1>
                 </div>
                 <Spacer y={2} />

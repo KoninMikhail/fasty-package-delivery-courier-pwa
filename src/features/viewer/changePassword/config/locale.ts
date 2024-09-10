@@ -10,4 +10,5 @@ export const VALIDATION_NUMBERS_LABEL = 'validation.label.number';
 export const VALIDATION_SPECIAL_CHARS_LABEL = 'validation.label.specialChars';
 export const VALIDATION_SUCCESS_LABEL = 'validation.label.success';
 export const VALIDATION_ERR_EASY_LABEL = 'validation.label.error.easy';
+export const VALIDATION_ERR_NOT_MATCH_LABEL = 'validation.label.match';
 export const NOTIFICATION_DEMO_MODE_TEXT = 'notification.demo';

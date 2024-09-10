@@ -1,87 +1,80 @@
 import { PropsWithChildren, useState } from 'react';
+import { widgetNavbarDesktopUi } from '@/widgets/layout/navbar-desktop';
 import { useUnit } from 'effector-react';
 import { UserCardRow } from '@/entities/user';
-import { Spacer } from '@nextui-org/react';
+import { Spacer, Tab, Tabs } from '@nextui-org/react';
 import { sessionModel } from '@/entities/viewer';
 import { widgetMyDeliveriesUi } from '@/widgets/deliveries/myDeliveries';
 import {
     MyDeliveriesFilters,
     MyDeliveriesList,
 } from '@/widgets/deliveries/myDeliveries/ui';
-import { Link } from 'react-router-dom';
-import { navbarItems } from '@/widgets/layout/navbar-desktop/data';
-import { Logo } from '@/shared/ui/branding';
-import { Menu, MenuItem } from '@/shared/ui/components';
-
-import { sharedConfigRoutes } from '@/shared/config';
+import { useTranslation } from 'react-i18next';
+import {
+    PAGE_HEADER,
+    PAGE_TAB_LIST,
+    PAGE_TAB_MAP,
+    translationNS,
+} from '../../config';
 
 const { MyDeliveriesMap } = widgetMyDeliveriesUi;
-const { RouteName } = sharedConfigRoutes;
-const { ROOT_PAGE } = RouteName;
+const { Navbar } = widgetNavbarDesktopUi;
 
-const Root: FunctionComponent<PropsWithChildren> = ({ children }) => (
-    <div className="mx-auto w-[1400px]">{children}</div>
+const Layout: FunctionComponent<PropsWithChildren> = ({ children }) => (
+    <div className="relative grid h-screen w-screen overflow-hidden">
+        {children}
+    </div>
+);
+
+const Sidebar: FunctionComponent<PropsWithChildren> = ({ children }) => (
+    <div className="fixed z-[5100] h-full w-48 border-r border-gray-200 bg-white">
+        {children}
+    </div>
 );
 
 const MainContainer: FunctionComponent<PropsWithChildren> = ({ children }) => (
-    <main className="relative h-full w-full">{children}</main>
+    <main className="relative h-full w-full overflow-hidden overflow-y-scroll pl-64">
+        {children}
+    </main>
 );
 
 const ListSection: FunctionComponent<PropsWithChildren> = ({ children }) => (
-    <div className="w-full px-8 ">
+    <div className="h-inherit w-full overflow-hidden px-8 pl-16">
         <div className="relative block w-full">{children}</div>
     </div>
 );
 
 const Toolbar: FunctionComponent<{
     heading: string;
+    // @ts-expect-error ts-migrate
     onSelectTab: (key) => void;
-}> = () => {
+}> = ({ heading, onSelectTab }) => {
+    const { t } = useTranslation(translationNS);
     const user = useUnit(sessionModel.$viewerProfileData);
     return (
-        <header className="sticky top-0 z-50 h-24 w-full bg-gradient-to-b from-background to-transparent px-8">
-            <div className="flex h-24 w-full items-center justify-between">
-                <Link to={ROOT_PAGE}>
-                    <Logo />
-                </Link>
-                <div className="mx-auto w-80">
-                    <Menu
-                        items={navbarItems}
-                        stretch
-                        orientation="horizontal"
-                        renderItem={(item) => {
-                            return (
-                                <MenuItem
-                                    vertical
-                                    icon={item.icon}
-                                    key={item.href}
-                                    to={item.href}
-                                    classNames={{
-                                        item: 'py-3 !text-sm',
-                                    }}
-                                    label={item.label}
-                                />
-                            );
-                        }}
-                    />
-                </div>
-                <div>
-                    <UserCardRow user={user} avatarPosition="right" />
-                </div>
+        <div className="fixed left-64 right-0 top-0 z-[5000] flex items-center justify-between bg-gradient-to-b from-background to-transparent px-8 py-6 pl-16">
+            <h1 className="text-4xl">{heading}</h1>
+            <div>
+                <Tabs
+                    key="lg"
+                    size="md"
+                    radius="full"
+                    onSelectionChange={onSelectTab}
+                    aria-label="Tabs sizes"
+                >
+                    <Tab key="list" title={t(PAGE_TAB_LIST)} />
+                    <Tab key="map" title={t(PAGE_TAB_MAP)} />
+                </Tabs>
             </div>
-        </header>
-    );
-};
-
-const Headline: FunctionComponent = () => {
-    return (
-        <div className="flex items-center justify-between px-8 py-4">
-            <h1 className="text-2xl font-bold">Мои доставки</h1>
+            <div>
+                <UserCardRow user={user} avatarPosition="right" />
+            </div>
         </div>
     );
 };
 
 export const DesktopMyDeliveriesPageView: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
     const [selectedTab, setSelectedTab] = useState<string>('list');
 
     const onSelectedTab = (key: string): void => {
@@ -89,22 +82,23 @@ export const DesktopMyDeliveriesPageView: FunctionComponent = () => {
     };
 
     return (
-        <Root>
-            <Toolbar heading="Мои доставки" onSelectTab={onSelectedTab} />
-            <Spacer y={6} />
-            <Headline />
-            <Spacer y={6} />
+        <Layout>
+            <Sidebar>
+                <Navbar />
+            </Sidebar>
             <MainContainer>
+                <Toolbar heading={t(PAGE_HEADER)} onSelectTab={onSelectedTab} />
                 {selectedTab === 'map' ? (
                     <MyDeliveriesMap />
                 ) : (
                     <ListSection>
+                        <Spacer y={24} />
                         <MyDeliveriesFilters />
                         <Spacer y={6} />
                         <MyDeliveriesList />
                     </ListSection>
                 )}
             </MainContainer>
-        </Root>
+        </Layout>
     );
 };

@@ -1,3 +1,4 @@
+
 declare module '*.svg' {
     import type React from 'react';
 
@@ -18,3 +19,5 @@ interface FunctionComponent<P = Record<string, unknown>> {
     defaultProps?: Partial<P> | undefined;
     displayName?: string | undefined;
 }
+
+

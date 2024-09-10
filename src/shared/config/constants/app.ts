@@ -4,6 +4,7 @@ export const APP_DESCRIPTION = {
     en: 'Business app for couriers',
     ru: 'Таск менеджер для курьеров',
 };
+export const APP_VERSION = import.meta.env.PACKAGE_VERSION as string;
 export const APP_IDENTIFIER = 'CourierApp';
 export const APP_JWT_ACCESS_TOKEN_KEY = `${APP_NAME.toUpperCase()}_ACCESS_TOKEN`;
 export const APP_JWT_REFRESH_TOKEN_KEY = `${APP_NAME.toUpperCase()}_REFRESH_TOKEN`;

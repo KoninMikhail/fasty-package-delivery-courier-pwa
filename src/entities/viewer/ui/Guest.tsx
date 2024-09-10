@@ -2,7 +2,7 @@ import { PropsWithChildren } from 'react';
 import { useUnit } from 'effector-react';
 import { Navigate } from 'react-router-dom';
 import { sharedConfigRoutes } from '@/shared/config';
-import { $initSessionComplete, $isAuthorized } from '../model/session';
+import { $isAuthorized, $viewerDataReceived } from '../model/session';
 
 const { RouteName } = sharedConfigRoutes;
 const { ROOT_PAGE } = RouteName;
@@ -20,10 +20,10 @@ export const Guest: FunctionComponent<IAuthorizedProperties> = ({
     redirectToPathIfAuthorized = null,
     children,
 }) => {
-    const isSessionReady = useUnit($initSessionComplete);
+    const hasViewerData = useUnit($viewerDataReceived);
     const isAuthorized = useUnit($isAuthorized);
 
-    if (isSessionReady && isAuthorized) {
+    if (hasViewerData && isAuthorized) {
         return (
             <Navigate to={redirectToPathIfAuthorized || ROOT_PAGE} replace />
         );

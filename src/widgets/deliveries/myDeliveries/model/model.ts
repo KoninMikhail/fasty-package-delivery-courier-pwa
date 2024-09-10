@@ -1,75 +1,112 @@
 import { createEvent, createStore, sample } from 'effector';
-import { getMyDeliveriesFx } from '@/entities/delivery';
 import { FilterDeliveriesByTimeRange } from '@/features/delivery/filterDeliveriesByTimeRange';
-import { sessionModel } from '@/entities/viewer';
+import { and, combineEvents, delay, not } from 'patronum';
+import { FetchDeliveriesByParameters } from '@/features/delivery/fetchDeliveriesByParams';
+import { RevalidateSubwayStationsList } from '@/features/route/revalidateSubwayStationsList';
+import { getMyDeliveriesFx } from '@/entities/delivery';
 import { sharedLibTypeGuards } from '@/shared/lib';
-import { $deliveriesStore } from './deliveriesStore';
-
+import { RefreshToken } from '@/features/auth/refreshToken';
+import { isEmpty } from '@/shared/lib/type-guards';
+import { Delivery } from '@/shared/api';
+import {
+    $myDeliveriesStore,
+    $myDeliveriesStoreSorted,
+    resetDeliveries,
+    setDeliveries,
+} from './stores';
 import {
     DELIVERY_END_TIME,
     DELIVERY_START_TIME,
     DELIVERY_TIME_STEP,
 } from '../config';
 
-const { isEmpty } = sharedLibTypeGuards;
+const { isUnAuthorizedError } = sharedLibTypeGuards;
+
+/**
+ * Extends
+ */
 
 /**
  * Events
  */
 export const init = createEvent();
+export const initOffline = createEvent();
+export const setOffline = createEvent<boolean>();
 export const fetchData = createEvent();
+export const dataUpdated = createEvent();
+export const removeDelivery = createEvent<Delivery['id']>();
+export const reset = createEvent();
+
+export const $isOffline = createStore<boolean>(false)
+    .on(initOffline, () => true)
+    .on(setOffline, (_, payload) => payload)
+    .reset(init, reset);
+
+/**
+ * Data fetching
+ */
+
+const fetchMyDeliveriesModel = FetchDeliveriesByParameters.factory.createModel({
+    provider: getMyDeliveriesFx,
+    pagination: createStore({ limit: 100 }),
+});
+
+sample({
+    clock: fetchData,
+    target: fetchMyDeliveriesModel.fetch,
+});
+
+sample({
+    clock: fetchMyDeliveriesModel.deliveriesFetched,
+    target: setDeliveries,
+});
+
+sample({
+    clock: fetchMyDeliveriesModel.deliveriesFetched,
+    target: dataUpdated,
+});
+
+sample({
+    clock: fetchMyDeliveriesModel.deliveriesFetchFailed,
+    filter: (error) => isUnAuthorizedError(error),
+    target: RefreshToken.tokenRefreshRequested,
+});
+sample({
+    clock: RefreshToken.updateTokenSuccess,
+    source: fetchMyDeliveriesModel.$errors,
+    filter: (errors) => !isEmpty(errors),
+    target: fetchData,
+});
 
 /**
  * init
  */
-const initCompleted = createEvent();
+export const $isInitialized = createStore<boolean>(false)
+    .on(
+        combineEvents({
+            events: [
+                RevalidateSubwayStationsList.done,
+                fetchMyDeliveriesModel.deliveriesFetched,
+            ],
+            reset: init,
+        }),
+        () => true,
+    )
+    .on(initOffline, () => true)
+    .reset(reset);
 
-export const $isInitialized = createStore<boolean>(false).on(
-    initCompleted,
-    () => false,
-);
+sample({
+    clock: delay(init, 400),
+    source: and(not($isInitialized), not($isOffline)),
+    filter: (allowed) => !!allowed,
+    target: fetchMyDeliveriesModel.fetch,
+});
 
 sample({
     clock: init,
-    source: $isInitialized,
-    filter: (initialized) => !initialized,
-    target: fetchData,
-});
-
-sample({
-    clock: getMyDeliveriesFx.done,
-    target: initCompleted,
-});
-
-/**
- * State
- */
-export const $$empty = $deliveriesStore.map((deliveries) =>
-    isEmpty(deliveries),
-);
-export const $inPending = getMyDeliveriesFx.pending;
-export const $error = createStore<Error[]>([])
-    .on(getMyDeliveriesFx.failData, (state, error) => {
-        const errorAlreadyExists = state.some(
-            (existingError) => existingError.message === error.message,
-        );
-        return errorAlreadyExists ? state : [...state, error];
-    })
-    .reset([init, fetchData]);
-export const $$hasError = $error.map((error) => !isEmpty(error));
-
-/**
- * Initial data fetching
- */
-
-sample({
-    clock: fetchData,
-    source: {
-        isOnline: sessionModel.$$isOnline,
-        isAuthorized: sessionModel.$isAuthorized,
-    },
-    filter: ({ isOnline, isAuthorized }) => isOnline && isAuthorized,
-    target: getMyDeliveriesFx,
+    source: and(not($isInitialized), not($isOffline)),
+    filter: (allowed) => !!allowed,
+    target: RevalidateSubwayStationsList.check,
 });
 
 /**
@@ -80,8 +117,43 @@ export const filteredDeliveriesByTimeModel =
         startTime: DELIVERY_START_TIME,
         endTime: DELIVERY_END_TIME,
         stepMins: DELIVERY_TIME_STEP,
-        sourceStore: $deliveriesStore,
+        sourceStore: $myDeliveriesStoreSorted,
     });
 
-export const $deliveriesList =
-    filteredDeliveriesByTimeModel.$filteredDeliveries;
+/**
+ * State
+ */
+export const $$empty = $myDeliveriesStore.map((items) => isEmpty(items));
+export const $$inPending = fetchMyDeliveriesModel.$pending;
+
+/**
+ * Refetch when online
+ */
+
+sample({
+    clock: delay($isOffline, 300),
+    source: $isInitialized,
+    filter: (isInit, isOffline) => isInit && isOffline === false,
+    fn: (isOnline) => !isOnline,
+    target: fetchMyDeliveriesModel.fetch,
+});
+
+/**
+ * Remove delivery
+ */
+sample({
+    clock: removeDelivery,
+    source: $myDeliveriesStore,
+    fn: (deliveries, id) => deliveries.filter((delivery) => delivery.id !== id),
+    target: setDeliveries,
+});
+
+/*
+ * Reset
+ */
+sample({
+    clock: delay(reset, 300),
+    source: $isInitialized,
+    filter: (isInit) => isInit,
+    target: [resetDeliveries, fetchMyDeliveriesModel.reset],
+});

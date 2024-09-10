@@ -3,9 +3,11 @@ import { AssignDeliveryWithMe } from '@/features/delivery/assignDeliveryToUser';
 import { assignUserToDeliveryFx } from '@/entities/user';
 import { FetchDeliveriesByParameters } from '@/features/delivery/fetchDeliveriesByParams';
 import { InfiniteScroll } from '@/features/other/infinite-scroll';
-import { isEmpty } from '@/shared/lib/type-guards';
-import { condition, debounce, delay } from 'patronum';
-import { sessionModel } from '@/entities/viewer';
+import { isEmpty, isUnAuthorizedError } from '@/shared/lib/type-guards';
+import { and, delay, not, throttle } from 'patronum';
+import { RefreshToken } from '@/features/auth/refreshToken';
+import { DatePeriod } from '@/shared/ui/components/forms/horizontal-date-picker/types';
+import { DeliveryType } from '@/shared/api';
 import { fetchAvailableDeliveriesFx } from './effects';
 import {
     $datesRange,
@@ -14,12 +16,11 @@ import {
     $outputDeliveriesStore,
     $weight,
     clearDeliveries,
-    datesRangePicked,
-    deliveryTypeChanged,
-    expressChanged,
-    filtersChanged,
+    setDatesRange,
     setDeliveries,
-    weightRangeChanged,
+    setDeliveryType,
+    setExpress,
+    setWeight,
 } from './stores';
 
 /**
@@ -27,13 +28,30 @@ import {
  */
 
 export const init = createEvent();
+export const initOffline = createEvent();
+export const setOffline = createEvent<boolean>();
 export const fetchData = createEvent();
+export const datesRangePicked = createEvent<DatePeriod>();
+export const expressChanged = createEvent<boolean>();
+export const deliveryTypeChanged = createEvent<DeliveryType>();
+export const weightRangeChanged = createEvent<[number, number]>();
+export const resetFilters = createEvent();
+export const deliveryAssignCompleted = createEvent();
+export const reset = createEvent();
 
 /**
- * Fetching
+ * Network state
  */
 
-export const InfiniteScrollModel = InfiniteScroll.factory.createModel({
+export const $isOffline = createStore<Optional<boolean>>(null)
+    .on(initOffline, () => true)
+    .on(setOffline, (_, payload) => payload)
+    .reset([reset, init]);
+
+/**
+ * Data Fetching
+ */
+export const infiniteScrollModel = InfiniteScroll.factory.createModel({
     provider: fetchAvailableDeliveriesFx,
     throttleTimeoutInMs: 500,
     initial: {
@@ -49,7 +67,7 @@ export const InfiniteScrollModel = InfiniteScroll.factory.createModel({
 export const fetchDeliveriesModel =
     FetchDeliveriesByParameters.factory.createModel({
         provider: fetchAvailableDeliveriesFx,
-        pagination: InfiniteScrollModel.$pagination,
+        pagination: infiniteScrollModel.$pagination,
         sourceData: combine(
             $express,
             $deliveryType,
@@ -65,28 +83,43 @@ export const fetchDeliveriesModel =
         ),
     });
 
+export const $hasNoDeliveries = createStore<boolean>(false).on(
+    fetchDeliveriesModel.deliveriesFetchFailed,
+    () => true,
+);
+
+sample({
+    clock: fetchDeliveriesModel.deliveriesFetched,
+    source: infiniteScrollModel.$pagination,
+    filter: (pagination) => pagination.page === 1,
+    fn: (_, data) => {
+        return isEmpty(data);
+    },
+    target: $hasNoDeliveries,
+});
+
+export const $isDeliveriesLoading = fetchDeliveriesModel.$pending;
+export const $isFirstPage = infiniteScrollModel.$pagination.map(
+    (page) => page.page === 1,
+);
+
 sample({
     clock: fetchDeliveriesModel.deliveriesFetched,
     source: {
-        pagination: InfiniteScrollModel.$pagination,
+        pagination: infiniteScrollModel.$pagination,
         outputStore: $outputDeliveriesStore,
     },
     fn: ({ pagination, outputStore }, data) => {
         if (pagination.page === 1) return data;
+        if (isEmpty(data) && pagination.page > 1) return outputStore;
         return [...outputStore, ...data];
     },
     target: setDeliveries,
 });
 
 sample({
-    clock: InfiniteScrollModel.newPageRequested,
+    clock: infiniteScrollModel.newPageRequested,
     target: fetchDeliveriesModel.fetch,
-});
-
-sample({
-    clock: sessionModel.$$isOnline,
-    filter: (isOnline) => !isOnline,
-    target: InfiniteScrollModel.reset,
 });
 
 /**
@@ -97,43 +130,37 @@ export const assignDeliveryToUserModel =
         assignToDeliveryFx: assignUserToDeliveryFx,
     });
 
+sample({
+    clock: assignDeliveryToUserModel.assignCompleted,
+    target: deliveryAssignCompleted,
+});
+
 /**
  * Widget initialization
  */
-const initStarted = createEvent();
+
 const initComplete = createEvent();
+
 const $firstDataFetched = createStore<boolean>(false);
+export const $isReadyForInfiniteScroll = createStore<boolean>(false);
 
 export const $isInitialized = createStore<boolean>(false)
     .on(initComplete, () => true)
+    .on(initOffline, () => true)
     .reset(init);
 
+// Online
 sample({
     clock: delay(init, 400),
-    source: $isInitialized,
-    filter: (initialized) => !initialized,
+    source: and(not($isInitialized), not($isOffline)),
+    filter: (allowed) => !!allowed,
     target: fetchDeliveriesModel.fetch,
-});
-
-condition({
-    source: initStarted,
-    if: sessionModel.$$isOnline,
-    then: fetchDeliveriesModel.fetch,
-    else: initComplete,
-});
-
-sample({
-    clock: fetchDeliveriesModel.deliveriesFetched,
-    source: $isInitialized,
-    filter: (initialized) => !initialized,
-    fn: (_, deliveries) => deliveries,
-    target: setDeliveries,
 });
 
 sample({
     clock: delay($outputDeliveriesStore, 100),
-    source: $isInitialized,
-    filter: (initialized) => !initialized,
+    source: and(not($isInitialized), not($isOffline)),
+    filter: (allowed) => !!allowed,
     fn: () => true,
     target: $firstDataFetched,
 });
@@ -143,69 +170,115 @@ sample({
     target: initComplete,
 });
 
+sample({
+    clock: delay(fetchDeliveriesModel.deliveriesFetched, 300),
+    source: $outputDeliveriesStore,
+    filter: (deliveries) => !isEmpty(deliveries),
+    fn: () => true,
+    target: $isReadyForInfiniteScroll,
+});
+
+sample({
+    clock: fetchDeliveriesModel.fetch,
+    fn: () => false,
+    target: $isReadyForInfiniteScroll,
+});
+
 /**
- * Re-fetch Data
+ * Filters
+ */
+sample({
+    clock: expressChanged,
+    target: [setExpress, infiniteScrollModel.reset],
+});
+
+sample({
+    clock: deliveryTypeChanged,
+    target: [setDeliveryType, infiniteScrollModel.reset],
+});
+
+sample({
+    clock: weightRangeChanged,
+    target: [setWeight, infiniteScrollModel.reset],
+});
+
+sample({
+    clock: datesRangePicked,
+    target: [setDatesRange, infiniteScrollModel.reset],
+});
+
+sample({
+    clock: [
+        throttle(expressChanged, 500),
+        throttle(deliveryTypeChanged, 500),
+        throttle(weightRangeChanged, 500),
+        throttle(datesRangePicked, 500),
+    ],
+    source: and($isInitialized, not($isOffline)),
+    filter: (allowed) => !!allowed,
+    target: fetchDeliveriesModel.fetch,
+});
+
+/**
+ * Fetch Data
  */
 
 sample({
     clock: fetchData,
-    source: {
-        isInit: $isInitialized,
-        isOnline: sessionModel.$$isOnline,
-        isAuthorized: sessionModel.$isAuthorized,
-    },
-    filter: ({ isInit, isOnline, isAuthorized }) =>
-        isInit && isOnline && isAuthorized,
+    source: and($isInitialized, not($isOffline)),
+    filter: (allowed) => allowed,
     target: fetchDeliveriesModel.fetch,
 });
 
 /**
- * Change Filters
+ * Change network state
  */
 
 sample({
-    clock: [
-        datesRangePicked,
-        expressChanged,
-        deliveryTypeChanged,
-        weightRangeChanged,
-    ],
-    target: filtersChanged,
+    clock: $isOffline,
+    source: $isInitialized,
+    filter: (isInit, isOnline) => isInit && isOnline === false,
+    fn: (isOnline) => !isOnline,
+    target: [fetchDeliveriesModel.reset, clearDeliveries],
 });
 
 sample({
-    clock: debounce(filtersChanged, 1000),
-    target: [InfiniteScrollModel.reset, clearDeliveries],
-});
-
-sample({
-    clock: delay(filtersChanged, 500),
-    source: {
-        isInit: $isInitialized,
-        isOnline: sessionModel.$$isOnline,
-        isAuthorized: sessionModel.$isAuthorized,
-    },
-    filter: ({ isInit, isOnline, isAuthorized }) =>
-        isInit && isOnline && isAuthorized,
+    clock: delay($isOffline, 300),
+    source: $isInitialized,
+    filter: (isInit, isOnline) => isInit && isOnline === false,
+    fn: (isOnline) => !isOnline,
     target: fetchDeliveriesModel.fetch,
 });
 
 /**
- * Handle states
+ * Refresh token on error
  */
+sample({
+    clock: fetchDeliveriesModel.deliveriesFetchFailed,
+    filter: (error) => isUnAuthorizedError(error),
+    target: RefreshToken.tokenRefreshRequested,
+});
 
-export const $hasNoDeliveries = createStore<boolean>(false)
-    .on(fetchDeliveriesModel.deliveriesFetched, (_, deliveries) =>
-        isEmpty(deliveries),
-    )
-    .on(fetchDeliveriesModel.deliveriesFetchFailed, () => true);
+sample({
+    clock: RefreshToken.updateTokenSuccess,
+    source: fetchDeliveriesModel.$errors,
+    filter: (errors) => !isEmpty(errors),
+    target: fetchDeliveriesModel.fetch,
+});
 
-export const $isDeliveriesLoading = fetchDeliveriesModel.$pending;
-export const $isFirstPage = InfiniteScrollModel.$pagination.map(
-    (page) => page.page === 1,
-);
+sample({
+    clock: RefreshToken.updateTokenSuccess,
+    source: $isInitialized,
+    filter: (isInit) => !isInit,
+    target: fetchDeliveriesModel.fetch,
+});
 
 /**
- * ------------------------------------------------
- * Here you can implement the logic for handling critical errors
+ * Reset
  */
+sample({
+    clock: delay(reset, 300),
+    source: $isInitialized,
+    filter: (isInit) => isInit,
+    target: [clearDeliveries, resetFilters],
+});

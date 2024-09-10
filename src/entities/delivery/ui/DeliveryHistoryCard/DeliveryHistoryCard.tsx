@@ -3,7 +3,8 @@ import { Button, Chip, Divider } from '@nextui-org/react';
 import { sharedConfigRoutes } from '@/shared/config';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
+import { getDeliveryId, getDeliverySystemId } from '@/entities/delivery';
 import {
     LABEL_ADDRESS,
     LABEL_COMMENT,
@@ -18,7 +19,6 @@ import {
 } from '../../config';
 import { getDeliveryContents } from '../../lib/utils/getDeliveryContents';
 import { getDeliveryComment } from '../../lib/utils/getDeliveryComment';
-import { getDeliveryId } from '../../lib/utils/getDeliveryId';
 import { getDeliveryPickupDateTime } from '../../lib/utils/getDeliveryPickupDateTime';
 import { getDeliveryAddress } from '../../lib/utils/getDeliveryAdress';
 
@@ -108,40 +108,45 @@ const ButtonMore: FunctionComponent<{ onPress: () => void }> = ({
 };
 
 interface DeliveryHistoryCardProperties {
-    delivery: Delivery;
+    delivery: Pick<
+        Delivery,
+        'id' | 'deliveryId' | 'contents' | 'comment' | 'state' | 'date'
+    >;
 }
 
-export const DeliveryHistoryCard: FunctionComponent<DeliveryHistoryCardProperties> =
-    React.memo(({ delivery }) => {
-        const { state } = delivery;
-        const navigate = useNavigate();
+export const DeliveryHistoryCard: FunctionComponent<
+    DeliveryHistoryCardProperties
+> = ({ delivery }) => {
+    const { state } = delivery;
+    const navigate = useNavigate();
 
-        const id = getDeliveryId(delivery);
-        const contents = getDeliveryContents(delivery);
-        const comment = getDeliveryComment(delivery);
-        const address = getDeliveryAddress(delivery);
-        const date = getDeliveryPickupDateTime(delivery, true, true);
+    const deliverySystemId = getDeliverySystemId(delivery);
+    const id = getDeliveryId(delivery);
+    const contents = getDeliveryContents(delivery);
+    const comment = getDeliveryComment(delivery);
+    const address = getDeliveryAddress(delivery);
+    const date = getDeliveryPickupDateTime(delivery, true, true);
 
-        const onPressButtonMore = useCallback((): void => {
-            navigate(`${DELIVERIES}/${id}`);
-        }, [id, navigate]);
+    const onPressButtonMore = useCallback((): void => {
+        navigate(`${DELIVERIES}/${deliverySystemId}`);
+    }, [deliverySystemId, navigate]);
 
-        return (
-            <div className="min-w-0 flex-1 py-0">
-                <div className="text-md text-gray-500">
-                    <div className="grid w-full grid-cols-[max-content_auto] justify-between">
-                        <ID id={id} />
-                        <StateBadge state={state} />
-                    </div>
-                    <span className="whitespace-nowrap text-sm">{date}</span>
+    return (
+        <div className="min-w-0 flex-1 py-0">
+            <div className="text-md text-gray-500">
+                <div className="grid w-full grid-cols-[max-content_auto] justify-between">
+                    <ID id={id} />
+                    <StateBadge state={state} />
                 </div>
-                <Divider className="my-4" />
-                <div className="mt-2 flex flex-col gap-4">
-                    <Address address={address} />
-                    <Contents contents={contents} />
-                    <Comment comment={comment} />
-                    <ButtonMore onPress={onPressButtonMore} />
-                </div>
+                <span className="whitespace-nowrap text-sm">{date}</span>
             </div>
-        );
-    });
+            <Divider className="my-4" />
+            <div className="mt-2 flex flex-col gap-4">
+                <Address address={address} />
+                <Contents contents={contents} />
+                <Comment comment={comment} />
+                <ButtonMore onPress={onPressButtonMore} />
+            </div>
+        </div>
+    );
+};

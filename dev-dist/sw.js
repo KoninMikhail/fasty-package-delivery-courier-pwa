@@ -13,113 +13,120 @@
 
 // If the loader is already loaded, just stop.
 if (!self.define) {
-  let registry = {};
+    const registry = {};
 
-  // Used for `eval` and `importScripts` where we can't get script URL by other means.
-  // In both cases, it's safe to use a global var because those functions are synchronous.
-  let nextDefineUri;
+    // Used for `eval` and `importScripts` where we can't get script URL by other means.
+    // In both cases, it's safe to use a global var because those functions are synchronous.
+    let nextDefineUri;
 
-  const singleRequire = (uri, parentUri) => {
-    uri = new URL(uri + ".js", parentUri).href;
-    return registry[uri] || (
-      
-        new Promise(resolve => {
-          if ("document" in self) {
-            const script = document.createElement("script");
-            script.src = uri;
-            script.onload = resolve;
-            document.head.appendChild(script);
-          } else {
-            nextDefineUri = uri;
-            importScripts(uri);
-            resolve();
-          }
-        })
-      
-      .then(() => {
-        let promise = registry[uri];
-        if (!promise) {
-          throw new Error(`Module ${uri} didn’t register its module`);
-        }
-        return promise;
-      })
-    );
-  };
-
-  self.define = (depsNames, factory) => {
-    const uri = nextDefineUri || ("document" in self ? document.currentScript.src : "") || location.href;
-    if (registry[uri]) {
-      // Module is already loading or loaded.
-      return;
-    }
-    let exports = {};
-    const require = depUri => singleRequire(depUri, uri);
-    const specialDeps = {
-      module: { uri },
-      exports,
-      require
+    const singleRequire = (uri, parentUri) => {
+        uri = new URL(`${uri}.js`, parentUri).href;
+        return (
+            registry[uri] ||
+            new Promise((resolve) => {
+                if ('document' in self) {
+                    const script = document.createElement('script');
+                    script.src = uri;
+                    script.addEventListener('load', resolve);
+                    document.head.append(script);
+                } else {
+                    nextDefineUri = uri;
+                    importScripts(uri);
+                    resolve();
+                }
+            }).then(() => {
+                const promise = registry[uri];
+                if (!promise) {
+                    throw new Error(`Module ${uri} didn’t register its module`);
+                }
+                return promise;
+            })
+        );
     };
-    registry[uri] = Promise.all(depsNames.map(
-      depName => specialDeps[depName] || require(depName)
-    )).then(deps => {
-      factory(...deps);
-      return exports;
-    });
-  };
+
+    self.define = (depsNames, factory) => {
+        const uri =
+            nextDefineUri ||
+            ('document' in self ? document.currentScript.src : '') ||
+            location.href;
+        if (registry[uri]) {
+            // Module is already Loading or loaded.
+            return;
+        }
+        const exports = {};
+        const require = (depUri) => singleRequire(depUri, uri);
+        const specialDeps = {
+            module: { uri },
+            exports,
+            require,
+        };
+        registry[uri] = Promise.all(
+            depsNames.map(
+                (depName) => specialDeps[depName] || require(depName),
+            ),
+        ).then((deps) => {
+            factory(...deps);
+            return exports;
+        });
+    };
 }
-define(['./workbox-ddf0a90e'], (function (workbox) { 'use strict';
+define(['./workbox-0747ddcf'], function (workbox) {
+    self.skipWaiting();
+    workbox.clientsClaim();
 
-  self.skipWaiting();
-  workbox.clientsClaim();
-
-  /**
-   * The precacheAndRoute() method efficiently caches and responds to
-   * requests for URLs in the manifest.
-   * See https://goo.gl/S9QRab
-   */
-  workbox.precacheAndRoute([{
-    "url": "index.html",
-    "revision": "0.ub21l97il28"
-  }], {});
-  workbox.cleanupOutdatedCaches();
-  workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
-    allowlist: [/^\/$/]
-  }));
-  workbox.registerRoute(/.*\/files\/.*/i, new workbox.CacheFirst({
-    "cacheName": "files-cache",
-    plugins: [new workbox.ExpirationPlugin({
-      maxEntries: 5,
-      maxAgeSeconds: 31536000
-    }), new workbox.CacheableResponsePlugin({
-      statuses: [0, 200]
-    })]
-  }), 'GET');
-  workbox.registerRoute(/.*\/icons\/subway\/.*.svg/i, new workbox.CacheFirst({
-    "cacheName": "subway-icons-cache",
-    plugins: [new workbox.ExpirationPlugin({
-      maxEntries: 50,
-      maxAgeSeconds: 31536000
-    }), new workbox.CacheableResponsePlugin({
-      statuses: [0, 200]
-    })]
-  }), 'GET');
-  workbox.registerRoute(/^(.*\/deliveries\/history.*)?$/i, new workbox.StaleWhileRevalidate({
-    "cacheName": "deliveries-history-cache",
-    plugins: [new workbox.ExpirationPlugin({
-      maxEntries: 200,
-      maxAgeSeconds: 21600
-    }), new workbox.CacheableResponsePlugin({
-      statuses: [0, 200]
-    })]
-  }), 'GET');
-  workbox.registerRoute(/^(.*\/deliveries)(\?(?=.*from=)(?=.*to=).*)?$/i, new workbox.CacheFirst({
-    "cacheName": "market-deliveries-cache",
-    plugins: [new workbox.ExpirationPlugin({
-      maxEntries: 200,
-      maxAgeSeconds: 120
-    }), new workbox.CacheableResponsePlugin({
-      statuses: [0, 200]
-    })]
-  }), 'GET');
-
-}));
+    /**
+     * The precacheAndRoute() method efficiently caches and responds to
+     * requests for URLs in the manifest.
+     * See https://goo.gl/S9QRab
+     */
+    workbox.precacheAndRoute(
+        [
+            {
+                url: 'index.html',
+                revision: '0.vr1o2prtd8g',
+            },
+        ],
+        {},
+    );
+    workbox.cleanupOutdatedCaches();
+    workbox.registerRoute(
+        new workbox.NavigationRoute(
+            workbox.createHandlerBoundToURL('index.html'),
+            {
+                allowlist: [/^\/$/],
+            },
+        ),
+    );
+    workbox.registerRoute(
+        /.*\/uploads\/.*/i,
+        new workbox.CacheFirst({
+            cacheName: 'files-cache',
+            plugins: [
+                new workbox.ExpirationPlugin({
+                    maxEntries: 5,
+                    maxAgeSeconds: 31_536_000,
+                }),
+                new workbox.CacheableResponsePlugin({
+                    statuses: [0, 200],
+                }),
+            ],
+        }),
+        'GET',
+    );
+    workbox.registerRoute(
+        /.*\/icons\/subway\/.+svg/i,
+        new workbox.CacheFirst({
+            cacheName: 'subway-icons-cache',
+            plugins: [
+                new workbox.ExpirationPlugin({
+                    maxEntries: 50,
+                    maxAgeSeconds: 31_536_000,
+                }),
+                new workbox.CacheableResponsePlugin({
+                    statuses: [0, 200],
+                }),
+            ],
+        }),
+        'GET',
+    );
+});

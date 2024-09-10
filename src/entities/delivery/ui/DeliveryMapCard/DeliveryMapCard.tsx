@@ -9,10 +9,11 @@ import {
 import { Delivery } from '@/shared/api';
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SubwayStationWithIcon } from '@/shared/services/subway';
+// eslint-disable-next-line boundaries/element-types
+import { SubwayStationWithIcon } from '@/entities/route/@subway';
 import { useEstimatedTime } from '../../lib/hooks/useEstimatedTime';
 import { translationNS, EXPIRED, TIME_LEFT, ADDRESS } from '../../config';
-import { getDeliveryId } from '../../lib/utils/getDeliveryId';
+import { getDeliverySystemId } from '../../lib/utils/getDeliverySystemId';
 import { getDeliveryAddress } from '../../lib/utils/getDeliveryAdress';
 import { getDeliveryMetro } from '../../lib/utils/getDeliveryMetro';
 
@@ -94,7 +95,7 @@ export const DeliveryMapCard: FunctionComponent<DeliveryMapCardProperties> = ({
     onPress,
 }) => {
     const deadline = delivery.time_end;
-    const id = getDeliveryId(delivery);
+    const id = getDeliverySystemId(delivery);
     const metro = getDeliveryMetro(delivery);
     const address = getDeliveryAddress(delivery);
 

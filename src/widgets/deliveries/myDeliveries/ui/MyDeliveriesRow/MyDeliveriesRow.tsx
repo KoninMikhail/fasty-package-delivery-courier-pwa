@@ -1,24 +1,17 @@
 import { DeliveryCountdownCard, getDeliveryNumber } from '@/entities/delivery';
 import { useList, useUnit } from 'effector-react';
 import { sharedUiLayouts } from '@/shared/ui';
-import { Button, Skeleton, Spacer, Spinner } from '@nextui-org/react';
-import { GoAlert } from 'react-icons/go';
-import { AiOutlineReload } from 'react-icons/ai';
-import { BsBoxSeam } from 'react-icons/bs';
+import { Spinner } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
 import { PropsWithChildren } from 'react';
 import { settingsModel } from '@/entities/viewer';
-import { $$empty, $inPending, $$hasError, $isInitialized } from '../../model';
-import { $deliveriesStore } from '../../model/deliveriesStore';
 
-import {
-    BUTTON_RETRY_TEXT_KEY,
-    DELIVERY_PREFIX,
-    ERROR_TEXT_KEY,
-    DATA_EMPTY_TEXT_KEY,
-    translationNS,
-} from '../../config';
+import { NoDeliveries } from '@/widgets/deliveries/myDeliveries/ui/common/NoDeliveries';
+import { DELIVERY_PREFIX, translationNS } from '../../config';
+import { $$empty, $$inPending, $isInitialized } from '../../model/model';
+import { $myDeliveriesStoreSorted } from '../../model/stores';
+import { Loading } from '../common/Loading';
 
 const { HorizontalScroll } = sharedUiLayouts;
 
@@ -30,69 +23,6 @@ const ScrollableContent: FunctionComponent<PropsWithChildren> = ({
 }) => (
     <div className="flex flex-nowrap justify-start gap-4 py-4">{children}</div>
 );
-
-/**
- * Component rendering a placeholder to indicate no items are available.
- */
-const EmptyItemsPlaceholder: FunctionComponent = () => {
-    const { t } = useTranslation(translationNS);
-    return (
-        <div className="block p-4">
-            <div className="flex h-44 w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-content3 p-4">
-                <BsBoxSeam className="text-4xl text-content3" />
-                <Spacer y={3} />
-                <div>
-                    <span className="text-center text-lg text-content3">
-                        {t(DATA_EMPTY_TEXT_KEY)}
-                    </span>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-/**
- * Renders skeletons as placeholders during loading states.
- */
-const Loading: FunctionComponent = () => (
-    <div className="block py-4">
-        <HorizontalScroll>
-            <div className="flex flex-nowrap justify-start gap-4 px-4">
-                <Skeleton className="rounded-lg">
-                    <div className="h-[175px] w-[300px]" />
-                </Skeleton>
-                <Skeleton className="rounded-lg">
-                    <div className="h-[175px] w-[300px]" />
-                </Skeleton>
-                <Skeleton className="rounded-lg">
-                    <div className="h-[175px] w-[300px]" />
-                </Skeleton>
-            </div>
-        </HorizontalScroll>
-    </div>
-);
-
-/**
- * Component displaying an error message with a retry button.
- */
-const ErrorInitPlaceholder: FunctionComponent = () => {
-    const { t } = useTranslation(translationNS);
-    return (
-        <div className="block p-4">
-            <div className="flex h-44 w-full flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-content3 p-4">
-                <GoAlert className="text-6xl text-content3" />
-                <div>
-                    <span className="text-content3">{t(ERROR_TEXT_KEY)}</span>
-                </div>
-                <Spacer y={1} />
-                <Button size="sm">
-                    <AiOutlineReload />
-                    {t(BUTTON_RETRY_TEXT_KEY)}
-                </Button>
-            </div>
-        </div>
-    );
-};
 
 /**
  * Animates and shows an updating spinner.
@@ -110,20 +40,19 @@ const Updater: FunctionComponent = () => (
 );
 
 /**
- * Main component for displaying a row of deliveries, handling loading, empty, and error states.
+ * Main component for displaying a row of deliveries, handling Loading, empty, and error states.
  */
 export const MyDeliveriesRow: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
     const itemsLimit = useUnit(settingsModel.$homeUpcomingDeliveriesCount);
 
-    const { isInit, isEmpty, isUpdating, hasError } = useUnit({
+    const { isInit, isEmpty, isUpdating } = useUnit({
         isInit: $isInitialized,
         isEmpty: $$empty,
-        isUpdating: $inPending,
-        hasError: $$hasError,
+        isUpdating: $$inPending,
     });
 
-    const items = useList($deliveriesStore, (delivery, index) => {
+    const items = useList($myDeliveriesStoreSorted, (delivery, index) => {
         const deliveryId = getDeliveryNumber(delivery);
 
         if (index >= itemsLimit) return null;
@@ -145,10 +74,17 @@ export const MyDeliveriesRow: FunctionComponent = () => {
 
     if (!isInit) return <Loading />;
 
+    /* if (hasError) return <ErrorInitPlaceholder />;
+     */
     if (isEmpty) {
-        if (hasError) return <ErrorInitPlaceholder />;
         if (isUpdating) return <Loading />;
-        return <EmptyItemsPlaceholder />;
+        return (
+            <NoDeliveries
+                classNames={{
+                    container: 'block px-4',
+                }}
+            />
+        );
     }
 
     return (

@@ -14,7 +14,8 @@ import { useTranslation } from 'react-i18next';
 import { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { sharedConfigRoutes } from '@/shared/config';
-import { sharedServicesSubway } from '@/shared/services';
+// eslint-disable-next-line boundaries/element-types
+import { SubwayStationWithIcon } from '@/entities/route/@subway';
 
 import {
     BUTTON_MORE,
@@ -29,7 +30,7 @@ import {
     WEIGHT_VALUE,
 } from '../../config';
 import { getDeliveryNumber } from '../../lib/utils/getDeliveryNumber';
-import { getDeliveryId } from '../../lib/utils/getDeliveryId';
+import { getDeliverySystemId } from '../../lib/utils/getDeliverySystemId';
 import { getDeliveryAddress } from '../../lib/utils/getDeliveryAdress';
 import { getDeliveryMetro } from '../../lib/utils/getDeliveryMetro';
 import { getDeliveryContents } from '../../lib/utils/getDeliveryContents';
@@ -38,7 +39,6 @@ import { getDeliveryExpressState } from '../../lib/utils/getDeliveryExpressState
 import { getDeliveryPickupDateTime } from '../../lib/utils/getDeliveryPickupDateTime';
 import { getDeliveryWeight } from '../../lib/utils/getDeliveryWeight';
 
-const { SubwayStationWithIcon } = sharedServicesSubway;
 const { RouteName } = sharedConfigRoutes;
 const { DELIVERIES } = RouteName;
 
@@ -140,7 +140,7 @@ export const DeliveryMarketCard: FunctionComponent<{
 }> = ({ delivery, featureSlot }) => {
     const navigate = useNavigate();
 
-    const id = getDeliveryId(delivery);
+    const id = getDeliverySystemId(delivery);
     const deliveryId = getDeliveryNumber(delivery);
     const address = getDeliveryAddress(delivery);
     const subway = getDeliveryMetro(delivery);
@@ -159,8 +159,10 @@ export const DeliveryMarketCard: FunctionComponent<{
     return (
         <Card
             className={clsx(
-                'max-w-[600px] shadow-md',
-                isExpress && 'border-2 border-danger',
+                'max-w-[800px] shadow-md',
+                isExpress
+                    ? 'border-2 border-danger'
+                    : 'border-2 border-background',
             )}
         >
             <CardHeader className="flex justify-between gap-3">

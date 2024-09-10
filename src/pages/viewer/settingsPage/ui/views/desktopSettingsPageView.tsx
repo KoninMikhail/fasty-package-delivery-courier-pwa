@@ -5,27 +5,16 @@ import { UserCardRow } from '@/entities/user';
 import { sessionModel } from '@/entities/viewer';
 import { Button, Chip, Divider, Link, Spacer } from '@nextui-org/react';
 import { CompanyLogoIcon } from '@/shared/ui/icons/CompanyLogoIcon';
-import { ChangeLanguageButton } from '@/features/viewer/changeLanguage';
 import { ChangeColorModeSwitchButton } from '@/features/viewer/changeColorMode';
-import { UpcomingItemsCountDropdown } from '@/features/viewer/setHomeUpcommingCount';
-import {
-    PageTitle,
-    SectionHelpSupportTitle,
-    SectionLegalTitle,
-    SettingsNotice,
-    TermsOfUseButtonText,
-    PrivacyPolicyButtonText,
-    CookiesPolicyButtonText,
-} from '@/pages/viewer/settingsPage/ui/common';
+
 import {
     APP_DESCRIPTION,
     APP_NAME,
+    APP_VERSION,
     APP_SUPPORT_EMAIL,
     APP_SUPPORT_PHONE,
 } from '@/shared/config/constants';
-import { AppVersion } from '@/shared/lib/app';
 import { useTranslation } from 'react-i18next';
-import { translationNS } from '@/pages/viewer/settingsPage/config';
 import { widgetCookiePolicyModalUi } from '@/widgets/polices/cookiePolicyModal';
 import { widgetPrivacyPolicyModalUi } from '@/widgets/polices/privacyPolicyModal';
 import { widgetTermsOfUseModalUi } from '@/widgets/polices/termsOfUseModal';
@@ -35,6 +24,18 @@ import {
     pressOpenPrivacyPolicyLink,
     pressOpenTermsOfUseLink,
 } from '@/pages/viewer/settingsPage/model';
+import { SetHomeUpcomingCount } from '@/features/viewer/setHomeUpcommingCount';
+import { ChangeLanguage } from '@/features/viewer/changeLanguage';
+import {
+    NOTIFICATION_CONTENT,
+    PAGE_HEADING,
+    SECTION_HELP_SUPPORT_TITLE,
+    SECTION_LEGAL_COOKIE_POLICY,
+    SECTION_LEGAL_PRIVACY_POLICY,
+    SECTION_LEGAL_TERMS_OF_USE,
+    SECTION_LEGAL_TITLE,
+    translationNS,
+} from '../../config';
 
 const { Navbar } = widgetNavbarDesktopUi;
 const { CookiePolicyModal } = widgetCookiePolicyModalUi;
@@ -66,13 +67,12 @@ const Section: FunctionComponent<PropsWithChildren> = ({ children }) => (
  * =======================
  */
 const Toolbar: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
     const user = useUnit(sessionModel.$viewerProfileData);
     return (
         <div className="flex w-full items-center justify-between py-6 pr-4">
             <div className="w-1/2">
-                <h1 className="text-4xl capitalize">
-                    <PageTitle />
-                </h1>
+                <h1 className="text-4xl capitalize">{t(PAGE_HEADING)}</h1>
             </div>
             <div>
                 <UserCardRow user={user} avatarPosition="right" />
@@ -100,6 +100,7 @@ const ContactLinks: FunctionComponent = () => {
 };
 
 const LegalLinks: FunctionComponent = () => {
+    const { t } = useTranslation(translationNS);
     const onPressCookiePolicy = useUnit(pressOpenCookiePolicyLink);
     const onPressPrivacyPolicy = useUnit(pressOpenPrivacyPolicyLink);
     const onPressTermsOfUse = useUnit(pressOpenTermsOfUseLink);
@@ -113,7 +114,7 @@ const LegalLinks: FunctionComponent = () => {
                         variant="flat"
                         fullWidth
                     >
-                        <CookiesPolicyButtonText />
+                        {t(SECTION_LEGAL_COOKIE_POLICY)}
                     </Button>
                 </div>
                 <div className="flex-grow">
@@ -123,7 +124,7 @@ const LegalLinks: FunctionComponent = () => {
                         variant="flat"
                         fullWidth
                     >
-                        <PrivacyPolicyButtonText />
+                        {t(SECTION_LEGAL_PRIVACY_POLICY)}
                     </Button>
                 </div>
             </div>
@@ -135,7 +136,7 @@ const LegalLinks: FunctionComponent = () => {
                         variant="flat"
                         fullWidth
                     >
-                        <TermsOfUseButtonText />
+                        {t(SECTION_LEGAL_TERMS_OF_USE)}
                     </Button>
                 </div>
             </div>
@@ -162,9 +163,7 @@ export const DesktopSettingsPageView: FunctionComponent = () => {
                     <Spacer />
                     <div className="flex w-full items-center justify-center gap-1 text-center text-lg">
                         <span className=" font-bold">{APP_NAME}</span>
-                        <Chip size="sm">
-                            <AppVersion />
-                        </Chip>
+                        <Chip size="sm">{APP_VERSION}</Chip>
                     </div>
                     <div className="w-full text-center text-xs">
                         {APP_DESCRIPTION[currentLanguage]}
@@ -177,7 +176,7 @@ export const DesktopSettingsPageView: FunctionComponent = () => {
                     <div className="flex items-center gap-2">
                         <div className="flex-grow">{t('language.title')}</div>
                         <div>
-                            <ChangeLanguageButton />
+                            <ChangeLanguage.Button />
                         </div>
                     </div>
                 </Section>
@@ -195,14 +194,14 @@ export const DesktopSettingsPageView: FunctionComponent = () => {
                             {t('setting.upcoming.items.count')}
                         </div>
                         <div>
-                            <UpcomingItemsCountDropdown />
+                            <SetHomeUpcomingCount.Dropdown />
                         </div>
                     </div>
                 </Section>
                 <Spacer />
                 <Section>
                     <p className="text-xs text-danger-400">
-                        <SettingsNotice />
+                        {t(NOTIFICATION_CONTENT)}
                     </p>
                 </Section>
                 <Spacer y={2} />
@@ -210,7 +209,7 @@ export const DesktopSettingsPageView: FunctionComponent = () => {
                 <Spacer y={2} />
                 <Section>
                     <div className="w-full font-bold">
-                        <SectionHelpSupportTitle />
+                        {t(SECTION_HELP_SUPPORT_TITLE)}
                     </div>
                     <ContactLinks />
                 </Section>
@@ -220,7 +219,7 @@ export const DesktopSettingsPageView: FunctionComponent = () => {
                 <Section>
                     <div className="flex flex-col gap-2">
                         <div className="mb-2 w-full font-bold">
-                            <SectionLegalTitle />
+                            {t(SECTION_LEGAL_TITLE)}
                         </div>
                     </div>
                     <LegalLinks />

@@ -1,13 +1,18 @@
 import { useUnit } from 'effector-react';
 import { IoCar } from 'react-icons/io5';
 import { MdOutlineDirectionsRun } from 'react-icons/md';
-import { $$deliveryType, $$deliveryTypeTranslated } from '../../../../model';
+import {
+    getDeliveryType,
+    getDeliveryTypeTranslated,
+} from '@/entities/delivery';
+import { $pageDeliveryDetails } from '../../../../model/stores';
 
 export const DeliveryTypeTransport: FunctionComponent = () => {
-    const type = useUnit($$deliveryType);
-    const text = useUnit($$deliveryTypeTranslated);
+    const delivery = useUnit($pageDeliveryDetails);
+    const type = getDeliveryType(delivery);
+    const text = getDeliveryTypeTranslated(delivery);
 
-    if (type === 'car') {
+    if (type === 'car')
         return (
             <div className="flex items-center gap-1">
                 <span className="text-xl">
@@ -16,7 +21,6 @@ export const DeliveryTypeTransport: FunctionComponent = () => {
                 {text}
             </div>
         );
-    }
     return (
         <div className="flex items-center gap-1">
             <span className="text-xl">

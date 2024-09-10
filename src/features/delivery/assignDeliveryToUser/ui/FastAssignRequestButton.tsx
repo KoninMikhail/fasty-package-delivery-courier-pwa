@@ -14,7 +14,7 @@ import { FaCheck } from 'react-icons/fa';
 import { BiSolidError } from 'react-icons/bi';
 import { useUnit } from 'effector-react';
 import { useTranslation } from 'react-i18next';
-import { factory } from '../model/model';
+import { factory } from '@/features/delivery/assignDeliveryToUser/factory/factory';
 import {
     BUTTON_LABEL_CANCEL,
     BUTTON_LABEL_CONFIRM,

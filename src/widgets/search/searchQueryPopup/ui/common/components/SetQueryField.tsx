@@ -2,7 +2,8 @@ import { useUnit } from 'effector-react';
 import { useSearchParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { Input, InputProps } from '@nextui-org/react';
-import { base as baseModel } from '../../../model';
+import { $query } from '@/widgets/search/searchQueryPopup/model/stores';
+import { queryChanged } from '@/widgets/search/searchQueryPopup/model/model';
 
 interface SetQueryFieldProperties {
     size?: InputProps['size'];
@@ -11,10 +12,7 @@ interface SetQueryFieldProperties {
 export const SetQueryField: FunctionComponent<SetQueryFieldProperties> = ({
     size,
 }) => {
-    const [value, onChangeQuery] = useUnit([
-        baseModel.$query,
-        baseModel.setQuery,
-    ]);
+    const [value, onChangeQuery] = useUnit([$query, queryChanged]);
     const [searchParameters] = useSearchParams();
 
     useEffect(() => {

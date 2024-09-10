@@ -9,12 +9,8 @@ import { useKeyPress } from '@/shared/lib/browser';
 import { Button } from '@nextui-org/react';
 
 import { sharedConfigRoutes } from '@/shared/config';
-
-import {
-    base as baseModel,
-    modal as modalModel,
-    history as searchHistoryModel,
-} from '../../../model';
+import { $query } from '../../../model/stores';
+import { queryAddedToHistory, searchButtonClicked } from '../../../model/model';
 
 const { RouteName } = sharedConfigRoutes;
 const { SEARCH_PAGE } = RouteName;
@@ -22,9 +18,12 @@ const { SEARCH_PAGE } = RouteName;
 export const PerformSearchButton: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
     const navigate = useNavigate();
-    const [query] = useUnit([baseModel.$query]);
-    const addToHistory = useUnit(searchHistoryModel.addQueryToHistory);
-    const onStartSearchCloseModal = useUnit(modalModel.startSearch);
+
+    const { query, addToHistory, onStartSearchCloseModal } = useUnit({
+        addToHistory: queryAddedToHistory,
+        query: $query,
+        onStartSearchCloseModal: searchButtonClicked,
+    });
 
     const onPressSearchButton = (): void => {
         const queryParameters = new URLSearchParams({

@@ -1,6 +1,7 @@
 import { LuPackage } from 'react-icons/lu';
-import { TbTruckDelivery } from 'react-icons/tb';
+import { TbTruckDelivery, TbUserEdit } from 'react-icons/tb';
 import { MdChecklistRtl } from 'react-icons/md';
+import { IoMdSettings } from 'react-icons/io';
 
 import { sharedConfigRoutes } from '@/shared/config';
 import { IoSearchSharp } from 'react-icons/io5';
@@ -40,5 +41,20 @@ export const navbarItems = [
         icon: <IoSearchSharp />,
         label: 'nav.search',
         href: SEARCH_PAGE,
+    },
+];
+
+export const bottomToolItems = [
+    {
+        id: 'profile-edit',
+        icon: <TbUserEdit />,
+        label: 'nav.profileEdit',
+        href: PROFILE_EDIT_PAGE,
+    },
+    {
+        id: 'settings',
+        icon: <IoMdSettings />,
+        label: 'nav.settings',
+        href: SETTINGS_PAGE,
     },
 ];

@@ -1,10 +1,26 @@
-import { combine, createEvent, createStore, restore, sample } from 'effector';
-import { Delivery } from '@/shared/api';
-import { sharedLibTypeGuards } from '@/shared/lib';
-import { searchDeliveriesByQueryFx } from './effects';
-import { PageState, SearchPageState } from '../types';
+import { createEvent, createStore, sample } from 'effector';
+import { widgetSearchResultsModel } from '@/widgets/search/searchResults';
+import { createGate } from 'effector-react';
+import { and, debug, delay, not } from 'patronum';
+import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
+import { widgetNavbarDesktopModel } from '@/widgets/layout/navbar-desktop';
+import { widgetNavbarMobileModel } from '@/widgets/layout/navbar-mobile';
+import { TIMEOUT_BEFORE_INIT_WIDGETS } from '@/pages/deliveries/marketPage/config';
+import { Logout } from '@/features/auth/logout';
+import { widgetSearchQueryPopupModel } from '@/widgets/search/searchQueryPopup';
 
-const { isEmpty } = sharedLibTypeGuards;
+export const {
+    model: { $$isOnline },
+} = DetectNetworkConnectionState;
+
+export const SearchPageGate = createGate<{
+    query: string;
+}>();
+
+const $isPageVisible = SearchPageGate.status;
+const $isFirstPageLoad = createStore<boolean>(false)
+    .on(SearchPageGate.open, () => true)
+    .reset(Logout.model.userLoggedOut);
 
 /**
  * Events
@@ -12,63 +28,98 @@ const { isEmpty } = sharedLibTypeGuards;
 export const queryChanged = createEvent<string>();
 
 /**
- * Query
+ * Init
  */
-export const $searchQuery = createStore<string>('', {
-    name: 'searchQuery',
-}).on(queryChanged, (_, query) => query);
 
+// Search query popup
 sample({
-    clock: $searchQuery,
-    filter: (query) => !isEmpty(query),
-    target: searchDeliveriesByQueryFx,
+    clock: delay(SearchPageGate.open, TIMEOUT_BEFORE_INIT_WIDGETS),
+    source: and(
+        $isFirstPageLoad,
+        $isPageVisible,
+        $$isOnline,
+        not(widgetSearchQueryPopupModel.$isInitialized),
+    ),
+    filter: (isAllow) => isAllow,
+    target: widgetSearchQueryPopupModel.init,
 });
 
-// Assuming the imports and PageState enum are correctly set as before
-
-// You already have a store reflecting the loading state,
-// so no need to use 'restore' here, you can directly use '$isLoading'
-const $isLoading = searchDeliveriesByQueryFx.pending;
-
-// Assuming $searchQuery and searchDeliveriesByQueryFx.doneData are setup correctly
-
-// Restoration of fetch results to manage its state, resetting on new fetch attempts
-const $fetchResults = restore(searchDeliveriesByQueryFx.doneData, null).reset(
-    searchDeliveriesByQueryFx,
-);
-
-// Combining states to derive $searchState using PageState
-const $searchState = combine(
-    $searchQuery,
-    $isLoading,
-    $fetchResults,
-    (searchQuery, isLoading, fetchResults): SearchPageState => {
-        if (isLoading) return PageState.Loading;
-        if (isEmpty(searchQuery)) return PageState.EmptyQuery;
-        if (fetchResults === null) return PageState.EmptyQuery; // or another appropriate default state
-        if (fetchResults.length === 0) return PageState.NotFound;
-        return PageState.Search;
-    },
-);
-
-// React to fetch failure separately
-const $isFetchError = createStore<boolean>(false)
-    .on(searchDeliveriesByQueryFx.fail, () => true)
-    .reset(searchDeliveriesByQueryFx); // Resets on new fetch attempts
-
-// Optionally combine with error state
-export const $finalSearchState = combine(
-    $searchState,
-    $isFetchError,
-    (pageState, isFetchError) => {
-        return isFetchError ? PageState.Error : pageState;
-    },
-);
+sample({
+    clock: delay(SearchPageGate.open, TIMEOUT_BEFORE_INIT_WIDGETS),
+    source: and(
+        $isFirstPageLoad,
+        $isPageVisible,
+        not($$isOnline),
+        not(widgetSearchQueryPopupModel.$isInitialized),
+    ),
+    filter: (isAllow) => isAllow,
+    target: widgetSearchQueryPopupModel.initOffline,
+});
 
 /**
- * Search results
+ * Query
  */
-export const $searchResults = createStore<Delivery[]>([]).on(
-    searchDeliveriesByQueryFx.doneData,
-    (_, payload) => payload,
-);
+sample({
+    clock: queryChanged,
+    target: widgetSearchResultsModel.queryChanged,
+});
+
+/**
+ * Init
+ */
+
+const $isFirstLoadPage = not(widgetSearchResultsModel.$isInitialized);
+
+sample({
+    clock: delay(SearchPageGate.open, 500),
+    source: and($isFirstLoadPage, $$isOnline),
+    filter: (allowed) => allowed,
+    target: widgetSearchResultsModel.init,
+});
+
+sample({
+    clock: delay(SearchPageGate.open, 500),
+    source: and($isFirstLoadPage, not($$isOnline)),
+    filter: (isFirstLoadPage) => isFirstLoadPage,
+    target: widgetSearchResultsModel.initOffline,
+});
+
+sample({
+    clock: widgetSearchResultsModel.$isInitialized,
+    source: SearchPageGate.state,
+    filter: (_, isInitialized) => isInitialized,
+    fn: (state) => state.query,
+    target: widgetSearchResultsModel.queryChanged,
+});
+
+sample({
+    clock: SearchPageGate.state,
+    fn: (state) => state.query,
+    target: queryChanged,
+});
+
+/**
+ * Set query for nav item
+ */
+sample({
+    clock: queryChanged,
+    target: [
+        widgetNavbarDesktopModel.setQuery,
+        widgetNavbarMobileModel.setQuery,
+    ],
+});
+
+debug({
+    queryChanged,
+});
+
+/**
+ * Change network state
+ */
+sample({
+    clock: $$isOnline,
+    source: widgetSearchResultsModel.$isInitialized,
+    filter: (isInit) => isInit,
+    fn: (isOnline) => !isOnline,
+    target: widgetSearchResultsModel.setOffline,
+});

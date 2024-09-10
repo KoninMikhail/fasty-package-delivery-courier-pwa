@@ -1,29 +1,29 @@
-import { isWithinInterval, parse } from 'date-fns';
+import { isBefore, isWithinInterval, parse } from 'date-fns';
 import { Delivery } from '@/shared/api';
 
-export function isTimeInRange(time: string, range: string): boolean {
+export function isTimeInRange(time: Date, range: string): boolean {
     const [rangeStart, rangeEnd] = range.split('-');
-    const date = new Date(); // используем текущую дату как базу для времени
 
-    const startTime = parse(rangeStart, 'HH:mm', date);
-    const endTime = parse(rangeEnd, 'HH:mm', date);
-    const currentTime = parse(time, 'HH:mm', date);
+    const startTime = parse(rangeStart, 'HH:mm', time);
+    const endTime = parse(rangeEnd, 'HH:mm', time);
 
-    return isWithinInterval(currentTime, { start: startTime, end: endTime });
+    return isWithinInterval(time, { start: startTime, end: endTime });
 }
 
 export function filterAndSortDeliveries(
     deliveries: Delivery[],
     timeRanges: string[],
 ): Delivery[] {
-    const filteredDeliveries = deliveries.filter((delivery) =>
-        timeRanges.some((range) => isTimeInRange(delivery.time_end, range)),
-    );
+    const filteredDeliveries = deliveries.filter((delivery) => {
+        return timeRanges.some((range) =>
+            isTimeInRange(delivery.time_end, range),
+        );
+    });
 
     filteredDeliveries.sort((a, b) => {
-        const timeA = parse(a.time_end, 'HH:mm', new Date());
-        const timeB = parse(b.time_end, 'HH:mm', new Date());
-        return timeA.getTime() - timeB.getTime();
+        const timeA = a.time_end;
+        const timeB = b.time_end;
+        return isBefore(timeA, timeB) ? -1 : 1;
     });
 
     return filteredDeliveries;

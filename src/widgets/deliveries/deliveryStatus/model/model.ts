@@ -1,49 +1,63 @@
 import { SetDeliveryStatus } from '@/features/delivery/setDeliveryStatus';
-import { createStore, sample } from 'effector';
+import { createEvent, sample } from 'effector';
 import { AssignDeliveryWithMe } from '@/features/delivery/assignDeliveryToUser';
-import { getDeliveryByIdFx, setDeliveryStatusFx } from '@/entities/delivery';
+import { setDeliveryStatusFx } from '@/entities/delivery';
 import { Delivery } from '@/shared/api';
 import { assignUserToDeliveryFx } from '@/entities/user';
+import { clearDelivery, setDelivery } from './stores';
 
 /**
- * Data
+ * Events
  */
-export const $delivery = createStore<Optional<Delivery>>(null)
-    .on(assignUserToDeliveryFx.doneData, (_, delivery) => delivery)
-    .on(getDeliveryByIdFx.doneData, (_, delivery) => delivery)
-    .on(setDeliveryStatusFx.doneData, (_, delivery) => delivery);
-export const $$deliveryStatus = $delivery.map(
-    (delivery) => delivery && delivery?.state,
-);
-export const $$deliveryComment = $delivery.map(
-    (delivery) => delivery && delivery?.comment,
-);
-export const $$deliveryCreateDate = $delivery.map(
-    (delivery) => delivery && delivery?.createdAt,
-);
-export const $$deliveryUpdateDate = $delivery.map(
-    (delivery) => delivery && delivery?.updatedAt,
-);
+export const loadDelivery = createEvent<Delivery>();
+export const deliveryChanged = createEvent<Delivery>();
+export const reset = createEvent();
 
 /**
- * Feature models
+ * Load delivery
+ */
+
+sample({
+    clock: loadDelivery,
+    target: setDelivery,
+});
+
+/**
+ * Assign to delivery factory
  */
 export const assignToDeliveryModel = AssignDeliveryWithMe.factory.createModel({
     assignToDeliveryFx: assignUserToDeliveryFx,
 });
 
-export const setStatusModel = SetDeliveryStatus.factory.createModel({
-    allowedStatuses: ['canceled', 'done'],
-    patchDeliveryStatusFx: setDeliveryStatusFx,
+sample({
+    clock: assignToDeliveryModel.assignCompleted,
+    target: [deliveryChanged, setDelivery],
 });
 
 /**
- * Handlers
+ * Set delivery state
+ */
+export const setStatusModel = SetDeliveryStatus.factory.createModel({
+    allowedStatuses: ['done', 'canceled'],
+    patchDeliveryStatusFx: setDeliveryStatusFx,
+});
+
+sample({
+    clock: loadDelivery,
+    fn: (delivery) => delivery.id,
+    target: setStatusModel.setDeliveryId,
+});
+
+sample({
+    clock: setStatusModel.statusChangeCompleted,
+    target: [deliveryChanged, setDelivery],
+});
+
+/**
+ * Reset
  */
 
 sample({
-    clock: getDeliveryByIdFx.doneData,
-    filter: ({ id }) => !!id,
-    fn: ({ id }) => id,
-    target: setStatusModel.setDeliveryId,
+    clock: reset,
+    target: [clearDelivery, setStatusModel.reset],
 });

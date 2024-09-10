@@ -6,23 +6,19 @@ import { useState } from 'react';
 import { HorizontalDatePicker } from '@/shared/ui/components';
 import { DatePeriod } from '@/shared/ui/components/forms/horizontal-date-picker/types';
 import { useUnit } from 'effector-react';
-import { datesRangePicked } from '../model/stores';
-
-interface MarketDateSelectorProperties {
-    typePicker: 'scroll' | 'slider';
-}
+import { datesRangePicked } from '../model/model';
+import { OfflineBlock } from './common/OfflineBlocker';
 
 /**
  * @name MarketDateSelector
  * @description filter for widget with display available deliveries
  * @constructor
  */
-export const MarketDateSelector: FunctionComponent<
-    MarketDateSelectorProperties
-> = ({ typePicker }) => {
+export const MarketDateSelector: FunctionComponent<{
+    typePicker: 'scroll' | 'slider';
+}> = ({ typePicker }) => {
     const [selectedDates, setSelectedDates] =
         useState<Optional<DatePeriod>>(null);
-
     const setDatesRange = useUnit(datesRangePicked);
 
     const onChangeDate = (work: DatePeriod): void => {
@@ -31,7 +27,7 @@ export const MarketDateSelector: FunctionComponent<
             selectedDates?.toDate === work.toDate
         ) {
             setSelectedDates(() => null);
-            setDatesRange(null);
+            setDatesRange(null as unknown as DatePeriod);
         }
 
         if (
@@ -46,22 +42,26 @@ export const MarketDateSelector: FunctionComponent<
 
     if (typePicker === 'scroll') {
         return (
-            <HorizontalScroll>
+            <OfflineBlock>
+                <HorizontalScroll>
+                    <HorizontalDatePicker
+                        selectedDates={selectedDates}
+                        onChangeDate={onChangeDate}
+                        offsetY="3"
+                    />
+                </HorizontalScroll>
+            </OfflineBlock>
+        );
+    }
+    return (
+        <OfflineBlock>
+            <HorizontalSliderWithControls>
                 <HorizontalDatePicker
                     selectedDates={selectedDates}
                     onChangeDate={onChangeDate}
                     offsetY="3"
                 />
-            </HorizontalScroll>
-        );
-    }
-    return (
-        <HorizontalSliderWithControls>
-            <HorizontalDatePicker
-                selectedDates={selectedDates}
-                onChangeDate={onChangeDate}
-                offsetY="3"
-            />
-        </HorizontalSliderWithControls>
+            </HorizontalSliderWithControls>
+        </OfflineBlock>
     );
 };

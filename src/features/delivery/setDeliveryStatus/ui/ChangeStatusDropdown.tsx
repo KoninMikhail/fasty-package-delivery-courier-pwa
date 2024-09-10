@@ -1,15 +1,10 @@
 import { modelView } from 'effector-factorio';
-import {
-    Button,
-    Select,
-    SelectItem,
-    Spacer,
-    Textarea,
-} from '@nextui-org/react';
+import { Button, Spacer, Tab, Tabs, Textarea } from '@nextui-org/react';
 import { useUnit } from 'effector-react';
 import { motion } from 'framer-motion';
-import { PropsWithChildren } from 'react';
+import { Key, PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
+import { DeliveryStates } from '@/shared/api';
 import { factory } from '../model/model';
 import { translationNS } from '../config';
 
@@ -63,38 +58,6 @@ const FormSection: FunctionComponent<PropsWithChildren> = ({ children }) => {
     );
 };
 
-const Selector: FunctionComponent = () => {
-    const model = factory.useModel();
-    const { t } = useTranslation(translationNS);
-    const { allowedStatuses, $status, statusChanged } = model;
-
-    const status = useUnit($status);
-    const onChangeValue = useUnit(statusChanged);
-
-    const hydratedStatus = (key: string): string => {
-        return t(key);
-    };
-
-    return (
-        <Select
-            fullWidth
-            label={t(SELECTOR_LABEL)}
-            placeholder={t(SELECTOR_PLACEHOLDER)}
-            selectedKeys={status}
-            onSelectionChange={onChangeValue}
-            selectionMode="single"
-        >
-            {allowedStatuses.map((statusDeclaration) => (
-                <SelectItem
-                    key={statusDeclaration.id}
-                    value={statusDeclaration.id}
-                >
-                    {hydratedStatus(statusDeclaration.label)}
-                </SelectItem>
-            ))}
-        </Select>
-    );
-};
 const Message: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
     const model = factory.useModel();
@@ -134,6 +97,53 @@ const SubmitButton: FunctionComponent = () => {
         >
             {t(SUBMIT_BUTTON_LABEL)}
         </Button>
+    );
+};
+const Selector: FunctionComponent = () => {
+    const model = factory.useModel();
+    const { t } = useTranslation(translationNS);
+    const { allowedStatuses, $status, statusChanged } = model;
+
+    const status = useUnit($status);
+    const onChangeValue = useUnit(statusChanged);
+
+    const hydratedStatus = (key: string): string => {
+        return t(key);
+    };
+
+    const onSelectionChange = (value: Key): void => {
+        onChangeValue(value as unknown as DeliveryStates);
+    };
+
+    return (
+        <div className="flex w-full flex-col">
+            <Tabs
+                fullWidth
+                size="md"
+                aria-label="Set state form"
+                selectedKey={status}
+                onSelectionChange={onSelectionChange}
+            >
+                {allowedStatuses.map((statusDeclaration) => {
+                    return (
+                        <Tab
+                            key={statusDeclaration.id}
+                            title={hydratedStatus(statusDeclaration.label)}
+                        >
+                            {statusDeclaration.message ? (
+                                <Message
+                                    requiereMessage={
+                                        statusDeclaration.requireMessage
+                                    }
+                                />
+                            ) : null}
+                            <Spacer y={3} />
+                            <SubmitButton />
+                        </Tab>
+                    );
+                })}
+            </Tabs>
+        </div>
     );
 };
 

@@ -10,6 +10,8 @@ interface FactoryOptions {
 }
 
 export const factory = modelFactory((options: FactoryOptions) => {
+    const authSuccess = createEvent();
+    const authFail = createEvent<Error>();
     /**
      * Form events
      */
@@ -69,6 +71,16 @@ export const factory = modelFactory((options: FactoryOptions) => {
         target: options.registerFx,
     });
 
+    sample({
+        clock: options.registerFx.done,
+        target: authSuccess,
+    });
+
+    sample({
+        clock: options.registerFx.failData,
+        target: authFail,
+    });
+
     return {
         $login,
         $password,
@@ -81,5 +93,7 @@ export const factory = modelFactory((options: FactoryOptions) => {
         passwordChanged,
         submitPressed,
         resetFormState,
+        authSuccess,
+        authFail,
     };
 });

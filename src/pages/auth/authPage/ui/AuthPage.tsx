@@ -1,18 +1,12 @@
-import {
-    sharedConfigConstants,
-    sharedConfigEnvs,
-    sharedConfigRoutes,
-} from '@/shared/config';
+import { sharedConfigConstants, sharedConfigEnvs } from '@/shared/config';
 
 import { useTranslation } from 'react-i18next';
 import { useDocumentTitle } from 'usehooks-ts';
 import { PropsWithChildren } from 'react';
 import { Button, Chip, Link, Spacer } from '@nextui-org/react';
 import { ImKey } from 'react-icons/im';
-import { useUnit } from 'effector-react';
+import { useGate, useUnit } from 'effector-react';
 import { FaGithub } from 'react-icons/fa6';
-
-import { ChangeLanguageIconButton } from '@/features/viewer/changeLanguage';
 
 import { widgetCookiePolicyModalUi } from '@/widgets/polices/cookiePolicyModal';
 import { widgetResetPasswordModalUi } from '@/widgets/viewer/reset-password-modal';
@@ -22,7 +16,12 @@ import { widgetTermsOfUseModalUi } from '@/widgets/polices/termsOfUseModal';
 import { sharedUiBranding } from '@/shared/ui/';
 
 import { Guest } from '@/entities/viewer/ui/Guest';
-import { requestAuthModel, requestRecoveryModel } from '../model';
+import { ChangeLanguage } from '@/features/viewer/changeLanguage';
+import {
+    AuthPageGate,
+    pressRecoveryButton,
+    pressSignInButton,
+} from '../model/model';
 import {
     BUTTON_GITHUB,
     BUTTON_RESET_PASSWORD,
@@ -35,9 +34,9 @@ import {
 
 const { Logo } = sharedUiBranding;
 
-const { APP_NAME, GITHUB_PAGE_URL, APP_DESCRIPTION } = sharedConfigConstants;
+const { APP_NAME, GITHUB_PAGE_URL, APP_DESCRIPTION, APP_VERSION } =
+    sharedConfigConstants;
 const { isDevelopmentEnvironment } = sharedConfigEnvs;
-const { RouteName } = sharedConfigRoutes;
 const { SignInModal } = widgetSignInModalUi;
 
 const { ResetPasswordModal } = widgetResetPasswordModalUi;
@@ -51,7 +50,8 @@ const { TermsOfUseModal } = widgetTermsOfUseModalUi;
 const Root: FunctionComponent<PropsWithChildren> = ({ children }) => (
     <div className="h-dvh w-screen">
         <div className="absolute inset-0 h-full w-full bg-[url('/assets/images/auth_bg.jpg')] bg-cover bg-[left_-10rem_top] md:bg-center">
-            <div className="absolute bottom-0 h-1/2 w-full bg-gradient-to-t from-background from-45% to-transparent" />
+            <div className="absolute top-0 h-24 w-full bg-gradient-to-b from-background from-45% to-transparent opacity-25" />
+            <div className="absolute bottom-0 h-1/2 w-full bg-gradient-to-t from-background from-45% to-transparent opacity-85" />
             <div className="grid h-full w-full grid-cols-1 grid-rows-[auto_max-content]">
                 {children}
             </div>
@@ -89,7 +89,7 @@ const Greetings: FunctionComponent = () => {
 
 const SignInButton: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
-    const onPressSignIn = useUnit(requestAuthModel.pressSignInButton);
+    const onPressSignIn = useUnit(pressSignInButton);
     return (
         <Button
             color="primary"
@@ -105,9 +105,7 @@ const SignInButton: FunctionComponent = () => {
 const ResetPasswordButton: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
 
-    const onPressResetPassword = useUnit(
-        requestRecoveryModel.pressRecoveryButton,
-    );
+    const onPressResetPassword = useUnit(pressRecoveryButton);
 
     return (
         <Button
@@ -144,11 +142,9 @@ const DeveloperModeChip: FunctionComponent = () => (
     </Chip>
 );
 
-const AppVersion: FunctionComponent = () => (
+const AppVersionLabel: FunctionComponent = () => (
     <div className="invisible fixed bottom-8 right-12 text-center lg:visible">
-        <span className="text-foreground">
-            {import.meta.env.PACKAGE_VERSION}
-        </span>
+        <span className="text-foreground">{APP_VERSION}</span>
     </div>
 );
 
@@ -163,6 +159,8 @@ export const AuthPage: FunctionComponent = () => {
         }),
     );
 
+    useGate(AuthPageGate);
+
     return (
         <Guest>
             <Root>
@@ -172,7 +170,7 @@ export const AuthPage: FunctionComponent = () => {
                             <Logo />
                         </NavbarBrand>
                         <NavbarTools>
-                            <ChangeLanguageIconButton />
+                            <ChangeLanguage.IconButton />
                         </NavbarTools>
                     </Navbar>
                 </Section>
@@ -193,7 +191,7 @@ export const AuthPage: FunctionComponent = () => {
             <CookiePolicyModal size="5xl" />
             <PrivacyPolicyModal size="5xl" />
             <TermsOfUseModal size="5xl" />
-            <AppVersion />
+            <AppVersionLabel />
         </Guest>
     );
 };

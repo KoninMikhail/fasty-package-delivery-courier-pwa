@@ -1,10 +1,13 @@
-import { Authorized, sessionModel } from '@/entities/viewer';
+import { Authorized } from '@/entities/viewer';
 import { sharedConfigConstants } from '@/shared/config';
 import { useTranslation } from 'react-i18next';
 import { useDocumentTitle } from 'usehooks-ts';
 import { useGate, useUnit } from 'effector-react';
 import { useParams } from 'react-router-dom';
-import { DeliveryDetailsPageGateway } from '../model';
+import { $pageDeliveryDetails } from '@/pages/deliveries/singleDeliveryDetailsPage/model/stores';
+import { getDeliveryId } from '@/entities/delivery';
+import { DetectDeviceType } from '@/features/device/detecDeviceType';
+import { DeliveryDetailsPageGate } from '../model/model';
 
 import {
     DesktopDeliveryDetailsPageView,
@@ -15,8 +18,12 @@ import { PAGE_TITLE, translationNS } from '../config';
 const { APP_NAME, APP_DESCRIPTION } = sharedConfigConstants;
 
 export const SingleDeliveryDetailsPage: FunctionComponent = () => {
-    const isDesktop = useUnit(sessionModel.$$isDesktop);
-    const { deliveryId } = useParams();
+    const { isDesktop, delivery } = useUnit({
+        isDesktop: DetectDeviceType.$$isDesktop,
+        delivery: $pageDeliveryDetails,
+    });
+    const { deliveryId: deliverySystemId } = useParams();
+    const deliveryId = delivery ? getDeliveryId(delivery) : null;
     const { t, i18n } = useTranslation(translationNS);
     const currentLanguage = i18n.language as keyof typeof APP_DESCRIPTION;
 
@@ -27,7 +34,7 @@ export const SingleDeliveryDetailsPage: FunctionComponent = () => {
             appDescription: APP_DESCRIPTION[currentLanguage],
         }),
     );
-    useGate(DeliveryDetailsPageGateway, { deliveryId });
+    useGate(DeliveryDetailsPageGate, { deliveryId: deliverySystemId });
 
     return isDesktop ? (
         <Authorized>

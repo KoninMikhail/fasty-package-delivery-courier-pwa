@@ -10,12 +10,13 @@ import {
 } from '@nextui-org/react';
 import { Delivery } from '@/shared/api';
 import { IoCall } from 'react-icons/io5';
-import { sharedServicesSubway } from '@/shared/services';
 import { useTranslation } from 'react-i18next';
 import { forwardRef, ReactNode } from 'react';
 import { Link as ReactRouterLink } from 'react-router-dom';
 import { sharedConfigRoutes } from '@/shared/config';
 import { sharedLibHelpers } from '@/shared/lib';
+// eslint-disable-next-line boundaries/element-types
+import { SubwayStationWithIcon } from '@/entities/route/@subway';
 import { getDeliveryContact } from '../../lib/utils/getDeliveryContact';
 import { useEstimatedTime } from '../../lib/hooks/useEstimatedTime';
 import {
@@ -25,11 +26,10 @@ import {
     TIME_LEFT,
     translationNS,
 } from '../../config';
-import { getDeliveryId } from '../../lib/utils/getDeliveryId';
+import { getDeliverySystemId } from '../../lib/utils/getDeliverySystemId';
 import { getDeliveryAddress } from '../../lib/utils/getDeliveryAdress';
 import { getDeliveryMetro } from '../../lib/utils/getDeliveryMetro';
 
-const { SubwayStationWithIcon } = sharedServicesSubway;
 const { RouteName } = sharedConfigRoutes;
 const { getMaskedPhone } = sharedLibHelpers;
 const { DELIVERIES } = RouteName;
@@ -108,7 +108,6 @@ export const DeliveryTimer: FunctionComponent<{
     date: Date;
 }> = ({ date }) => {
     const { t } = useTranslation(translationNS);
-
     const EXPIRED_MINS_COUNT = 0;
     const MINUTES_IN_HOUR = 60;
     const CLOSE_TO_EXPIRED_THRESHOLD = 30; // Minutes before considered close to expired
@@ -152,7 +151,7 @@ export const DeliveryCountdownCard = forwardRef<
     DeliveryCountdownCardProperties
 >(({ delivery }, reference) => {
     const deadline = delivery.time_end;
-    const id = getDeliveryId(delivery);
+    const id = getDeliverySystemId(delivery);
     const address = getDeliveryAddress(delivery);
     const contact = getDeliveryContact(delivery);
     const metro = getDeliveryMetro(delivery);

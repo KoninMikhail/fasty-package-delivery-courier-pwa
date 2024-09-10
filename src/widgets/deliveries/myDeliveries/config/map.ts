@@ -9,3 +9,4 @@ export const DEFAULT_MAP_CENTER: LatLngExpression = {
 };
 
 export const DEFAULT_MAP_ZOOM: MapContainerProps['zoom'] = 11;
+export const DEFAULT_MAP_ZOOM_MOBILE: MapContainerProps['zoom'] = 10;

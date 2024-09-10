@@ -1,8 +1,9 @@
 import { modelView } from 'effector-factorio';
-import { Button } from '@nextui-org/react';
+import { Button, ButtonProps } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { useUnit } from 'effector-react';
 import { ChangeEvent, useRef } from 'react';
+import { CropModal } from './common/CropModal';
 import {
     ALLOWED_FORMATS,
     BUTTON_PENDING_TEXT,
@@ -11,7 +12,10 @@ import {
 } from '../config';
 import { factory } from '../model';
 
-export const UploadButton = modelView(factory, () => {
+interface UploadButtonProperties
+    extends Pick<ButtonProps, 'size' | 'isDisabled'> {}
+
+const InputButton = ({ size, isDisabled }: UploadButtonProperties) => {
     const model = factory.useModel();
     const { t } = useTranslation(translationNS);
 
@@ -45,11 +49,24 @@ export const UploadButton = modelView(factory, () => {
             />
             <Button
                 onPress={onPressUploadButton}
-                size="sm"
+                size={size}
                 isLoading={isPending}
+                isDisabled={isDisabled}
             >
                 {isPending ? t(BUTTON_PENDING_TEXT) : t(BUTTON_UPLOAD_LABEL)}
             </Button>
         </>
     );
-});
+};
+
+export const UploadButton = modelView(
+    factory,
+    ({ size, isDisabled }: UploadButtonProperties) => {
+        return (
+            <>
+                <InputButton size={size} isDisabled={isDisabled} />
+                <CropModal />
+            </>
+        );
+    },
+);

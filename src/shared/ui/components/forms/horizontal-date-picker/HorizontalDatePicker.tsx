@@ -17,7 +17,7 @@ import locale_ru from './locale/ru.locale.json';
 const { locale } = sharedConfigLocale;
 
 /**
- * locale
+ * locales
  */
 locale.addResourceBundle('en', translationNS, locale_en);
 locale.addResourceBundle('ru', translationNS, locale_ru);

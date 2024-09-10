@@ -1,39 +1,39 @@
 import { createEvent, createStore } from 'effector';
-import { and } from 'patronum';
 import { User, userSchema } from '@/shared/api';
 import { Done } from 'effector-storage';
 import { persist } from 'effector-storage/local';
+import { delay } from 'patronum';
 import { SESSION_USER_PROFILE_LOCAL_STORAGE_KEY } from '../config';
-import { revalidateAuthFx } from './effects/revalidateAuthFx';
 import {
     authByEmailFx,
     changeViewerAvatarFx,
     getViewerProfileFx,
-    logoutFx,
 } from './effects';
-
-export const viewerDataReceived = createEvent<Done<User>>();
 
 /**
  * Session initialization status
  */
-export const $initSessionComplete = createStore(true).on(
+const viewerDataReceived = createEvent<Done<User>>();
+export const $viewerDataReceived = createStore(false).on(
     viewerDataReceived,
     () => true,
 );
+
+export const $initSessionComplete = $viewerDataReceived;
 
 /**
  * =================================================
  * Viewer profile data
  * =================================================
  */
+export const clearViewerProfileData = createEvent();
+export const setViewerAccount = createEvent<User>();
 export const $viewerProfileData = createStore<Optional<User>>(null)
+    .on(setViewerAccount, (_, payload) => payload)
     .on(authByEmailFx.doneData, (_, payload) => payload.user)
     .on(getViewerProfileFx.doneData, (_, payload) => payload)
-    .on(changeViewerAvatarFx.doneData, (_, payload) => payload)
-    .reset([logoutFx.done, logoutFx.fail]);
-
-export const $$hasProfileData = $viewerProfileData.map((data) => !!data);
+    .on(delay(changeViewerAvatarFx.doneData, 1000), (_, payload) => payload)
+    .reset(clearViewerProfileData);
 
 /*
  * Persist viewer profile data from local storage for correctly work offline mode
@@ -46,21 +46,13 @@ persist({
     key: SESSION_USER_PROFILE_LOCAL_STORAGE_KEY,
     contract: (raw): raw is User => userSchema.safeParse(raw).success,
     done: viewerDataReceived,
-    fail: revalidateAuthFx,
 });
 
 /**
  * Authorization status
  */
-export const $isAuthorized = and($initSessionComplete, $$hasProfileData);
+export const $isAuthorized = $viewerProfileData.map((data) => data ?? null);
 
-export { $$isOnline } from './parts/networkState';
-export {
-    $$isMobile,
-    $$isTablet,
-    $$isDesktop,
-    $$deviceScreen,
-} from './parts/deviceInfo';
 export {
     getViewerProfileFx,
     authByEmailFx,
