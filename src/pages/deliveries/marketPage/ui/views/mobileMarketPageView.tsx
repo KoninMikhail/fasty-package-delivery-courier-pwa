@@ -43,7 +43,7 @@ const { NavbarMobile } = widgetNavbarMobileUi;
 const { SearchQueryInputModal } = widgetSearchQueryPopupUi;
 const { MyDeliveriesRow } = widgetMyDeliveriesUi;
 
-const { DELIVERIES, PROFILE_EDIT_PAGE, SETTINGS_PAGE } = RouteName;
+const { PROFILE_EDIT_PAGE, SETTINGS_PAGE } = RouteName;
 
 /**
  * Layout
@@ -176,7 +176,6 @@ const Header: FunctionComponent = () => {
 
 const UpcomingDeliveriesSection: FunctionComponent<PropsWithChildren> = memo(
     ({ children }) => {
-        const navigate = useNavigate();
         const { t } = useTranslation(translationNS);
 
         return (
@@ -197,7 +196,7 @@ const MarketDeliveriesSection: FunctionComponent = () => {
             <SectionHead>
                 <Heading>{t(MARKET_LABEL)}</Heading>
             </SectionHead>
-            <Spacer y={2} />
+            <Spacer y={4} />
             <MarketDateSelector typePicker="scroll" />
             <Spacer y={2} />
             <MarketFilterScrollable withOutPadding />
