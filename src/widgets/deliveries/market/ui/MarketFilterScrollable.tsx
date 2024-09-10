@@ -18,7 +18,7 @@ import { Key, useMemo, useState } from 'react';
 import { GiGymBag } from 'react-icons/gi';
 
 import { DeliveryType } from '@/shared/api';
-import { OfflineBlock } from '@/widgets/deliveries/market/ui/common/OfflineBlocker';
+import { OfflineBlock } from './common/OfflineBlocker';
 import {
     EXPRESS_LABEL_KEY,
     LABEL_ONCAR_KEY,
@@ -34,15 +34,12 @@ import {
     translationNS,
 } from '../config';
 
+import { $deliveryType, $express, $weight } from '../model/stores';
 import {
-    $deliveryType,
-    $express,
-    $weight,
     deliveryTypeChanged,
     expressChanged,
     weightRangeChanged,
-    weightRangeSelected,
-} from '../model/stores';
+} from '../model/model';
 
 /**
  * Types
@@ -161,10 +158,9 @@ const WeightSelector: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
 
     const [value, setValue] = useState<[number, number]>([0, MAX_WEIGHT_KG]);
-    const { selected, weightChanged, applied } = useUnit({
+    const { selected, weightChanged } = useUnit({
         selected: $weight,
-        weightChanged: weightRangeSelected,
-        applied: weightRangeChanged,
+        weightChanged: weightRangeChanged,
     });
 
     const isSelected =
@@ -182,11 +178,14 @@ const WeightSelector: FunctionComponent = () => {
     const onSliderChange = (range: number | number[]): void => {
         if (Array.isArray(range)) {
             setValue(() => [range[0], range[1]]);
-            weightChanged([range[0], range[1]]);
         }
     };
 
-    const onSliderChangeEnd = () => applied();
+    const onSliderChangeEnd = (range: number | number[]): void => {
+        if (Array.isArray(range)) {
+            weightChanged([range[0], range[1]]);
+        }
+    };
 
     return (
         <Popover placement="bottom" offset={20} showArrow>
@@ -197,7 +196,7 @@ const WeightSelector: FunctionComponent = () => {
                     variant={isSelected ? 'solid' : 'bordered'}
                 >
                     {isSelected
-                        ? `${persistWeightValue(selected[0])} - ${persistWeightValue(selected[1])}`
+                        ? `${persistWeightValue(value[0])} - ${persistWeightValue(value[1])}`
                         : popoverSelectWeight}
                 </Button>
             </PopoverTrigger>

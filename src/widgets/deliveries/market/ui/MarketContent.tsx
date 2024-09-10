@@ -8,24 +8,20 @@ import { AssignDeliveryWithMe } from '@/features/delivery/assignDeliveryToUser';
 import { BsBoxSeam } from 'react-icons/bs';
 import { InfiniteScroll } from '@/features/other/infinite-scroll';
 import { useTranslation } from 'react-i18next';
-import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
 import { LABEL_NO_DELIVERIES, LABEL_OFFLINE, translationNS } from '../config';
 import { $outputDeliveriesStore } from '../model/stores';
 import {
-    InfiniteScrollModel,
     assignDeliveryToUserModel,
     $isDeliveriesLoading,
     $isInitialized,
     $hasNoDeliveries,
     $isFirstPage,
     $isOffline,
+    $isReadyForInfiniteScroll,
+    infiniteScrollModel,
 } from '../model';
 
 /* eslint-disable unicorn/consistent-function-scoping */
-
-export const {
-    model: { $$isOnline },
-} = DetectNetworkConnectionState;
 
 /**
  * Layout
@@ -108,12 +104,22 @@ const Empty: FunctionComponent = () => {
  * @constructor
  */
 export const MarketContent: FunctionComponent = () => {
-    const { isInit, isOffline, isPending, isEmpty, isFirstPage } = useUnit({
+    const {
+        isInit,
+        isOffline,
+        isPending,
+        isEmpty,
+        isFirstPage,
+        isContentReady,
+        lastPageLoaded,
+    } = useUnit({
         isInit: $isInitialized,
         isOffline: $isOffline,
         isPending: $isDeliveriesLoading,
         isEmpty: $hasNoDeliveries,
         isFirstPage: $isFirstPage,
+        isContentReady: $isReadyForInfiniteScroll,
+        lastPageLoaded: infiniteScrollModel.$lastPageLoaded,
     });
 
     const content = useList($outputDeliveriesStore, (delivery, index) => (
@@ -136,7 +142,8 @@ export const MarketContent: FunctionComponent = () => {
     if (isPending && isFirstPage) return <Loading />;
     if (isEmpty) return <Empty />;
 
-    const paginationAllowed = isInit && !isPending && !isEmpty;
+    const paginationAllowed =
+        isInit && !isPending && !isEmpty && !lastPageLoaded && isContentReady;
 
     return (
         <Root>
@@ -144,10 +151,10 @@ export const MarketContent: FunctionComponent = () => {
                 {content}
             </div>
             <InfiniteScroll.Trigger
-                model={InfiniteScrollModel}
+                model={infiniteScrollModel}
                 allowed={paginationAllowed}
             />
-            <InfiniteScroll.Spinner model={InfiniteScrollModel} />
+            <InfiniteScroll.Spinner model={infiniteScrollModel} />
         </Root>
     );
 };

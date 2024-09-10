@@ -9,6 +9,7 @@ import { MAX_WEIGHT_KG } from '../config';
  * Deliveries store
  */
 export const setDeliveries = createEvent<UpcomingDelivery[]>();
+export const addDeliveries = createEvent<UpcomingDelivery[]>();
 export const clearDeliveries = createEvent();
 export const updateSingleDelivery = createEvent<Partial<UpcomingDelivery>>();
 export const $outputDeliveriesStore = createStore<UpcomingDelivery[]>([])
@@ -23,22 +24,16 @@ export const $outputDeliveriesStore = createStore<UpcomingDelivery[]>([])
             ...state.slice(index + 1),
         ];
     })
+    .on(addDeliveries, (state, payload) => [...state, ...payload])
     .reset(clearDeliveries);
 
 /**
  * Filters
  */
-export const datesRangePicked = createEvent<DatePeriod>();
-export const expressChanged = createEvent<boolean>();
-export const deliveryTypeChanged = createEvent<DeliveryType>();
-export const weightRangeSelected = createEvent<[number, number]>();
-export const weightRangeChanged = createEvent();
-
-export const filtersChanged = createEvent();
-export const resetFilters = createEvent();
-
+export const setDatesRange = createEvent<Optional<DatePeriod>>();
+export const resetDatesRange = createEvent();
 export const $datesRange = createStore<Optional<DatePeriod>>(null)
-    .on(datesRangePicked, (state, payload) => {
+    .on(setDatesRange, (state, payload) => {
         if (!payload) return null;
         return {
             ...state,
@@ -51,28 +46,31 @@ export const $datesRange = createStore<Optional<DatePeriod>>(null)
                 : payload.toDate,
         };
     })
-    .reset(resetFilters);
+    .reset(resetDatesRange);
 
+export const setWeight = createEvent<[number, number]>();
+export const resetWeight = createEvent();
 export const $weight = createStore<[number, number]>([0, MAX_WEIGHT_KG])
-    .on(weightRangeSelected, (_, payload) => payload)
-    .reset(resetFilters);
+    .on(setWeight, (_, payload) => payload)
+    .reset(resetWeight);
 
+export const setExpress = createEvent<boolean>();
+export const resetExpress = createEvent();
 export const $express = createStore<boolean>(false)
-    .on(expressChanged, (_, payload) => payload)
-    .reset(resetFilters);
+    .on(setExpress, (_, payload) => payload)
+    .reset(resetExpress);
 
+export const setDeliveryType = createEvent<DeliveryType>();
+export const resetDeliveryType = createEvent();
 export const $deliveryType = createStore<Set<DeliveryType>>(new Set(['unset']))
-    .on(deliveryTypeChanged, (state, selection) => {
+    .on(setDeliveryType, (state, selection) => {
+        console.log('wok');
         const newState = new Set(state);
         newState.clear();
         newState.add(selection);
         return newState;
     })
-    .reset(resetFilters);
-
+    .reset(resetDeliveryType);
 debug({
-    dates: $datesRange,
-    weight: $weight,
-    express: $express,
-    deliveryType: $deliveryType,
+    $deliveryType,
 });

@@ -2,7 +2,7 @@ import { modelView } from 'effector-factorio';
 import { Button, Spacer, Tab, Tabs, Textarea } from '@nextui-org/react';
 import { useUnit } from 'effector-react';
 import { motion } from 'framer-motion';
-import { PropsWithChildren } from 'react';
+import { Key, PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DeliveryStates } from '@/shared/api';
 import { factory } from '../model/model';
@@ -111,57 +111,39 @@ const Selector: FunctionComponent = () => {
         return t(key);
     };
 
+    const onSelectionChange = (value: Key): void => {
+        onChangeValue(value as unknown as DeliveryStates);
+    };
+
     return (
-        <>
-            {/* <div className="relative w-full cursor-pointer">
-                <Select
-                    fullWidth
-                    value="completed"
-                    label={t(SELECTOR_LABEL)}
-                    placeholder={t(SELECTOR_PLACEHOLDER)}
-                    selectedKeys={status}
-                    onSelectionChange={onChangeValue}
-                    selectionMode="single"
-                >
-                    {allowedStatuses.map((statusDeclaration) => (
-                        <SelectItem
+        <div className="flex w-full flex-col">
+            <Tabs
+                fullWidth
+                size="md"
+                aria-label="Set state form"
+                selectedKey={status}
+                onSelectionChange={onSelectionChange}
+            >
+                {allowedStatuses.map((statusDeclaration) => {
+                    return (
+                        <Tab
                             key={statusDeclaration.id}
-                            value={statusDeclaration.id}
+                            title={hydratedStatus(statusDeclaration.label)}
                         >
-                            {hydratedStatus(statusDeclaration.label)}
-                        </SelectItem>
-                    ))}
-                </Select>
-            </div> */}
-            <div className="flex w-full flex-col">
-                <Tabs
-                    fullWidth
-                    size="md"
-                    aria-label="Set state form"
-                    selectedKey={status}
-                    onSelectionChange={onChangeValue as DeliveryStates}
-                >
-                    {allowedStatuses.map((statusDeclaration) => {
-                        return (
-                            <Tab
-                                key={statusDeclaration.id}
-                                title={hydratedStatus(statusDeclaration.label)}
-                            >
-                                {statusDeclaration.message ? (
-                                    <Message
-                                        requiereMessage={
-                                            statusDeclaration.requireMessage
-                                        }
-                                    />
-                                ) : null}
-                                <Spacer y={3} />
-                                <SubmitButton />
-                            </Tab>
-                        );
-                    })}
-                </Tabs>
-            </div>
-        </>
+                            {statusDeclaration.message ? (
+                                <Message
+                                    requiereMessage={
+                                        statusDeclaration.requireMessage
+                                    }
+                                />
+                            ) : null}
+                            <Spacer y={3} />
+                            <SubmitButton />
+                        </Tab>
+                    );
+                })}
+            </Tabs>
+        </div>
     );
 };
 
