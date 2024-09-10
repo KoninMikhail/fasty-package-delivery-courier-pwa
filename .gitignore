@@ -298,4 +298,4 @@ fabric.properties
 
 
 ## Vite pwa
-dev-dist
+/dev-dist
