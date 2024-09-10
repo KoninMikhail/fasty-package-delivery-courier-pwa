@@ -16,7 +16,7 @@ const { isEmpty } = sharedLibTypeGuards;
 const NavbarContainer: FunctionComponent<PropsWithChildren> = ({
     children,
 }) => (
-    <div className="fixed bottom-0 left-0 right-0 z-30 w-full rounded-t-3xl border-[1px] border-b-0 border-gray-100 bg-background p-1.5 shadow-2xl ring-default dark:border-default-50">
+    <div className="fixed bottom-0 left-0 right-0 z-[100] w-full rounded-t-3xl border-[1px] border-b-0 border-gray-100 bg-background p-1.5 shadow-2xl ring-default dark:border-default-50">
         <div className="mx-auto w-full lg:w-[750px]">{children}</div>
     </div>
 );
