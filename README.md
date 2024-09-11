@@ -358,7 +358,7 @@ This pipeline is implemented in the application as follows:
 
 <br /><br /> 
 
-<img align="left" src="https://github.com/KoninMikhail/fasty-package-delivery-courier-pwa/blob/main/.resources/icons/contributors.png" width="50px" />
+<img align="left" src="https://github.com/KoninMikhail/fasty-package-delivery-courier-pwa/blob/main/.resources/icons/features.png" width="50px" />
 
 
 ## Roadmap
@@ -368,7 +368,7 @@ The application is currently in its beta release phase and is awaiting feedback 
 
 <br /><br />
 
-<img align="left" src="https://github.com/KoninMikhail/fasty-package-delivery-courier-pwa/blob/main/.resources/icons/contributors.png" width="50px" />
+<img align="left" src="https://github.com/KoninMikhail/fasty-package-delivery-courier-pwa/blob/main/.resources/icons/tree.png" width="50px" />
 
 
 ## Why Should You Learn This?
