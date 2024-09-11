@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0](https://github.com/KoninMikhail/fasty-package-delivery-courier-app/compare/v0.0.0...v0.1.0) (2024-09-11)
+
+
+### Bug Fixes
+
+* глобальный апдейт ([e6314b3](https://github.com/KoninMikhail/fasty-package-delivery-courier-app/commit/e6314b3adcbeddf1a5ed7b71c2f92e625fa4933e))
+* глобальный апдейт ([e1a8040](https://github.com/KoninMikhail/fasty-package-delivery-courier-app/commit/e1a804090ddf103721abf250d1aba2876fe34f3e))
+* исправил отдачу неправильной карточки в поиске ([7a0d780](https://github.com/KoninMikhail/fasty-package-delivery-courier-app/commit/7a0d780f180227250476c5805833169ccd9ca7a1))
+* поправил неработающую локализацию ([7829645](https://github.com/KoninMikhail/fasty-package-delivery-courier-app/commit/782964518f6b0aaff187f0443ffb1fe88b22455e))
+* поправил page title ([9243104](https://github.com/KoninMikhail/fasty-package-delivery-courier-app/commit/92431048d34a94e52e5c128b263177133730d63f))
+* maket filters ([1d2f2aa](https://github.com/KoninMikhail/fasty-package-delivery-courier-app/commit/1d2f2aafdb72e669162c16e3cc1799469ee34346))
+* markerIcon ([95822a2](https://github.com/KoninMikhail/fasty-package-delivery-courier-app/commit/95822a24e5fa95d2b923e38ca7dff5e251e5e0f8))
+* offline pwa fixes ([69bbaa1](https://github.com/KoninMikhail/fasty-package-delivery-courier-app/commit/69bbaa112be01999e8844e0ab9c530ab093f8b5d))
+* sw ([6c39cdb](https://github.com/KoninMikhail/fasty-package-delivery-courier-app/commit/6c39cdb01c725446458423723b2184ba20bc019a))
+* ui ([3c099b5](https://github.com/KoninMikhail/fasty-package-delivery-courier-app/commit/3c099b54e6d4725615616c59849f1a580e7a40a5))
+* ui ([0cf47fa](https://github.com/KoninMikhail/fasty-package-delivery-courier-app/commit/0cf47fafe0e493e40da78b2479e67f453cd11f92))
+* ui ([c288ca1](https://github.com/KoninMikhail/fasty-package-delivery-courier-app/commit/c288ca1493a588934ef6adea552ca56cfb4669f8))
+* uploadAvatar ([e0c81c3](https://github.com/KoninMikhail/fasty-package-delivery-courier-app/commit/e0c81c303fdfae6efefa358ac847bbfabeed7f11))
+* uploadAvatar ([ae45449](https://github.com/KoninMikhail/fasty-package-delivery-courier-app/commit/ae45449b1fce81c4615dc9e577b293449cbe9829))
+* uploadAvatar ([faa3ec3](https://github.com/KoninMikhail/fasty-package-delivery-courier-app/commit/faa3ec35afd481cb15b929ef7f68a7bc24f62f38))
+* uploadAvatar ([219c15d](https://github.com/KoninMikhail/fasty-package-delivery-courier-app/commit/219c15d9cc0326eec328ad3485a7bd3964c7b95e))
+* z-index navbar ([40bbbfc](https://github.com/KoninMikhail/fasty-package-delivery-courier-app/commit/40bbbfc4dde65efe63e54e7093f1c9358cd7306b))
+* zero day patches ([e2f21b7](https://github.com/KoninMikhail/fasty-package-delivery-courier-app/commit/e2f21b71848f9b84373826e029a64039440d6494))
+
 ## 0.0.0 (2024-04-11)
 
 ### Features
