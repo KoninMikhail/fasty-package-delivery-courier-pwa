@@ -12,7 +12,7 @@
   </a>
   <br>
   <a href="#">
-    <img src="https://img.shields.io/badge/build-stable-blue?style=for-the-badge&color=succeess" alt="KoninMikhail/fasty-package-delivery-courier-pwa">
+    <img src="https://img.shields.io/badge/build-beta-blue?style=for-the-badge&color=warning" alt="KoninMikhail/fasty-package-delivery-courier-pwa">
      </a>
     <a href="https://github.com/KoninMikhail/fasty-package-delivery-courier-pwa/issues">
       <img src="https://img.shields.io/github/issues/KoninMikhail/fasty-package-delivery-courier-pwa?color=0088ff&style=for-the-badge&logo=github" alt="KoninMikhail/fasty-package-delivery-courier-pwa issues"/>
