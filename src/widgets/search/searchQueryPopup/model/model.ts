@@ -1,7 +1,7 @@
 import { createEvent, createStore, sample } from 'effector';
 import { FetchUserSearchQueriesHistory } from '@/features/search/fetchUserSearchQueriesHistory';
 import { RemoveUserSearchQueryItem } from '@/features/search/removeUserSearchQueryItem';
-import { debug, delay } from 'patronum';
+import { delay } from 'patronum';
 import {
     addRelatedQuery,
     closePopup,
@@ -23,8 +23,6 @@ export const searchTriggerClicked = createEvent();
 export const searchCloseArrowClicked = createEvent();
 export const searchButtonClicked = createEvent();
 export const searchPopupCloseClicked = createEvent();
-
-debug({ searchTriggerClicked });
 
 /**
  * Initialization

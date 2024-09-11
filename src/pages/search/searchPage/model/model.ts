@@ -1,7 +1,7 @@
 import { createEvent, createStore, sample } from 'effector';
 import { widgetSearchResultsModel } from '@/widgets/search/searchResults';
 import { createGate } from 'effector-react';
-import { and, debug, delay, not } from 'patronum';
+import { and, delay, not } from 'patronum';
 import { DetectNetworkConnectionState } from '@/features/device/detectNetworkConnectionState';
 import { widgetNavbarDesktopModel } from '@/widgets/layout/navbar-desktop';
 import { widgetNavbarMobileModel } from '@/widgets/layout/navbar-mobile';
@@ -107,10 +107,6 @@ sample({
         widgetNavbarDesktopModel.setQuery,
         widgetNavbarMobileModel.setQuery,
     ],
-});
-
-debug({
-    queryChanged,
 });
 
 /**

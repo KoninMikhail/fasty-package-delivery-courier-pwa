@@ -88,15 +88,14 @@ Experience the future of delivery management with the Fasty App — where effici
   - [Multilingual Support](#multilingual-support)
 - [Architecture](#architecture)
   - [Feature Sliced Design](#feature-sliced-design)
-  - [Component Structure](#component-structure)
+  - [Components Structure](#component-structure)
+  - [Naming Conventions](#naming-conventions)
+  - [Data Validation](#data-validation)
 - [Authentication](#authentication)
 - [Profile Management](#profile-management)
 - [Delivery Management](#delivery-management)
-  - [Selecting Deliveries](#selecting-deliveries)
-  - [Viewing My Deliveries](#viewing-my-deliveries)
-  - [Delivery History](#delivery-history)
-  - [Search Functionality](#search-functionality)
-  - [OpenStreetMap Integration](#openstreetmap-integration)
+- [Roadmap](#roadmap)
+- [Why Should You Learn This?](#why-should-you-learn-this)
 - [Contributing](#contributors)
 - [Buy Me A Coffee](#buy-me-a-coffee)
 - [License and Changelog](#license-and-changelog)
@@ -209,9 +208,9 @@ The mechanism for determining if the user is online can be found in `@/entities/
 
 Our project supports multiple languages, ensuring a localized experience for users worldwide. Below are the details of our multilingual implementation:
 
-### Language Provider: `i18n`
+### Language Provider: `i18next`
 
-We use `i18n` as our primary library to handle multilingual capabilities. This allows us to dynamically switch languages and handle translations efficiently.
+We use `i18next` as our primary library to handle multilingual capabilities. This allows us to dynamically switch languages and handle translations efficiently.
 
 ### Structure of Translations
 
@@ -229,24 +228,105 @@ We use `i18n` as our primary library to handle multilingual capabilities. This a
 ## Architecture
 
 ## Feature Sliced Design
-sdfsdfsdf
 
-## Component Structure
-fdgdfg
+Feature Sliced Design is an outstanding architecture that has significantly contributed to the successful implementation of this project and numerous others within our company. To show our appreciation to its creators, we have decided to make a branch of this project publicly available. This allows those who are new to Feature Sliced Design to see practical implementations of various use cases. One of the versions of this application is actively used in production environments, showcasing its real-world applicability.
+
+## Project Structure
+
+- **shared** - Core functions devoid of business logic
+  - **api** - API client for server communication, built using `Zodios`
+  - **constants** - Crucial global settings and configurations
+  - **lib** - Collection of global helpers and type guards
+  - **types** - Global type declarations used throughout the project
+  - **ui** - Common UI components used across the application
+  - **assets** - Additional resources required by the compiled application
+- **entities** - Storage and management for global business abstractions, including templates, effects, and data fetching mechanisms
+- **features** - Logic that processes user actions with significant business value
+- **widgets** - Components that integrate layers above without managing the data themselves
+- **pages** - Layer where primary data handling logic resides; responsible for changing widget states or re-fetching data from the server. **Note**: It's considered best practice to avoid placing this logic in `widgets`.
+- **app** - Entry point and initialization hub of the entire application
+
+## Components Structure
+
+The main template for components is built using the following structure:
+
+- `index.ts` - The main entry point of the component and the point of interaction with it. We do not support other interactions to adhere to the core principles of `Feature Sliced Design`.
+- `init.ts` - The main file where all necessary resources for the abstraction are connected, such as localizations, and so on.
+- `/locales` - Storage for localization files for the current abstraction. Tip: You can copy/paste a file here to quickly add localization in your language.
+- `/config` - The main storage for configuration variables used in the current abstraction.
+- `/lib` - Helpers, type guards, and other utility functions that may be used in this abstraction and higher layers.
+- `/model` - The main folder or file containing the business logic of the current abstraction (models, factories, effects).
+- `/ui` - All UI components related to this abstraction.
+- `/@x` - Allowed cross imports between entities. **Note:** Use with great caution to avoid circular dependencies. The decision for this convention was made by the community and is not an official `Feature Sliced Design` specification.
+
+## Naming Conventions
+
+- `$$storeName`: Used for naming derived stores that are based on a parent store.
+- `whatEverChanged`, `whatEverInited`: Naming pattern for events in the main abstraction model. These events are triggered by user actions in the UI and are used to initiate core business logic processes.
+
+
+## Data Validation
+
+The application uses a contract system for validating data received from the server. This ensures type safety and data integrity throughout the system.
+
+### Why Use Contracts?
+
+Contracts help maintain a consistent data structure and prevent errors by validating incoming data against predefined schemas. This is particularly useful for:
+- Ensuring data integrity
+- Simplifying debugging
+- Enforcing API contracts between frontend and backend
+
+### Primary Contract Validation Provider
+
+We use [Zod](https://github.com/colinhacks/zod) as our primary library for data validation. Zod is a TypeScript-first schema declaration and validation library that enables comprehensive and efficient data validation.
 
 <br /><br />
 
 <img align="left" src="https://github.com/KoninMikhail/fasty-package-delivery-courier-pwa/blob/main/.resources/icons/contributors.png" width="50px" />
 
-## Authentication
-jwt
+
+## Authorization
+
+Our application employs JSON Web Tokens (JWT) as the core mechanism for authentication and authorization. This choice facilitates a flexible system for managing user sessions and renewing tokens, ensuring a high level of security for end users.
+
+### Key Benefits:
+1. **Flexibility**: JWT allows for a dynamic and adaptable authorization process.
+2. **Security**: JWT ensures secure data transmission between the client and server.
+3. **Offline Capability**: Given that the application can function offline, the JWT facilitates a deferred verification mechanism for user tokens. This means that even if the network is disconnected, the user's session can remain valid and be verified once the connection is restored.
+
+### How It Works:
+- Upon login, a JWT is issued and stored on the client side.
+- This token is sent with each request to verify the user's identity and permissions.
+- Tokens are periodically renewed to maintain security and session continuity.
+- In offline mode, tokens are queued for later verification once the connection is re-established.
+
+This approach optimizes both the user experience and the overall security architecture of the application.
 
 <br /><br />
 
 <img align="left" src="https://github.com/KoninMikhail/fasty-package-delivery-courier-pwa/blob/main/.resources/icons/contributors.png" width="50px" />
 
 ## Profile Management
-jwt
+
+Each user in the application has a personal profile stored on the server. The profile includes:
+
+- **Name:** The user's full name.
+- **Avatar:** The user's profile picture.
+- **Password:** The user's account password.
+- **Delivery Search History:** Records of the user's previous delivery search queries on the server.
+- **Additional Settings:**
+  - Language preferences
+  - Theme (e.g., light or dark mode)
+  - Other related data
+
+### Profile Features
+
+Users have the ability to:
+
+- **Update Avatar:** Change their profile picture.
+- **Change Password:** Update their account password for security.
+
+These features provide users with the flexibility to personalize their profiles and maintain account security.
 
 <br /><br />
 
@@ -254,11 +334,51 @@ jwt
 <img align="left" src="https://github.com/KoninMikhail/fasty-package-delivery-courier-pwa/blob/main/.resources/icons/contributors.png" width="50px" />
 
 ## Delivery Management
-jwt
+
+The core workflow for a courier involves the following pipeline:
+
+1. Select and take a suitable delivery order
+2. Maintain the delivery status
+3. Upon completion, set the status to indicate successful delivery
+
+This pipeline is implemented in the application as follows:
+
+- **Delivery Marketplace**: The main page features a marketplace with deliveries that have the status `created` and are not assigned to any courier. These deliveries can be filtered by date, delivery type (on foot or by car), and weight.
+- **Assign to Delivery**: Once a courier clicks `assign to delivery`, the delivery status changes to `delivering` and the courier is linked to the delivery. The delivery then becomes unavailable to other couriers.
+- **Managing Delivery Status**: When a delivery has the status `delivering` and is assigned to a courier, the courier can set the status to `done` with an optional note for the responsible manager, or set the status to `cancelled` with a mandatory reason for cancellation.
+- **Delivery History**: All deliveries of the current user with the statuses `done` and `cancelled` are recorded in the delivery history.
+
+### Additional Features
+
+- **Offline Availability**: All deliveries of the current user with the status `delivering` are available offline in case of internet connectivity loss.
+- **Delivery Map**: A map is available with markers for the delivery points.
 
 <br /><br /> 
 
 <img align="left" src="https://github.com/KoninMikhail/fasty-package-delivery-courier-pwa/blob/main/.resources/icons/contributors.png" width="50px" />
+
+
+## Roadmap
+
+The application is currently in its beta release phase and is awaiting feedback to determine the necessity and direction of the roadmap.
+
+
+<br /><br />
+
+<img align="left" src="https://github.com/KoninMikhail/fasty-package-delivery-courier-pwa/blob/main/.resources/icons/contributors.png" width="50px" />
+
+
+## Why Should You Learn This?
+
+Like any other project, ours is not perfect. It may have bugs and shortcomings. You have the opportunity to explore various use cases for implementing features using Feature-Sliced Design. Additionally, you are welcome to propose your improvements to our project.
+
+Moreover, you can fork this project and build something of your own that could bring you joy or even profit, as the project is under an open license.
+
+
+<br /><br />
+
+<img align="left" src="https://github.com/KoninMikhail/fasty-package-delivery-courier-pwa/blob/main/.resources/icons/contributors.png" width="50px" />
+
 
 ## Contributors
 

@@ -1,6 +1,6 @@
 import { createEvent, createStore, sample } from 'effector';
 import { FetchDeliveriesByQuery } from '@/features/delivery/fetchDeliveriesByQuery';
-import { and, debug, delay, not } from 'patronum';
+import { and, delay, not } from 'patronum';
 import { sharedLibTypeGuards } from '@/shared/lib';
 import { searchDeliveriesByQueryFx } from './effects';
 import { $searchResults, setQuery, setResults } from './stores';
@@ -24,9 +24,6 @@ export const $isOffline = createStore<boolean>(false)
     .on(setOffline, (_, isOffline) => isOffline)
     .reset(init);
 
-debug({
-    setOffline,
-});
 /**
  * Data
  */

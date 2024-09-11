@@ -2,7 +2,6 @@ import { createEvent, createStore } from 'effector';
 import { DeliveryType, UpcomingDelivery } from '@/shared/api';
 import { DatePeriod } from '@/shared/ui/components/forms/horizontal-date-picker/types';
 import { isAfter } from 'date-fns';
-import { debug } from 'patronum';
 import { MAX_WEIGHT_KG } from '../config';
 
 /**
@@ -71,6 +70,3 @@ export const $deliveryType = createStore<Set<DeliveryType>>(new Set(['unset']))
         return newState;
     })
     .reset(resetDeliveryType);
-debug({
-    $deliveryType,
-});

@@ -1,7 +1,7 @@
 import { createGate } from 'effector-react';
 import { createStore, sample } from 'effector';
 import { getDeliveryFromMyDeliverisLocalStorageCache } from '@/entities/delivery';
-import { and, debug, delay, not } from 'patronum';
+import { and, delay, not } from 'patronum';
 import { sharedLibTypeGuards } from '@/shared/lib';
 import { FetchDeliveryById } from '@/features/delivery/fetchDeliveryById';
 import {
@@ -69,11 +69,6 @@ sample({
     filter: (_, allow) => allow,
     fn: (id) => id as Delivery['id'],
     target: FetchDeliveryById.fetch,
-});
-
-debug({
-    online: delay(and($$pageOnline, $$readyForFetch), 500),
-    offline: delay(and(not($$isOnline), $$readyForFetch), 500),
 });
 
 sample({
