@@ -2,7 +2,7 @@
   "name": "fasty-package-delivery-courier-app",
   "license": "MIT",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "scripts": {
     "build": "vite build",
     "commit": "cz",
