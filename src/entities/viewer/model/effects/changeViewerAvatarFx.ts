@@ -7,6 +7,8 @@ export const changeViewerAvatarFx = createEffect<File, User, Error>(
 
         formData.append('image', upload);
 
+        console.log('upload', upload.size);
+
         try {
             return await apiClient.uploadViewerAvatar(formData);
         } catch (error: unknown) {
