@@ -24,7 +24,7 @@
          <img src="https://img.shields.io/badge/ -live demo-blue?style=for-the-badge&color=important" alt="KoninMikhail/fasty-package-delivery-courier-pwa link to live demo.">
     </a>
     <a href="https://github.com/KoninMikhail/fasty-package-delivery-courier-pwa/fork">
-      <img src="https://img.shields.io/badge/fork%20this-game-blue?logo=github-sponsors&style=for-the-badge&color=ff69b4" alt="KoninMikhail/fasty-app create fork">
+      <img src="https://img.shields.io/badge/fork%20this-app-blue?logo=github-sponsors&style=for-the-badge&color=ff69b4" alt="KoninMikhail/fasty-app create fork">
     </a>
 </div>
 
