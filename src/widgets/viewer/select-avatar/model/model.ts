@@ -29,8 +29,8 @@ export const $isOffline = createStore<Optional<boolean>>(null)
 export const changeAvatarModel = ChangeAvatar.factory.createModel({
     minWidth: 200,
     minHeight: 200,
-    resizeToMaxWidth: 600,
-    resizeToMaxHeight: 600,
+    resizeToMaxWidth: 350,
+    resizeToMaxHeight: 350,
     changeAvatarFx: changeViewerAvatarFx,
 });
 
