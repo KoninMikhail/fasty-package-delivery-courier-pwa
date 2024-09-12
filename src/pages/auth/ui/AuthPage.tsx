@@ -30,15 +30,14 @@ import {
     GREETINGS_WELCOME,
     PAGE_TITLE,
     translationNS,
-} from '../config';
-
-const { Logo } = sharedUiBranding;
+} from '../config/locale';
 
 const { APP_NAME, GITHUB_PAGE_URL, APP_DESCRIPTION, APP_VERSION } =
     sharedConfigConstants;
 const { isDevelopmentEnvironment } = sharedConfigEnvs;
-const { SignInModal } = widgetSignInModalUi;
 
+const { Logo } = sharedUiBranding;
+const { SignInModal } = widgetSignInModalUi;
 const { ResetPasswordModal } = widgetResetPasswordModalUi;
 const { CookiePolicyModal } = widgetCookiePolicyModalUi;
 const { PrivacyPolicyModal } = widgetPrivacyPolicyModalUi;
@@ -104,9 +103,7 @@ const SignInButton: FunctionComponent = () => {
 };
 const ResetPasswordButton: FunctionComponent = () => {
     const { t } = useTranslation(translationNS);
-
     const onPressResetPassword = useUnit(pressRecoveryButton);
-
     return (
         <Button
             fullWidth

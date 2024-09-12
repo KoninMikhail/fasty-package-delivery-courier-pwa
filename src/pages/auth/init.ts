@@ -1,5 +1,5 @@
 import { sharedConfigLocale } from '@/shared/config';
-import { translationNS } from './config';
+import { translationNS } from './config/locale';
 import locale_en from './locales/en.locale.json';
 import locale_ru from './locales/ru.locale.json';
 

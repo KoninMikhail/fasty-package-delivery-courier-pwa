@@ -2,15 +2,15 @@ import { Route, Routes } from 'react-router-dom';
 
 import { sharedConfigRoutes } from '@/shared/config';
 import { sharedUiLayouts } from '@/shared/ui';
-import { pageAuthUi } from '@/pages/auth/authPage';
-import { pageSettingsUi } from '@/pages/viewer/settingsPage';
-import { pageProfileEditUi } from '@/pages/viewer/profileEditPage';
-import { pageMyDeliveriesUi } from '@/pages/deliveries/myDeliveriesPage';
+import { pageAuthUi } from '@/pages/auth/';
+import { pageMyDeliveriesUi } from '@/pages/deliveries/my';
 import { pageSingleDeliveryDetailsUi } from '@/pages/deliveries/singleDeliveryDetailsPage';
-import { pageMyDeliveriesHistoryUi } from '@/pages/deliveries/myHistoryPage';
-import { pageMarketUi } from '@/pages/deliveries/marketPage';
-import { pageNotFoundUi } from '@/pages/errors/notFoundPage';
-import { pageSearchUi } from '@/pages/search/searchPage/';
+import { pageMyDeliveriesHistoryUi } from '@/pages/deliveries/history';
+import { pageMarketUi } from '@/pages/deliveries/market';
+import { pageNotFoundUi } from '@/pages/errors/not-found';
+import { pageSearchUi } from '@/pages/search';
+import { pageProfileEditUi } from '@/pages/profile-edit';
+import { pageSettingsUi } from '@/pages/settings';
 
 const { RouteName } = sharedConfigRoutes;
 const { SuspenseLayout } = sharedUiLayouts;
